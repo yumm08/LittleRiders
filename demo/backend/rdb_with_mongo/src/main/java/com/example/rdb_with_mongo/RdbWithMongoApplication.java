@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RdbWithMongoApplication {
 
     public static void main(String[] args) {
-
-
         SpringApplication.run(RdbWithMongoApplication.class, args);
     }
 
