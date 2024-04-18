@@ -46,6 +46,12 @@ public class VerificationService {
         return verification;
     }
 
+    public Verification findByEmail(String email){
+        return verificationRepository.findByEmail(email).orElseThrow(
+                () -> new RuntimeException()
+        );
+    }
+
     public void delete(Verification verification){
         verificationRepository.delete(verification);
     }
