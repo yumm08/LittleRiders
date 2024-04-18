@@ -47,7 +47,6 @@ class SignupApplicationTests {
 
 
             String email = "test@ruu.kr";
-
             signUpFacade.sendVerificationCode(email); //메일 발송
             Verification verification;
 
