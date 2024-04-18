@@ -79,6 +79,8 @@ public class Main {
     }
 
     public static void callSomeAPI(String accessToken){
+        //accessToken 은 expired time 안이라면 무조건 ok 임
+
         if(accessTokenService.isBlockedAccessToken(accessToken)){ //db 에 `있으면` 오류
             System.out.println("로그아웃 된거에요");
             return;
