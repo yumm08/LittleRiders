@@ -21,7 +21,7 @@ naver.maps.Event.addListener(map, "click", function (e) {
 
 
 
-const baseUrl = `https://demo.wookoo.shop/api/shuttle/${Math.floor(Math.random() * 4) + 1}`
+const baseUrl = `https://demo.wookoo.shop/api/shuttle/${Math.floor(Math.random() * 4) + 1}` //이 1~ 4번 버스중 랜덤픽
 
 
 const init = async () => {
