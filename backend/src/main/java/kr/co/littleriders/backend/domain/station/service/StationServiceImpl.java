@@ -2,7 +2,6 @@ package kr.co.littleriders.backend.domain.station.service;
 
 import kr.co.littleriders.backend.domain.station.StationService;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +10,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 class StationServiceImpl implements StationService {
 
-    private final RouteRepository routeRepository;
+    private final StationRepository stationRepository;
 
 }
