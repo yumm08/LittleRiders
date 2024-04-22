@@ -1,16 +1,15 @@
-import { useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import axios from "axios";
+import { useEffect } from "react";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import axios from 'axios';
-
-import A from '@/components/A';
+import A from "@components/A";
 
 const queryClient = new QueryClient();
 
 function App() {
   useEffect(() => {
     const getPosts = async () => {
-      const res = await axios.get('/posts');
+      const res = await axios.get("/posts");
 
       console.log(res.data);
     };
