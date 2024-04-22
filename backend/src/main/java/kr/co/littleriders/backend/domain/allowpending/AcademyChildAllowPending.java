@@ -1,9 +1,15 @@
 package kr.co.littleriders.backend.domain.allowpending;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class AcademyChildAllowPending {
+
+	@Id
 	private Long id;
 
-	private Long academyId;
+	// private Academy academy;
 
-	private Long childId;
+	// private Child child;
 }

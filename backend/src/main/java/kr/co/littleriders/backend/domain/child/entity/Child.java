@@ -1,19 +1,18 @@
-package kr.co.littleriders.backend.domain.childhistory;
+package kr.co.littleriders.backend.domain.child.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import kr.co.littleriders.backend.domain.Gender;
 
 @Entity
-public class ChildHistory {
+public class Child {
 
 	@Id
 	private Long id;
 
-	// private Child child;
+	// private Family family;
 
 	private String name;
 
@@ -22,8 +21,5 @@ public class ChildHistory {
 	private Gender gender;
 
 	private String imagePath;
-
-	private LocalDateTime createdAt;
-
 
 }
