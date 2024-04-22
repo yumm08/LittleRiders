@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+  jwt:
+    accessSecret: ${ACCESS_SECRET}
+    refreshSecret: ${REFRESH_SECRET}
+    accessExpTime: 3000
+    refreshExpTime: 6000
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+
+    redis:
+      host: ${REDIS_URL}
+      port: ${REDIS_PORT}
+
+
