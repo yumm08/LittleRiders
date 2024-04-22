@@ -12,10 +12,17 @@ public class StationRoute {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "route_id")
+    @JoinColumn(name = "route_id",nullable = false)
     private Route route;
 
     @ManyToOne
-    @JoinColumn(name = "station_id")
+    @JoinColumn(name = "station_id",nullable = false)
     private Station station;
+
+
+    @Column(name = "visitOrder" , nullable = false)
+    private int visitOrder;
+
+
+
 }
