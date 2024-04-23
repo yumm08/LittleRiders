@@ -1,13 +1,17 @@
-import CardListContainer from './CardListContainer'
+import Spacing from '@components/Shared/Spacing'
+import ShuttleList from '@components/Shuttle/ShuttleList'
 
 import Page from '@layouts/Page'
 
 export default function OperatePage() {
   return (
     <Page>
-      <CardListContainer title="직원관리" onClick={() => {}} />
-      <CardListContainer title="직원관리" onClick={() => {}} />
-      <CardListContainer title="직원관리" onClick={() => {}} />
+      <ShuttleList show={5} />
+      <Spacing className="h-5" />
+      <ShuttleList show={5} />
+      <Spacing className="h-5" />
+      <ShuttleList show={5} />
+      <Spacing className="h-5" />
     </Page>
   )
 }

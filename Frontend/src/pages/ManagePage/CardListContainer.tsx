@@ -12,17 +12,15 @@ interface Props {
 
 export default function CardListContainer({ title, onClick, children }: Props) {
   return (
-    <div className="flex-col p-2">
+    <div className="flex-col p-2 ">
       <strong className="text-2xl">{title}</strong>
       <Divider />
+      <Spacing className="h-[15px]" />
       {children}
-      <Spacing className="h-5" />
-      <Button
-        color="bg-lightgreen"
-        innerText="차량 추가"
-        full
-        onClick={onClick}
-      />
+      <Spacing className="h-[50px]" />
+      <Button color="bg-lightgreen" full onClick={onClick}>
+        <span className="text-xl text-white">차량 추가</span>
+      </Button>
     </div>
   )
 }
