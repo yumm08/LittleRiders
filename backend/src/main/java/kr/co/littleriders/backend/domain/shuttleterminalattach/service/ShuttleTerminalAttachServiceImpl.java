@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class ShuttleTerminalAttachServiceImpl implements ShuttleTerminalAttachService {
+class ShuttleTerminalAttachServiceImpl implements ShuttleTerminalAttachService {
     private final ShuttleTerminalAttachRepository shuttleTerminalAttachRepository;
 }

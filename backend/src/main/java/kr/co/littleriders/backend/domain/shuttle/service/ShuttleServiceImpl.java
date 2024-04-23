@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class ShuttleServiceImpl implements ShuttleService {
+class ShuttleServiceImpl implements ShuttleService {
     private final ShuttleRepository shuttleRepository;
 }

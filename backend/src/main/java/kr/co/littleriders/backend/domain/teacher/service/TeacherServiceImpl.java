@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeacherServiceImpl implements TeacherService {
+class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 }

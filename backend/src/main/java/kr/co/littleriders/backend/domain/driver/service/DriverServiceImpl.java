@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class DriverServiceImpl implements DriverService {
+class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
 }

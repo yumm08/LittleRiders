@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class TerminalServiceImpl {
+class TerminalServiceImpl {
     private final TerminalRepository terminalRepository;
 }
