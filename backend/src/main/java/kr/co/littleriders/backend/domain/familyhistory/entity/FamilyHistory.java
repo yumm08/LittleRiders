@@ -1,7 +1,8 @@
-package kr.co.littleriders.backend.domain.child.entity;
+package kr.co.littleriders.backend.domain.familyhistory.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
@@ -9,12 +10,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import kr.co.littleriders.backend.domain.common.Gender;
 
 @Entity
-@Table(name = "child")
-public class Child {
+@Table(name = "family_history")
+public class FamilyHistory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +29,14 @@ public class Child {
 	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "birth_date", nullable = false)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate birthDate;
+	@Column(name = "address", nullable = false)
+	private String address;
 
-	@Column(name = "gender", nullable = false)
-	private Gender gender;
+	@Column(name = "phone_number", nullable = false)
+	private String phoneNumber;
 
-	@Column(name = "image_path")
-	private String imagePath;
-
+	@CreatedDate
+	@DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
+	@Column(name = "created_at", nullable = false)
+	private LocalDateTime createdAt;
 }
