@@ -6,3 +6,9 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+spring:
+  mail:
+    host: littleriders.co.kr
+    port: 1025
+    from: admin@littleriders.co.kr
