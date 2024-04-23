@@ -23,10 +23,10 @@ public class ShuttleTerminalAttach {
     private Long id;
 
 //    @OneToOne
-//    @JoinColumn(name = "shuttleId")
+//    @JoinColumn(name = "shuttle_id")
 //    private Shuttle shuttle;
 //
 //    @OneToOne
-//    @JoinColumn(name = "terminalId")
+//    @JoinColumn(name = "terminal_id")
 //    private Terminal terminal;
 }

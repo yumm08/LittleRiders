@@ -24,8 +24,7 @@ public class Teacher {
 
 //    // 학원id
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("academyId")
-//    @JoinColumn(name = "academyId")
+//    @JoinColumn(name = "academy_id")
 //    private Academy academy;
 
     // 이름

@@ -47,18 +47,18 @@ public class Academy {
     private String imagePath;
 
 //    // 셔틀 목록
-//    @OneToMany(mappedBy = "academyId")
+//    @OneToMany(mappedBy = "academy_id")
 //    private List<Shuttle> shuttleList;
 //
 //    // 기사 목록
-//    @OneToMany(mappedBy = "academyId")
+//    @OneToMany(mappedBy = "academy_id")
 //    private List<Driver> driverList;
 //
 //    // 선생님 목록
-//    @OneToMany(mappedBy = "academyId")
+//    @OneToMany(mappedBy = "academy_id")
 //    private List<Teacher> teacherList;
 //
 //    // 단말기 목록
-//    @OneToMany(mappedBy = "academyId")
+//    @OneToMany(mappedBy = "academy_id")
 //    private List<Terminal> terminalList;
 }

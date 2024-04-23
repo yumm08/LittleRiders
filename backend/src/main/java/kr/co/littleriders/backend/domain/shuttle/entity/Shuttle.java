@@ -17,8 +17,7 @@ public class Shuttle {
 
     // 학원id
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("academyId")
-    @JoinColumn(name = "academyId")
+    @JoinColumn(name = "academy_id")
     private Academy academy;
 
     // 차량번호
@@ -36,14 +35,14 @@ public class Shuttle {
     // 상태
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private DriverStatus status;
+    private ShuttleStatus status;
 
     // 이미지 경로
     @Column(name = "image_path")
     private String imagePath;
 
 //    // 차량 단말기 부착 정보
-//    @OneToOne(mappedBy = "shuttleId")
+//    @OneToOne(mappedBy = "shuttle_id")
 //    private ShuttleTerminalAttach shuttleTerminalAttach;
 
 }

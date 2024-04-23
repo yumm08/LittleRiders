@@ -27,8 +27,7 @@ public class Terminal {
 
 //    // 학원id
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("academyId")
-//    @JoinColumn(name = "academyId")
+//    @JoinColumn(name = "academy_id")
 //    private Academy academy;
 
     // 단말기 고유번호
@@ -36,6 +35,6 @@ public class Terminal {
     private String terminalNumber;
 
 //    // 차량 단말기 부착정보
-//    @OneToOne(mappedBy = "terminalId")
+//    @OneToOne(mappedBy = "terminal_id")
 //    private ShuttleTerminalAttach shuttleTerminalAttach;
 }
