@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import COLOR_PALETTE from './src/style/COLOR_PALETTE'
+import COLOR_PALETTE from './src/style/ColorPalette'
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
