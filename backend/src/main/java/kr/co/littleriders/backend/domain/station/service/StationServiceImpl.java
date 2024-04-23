@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 class StationServiceImpl implements StationService {
 
     private final StationRepository stationRepository;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 class BoardDropHistoryServiceImpl implements BoardDropHistoryService {
 
     private final BoardDropHistoryRepository boardDropHistoryRepository;

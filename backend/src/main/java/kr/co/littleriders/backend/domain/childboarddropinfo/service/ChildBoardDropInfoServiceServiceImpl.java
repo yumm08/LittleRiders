@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 class ChildBoardDropInfoServiceServiceImpl implements ChildBoardDropInfoService {
 
     private final ChildBoardDropInfoRepository childBoardDropInfoRepository;
