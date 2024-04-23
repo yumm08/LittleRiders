@@ -38,5 +38,4 @@ public class Teacher {
     @Column(name = "card_number")
     private String cardNumber;
 
-
 }
