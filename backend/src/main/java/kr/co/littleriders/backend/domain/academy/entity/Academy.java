@@ -1,16 +1,6 @@
 package kr.co.littleriders.backend.domain.academy.entity;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.domain.driver.entity.Driver;
-import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
-import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
-import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "academy")

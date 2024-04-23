@@ -1,7 +1,6 @@
 package kr.co.littleriders.backend.domain.shuttle.entity;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttleterminalattach.entity.ShuttleTerminalAttach;
 

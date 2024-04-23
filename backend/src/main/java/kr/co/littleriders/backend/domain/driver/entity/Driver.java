@@ -2,16 +2,8 @@ package kr.co.littleriders.backend.domain.driver.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "driver")
 public class Driver {
 

@@ -1,18 +1,8 @@
 package kr.co.littleriders.backend.domain.shuttleterminalattach.entity;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
-import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "shuttle_terminal_attach")
 public class ShuttleTerminalAttach {
 

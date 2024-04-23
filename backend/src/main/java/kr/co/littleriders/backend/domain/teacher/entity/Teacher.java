@@ -2,17 +2,8 @@ package kr.co.littleriders.backend.domain.teacher.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "teacher")
 public class Teacher {
 
