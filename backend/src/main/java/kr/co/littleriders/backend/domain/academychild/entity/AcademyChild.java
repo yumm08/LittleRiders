@@ -40,7 +40,7 @@ public class AcademyChild {
 	private AcademyChildStatus status;
 
 	@Column(name = "card_type", nullable = false)
-	private String cardType;
+	private CardType cardType;
 
 	@Column(name = "card_number")
 	private String cardNumber;
