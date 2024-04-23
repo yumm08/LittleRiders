@@ -41,7 +41,7 @@ public class Teacher {
 
     // 상태
     @Column(name = "status", nullable = false)
-    private DriverStatus status;
+    private TeacherStatus status;
 
     // 카드정보
     @Column(name = "card_number")
