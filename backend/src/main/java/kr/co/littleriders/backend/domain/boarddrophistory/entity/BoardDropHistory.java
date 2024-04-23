@@ -26,17 +26,21 @@ public class BoardDropHistory {
 
 
 
+    @Column(name = "latitude",nullable = false)
     private double latitude;
+
+    @Column(name = "longitude",nullable = false)
     private double longitude;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private BoardDropHistoryStatus status;
 
 
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
-    @Column(name = "created_at")
+    @Column(name = "created_at",nullable = false)
     private LocalDateTime createdAt; //탑승 시간
 
 

@@ -15,8 +15,11 @@ public class Route {
 
 
 //    @ManyToOne
-//    @JoinColumn(name = "academy_id")
+//    @JoinColumn(name = "academy_id",nullable = false)
 //    private Academy academy;
+
+    @Column(name = "academy_id",nullable = false)
+    private Long academy;
 
     @Column(name = "name",nullable = false)
     private String name;

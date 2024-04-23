@@ -2,7 +2,7 @@ package kr.co.littleriders.backend.domain.childboarddropinfo.entity;
 
 
 
-public enum ChildBoardDropInfoDayOfWeek {
+public enum ChildBoardDropInfoDayOfTheWeek {
 
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY,SUNDAY;
 
