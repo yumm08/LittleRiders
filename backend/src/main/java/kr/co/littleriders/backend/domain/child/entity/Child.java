@@ -2,14 +2,10 @@ package kr.co.littleriders.backend.domain.child.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import kr.co.littleriders.backend.domain.common.Gender;
 
 @Entity
@@ -20,6 +16,10 @@ public class Child {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "academy_id")
+	private Academy academy;
 
 	// @ManyToOne
 	// @JoinColumn(name = "family_id", nullable = false)

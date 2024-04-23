@@ -39,8 +39,8 @@ public class Shuttle {
     @Column(name = "image_path")
     private String imagePath;
 
-//    // 차량 단말기 부착 정보
-//    @OneToOne(mappedBy = "shuttle_id")
-//    private ShuttleTerminalAttach shuttleTerminalAttach;
+    // 차량 단말기 부착 정보
+    @OneToOne(mappedBy = "shuttle_id")
+    private ShuttleTerminalAttach shuttleTerminalAttach;
 
 }

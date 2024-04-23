@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.route.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 
 import java.util.List;
 
@@ -14,12 +15,9 @@ public class Route {
     private Long id;
 
 
-//    @ManyToOne
-//    @JoinColumn(name = "academy_id",nullable = false)
-//    private Academy academy;
-
-    @Column(name = "academy_id",nullable = false)
-    private Long academy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "academy_id",nullable = false)
+    private Academy academy;
 
     @Column(name = "name",nullable = false)
     private String name;

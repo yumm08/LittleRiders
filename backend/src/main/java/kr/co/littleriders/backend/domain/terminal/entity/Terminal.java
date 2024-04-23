@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.terminal.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 
 @Entity
 @Table(name = "terminal")
@@ -12,10 +13,10 @@ public class Terminal {
     @Column(name = "id")
     private Long id;
 
-//    // 학원id
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "academy_id")
-//    private Academy academy;
+    // 학원id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "academy_id")
+    private Academy academy;
 
     // 단말기 고유번호
     @Column(name = "terminal_number")

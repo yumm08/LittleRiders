@@ -2,17 +2,9 @@ package kr.co.littleriders.backend.domain.academy.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "academy_family")
@@ -27,9 +19,9 @@ public class AcademyFamily {
 	// @JoinColumn(name = "family_id", nullable = false)
 	// private Family family;
 
-	// @ManyToOne
-	// @JoinColumn(name = "academy_id", nullable = false)
-	// private Academy academy;
+	 @ManyToOne(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "academy_id", nullable = false)
+	 private Academy academy;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)

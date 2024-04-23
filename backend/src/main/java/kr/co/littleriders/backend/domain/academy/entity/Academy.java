@@ -1,6 +1,18 @@
 package kr.co.littleriders.backend.domain.academy.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.child.entity.Child;
+import kr.co.littleriders.backend.domain.driver.entity.Driver;
+import kr.co.littleriders.backend.domain.family.entity.Family;
+import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
+import kr.co.littleriders.backend.domain.pending.entity.Pending;
+import kr.co.littleriders.backend.domain.route.entity.Route;
+import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.station.entity.Station;
+import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
+import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
+
+import java.util.List;
 
 @Entity
 @Table(name = "academy")
@@ -36,19 +48,43 @@ public class Academy {
     @Column(name = "image_path")
     private String imagePath;
 
-//    // 셔틀 목록
-//    @OneToMany(mappedBy = "academy_id")
-//    private List<Shuttle> shuttleList;
-//
-//    // 기사 목록
-//    @OneToMany(mappedBy = "academy_id")
-//    private List<Driver> driverList;
-//
-//    // 선생님 목록
-//    @OneToMany(mappedBy = "academy_id")
-//    private List<Teacher> teacherList;
-//
-//    // 단말기 목록
-//    @OneToMany(mappedBy = "academy_id")
-//    private List<Terminal> terminalList;
+    // 셔틀 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Shuttle> shuttleList;
+
+    // 기사 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Driver> driverList;
+
+    // 선생님 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Teacher> teacherList;
+
+    // 단말기 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Terminal> terminalList;
+
+    // 정류장 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Station> stationList;
+
+    // 경로 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Route> routeList;
+
+    // 원생 탑승 이력 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<BoardDropHistory> boardDropHistoryList;
+
+    // 원생정보 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Child> childList;
+
+    // 보호자정보 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<AcademyFamily> academyFamilyList;
+
+    // 원생 승인 신청 목록
+    @OneToMany(mappedBy = "academy_id")
+    private List<Pending> pendingList;
 }

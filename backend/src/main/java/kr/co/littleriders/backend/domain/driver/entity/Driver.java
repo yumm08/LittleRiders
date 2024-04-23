@@ -13,10 +13,10 @@ public class Driver {
     @Column(name = "id")
     private Long id;
 
-//    // 학원id
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "academy_id")
-//    private Academy academy;
+    // 학원id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "academy_id")
+    private Academy academy;
 
     // 이름
     @Column(name = "name", nullable = false)

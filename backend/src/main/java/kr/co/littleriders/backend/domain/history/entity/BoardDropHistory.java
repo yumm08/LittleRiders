@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.domain.history.entity;
 
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,8 +18,10 @@ public class BoardDropHistory {
     @Column(name = "id")
     private Long id;
 
-//    @ManyToOne
-//    private Academy academy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "academy_id")
+    private Academy academy;
+
 //
 //    @ManyToOne
 //    private AcademyChild academyChild;
