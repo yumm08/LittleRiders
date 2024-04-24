@@ -27,6 +27,7 @@
       "@apis/*": ["apis/*"],
       "@assets/*": ["assets/*"],
       "@components/*": ["components/*"],
+      "@constants": ["constants/index.ts"],
       "@constants/*": ["constants/*"],
       "@hooks/*": ["hooks/*"],
       "@layouts/*": ["layouts/*"],
