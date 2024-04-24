@@ -1,13 +1,11 @@
 package kr.co.littleriders.backend.domain.child.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.family.entity.Family;
+import kr.co.littleriders.backend.global.entity.Gender;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import kr.co.littleriders.backend.domain.common.Gender;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "child")
