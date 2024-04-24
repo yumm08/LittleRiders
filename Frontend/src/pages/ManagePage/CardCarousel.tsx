@@ -11,7 +11,6 @@ interface Props {
 
 export default function CardCarousel({ show, children }: Props) {
   const settings = {
-    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: show,
