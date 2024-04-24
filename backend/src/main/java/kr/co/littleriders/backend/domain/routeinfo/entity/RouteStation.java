@@ -28,7 +28,7 @@ public class RouteStation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academy_id",nullable = false)
-    private Academy academy; //TODO : 학원 엔티티로 매핑 필요
+    private Academy academy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id",nullable = false)
