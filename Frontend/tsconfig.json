@@ -36,6 +36,7 @@
       "@routes/*": ["routes/*"],
       "@stores/*": ["stores/*"],
       "@types/*": ["types/*"],
+      "@types": ["types/index.d.ts"],
       "@utils/*": ["utils/*"],
       "@style/*": ["style/*"]
     }
