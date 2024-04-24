@@ -8,7 +8,7 @@ interface Props {
 export default function ShuttleCard({id}:Props) {
   const navigate = useNavigate()
   const handleShuttleCardClick = () => {
-    navigate(`./${id}`)
+    navigate(`/manage/drive-history/${id}`)
   }
   return (
     <div className="w-[200px] flex-col justify-center items-center">
