@@ -1,4 +1,4 @@
-import OperatePage from '@pages/ManagePage'
+import OperatePage from '@pages/OperatePage'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 

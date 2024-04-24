@@ -1,5 +1,5 @@
-import CardCarousel from '@pages/ManagePage/CardCarousel'
-import CardListContainer from '@pages/ManagePage/CardListContainer'
+import CardCarousel from '@pages/OperatePage/CardCarousel'
+import CardListContainer from '@pages/OperatePage/CardListContainer'
 
 import EmployeeCard from './EmployeeCard'
 

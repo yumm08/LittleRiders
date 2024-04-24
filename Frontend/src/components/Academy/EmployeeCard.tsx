@@ -1,5 +1,4 @@
 import employee from '@assets/Mock/employee.jpg'
-import ColorPalette from '@style/ColorPalette'
 import { MdCancel } from 'react-icons/md'
 
 export default function EmployeeCard() {
@@ -7,8 +6,7 @@ export default function EmployeeCard() {
     <div className="w-[150px] flex-col justify-center items-center relative">
       <MdCancel
         size={'22'}
-        className="absolute top-1 right-1 z-10"
-        color={`${ColorPalette['lightgreen']}`}
+        className="absolute top-1 right-1 z-10 bg-lightgreen"
       />
       <div>
         <img

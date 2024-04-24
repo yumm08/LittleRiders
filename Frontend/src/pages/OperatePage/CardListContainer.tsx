@@ -15,9 +15,9 @@ export default function CardListContainer({ type, onClick, children }: Props) {
     <div className="flex-col p-2 ">
       <strong className="text-2xl">{`${type} 관리`}</strong>
       <Divider />
-      <Spacing className="h-[15px]" />
+      <Spacing style="h-[15px]" />
       {children}
-      <Spacing className="h-[50px]" />
+      <Spacing style="h-[50px]" />
       <Button color="bg-lightgreen" full onClick={onClick}>
         <span className="text-xm text-white">{`${type} 추가`}</span>
       </Button>
