@@ -1,0 +1,20 @@
+import employee from '@assets/Mock/employee.jpg'
+
+export default function EmployeeCard() {
+  return (
+    <div className="w-[150px] flex-col justify-center items-center">
+      <div>
+        <img
+          className="w-full h-[150px] border-2 border-slate-300 rounded-md "
+          src={employee}
+        ></img>
+      </div>
+      <div className="flex items-center justify-between pt-1">
+        <div className="flex flex-col">
+          <strong className="text-xm">차은우</strong>
+          <span className="text-darkgray text-xs">010-9212-4492</span>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -1,5 +1,3 @@
-import ShuttleCard from '@components/Shuttle/ShuttleCard'
-
 import ColorPalette from '@style/ColorPalette'
 import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6'
 import Slider from 'react-slick'
@@ -8,9 +6,10 @@ import 'slick-carousel/slick/slick.css'
 
 interface Props {
   show: number
+  children: React.ReactNode
 }
 
-export default function CardCarousel({ show }: Props) {
+export default function CardCarousel({ show, children }: Props) {
   const settings = {
     dots: true,
     infinite: true,
@@ -22,19 +21,7 @@ export default function CardCarousel({ show }: Props) {
   }
   return (
     <div className="slider-container">
-      <Slider {...settings}>
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-        <ShuttleCard />
-      </Slider>
+      <Slider {...settings}>{children}</Slider>
     </div>
   )
 }
