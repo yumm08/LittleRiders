@@ -1,5 +1,6 @@
 import ChildPage from '@pages/ChildPage'
 import DispatchPage from '@pages/DispatchPage'
+import DriveHistoryPage from '@pages/DriveHistoryPage'
 import HomePage from '@pages/HomePage'
 import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
@@ -34,6 +35,12 @@ const router = createBrowserRouter([
           {
             path: 'operate',
             element: <OperatePage />,
+            children:[
+              {
+                path : 'dirve-history/:id',
+                element:<DriveHistoryPage/>
+              }
+            ]
           },
         ],
       },
