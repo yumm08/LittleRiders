@@ -7,22 +7,18 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 @Table(name = "terminal")
 public class Terminal {
 
-    // 단말기id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long id; // 단말기 id
 
-    // 학원id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academy_id")
-    private Academy academy;
+    private Academy academy; // 학원
 
-    // 단말기 고유번호
     @Column(name = "terminal_number")
-    private String terminalNumber;
+    private String terminalNumber; // 단말기 고유번호
 
-    // 차량 단말기 부착정보
     @OneToOne(mappedBy = "terminal")
-    private ShuttleTerminalAttach shuttleTerminalAttach;
+    private ShuttleTerminalAttach shuttleTerminalAttach; // 차량 단말기 부착 정보
 }

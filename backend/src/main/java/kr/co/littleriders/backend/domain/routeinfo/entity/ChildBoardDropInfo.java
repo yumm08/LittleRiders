@@ -16,31 +16,31 @@ public class ChildBoardDropInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",nullable = false)
-    private Long id;
+    private Long id; // 원생 승하차 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academy_child_id")
-    private AcademyChild academyChild;
+    private AcademyChild academyChild; // 원생 정보
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academy_id")
-    private Academy academy;
+    private Academy academy; // 학원
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_route_station_id",nullable = false)
-    private RouteStation boardRouteStation;
+    private RouteStation boardRouteStation; // 승차 정류장
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "drop_route_station_id",nullable = false)
-    private RouteStation dropRouteStation;
+    private RouteStation dropRouteStation; // 하차 정류장
 
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_the_week",nullable = false)
-    private ChildBoardDropInfoDayOfTheWeek dayOfTheWeek;
+    private ChildBoardDropInfoDayOfTheWeek dayOfTheWeek; // 요일
 
     @CreatedDate
     @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     @Column(name = "board_time")
-    private LocalDateTime boardTime;
+    private LocalDateTime boardTime; // 승차 시간
 
 }

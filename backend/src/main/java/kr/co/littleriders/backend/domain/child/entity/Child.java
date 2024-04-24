@@ -16,23 +16,23 @@ public class Child {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long id; // 자녀 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_id", nullable = false)
-    private Family family;
+    private Family family; // 보호자
 
     @Column(name = "name", nullable = false)
-    private String name;
+    private String name; // 성명
 
     @Column(name = "birth_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthDate;
+    private LocalDate birthDate; // 생년월일
 
     @Column(name = "gender", nullable = false)
-    private Gender gender;
+    private Gender gender; // 성별
 
     @Column(name = "image_path")
-    private String imagePath;
+    private String imagePath; // 이미지 경로
 
 }

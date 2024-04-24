@@ -11,13 +11,13 @@ public class Pending {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long id;
+	private Long id; // 승인 id
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "academy_id", nullable = false)
-	private Academy academy;
+	private Academy academy; // 학원
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "child_id", nullable = false)
-	private Child child;
+	private Child child; // 자녀
 }

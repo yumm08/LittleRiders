@@ -14,18 +14,18 @@ public class Station {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long id; // 정류장 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academy_id")
-    private Academy academy;
+    private Academy academy; // 학원
 
     @Column(name = "name",nullable = false)
-    private String name;
+    private String name; // 정류장명
 
     @Column(name = "latitude",nullable = false)
-    private double latitude;
+    private double latitude; // 위도
 
     @Column(name = "longitude",nullable = false)
-    private double longitude;
+    private double longitude; // 경도
 }

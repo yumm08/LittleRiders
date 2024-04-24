@@ -14,23 +14,23 @@ public class FamilyHistory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long id;
+	private Long id; // 보호자 이력 id
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "family_id", nullable = false)
-	private Family family;
+	private Family family; // 보호자
 
 	@Column(name = "name", nullable = false)
-	private String name;
+	private String name; // 성명
 
 	@Column(name = "address", nullable = false)
-	private String address;
+	private String address; // 주소
 
 	@Column(name = "phone_number", nullable = false)
-	private String phoneNumber;
+	private String phoneNumber; // 전화번호
 
 	@CreatedDate
 	@DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
 	@Column(name = "created_at", nullable = false)
-	private LocalDateTime createdAt;
+	private LocalDateTime createdAt; // 생성일자
 }

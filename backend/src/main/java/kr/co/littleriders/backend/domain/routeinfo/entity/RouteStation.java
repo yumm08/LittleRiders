@@ -20,22 +20,22 @@ public class RouteStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long id; // 경로 정류장 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "route_id",nullable = false)
-    private Route route;
+    private Route route; // 경로
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academy_id",nullable = false)
-    private Academy academy;
+    private Academy academy; // 학원
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id",nullable = false)
-    private Station station;
+    private Station station; // 정류장
 
     @Column(name = "visit_order" , nullable = false)
-    private Integer visitOrder;
+    private Integer visitOrder; // 방문 순서
 
 //    @OneToMany(mappedBy = "boardRouteStation")
 //    private List<ChildBoardDropInfo> childBoardInfoList;

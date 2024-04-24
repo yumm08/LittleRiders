@@ -12,21 +12,21 @@ public class Family {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Long id;
+	private Long id; // 보호자 id
 
 	@Column(name = "email", nullable = false)
-	private String email;
+	private String email; // 이메일
 
 	@Column(name = "password", nullable = false)
-	private String password;
+	private String password; // 비밀번호
 
 	@Column(name = "name", nullable = false)
-	private String name;
+	private String name; // 성명
 
 	@Column(name = "phone_number", nullable = false)
-	private String phoneNumber;
+	private String phoneNumber; // 연락처
 
 	@OneToMany(mappedBy = "family")
-	private List<Child> child;
+	private List<Child> child; // 자녀 목록
 
 }
