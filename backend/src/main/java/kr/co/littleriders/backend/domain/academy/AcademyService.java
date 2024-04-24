@@ -13,4 +13,6 @@ public interface AcademyService {
 
 
     boolean existsByEmail(String email);
+
+    boolean notExistsByEmail(String email);
 }

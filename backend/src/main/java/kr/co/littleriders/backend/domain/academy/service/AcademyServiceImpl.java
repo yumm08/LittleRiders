@@ -44,4 +44,9 @@ class AcademyServiceImpl implements AcademyService {
         return academyRepository.existsByEmail(email);
     }
 
+    @Override
+    public boolean notExistsByEmail(String email) {
+        return !academyRepository.existsByEmail(email);
+    }
+
 }
