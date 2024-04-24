@@ -22,7 +22,7 @@ public class Terminal {
     @Column(name = "terminal_number")
     private String terminalNumber;
 
-//    // 차량 단말기 부착정보
-//    @OneToOne(mappedBy = "terminal_id")
-//    private ShuttleTerminalAttach shuttleTerminalAttach;
+    // 차량 단말기 부착정보
+    @OneToOne(mappedBy = "terminal")
+    private ShuttleTerminalAttach shuttleTerminalAttach;
 }

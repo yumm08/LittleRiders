@@ -10,6 +10,7 @@ uniqueConstraints = @UniqueConstraint(
         columnNames = {"academy_id","latitude","longitude"}
 ))
 public class Station {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

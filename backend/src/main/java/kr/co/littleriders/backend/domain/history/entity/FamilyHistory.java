@@ -2,15 +2,10 @@ package kr.co.littleriders.backend.domain.history.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.family.entity.Family;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "family_history")
@@ -21,9 +16,9 @@ public class FamilyHistory {
 	@Column(name = "id")
 	private Long id;
 
-	// @ManyToOne
-	// @JoinColumn(name = "family_id", nullable = false)
-	// private Family family;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "family_id", nullable = false)
+	private Family family;
 
 	@Column(name = "name", nullable = false)
 	private String name;

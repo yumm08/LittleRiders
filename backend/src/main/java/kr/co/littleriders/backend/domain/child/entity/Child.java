@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.family.entity.Family;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import kr.co.littleriders.backend.domain.common.Gender;
@@ -17,13 +18,9 @@ public class Child {
 	@Column(name = "id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "academy_id")
-	private Academy academy;
-
-	// @ManyToOne
-	// @JoinColumn(name = "family_id", nullable = false)
-	// private Family family;
+	 @ManyToOne(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "family_id", nullable = false)
+	 private Family family;
 
 	@Column(name = "name", nullable = false)
 	private String name;

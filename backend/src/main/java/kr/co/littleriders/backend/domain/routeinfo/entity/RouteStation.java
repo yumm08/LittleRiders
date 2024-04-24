@@ -2,8 +2,11 @@ package kr.co.littleriders.backend.domain.routeinfo.entity;
 
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.station.entity.Station;
+
+import java.util.List;
 
 @Entity
 @Table(name = "station_route",
@@ -19,23 +22,25 @@ public class RouteStation {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "route_id",nullable = false)
     private Route route;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "academy_id",nullable = false)
+    private Academy academy; //TODO : 학원 엔티티로 매핑 필요
 
-
-//    @ManyToOne
-    @Column(name = "academy_id",nullable = false)
-    private Long academy; //TODO : 학원 엔티티로 매핑 필요
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id",nullable = false)
     private Station station;
-
 
     @Column(name = "visit_order" , nullable = false)
     private Integer visitOrder;
 
-
+//    @OneToMany(mappedBy = "boardRouteStation")
+//    private List<ChildBoardDropInfo> childBoardInfoList;
+//
+//    @OneToMany(mappedBy = "dropRouteStation")
+//    private List<ChildBoardDropInfo> childDropInfoList;
 
 }

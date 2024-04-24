@@ -1,11 +1,9 @@
 package kr.co.littleriders.backend.domain.family.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.child.entity.Child;
+
+import java.util.List;
 
 @Entity
 @Table(name = "family")
@@ -27,4 +25,8 @@ public class Family {
 
 	@Column(name = "phone_number", nullable = false)
 	private String phoneNumber;
+
+	@OneToMany(mappedBy = "family")
+	private List<Child> child;
+
 }

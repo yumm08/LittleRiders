@@ -1,9 +1,7 @@
 package kr.co.littleriders.backend.domain.academy.entity;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
-import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.route.entity.Route;
@@ -49,42 +47,42 @@ public class Academy {
     private String imagePath;
 
     // 셔틀 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<Shuttle> shuttleList;
 
     // 기사 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<Driver> driverList;
 
     // 선생님 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<Teacher> teacherList;
 
     // 단말기 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<Terminal> terminalList;
 
     // 정류장 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<Station> stationList;
 
     // 경로 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<Route> routeList;
 
     // 원생 탑승 이력 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<BoardDropHistory> boardDropHistoryList;
 
     // 원생정보 목록
-    @OneToMany(mappedBy = "academy_id")
-    private List<Child> childList;
+    @OneToMany(mappedBy = "academy")
+    private List<AcademyChild> academyChildList;
 
     // 보호자정보 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<AcademyFamily> academyFamilyList;
 
     // 원생 승인 신청 목록
-    @OneToMany(mappedBy = "academy_id")
+    @OneToMany(mappedBy = "academy")
     private List<Pending> pendingList;
 }

@@ -1,18 +1,13 @@
 package kr.co.littleriders.backend.domain.academy.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.child.entity.Child;
+import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "academy_child")
@@ -23,17 +18,20 @@ public class AcademyChild {
 	@Column(name = "id")
 	private Long id;
 
-	// @ManyToOne
-	// @JoinColumn(name = "child_id", nullable = false)
-	// private Child child;
+	 @ManyToOne(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "child_id", nullable = false)
+	 private Child child;
 
-	// @ManyToOne
-	// @JoinColumn(name = "academy_family_id", nullable = false)
-	// private AcademyFamily academyFamily;
+	 @ManyToOne(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "academy_family_id", nullable = false)
+	 private AcademyFamily academyFamily;
 
-	// @ManyToOne
-	// @JoinColumn(name = "academy_id", nullable = false)
-	// private Academy academy;
+	 @ManyToOne(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "academy_id", nullable = false)
+	 private Academy academy;
+
+	@OneToMany(mappedBy = "academyChild")
+	private List<ChildBoardDropInfo> childBoardDropInfoList;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")

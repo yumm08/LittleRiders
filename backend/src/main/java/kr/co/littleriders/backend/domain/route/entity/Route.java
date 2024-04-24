@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.domain.route.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
 
 import java.util.List;
 
@@ -22,9 +23,7 @@ public class Route {
     @Column(name = "name",nullable = false)
     private String name;
 
-//    @OneToMany
-//    private List<Object> stopRouteList;
-
-
+    @OneToMany(mappedBy = "route")
+    private List<RouteStation> routeStationList;
 
 }

@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.domain.shuttle.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
 
 @Entity
 @Table(name = "shuttle")
@@ -40,7 +41,7 @@ public class Shuttle {
     private String imagePath;
 
     // 차량 단말기 부착 정보
-    @OneToOne(mappedBy = "shuttle_id")
+    @OneToOne(mappedBy = "shuttle")
     private ShuttleTerminalAttach shuttleTerminalAttach;
 
 }
