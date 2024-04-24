@@ -35,13 +35,12 @@ const router = createBrowserRouter([
           {
             path: 'operate',
             element: <OperatePage />,
-            children:[
-              {
-                path : 'dirve-history/:id',
-                element:<DriveHistoryPage/>
-              }
-            ]
+
           },
+          {
+            path : 'drive-history/:id',
+            element:<DriveHistoryPage/>
+          }
         ],
       },
       {
