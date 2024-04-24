@@ -12,7 +12,7 @@ public enum AcademyFamilyErrorCode implements LittleRidersErrorCode {
 
     AcademyFamilyErrorCode(HttpStatus status, String code, String message) {
         this.status = status;
-        this.code = "ACADEMY_FAMILY" + code;
+        this.code = "ACADEMY_FAMILY_" + code;
         this.message = message;
     }
 
