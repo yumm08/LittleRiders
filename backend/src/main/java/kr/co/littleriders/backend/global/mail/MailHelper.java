@@ -8,12 +8,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MailSender {
+public class MailHelper {
 
     private final JavaMailSender javaMailSender;
     private final String FROM;
 
-    public MailSender(JavaMailSender javaMailSender, @Value("${spring.mail.from}") String FROM) {
+    public MailHelper(JavaMailSender javaMailSender, @Value("${spring.mail.from}") String FROM) {
         this.javaMailSender = javaMailSender;
         this.FROM = FROM;
     }
