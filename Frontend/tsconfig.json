@@ -36,7 +36,8 @@
       "@routes/*": ["routes/*"],
       "@stores/*": ["stores/*"],
       "@types/*": ["types/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@style/*": ["style/*"]
     }
   },
   "include": ["src"],

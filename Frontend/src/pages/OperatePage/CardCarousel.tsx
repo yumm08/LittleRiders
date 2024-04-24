@@ -1,0 +1,25 @@
+import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick-theme.css'
+import 'slick-carousel/slick/slick.css'
+
+interface Props {
+  show: number
+  children: React.ReactNode
+}
+
+export default function CardCarousel({ show, children }: Props) {
+  const settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: show,
+    slidesToScroll: 2,
+    prevArrow: <FaCircleChevronLeft className=" bg-lightgreen" />,
+    nextArrow: <FaCircleChevronRight className=" bg-lightgreen" />,
+  }
+  return (
+    <div className="slider-container">
+      <Slider {...settings}>{children}</Slider>
+    </div>
+  )
+}
