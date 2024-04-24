@@ -1,4 +1,4 @@
-import RoutePage from '@pages/RoutePage'
+import RoutePage from '@pages/DipatchPage'
 
 import App from 'App'
 import { createBrowserRouter } from 'react-router-dom'
