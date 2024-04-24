@@ -7,35 +7,28 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 @Table(name = "driver")
 public class Driver {
 
-    // 기사id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long id; // 기사 id
 
-//    // 학원id
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "academy_id")
-//    private Academy academy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "academy_id")
+    private Academy academy; // 학원 id
 
-    // 이름
     @Column(name = "name", nullable = false)
-    private String name;
+    private String name; // 성명
 
-    // 전화번호
     @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
+    private String phoneNumber; // 전화번호
 
-    // 이미지 경로
     @Column(name = "image_path")
-    private String imagePath;
+    private String imagePath; // 이미지 경로
 
-    // 상태
     @Column(name = "status", nullable = false)
-    private DriverStatus status;
+    private DriverStatus status; // 상태
 
-    // 카드정보
     @Column(name = "card_number", nullable = false)
-    private String cardNumber;
+    private String cardNumber; // 카드정보
 
 }

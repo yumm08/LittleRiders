@@ -2,46 +2,38 @@ package kr.co.littleriders.backend.domain.shuttle.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.shuttleterminalattach.entity.ShuttleTerminalAttach;
+import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
 
 @Entity
 @Table(name = "shuttle")
 public class Shuttle {
 
-    // 버스id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long id; // 차량 id
 
-    // 학원id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academy_id")
-    private Academy academy;
+    private Academy academy; // 학원
 
-    // 차량번호
     @Column(name = "license_number", nullable = false)
-    private Integer licenseNumber;
+    private Integer licenseNumber; // 차량번호
 
-    // 차종
     @Column(name = "type")
-    private String type;
+    private String type; // 차종
 
-    // 버스명
     @Column(name = "name")
-    private String name;
+    private String name; // 차량명
 
-    // 상태
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private ShuttleStatus status;
+    private ShuttleStatus status; // 상태
 
-    // 이미지 경로
     @Column(name = "image_path")
-    private String imagePath;
+    private String imagePath; // 이미지 경로
 
-//    // 차량 단말기 부착 정보
-//    @OneToOne(mappedBy = "shuttle_id")
-//    private ShuttleTerminalAttach shuttleTerminalAttach;
+    @OneToOne(mappedBy = "shuttle")
+    private ShuttleTerminalAttach shuttleTerminalAttach; // 차량 단말기 부착 정보
 
 }
