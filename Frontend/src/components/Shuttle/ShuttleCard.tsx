@@ -3,7 +3,7 @@ import Button from '@components/Shared/Button'
 import shuttle from '@assets/Mock/shuttle.png'
 
 export default function ShuttleCard() {
-  function handleShuttleCardClick() {}
+  const handleShuttleCardClick = () => {}
   return (
     <div className="w-[200px] flex-col justify-center items-center">
       <div className="relative">
