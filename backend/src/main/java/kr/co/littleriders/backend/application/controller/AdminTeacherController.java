@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
+import kr.co.littleriders.backend.application.facade.AdminShuttleFacade;
+import kr.co.littleriders.backend.application.facade.AdminTeacherFacade;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.RequiredArgsConstructor;
 
@@ -16,14 +18,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminTeacherController {
 
+	private final AdminTeacherFacade adminTeacherFacade;
+
 	@PostMapping
 	public ResponseEntity<Long> addTeacher(@RequestBody @Valid TeacherRegistRequest teacherRegistRequest) {
 
 		// valid 확인
 		Academy academy = null;
 
+		Long teacherId = adminTeacherFacade.insertTeacher(teacherRegistRequest, academy);
 
-
-		return null;
+		return ResponseEntity.ok().body(teacherId);
 	}
 }

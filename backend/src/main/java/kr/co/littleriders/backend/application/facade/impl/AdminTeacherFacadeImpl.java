@@ -16,6 +16,7 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 
 	private final TeacherService teacherService;
 
+	@Override
 	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Academy academy) {
 
 		Teacher teacher;

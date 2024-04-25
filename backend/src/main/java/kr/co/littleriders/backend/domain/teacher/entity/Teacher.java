@@ -1,7 +1,8 @@
 package kr.co.littleriders.backend.domain.teacher.entity;
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.AccessLevel;
@@ -32,39 +33,47 @@ public class Teacher {
     private String imagePath; // 이미지 경로
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private TeacherStatus status; // 상태
 
     @Column(name = "card_number")
     private String cardNumber; // 카드정보
 
-    public Teacher(Academy academy, String name, String phoneNumber, TeacherStatus status) {
+    private Teacher(Academy academy, String name, String phoneNumber, TeacherStatus status, String code) {
         this.academy = academy;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.status = status;
+        this.cardNumber = code;
     }
 
-    public Teacher(Academy academy, String name, String phoneNumber, TeacherStatus status, String imagePath) {
+    private Teacher(Academy academy, String name, String phoneNumber, TeacherStatus status, String imagePath, String code) {
         this.academy = academy;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.status = status;
         this.imagePath = imagePath;
+        this.cardNumber = code;
     }
-
 
     public static Teacher of(TeacherRegistRequest teacherRegistRequest, Academy academy, TeacherStatus status) {
         return new Teacher(academy
                         , teacherRegistRequest.getName()
                         , teacherRegistRequest.getPhoneNumber()
-                        , status);
+                        , status
+                        , generateCode());
 	}
 
     public static Teacher of(TeacherRegistRequest teacherRegistRequest, Academy academy, TeacherStatus status, String imagePath) {
         return new Teacher(academy
-            , teacherRegistRequest.getName()
-            , teacherRegistRequest.getPhoneNumber()
-            , status
-            , imagePath);
+                        , teacherRegistRequest.getName()
+                        , teacherRegistRequest.getPhoneNumber()
+                        , status
+                        , imagePath
+                        , generateCode());
+    }
+
+    private static String generateCode() {
+        return UUID.randomUUID().toString();
     }
 }
