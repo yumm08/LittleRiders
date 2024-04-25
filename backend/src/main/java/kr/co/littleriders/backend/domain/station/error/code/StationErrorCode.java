@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum StationErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "뭘 넣어야 할까요;;;"); //TODO : 진짜 뭐넣지
-
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "뭘 넣어야 할까요;;;"), //TODO : 진짜 뭐넣지
+    DUPLICATE_NAME(HttpStatus.CONFLICT, "002", "이미 존재하는 정류장 이름입니다.");
 
     StationErrorCode(HttpStatus status, String code, String message) {
         this.status = status;
