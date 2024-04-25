@@ -20,7 +20,7 @@ public class AccountController {
 
     private final AccountFacade accountFacade;
 
-    @GetMapping("/reIssue")
+    @GetMapping("/re-issue")
     public ResponseEntity<Void> reIssueTokenByRefresh(@CookieValue("refresh-token") String requestRefreshToken, HttpServletResponse response){
         JwtToken jwtToken = accountFacade.tokenReIssue(requestRefreshToken);
         String accessToken = jwtToken.getAccessToken();

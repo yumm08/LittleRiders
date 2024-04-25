@@ -9,6 +9,7 @@ import kr.co.littleriders.backend.application.dto.response.ValidateEmailResponse
 import kr.co.littleriders.backend.application.facade.FamilyAccountFacade;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +19,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/family/account")
 @RequiredArgsConstructor
+@Slf4j
 public class FamilyAccountController {
     private final FamilyAccountFacade familyAccountFacade;
 
-    @GetMapping("/signup/validate")
+    @GetMapping("/sign-up/validate")
     public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam String email) {
         familyAccountFacade.sendSignUpEmail(email);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/signup/validate")
+    @PostMapping("/sign-up/validate")
     public ResponseEntity<ValidateEmailResponse> validateEmailWithCode(@RequestBody String email, @RequestBody String code, HttpServletResponse response) {
-
         ValidateEmailResponse validateEmailResponse = familyAccountFacade.validateEmailWithCode(email, code);
         Cookie cookie = new Cookie("signup-token", validateEmailResponse.getToken());
         cookie.setHttpOnly(true);
@@ -39,13 +40,15 @@ public class FamilyAccountController {
         return ResponseEntity.ok().body(validateEmailResponse);
     }
 
-    @PostMapping("/signUp")
-    public ResponseEntity<Void> signUp(@RequestBody FamilySignUpRequest familySignUpRequest) { //리팩토링 필요할것 같음.
-        familyAccountFacade.signUp(familySignUpRequest);
+    @PostMapping("/sign-up")
+    public ResponseEntity<Void> signUp(@RequestBody FamilySignUpRequest familySignUpRequest, @CookieValue("signup-token") String token) {
+
+        log.info("signup-token = [{}]",token);
+        familyAccountFacade.signUp(familySignUpRequest,token);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/sign-in")
     public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse response) {
         JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
 
