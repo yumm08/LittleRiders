@@ -7,4 +7,5 @@ public interface DriverService {
     Driver findById(Long id);
     boolean existsById(Long id);
     boolean notExistsById(Long id);
+	Long save(Driver driver);
 }
