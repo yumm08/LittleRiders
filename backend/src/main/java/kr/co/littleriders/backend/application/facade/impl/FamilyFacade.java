@@ -19,12 +19,15 @@ import kr.co.littleriders.backend.domain.verification.VerificationService;
 import kr.co.littleriders.backend.domain.verification.entity.Verification;
 import kr.co.littleriders.backend.domain.verification.entity.VerificationType;
 import kr.co.littleriders.backend.global.entity.MemberType;
+import kr.co.littleriders.backend.global.error.code.MemberErrorCode;
+import kr.co.littleriders.backend.global.error.exception.MemberException;
 import kr.co.littleriders.backend.global.jwt.JwtProvider;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import kr.co.littleriders.backend.global.mail.MailHelper;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +51,7 @@ class FamilyFacade implements FamilyAccountFacade {
     @Override
     public String sendSignUpEmail(final String email) {
         if (familyService.existsByEmail(email) || academyService.existsByEmail(email)) {
-            throw new RuntimeException();
+            throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);
         }
         Verification verification = Verification.of(email, VerificationType.FAMILY_SIGN_UP);
         verificationService.save(verification);
@@ -80,12 +83,16 @@ class FamilyFacade implements FamilyAccountFacade {
     }
 
     @Override
+    @Transactional
     public void signUp(final FamilySignUpRequest familySignUpRequest) {
         String token = familySignUpRequest.getToken();
         String email = familySignUpRequest.getEmail();
         SignUpToken signUpToken = signUpTokenService.findFamilySignUpTokenByEmailAndToken(email, token);
         signUpTokenService.delete(signUpToken);
         Family family = familySignUpRequest.toFamily(passwordUtil);
+        if(familyService.existsByEmail(email) || academyService.existsByEmail(email)){
+            throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);
+        }
         familyService.save(family);
     }
 
