@@ -41,6 +41,8 @@ class AccountFacadeTest {
                     email,
                     password,
                     "테스트",
+                    "집수소",
+
                     "01012345678"
             );
             familyAccountFacade.signUp(familySignUpRequest,uuid);

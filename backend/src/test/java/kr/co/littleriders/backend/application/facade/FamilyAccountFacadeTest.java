@@ -76,6 +76,7 @@ class FamilyAccountFacadeTest {
                     email,
                     "123456",
                     "테스트",
+                    "집주소",
                     "01012345678"
             );
             familyAccountFacade.signUp(familySignUpRequest,uuid);
@@ -99,6 +100,7 @@ class FamilyAccountFacadeTest {
                     email,
                     password,
                     "테스트",
+                    "집주소",
                     "01012345678"
             );
             familyAccountFacade.signUp(familySignUpRequest,uuid);

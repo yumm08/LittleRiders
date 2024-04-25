@@ -56,6 +56,7 @@ class FamilyAccountControllerTest {
                     "email",
                     "password",
                     "name",
+                    "집주소",
                     "phoneNumber"
             );
 

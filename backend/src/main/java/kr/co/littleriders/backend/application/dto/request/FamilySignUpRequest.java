@@ -13,9 +13,10 @@ public class FamilySignUpRequest {
     private String email;
     private String password;
     private String name;
+    private String address;
     private String phoneNumber;
 
     public Family toFamily(PasswordUtil passwordUtil) {
-        return Family.of(this.email, passwordUtil.encrypt(this.password), this.name, this.phoneNumber);
+        return Family.of(this.email, passwordUtil.encrypt(this.password), this.name,this.address, this.phoneNumber);
     }
 }
