@@ -1,6 +1,8 @@
 package kr.co.littleriders.backend.application.controller;
 
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.dto.response.ValidateEmailResponse;
@@ -13,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
 
 @RestController
 @RequestMapping("/family/account")
@@ -40,15 +41,18 @@ public class FamilyAccountController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest){
+    public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse reponse) {
         JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
 
         String accessToken = jwtToken.getAccessToken();
         String refreshToken = jwtToken.getRefreshToken();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("access-token", "Bearer " + accessToken);
-        headers.add("refresh-token", "Bearer " + refreshToken);
-
+        headers.add("Authorization", "Bearer " + accessToken);
+        Cookie cookie = new Cookie("refresh-token", refreshToken);
+        cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        reponse.addCookie(cookie);
         return ResponseEntity.ok().headers(headers).build();
     }
 }
