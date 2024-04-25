@@ -99,7 +99,7 @@ class FamilyFacade implements FamilyAccountFacade {
             throw FamilyException.from(FamilyErrorCode.NOT_FOUND);
         }
         JwtToken jwtToken = jwtProvider.createToken(family.getId(), MemberType.FAMILY);
-        RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTime() / 1000);
+        RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
         refreshTokenService.save(refreshToken);
 
 
