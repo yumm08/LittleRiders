@@ -20,7 +20,7 @@ public class Family implements Member {
     @Column(name = "id")
     private Long id; // 보호자 id
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false,unique = true)
     private String email; // 이메일
 
 
