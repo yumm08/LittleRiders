@@ -10,7 +10,6 @@ import kr.co.littleriders.backend.application.facade.FamilyAccountFacade;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +40,7 @@ public class FamilyAccountController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse reponse) {
+    public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse response) {
         JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
 
         String accessToken = jwtToken.getAccessToken();
@@ -52,7 +51,7 @@ public class FamilyAccountController {
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        reponse.addCookie(cookie);
+        response.addCookie(cookie);
         return ResponseEntity.ok().headers(headers).build();
     }
 }
