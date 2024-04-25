@@ -12,10 +12,10 @@ spring:
       hibernate.format_sql: true
   jwt:
     access:
-      secret: myaccesssecret1234
+      secret: accessabcdefg1234567891011121314151617181920
       expTime: 3000
     refresh:
-      secret: myrefreshsecret1234
+      secret: refreshabcdefg1234567891011121314151617181920
       expTime: 6000
 
 
