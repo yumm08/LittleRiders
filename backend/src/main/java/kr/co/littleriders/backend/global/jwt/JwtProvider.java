@@ -48,6 +48,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(userId)
                 .claim(MEMBER_TYPE, memberType.name())
+                .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(ACCESS_SECRET_KEY)
                 .compact();
@@ -57,6 +58,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(userId)
                 .claim(MEMBER_TYPE, memberType.name())
+                .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(REFRESH_SECRET_KEY)
                 .compact();
