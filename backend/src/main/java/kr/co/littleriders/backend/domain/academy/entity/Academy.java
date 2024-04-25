@@ -9,12 +9,13 @@ import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
+import kr.co.littleriders.backend.global.entity.Member;
 
 import java.util.List;
 
 @Entity
 @Table(name = "academy")
-public class Academy {
+public class Academy implements Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
