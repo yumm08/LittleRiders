@@ -61,12 +61,12 @@ public class Shuttle {
         this.imagePath = imagePath;
     }
 
-    public static Shuttle of(ShuttleRegistRequest shuttleRegistRequest, Academy academy) {
+    public static Shuttle of(ShuttleRegistRequest shuttleRegistRequest, Academy academy, ShuttleStatus status) {
         return new Shuttle(shuttleRegistRequest.getLicenseNumber()
                             , shuttleRegistRequest.getName()
                             , shuttleRegistRequest.getType()
                             , academy
-                            , ShuttleStatus.USE);
+                            , status);
     }
 
     public static Shuttle of(ShuttleRegistRequest shuttleRegistRequest, Academy academy, ShuttleStatus status, String imagePath) {

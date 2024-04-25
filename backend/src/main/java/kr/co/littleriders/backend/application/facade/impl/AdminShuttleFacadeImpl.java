@@ -27,7 +27,7 @@ class AdminShuttleFacadeImpl implements AdminShuttleFacade {
 
 			shuttle = Shuttle.of(shuttleRegistRequest, academy, ShuttleStatus.USE, imagePath);
 		} else {
-			shuttle = Shuttle.of(shuttleRegistRequest, academy);
+			shuttle = Shuttle.of(shuttleRegistRequest, academy, ShuttleStatus.USE);
 		}
 
 		return shuttleService.save(shuttle);
