@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.*;
 public class FamilyAccountController {
     private final FamilyAccountFacade familyAccountFacade;
 
-    @GetMapping("/validate")
+    @GetMapping("/signup/validate")
     public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam String email) {
         familyAccountFacade.sendSignUpEmail(email);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/validate")
+    @PostMapping("/signup/validate")
     public ResponseEntity<ValidateEmailResponse> validateEmailWithCode(@RequestBody String email, @RequestBody String code) {
         ValidateEmailResponse validateEmailResponse = familyAccountFacade.validateEmailWithCode(email, code);
         return ResponseEntity.ok().body(validateEmailResponse);
