@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 class AdminShuttleFacadeImpl implements AdminShuttleFacade {
 
 	private final ShuttleService shuttleService;
+	private final String rootPath = "/image/shuttle";
+
 
 	@Override
 	public Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Academy academy) {
@@ -23,7 +25,7 @@ class AdminShuttleFacadeImpl implements AdminShuttleFacade {
 
 		if (shuttleRegistRequest.getImage() != null) {
 			// 이미지 저장
-			String imagePath = null;
+			String imagePath = rootPath;
 
 			shuttle = Shuttle.of(shuttleRegistRequest, academy, ShuttleStatus.USE, imagePath);
 		} else {

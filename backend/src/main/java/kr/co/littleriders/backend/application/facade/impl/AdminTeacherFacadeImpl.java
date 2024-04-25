@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 
 	private final TeacherService teacherService;
+	private final String rootPath = "/image/teacher";
 
 	@Override
 	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Academy academy) {
@@ -22,7 +23,7 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 		Teacher teacher;
 
 		if (teacherRegistRequest.getImage() != null) {
-			String imagePath = null;
+			String imagePath = rootPath;
 
 			teacher = Teacher.of(teacherRegistRequest, academy, TeacherStatus.WORK, imagePath);
 		} else {
