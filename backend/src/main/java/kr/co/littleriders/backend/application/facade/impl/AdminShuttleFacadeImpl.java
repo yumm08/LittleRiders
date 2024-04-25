@@ -19,6 +19,7 @@ class AdminShuttleFacadeImpl implements AdminShuttleFacade {
 	@Override
 	public Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Academy academy) {
 		Shuttle shuttle;
+		// 동일한 academy 추가되는 license number unique 해야함
 
 		if (shuttleRegistRequest.getImage() != null) {
 			// 이미지 저장
