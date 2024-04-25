@@ -1,8 +1,8 @@
-import ColorPalette from '@style/ColorPalette';
-import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
+import ColorPalette from '@style/ColorPalette'
+import { FaCircleChevronLeft, FaCircleChevronRight } from 'react-icons/fa6'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick-theme.css'
+import 'slick-carousel/slick/slick.css'
 
 interface Props {
   show: number
@@ -16,7 +16,7 @@ export default function CardCarousel({ show, children }: Props) {
     slidesToShow: show,
     slidesToScroll: 2,
     prevArrow: <FaCircleChevronLeft color={ColorPalette['lightgreen']} />,
-    nextArrow: <FaCircleChevronRight color={ColorPalette['lightgreen']}  />,
+    nextArrow: <FaCircleChevronRight color={ColorPalette['lightgreen']} />,
   }
   return (
     <div className="slider-container">

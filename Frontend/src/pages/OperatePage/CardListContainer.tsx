@@ -6,11 +6,11 @@ import Spacing from '@components/Shared/Spacing'
 
 interface Props {
   type: string
-  onClick: MouseEventHandler<HTMLButtonElement>
+  openModal: MouseEventHandler<HTMLButtonElement>
   children: React.ReactNode
 }
 
-export default function CardListContainer({ type, onClick, children }: Props) {
+export default function CardListContainer({ type, openModal, children }: Props) {
   return (
     <div className="flex-col p-2 ">
       <strong className="text-2xl">{`${type} 관리`}</strong>
@@ -18,7 +18,8 @@ export default function CardListContainer({ type, onClick, children }: Props) {
       <Spacing style="h-[15px]" />
       {children}
       <Spacing style="h-[50px]" />
-      <Button color="bg-lightgreen" full onClick={onClick}>
+      
+      <Button color="bg-lightgreen" full onClick={openModal}>
         <span className="text-xm text-white">{`${type} 추가`}</span>
       </Button>
     </div>
