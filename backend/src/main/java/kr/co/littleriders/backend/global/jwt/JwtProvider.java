@@ -1,8 +1,9 @@
 package kr.co.littleriders.backend.global.jwt;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import kr.co.littleriders.backend.global.entity.MemberType;
+import kr.co.littleriders.backend.global.error.code.AuthErrorCode;
+import kr.co.littleriders.backend.global.error.exception.AuthException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +36,6 @@ public class JwtProvider {
 
     public JwtToken createToken(Long id, MemberType memberType) {
 
-
         long now = System.currentTimeMillis();
         String userId = id.toString();
         String accessToken = createAccessToken(userId, now, memberType);
@@ -63,6 +63,17 @@ public class JwtProvider {
                 .signWith(REFRESH_SECRET_KEY)
                 .compact();
     }
+
+    public JwtReIssue getJwtReIssueByRefreshToken(String token){
+
+        Claims claims = validationAndParseClaimsByTokenAndSecret(token,REFRESH_SECRET_KEY);
+        Long id = Long.valueOf(claims.getSubject());
+        MemberType memberType = MemberType.valueOf(claims.get(MEMBER_TYPE,String.class));
+
+        return JwtReIssue.of(id,memberType);
+
+    }
+
 //
 //    public Member getMember(String token, MemberType memberType) {
 //        token = token.replace("Bearer ", "");
@@ -77,22 +88,19 @@ public class JwtProvider {
 //
 //    }
 //
-//    private Claims validationAndparesClaimsByAccessToken(String token) {
-//        try {
-//            token = token.replace("Bearer ", "");
-//            Claims claims = Jwts.parserBuilder().setSigningKey(ACCESS_SECRET_KEY).build().parseClaimsJws(token).getBody();
-//            if (claims.get(MEMBER_TYPE) == null) {
-//                throw AuthException.of(ErrorCode.API_ERROR_AUTH_BY_AUTHORIZATION_INFORMATION);
-//            }
-//            return claims;
-//        } catch (ExpiredJwtException e) {
-//            throw AuthException.of(ErrorCode.API_ERROR_AUTH_BY_JWT_KEY_EXPIERD);
-//        } catch (UnsupportedJwtException e) {
-//            throw AuthException.of(ErrorCode.API_ERROR_AUTH_BY_JWT_NOT_SUPPORT);
-//        } catch (IllegalArgumentException e) {
-//            throw AuthException.of(ErrorCode.API_ERROR_AUTH_BY_JWT_KEY_INVALID);
-//        }
-//    }
+
+
+    private Claims validationAndParseClaimsByTokenAndSecret(String token,SecretKey secretKey) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            throw AuthException.from(AuthErrorCode.JWT_EXPIRED);
+        } catch (UnsupportedJwtException e) {
+            throw AuthException.from(AuthErrorCode.JWT_NOT_SUPPORT);
+        } catch (IllegalArgumentException e) {
+            throw AuthException.from(AuthErrorCode.JWT_KET_NOT_VALID);
+        }
+    }
 
 
 }
