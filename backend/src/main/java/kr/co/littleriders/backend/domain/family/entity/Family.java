@@ -3,14 +3,19 @@ package kr.co.littleriders.backend.domain.family.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.global.entity.Member;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "family")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Family implements Member {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id; // 보호자 id
@@ -18,6 +23,8 @@ public class Family implements Member {
     @Column(name = "email", nullable = false)
     private String email; // 이메일
 
+
+    @Getter
     @Column(name = "password", nullable = false)
     private String password; // 비밀번호
 

@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
+import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.dto.response.ValidateEmailResponse;
 import kr.co.littleriders.backend.application.facade.FamilyAccountFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -11,11 +12,15 @@ import kr.co.littleriders.backend.domain.family.error.code.FamilyErrorCode;
 import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
 import kr.co.littleriders.backend.domain.token.RefreshTokenService;
 import kr.co.littleriders.backend.domain.token.SignUpTokenService;
+import kr.co.littleriders.backend.domain.token.entity.RefreshToken;
 import kr.co.littleriders.backend.domain.token.entity.SignUpToken;
 import kr.co.littleriders.backend.domain.token.entity.SignUpTokenType;
 import kr.co.littleriders.backend.domain.verification.VerificationService;
 import kr.co.littleriders.backend.domain.verification.entity.Verification;
 import kr.co.littleriders.backend.domain.verification.entity.VerificationType;
+import kr.co.littleriders.backend.global.entity.MemberType;
+import kr.co.littleriders.backend.global.jwt.JwtProvider;
+import kr.co.littleriders.backend.global.jwt.JwtToken;
 import kr.co.littleriders.backend.global.mail.MailHelper;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +42,8 @@ class FamilyFacade implements FamilyAccountFacade {
     private final MailHelper mailHelper;
 
     private final PasswordUtil passwordUtil;
+
+    private final JwtProvider jwtProvider;
 
     @Override
     public String sendSignUpEmail(final String email) {
@@ -80,6 +87,23 @@ class FamilyFacade implements FamilyAccountFacade {
         signUpTokenService.delete(signUpToken);
         Family family = familySignUpRequest.toFamily(passwordUtil);
         familyService.save(family);
+    }
+
+    @Override
+    public JwtToken signIn(final SignInRequest familySignInRequest) {
+        String email = familySignInRequest.getEmail();
+        String password = familySignInRequest.getPassword();
+
+        Family family = familyService.findByEmail(email);
+        if (passwordUtil.notEqualsPassword(password, family.getPassword())) {
+            throw FamilyException.from(FamilyErrorCode.NOT_FOUND);
+        }
+        JwtToken jwtToken = jwtProvider.createToken(family.getId(), MemberType.FAMILY);
+        RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTime() / 1000);
+        refreshTokenService.save(refreshToken);
+
+
+        return jwtToken;
     }
 
 //    @Override

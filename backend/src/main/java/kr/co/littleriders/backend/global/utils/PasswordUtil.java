@@ -12,7 +12,10 @@ public class PasswordUtil {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public boolean isMatch(String password, String hashed) {
+    public boolean equalsPassword(String password, String hashed) {
         return BCrypt.checkpw(password, hashed);
+    }
+    public boolean notEqualsPassword(String password, String hashed){
+        return !equalsPassword(password,hashed);
     }
 }

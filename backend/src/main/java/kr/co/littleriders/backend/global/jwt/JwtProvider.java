@@ -1,14 +1,17 @@
 package kr.co.littleriders.backend.global.jwt;
 
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import kr.co.littleriders.backend.global.entity.MemberType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Date;
 
 @Component
-public class TokenProvider {
+public class JwtProvider {
 
 
     private final long ACCESS_TOKEN_EXPIRE_TIME;
@@ -21,7 +24,7 @@ public class TokenProvider {
     private final SecretKey ACCESS_SECRET_KEY;
     private final SecretKey REFRESH_SECRET_KEY;
 
-    public TokenProvider(@Value("${spring.jwt.access.expTime}") long accessTokenExpireTime, @Value("${spring.jwt.refresh.expTime}") long refreshTokenExpireTime, @Value("${spring.jwt.access.secret}") String accessKey, @Value("${spring.jwt.refresh.secret}") String refreshKey) {
+    public JwtProvider(@Value("${spring.jwt.access.expTime}") long accessTokenExpireTime, @Value("${spring.jwt.refresh.expTime}") long refreshTokenExpireTime, @Value("${spring.jwt.access.secret}") String accessKey, @Value("${spring.jwt.refresh.secret}") String refreshKey) {
 
         this.ACCESS_TOKEN_EXPIRE_TIME = accessTokenExpireTime;
         this.REFRESH_TOKEN_EXPIRE_TIME = refreshTokenExpireTime;
@@ -30,33 +33,34 @@ public class TokenProvider {
         this.REFRESH_SECRET_KEY = new SecretKeySpec(refreshKey.getBytes(), SignatureAlgorithm.HS512.getJcaName());
     }
 
-//    public JwtToken createToken(Long id, MemberType memberType) {
-//
-//
-//        long now = System.currentTimeMillis();
-//        String userId = id.toString();
-//        String accessToken = createAccessToken(userId, now, memberType);
-//        String refreshToken = createRefreshToken(userId, now, memberType);
-//
-//    }
-//
-//    private String createAccessToken(String userId, long now, MemberType memberType) {
-//        return Jwts.builder()
-//                .setSubject(userId)
-//                .claim(MEMBER_TYPE, memberType.name())
-//                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
-//                .signWith(ACCESS_SECRET_KEY)
-//                .compact();
-//    }
-//
-//    private String createRefreshToken(String userId, long now, MemberType memberType) {
-//        return Jwts.builder()
-//                .setSubject(userId)
-//                .claim(MEMBER_TYPE, memberType.name())
-//                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-//                .signWith(REFRESH_SECRET_KEY)
-//                .compact();
-//    }
+    public JwtToken createToken(Long id, MemberType memberType) {
+
+
+        long now = System.currentTimeMillis();
+        String userId = id.toString();
+        String accessToken = createAccessToken(userId, now, memberType);
+        String refreshToken = createRefreshToken(userId, now, memberType);
+
+        return JwtToken.of(accessToken, ACCESS_TOKEN_EXPIRE_TIME, refreshToken, REFRESH_TOKEN_EXPIRE_TIME);
+    }
+
+    private String createAccessToken(String userId, long now, MemberType memberType) {
+        return Jwts.builder()
+                .setSubject(userId)
+                .claim(MEMBER_TYPE, memberType.name())
+                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(ACCESS_SECRET_KEY)
+                .compact();
+    }
+
+    private String createRefreshToken(String userId, long now, MemberType memberType) {
+        return Jwts.builder()
+                .setSubject(userId)
+                .claim(MEMBER_TYPE, memberType.name())
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(REFRESH_SECRET_KEY)
+                .compact();
+    }
 //
 //    public Member getMember(String token, MemberType memberType) {
 //        token = token.replace("Bearer ", "");
