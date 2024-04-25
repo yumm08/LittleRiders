@@ -10,7 +10,7 @@ import Page from '@layouts/Page'
 
 export default function ChildPage() {
   const { data, isLoading } = useQuery({
-    queryKey: [],
+    queryKey: ['getPendingChildList'],
     queryFn: getPendingChildList,
     select: (data) => {
       const pendingChildList = data.data.pendingChildList
