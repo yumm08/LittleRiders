@@ -33,6 +33,7 @@ public class Driver {
     private String imagePath; // 이미지 경로
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private DriverStatus status; // 상태
 
     @Column(name = "card_number", nullable = false)
