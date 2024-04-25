@@ -4,6 +4,8 @@ import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -28,5 +30,18 @@ class StationServiceImpl implements StationService {
     @Override
     public boolean notExistsById(Long id) {
         return !stationRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByName(String name, Long academyId) { return stationRepository.existsByNameAndAcademyId(name, academyId); }
+
+    @Override
+    public void save(Station station) {
+        stationRepository.save(station);
+    }
+
+    @Override
+    public Page<Station> findAllByName(String name, Long academyId, Pageable pageable) {
+        return stationRepository.findByNameAndAcademyId(name, academyId, pageable);
     }
 }
