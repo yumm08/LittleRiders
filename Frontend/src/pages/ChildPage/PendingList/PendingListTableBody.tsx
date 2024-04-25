@@ -6,12 +6,14 @@ interface Props {
   pendingChildList: PendingChildInfo[]
   onChildCheck: (id: number, isChecked: boolean) => void
   checkChildIdList: number[]
+  onReject: (academyChildAllowPendingId: number) => void
 }
 
 export default function PendingListTableBody({
   pendingChildList,
   onChildCheck,
   checkChildIdList,
+  onReject,
 }: Props) {
   return (
     <tbody>
@@ -23,6 +25,7 @@ export default function PendingListTableBody({
           isChecked={checkChildIdList.includes(
             pendingChildInfo.academyChildAllowPendingId,
           )}
+          onReject={onReject}
         />
       ))}
     </tbody>

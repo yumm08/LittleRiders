@@ -9,12 +9,14 @@ interface Props {
   pendingChildInfo: PendingChildInfo
   onChildCheck: (id: number, isChecked: boolean) => void
   isChecked: boolean
+  onReject: (academyChildAllowPendingId: number) => void
 }
 
 export default function PendingListItem({
   pendingChildInfo,
   onChildCheck,
   isChecked,
+  onReject,
 }: Props) {
   const {
     academyChildAllowPendingId,
@@ -50,7 +52,10 @@ export default function PendingListItem({
           <Button color="bg-lightgreen" onClick={() => {}}>
             <span className="font-bold text-white">승인</span>
           </Button>
-          <Button color="bg-red" onClick={() => {}}>
+          <Button
+            color="bg-red"
+            onClick={() => onReject(academyChildAllowPendingId)}
+          >
             <span className="font-bold text-white">거절</span>
           </Button>
         </div>

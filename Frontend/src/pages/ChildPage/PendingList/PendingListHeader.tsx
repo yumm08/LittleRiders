@@ -3,9 +3,10 @@ import Title from '@components/Shared/Title'
 
 interface Props {
   checkCount: number
+  onReject: () => void
 }
 
-export default function PendingListHeader({ checkCount }: Props) {
+export default function PendingListHeader({ checkCount, onReject }: Props) {
   return (
     <div className="flex justify-between">
       <Title text="가입 요청" />
@@ -16,7 +17,9 @@ export default function PendingListHeader({ checkCount }: Props) {
             <span className="font-bold text-white">선택 승인</span>
           </Button>
           <Button color="bg-red" onClick={() => {}}>
-            <span className="font-bold text-white">선택 거절</span>
+            <span className="font-bold text-white" onClick={onReject}>
+              선택 거절
+            </span>
           </Button>
         </div>
       </div>
