@@ -18,18 +18,19 @@ spring:
     url: jdbc:h2:mem:testdb
     username: sa #user or root
     password: #password or rootpassword
-    jpa:
-      hibernate:
-        ddl-auto: create
-      show-sql: true
-      properties:
-        hibernate.format_sql: true
-    jwt:
-      accessSecret: myaccesssecret1234
-      refreshSecret: myrefreshsecret1234
-      accessExpTime: 3000
-      refreshExpTime: 6000
-
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+  jwt:
+    access:
+      secret: myaccesssecret1234
+      expTime: 3000
+    refresh:
+      secret: myrefreshsecret1234
+      expTime: 6000
 
   data:
     mongodb:
