@@ -67,15 +67,14 @@ class AccountControllerTest {
                     email,
                     password,
                     name,
-                    phoneNumber,
-                    "1234"
+                    phoneNumber
             ).toFamily(
                     passwordUtil
             );
             familyService.save(family);
             SignInRequest signInRequest = SignInRequest.of(email, password);
             MvcResult signInResult = mockMvc.perform(
-                            post("/family/account/signIn")
+                            post("/family/account/sign-in")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(objectMapper.writeValueAsString(signInRequest))
 
@@ -89,7 +88,7 @@ class AccountControllerTest {
             String acessToken = signInResult.getResponse().getHeader("Authorization");
             log.info("accessToken=[{}]", acessToken);
             MvcResult reIssueResult = mockMvc.perform(
-                            get("/account/reIssue")
+                            get("/account/re-issue")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .cookie(cookie)
                     )
