@@ -84,8 +84,7 @@ class FamilyFacade implements FamilyAccountFacade {
 
     @Override
     @Transactional
-    public void signUp(final FamilySignUpRequest familySignUpRequest) {
-        String token = familySignUpRequest.getToken();
+    public void signUp(final FamilySignUpRequest familySignUpRequest,final String token) {
         String email = familySignUpRequest.getEmail();
         SignUpToken signUpToken = signUpTokenService.findFamilySignUpTokenByEmailAndToken(email, token);
         signUpTokenService.delete(signUpToken);

@@ -13,7 +13,7 @@ public interface FamilyAccountFacade {
 
     ValidateEmailResponse validateEmailWithCode(String email, String code);
 
-    void signUp(FamilySignUpRequest familySignUpRequest);
+    void signUp(FamilySignUpRequest familySignUpRequest,String token);
 
     JwtToken signIn(SignInRequest familySignInRequest);
 }

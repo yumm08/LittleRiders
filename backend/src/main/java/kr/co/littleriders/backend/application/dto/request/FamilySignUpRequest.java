@@ -14,7 +14,6 @@ public class FamilySignUpRequest {
     private String password;
     private String name;
     private String phoneNumber;
-    private String token;
 
     public Family toFamily(PasswordUtil passwordUtil) {
         return Family.of(this.email, passwordUtil.encrypt(this.password), this.name, this.phoneNumber);
