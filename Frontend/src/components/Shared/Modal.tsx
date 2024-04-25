@@ -18,6 +18,7 @@ export default function Modal({ openModal, children, modalTitle }: Props) {
       <BackDrop onClick={openModal}>
         <div className=" relative left-1/2 top-1/2 z-20 w-[760px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md bg-white p-4 text-center">
           <strong className="mx-auto inline-block">{modalTitle}</strong>
+          {children}
         </div>
       </BackDrop>
     </ModalPortal>
