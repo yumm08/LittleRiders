@@ -24,7 +24,7 @@ class SignUpTokenServiceImpl implements SignUpTokenService { //write and check ë
                 () -> SignUpTokenException.from(SignUpTokenErrorCode.NOT_FOUND)
         );
         if (signUpToken.notEqualsToken(token) || signUpToken.notEqualsType(signUpTokenType)) {
-            throw VerificationException.from(VerificationErrorCode.NOT_FOUND);
+            throw SignUpTokenException.from(SignUpTokenErrorCode.NOT_FOUND);
         }
         return signUpToken;
     }
