@@ -1,0 +1,42 @@
+export const pendingChildList = [
+  {
+    academyChildAllowPendingId: 1,
+    childName: '김민준1',
+    childBirthDate: '1999-08-05',
+    gender: 'FEMALE',
+    address: '서울특별시 강동구 올림픽로-가',
+    familyPhoneNumber: '010-3111-4111',
+  },
+  {
+    academyChildAllowPendingId: 2,
+    childName: '김민준2',
+    childBirthDate: '1999-08-05',
+    gender: 'MALE',
+    address: '서울특별시 강동구 올림픽로-나',
+    familyPhoneNumber: '010-3111-4112',
+  },
+  {
+    academyChildAllowPendingId: 3,
+    childName: '김민준3',
+    childBirthDate: '1999-08-05',
+    gender: 'FEMALE',
+    address: '서울특별시 강동구 올림픽로-다',
+    familyPhoneNumber: '010-3111-4113',
+  },
+  {
+    academyChildAllowPendingId: 4,
+    childName: '김민준4',
+    childBirthDate: '1999-08-05',
+    gender: 'MALE',
+    address: '서울특별시 강동구 올림픽로-라',
+    familyPhoneNumber: '010-3111-4114',
+  },
+  {
+    academyChildAllowPendingId: 5,
+    childName: '김민준5',
+    childBirthDate: '1999-08-05',
+    gender: 'FEMALE',
+    address: '서울특별시 강동구 올림픽로-마',
+    familyPhoneNumber: '010-3111-4119',
+  },
+]
