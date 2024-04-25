@@ -7,7 +7,7 @@ public interface FamilyService {
     Family findById(Long id);
 
     Family findByEmail(String email);
-    
+
     boolean existsById(Long id);
 
     boolean notExistsById(Long id);
@@ -15,4 +15,6 @@ public interface FamilyService {
     boolean existsByEmail(String email);
 
     boolean notExistsByEmail(String email);
+
+    void save(Family family);
 }

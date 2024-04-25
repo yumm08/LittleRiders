@@ -1,15 +1,23 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 
+import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
+import kr.co.littleriders.backend.application.dto.response.ValidateEmailResponse;
 import kr.co.littleriders.backend.application.facade.FamilyAccountFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
+import kr.co.littleriders.backend.domain.family.FamilyService;
+import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.family.error.code.FamilyErrorCode;
 import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
+import kr.co.littleriders.backend.domain.token.RefreshTokenService;
+import kr.co.littleriders.backend.domain.token.SignUpTokenService;
+import kr.co.littleriders.backend.domain.token.entity.SignUpToken;
+import kr.co.littleriders.backend.domain.token.entity.SignUpTokenType;
 import kr.co.littleriders.backend.domain.verification.VerificationService;
 import kr.co.littleriders.backend.domain.verification.entity.Verification;
-import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.verification.entity.VerificationType;
 import kr.co.littleriders.backend.global.mail.MailHelper;
+import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +30,16 @@ class FamilyFacade implements FamilyAccountFacade {
 
     private final VerificationService verificationService;
 
+    private final RefreshTokenService refreshTokenService;
+
+    private final SignUpTokenService signUpTokenService;
+
     private final MailHelper mailHelper;
 
+    private final PasswordUtil passwordUtil;
+
     @Override
-    public void sendSignUpEmail(final String email) {
+    public String sendSignUpEmail(final String email) {
         if (familyService.existsByEmail(email) || academyService.existsByEmail(email)) {
             throw new RuntimeException();
         }
@@ -33,6 +47,8 @@ class FamilyFacade implements FamilyAccountFacade {
         verificationService.save(verification);
         String code = verification.getCode();
         mailHelper.sendVerificationEmail(email, code);
+
+        return code;
 
     }
 
@@ -46,4 +62,36 @@ class FamilyFacade implements FamilyAccountFacade {
         String code = verification.getCode();
         mailHelper.sendVerificationEmail(email, code);
     }
+
+    @Override
+    public ValidateEmailResponse validateEmailWithCode(final String email, final String code) {
+        Verification verification = verificationService.findFamilySignUpByEmailAndCode(email, code);
+        verificationService.delete(verification);
+        SignUpToken signUpToken = SignUpToken.of(email, SignUpTokenType.FAMILY);
+        signUpTokenService.save(signUpToken);
+        return ValidateEmailResponse.from(signUpToken);
+    }
+
+    @Override
+    public void signUp(final FamilySignUpRequest familySignUpRequest) {
+        String token = familySignUpRequest.getToken();
+        String email = familySignUpRequest.getEmail();
+        SignUpToken signUpToken = signUpTokenService.findFamilySignUpTokenByEmailAndToken(email, token);
+        signUpTokenService.delete(signUpToken);
+        Family family = familySignUpRequest.toFamily(passwordUtil);
+        familyService.save(family);
+    }
+
+//    @Override
+//    public void signOut(String token) {
+//        /*
+//        TODO :
+//               Refresh Token 이 VALID 한지 검사 -> 토큰 자체가 벨리드한지.
+//               RefreshToken 은 redis 에서 delete
+//         */
+//
+//        RefreshToken refreshToken = refreshTokenService.findByToken(token);
+//        refreshTokenService.delete(refreshToken);
+//
+//    }
 }

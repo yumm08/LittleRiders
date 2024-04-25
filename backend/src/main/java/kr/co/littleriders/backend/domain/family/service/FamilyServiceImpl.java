@@ -1,12 +1,11 @@
 package kr.co.littleriders.backend.domain.family.service;
 
+import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.family.error.code.FamilyErrorCode;
 import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
-import org.springframework.stereotype.Service;
-
-import kr.co.littleriders.backend.domain.family.FamilyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +45,10 @@ class FamilyServiceImpl implements FamilyService {
     @Override
     public boolean notExistsByEmail(String email) {
         return !familyRepository.existsByEmail(email);
+    }
+
+    @Override
+    public void save(Family family) {
+        familyRepository.save(family);
     }
 }
