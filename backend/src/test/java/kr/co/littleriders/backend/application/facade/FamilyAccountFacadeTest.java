@@ -76,10 +76,9 @@ class FamilyAccountFacadeTest {
                     email,
                     "123456",
                     "테스트",
-                    "01012345678",
-                    uuid
+                    "01012345678"
             );
-            familyAccountFacade.signUp(familySignUpRequest);
+            familyAccountFacade.signUp(familySignUpRequest,uuid);
         }
     }
 
@@ -100,10 +99,9 @@ class FamilyAccountFacadeTest {
                     email,
                     password,
                     "테스트",
-                    "01012345678",
-                    uuid
+                    "01012345678"
             );
-            familyAccountFacade.signUp(familySignUpRequest);
+            familyAccountFacade.signUp(familySignUpRequest,uuid);
 
             SignInRequest signInRequest = SignInRequest.of(email,password);
             JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);

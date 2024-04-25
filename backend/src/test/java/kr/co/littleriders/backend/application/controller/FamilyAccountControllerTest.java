@@ -2,6 +2,8 @@ package kr.co.littleriders.backend.application.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
+import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.facade.FamilyAccountFacade;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
@@ -38,6 +40,39 @@ class FamilyAccountControllerTest {
     ObjectMapper objectMapper;
 
     @Nested
+    @DisplayName("signUp 테스트")
+    class signUp {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+
+//             @PostMapping("/signUp")
+//    public ResponseEntity<Void> signUp(@RequestBody FamilySignUpRequest familySignUpRequest, @CookieValue("signup-token") String token) {
+//        familyAccountFacade.signUp(familySignUpRequest,token);
+//        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    }
+            FamilySignUpRequest familySignUpRequest = new FamilySignUpRequest(
+                    "email",
+                    "password",
+                    "name",
+                    "phoneNumber"
+            );
+
+            Cookie cookie = new Cookie("signup-token","apple");
+            mockMvc.perform(
+                            post("/family/account/sign-up")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(familySignUpRequest))
+                                    .cookie(cookie)
+
+                    )
+                    .andExpect(status().isCreated())
+                    .andDo(print());
+        }
+    }
+
+    @Nested
     @DisplayName("sendSignUpVerificationMail 테스트")
     class sendSignUpVerificationMail {
 
@@ -46,23 +81,9 @@ class FamilyAccountControllerTest {
         void whenSuccess() throws Exception {
             //given
 
-            mockMvc.perform(get("/family/account/validate")
+            mockMvc.perform(get("/family/account/sign-up/validate")
                             .param("email", "example@example.com")
                             .contentType(MediaType.APPLICATION_JSON))
-//                    .andDo(
-//                            document("Family/Account",
-//                                    preprocessRequest(prettyPrint()),
-//                                    preprocessResponse(prettyPrint()),
-//                                    queryParameters(
-//                                            parameterWithName("email").description("이메일")
-//                                    ),
-//                                    responseFields(
-//                                            fieldWithPath("message").description("실행결과, 성공적으로 메일이 발송되었습니다.")
-//                                    )
-//                            )
-//
-//                    )
-
                     .andExpect(status().isOk())
                     .andDo(print());
 
@@ -73,9 +94,7 @@ class FamilyAccountControllerTest {
     @DisplayName("signIn 테스트")
     class signIn {
 
-
         @Test
-
         @DisplayName("성공")
         void whenSuccess() throws Exception {
             JwtToken jwtToken = JwtToken.of("apple", 1234, "banana", 12345);
@@ -88,7 +107,7 @@ class FamilyAccountControllerTest {
 
 
             mockMvc.perform(
-                            post("/family/account/signIn")
+                            post("/family/account/sign-in")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(objectMapper.writeValueAsString(signInRequest))
 
@@ -96,11 +115,7 @@ class FamilyAccountControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(header().exists("Authorization"))
                     .andDo(print());
-
-
         }
-
-
     }
 
 
