@@ -8,4 +8,6 @@ public interface VerificationService {
     void save(Verification verification);
 
     void extendsTimeByEmail(String email);
+
+    void delete(Verification verification);
 }

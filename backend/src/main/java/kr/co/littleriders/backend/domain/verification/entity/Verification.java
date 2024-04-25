@@ -27,32 +27,34 @@ public final class Verification {
 
 
     private Verification(final String email, VerificationType type) {
-        this.email = email;
-        java.util.Random generator = new java.util.Random();
-        generator.setSeed(System.currentTimeMillis());
-        this.code = generator.nextInt(1000000) % 1000000 + "";
-        this.ttl = 60 * 3;
-        this.type = type;
+        this(email, Verification.generateCode(), type);
     }
 
-    private Verification(final String email, String code, VerificationType verificationType){
+    private Verification(final String email, String code, VerificationType verificationType) {
 
-        String regex = "\\d{6}";
+        String regex = "^\\d{6}$";
         // 정규식 패턴에 매칭되는지 확인
         if (!code.matches(regex)) {
             throw new RuntimeException("Compile Level Error");
         }
         this.email = email;
         this.code = code;
-        this.ttl = 60*3;
+        this.ttl = 60 * 3;
         this.type = verificationType;
     }
 
-    public static Verification of(final String email, final VerificationType type) {
-        return new Verification(email,type);
+    private static String generateCode() {
+        java.util.Random generator = new java.util.Random();
+        generator.setSeed(System.currentTimeMillis());
+        return String.format("%06d", generator.nextInt(100000, 1000000));
     }
-    public static Verification of(final String email, final String code, final VerificationType type){
-        return new Verification(email,code,type);
+
+    public static Verification of(final String email, final VerificationType type) {
+        return new Verification(email, type);
+    }
+
+    public static Verification of(final String email, final String code, final VerificationType type) {
+        return new Verification(email, code, type);
     }
 
     public boolean equalsCode(final String email) {
@@ -63,9 +65,10 @@ public final class Verification {
         return !this.equalsCode(email);
     }
 
-    public boolean equalsType(VerificationType verificationType){
+    public boolean equalsType(VerificationType verificationType) {
         return this.type == verificationType;
     }
+
     public boolean notEqualsType(VerificationType verificationType) {
         return !this.equalsType(verificationType);
     }
