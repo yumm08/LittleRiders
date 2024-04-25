@@ -13,10 +13,10 @@ spring:
   jwt:
     access:
       secret: accessabcdefg1234567891011121314151617181920
-      expTime: 3000
+      expTime: 120000
     refresh:
       secret: refreshabcdefg1234567891011121314151617181920
-      expTime: 6000
+      expTime: 86400000
 
 
   data:
