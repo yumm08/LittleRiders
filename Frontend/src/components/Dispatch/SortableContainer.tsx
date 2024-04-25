@@ -1,4 +1,4 @@
-import SortableItem from './SortableItem'
+import SortableItem from '@components/Dispatch/SortableItem'
 
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -18,7 +18,6 @@ interface Props {
  */
 export default function SortableContainer({ id, items, subject }: Props) {
   const { setNodeRef } = useDroppable({ id })
-  console.log(items)
   return (
     <SortableContext
       id={id}
@@ -31,7 +30,7 @@ export default function SortableContainer({ id, items, subject }: Props) {
         </p>
         <div
           ref={setNodeRef}
-          className="border w-80  rounded-md p-1 h-5/6 overflow-y-scroll bg-green-700"
+          className="border w-80  rounded-md p-1 h-5/6 overflow-y-scroll bg-lightgreen shadow-md"
         >
           {items.map((item) => (
             <SortableItem key={item.id} id={item.id} />

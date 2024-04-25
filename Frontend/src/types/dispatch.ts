@@ -4,3 +4,8 @@ export type Station = {
   lat?: number
   lng?: number
 }
+
+export type Route = {
+  id: number,
+  name: string,
+}

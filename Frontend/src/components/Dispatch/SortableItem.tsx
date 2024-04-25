@@ -16,7 +16,7 @@ export default function SortableItem({ id }: Props) {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className="border w-auto h-auto m-3 p-3 rounded-md bg-white"
+      className="border w-auto h-auto m-3 p-3 rounded-md shadow-md bg-white"
     >
       <div className="text-center">{id}</div>
     </div>

@@ -20,8 +20,12 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { Station } from '@types'
 
+interface Props {
+  selectedRouteId: number
+}
+
 // TODO : 함수 분리 해야 한다. Refactor coming soon...
-export default function ItemListView() {
+export default function ItemListView({ selectedRouteId }: Props) {
   const [items, setItems] = useState<{ [key: string]: Station[] }>({
     station: Array.from({ length: 10 }, (_, k) => k).map((k) => ({
       id: `item-${k}`,
@@ -161,7 +165,7 @@ export default function ItemListView() {
   }
 
   return (
-    <div className="w-[1536px] max-2xl:flex-row max-2xl:w-full max-2xl:mx-10 h-3/6 flex mx-auto justify-evenly">
+    <div className="mx-auto flex h-3/6 w-[1536px] justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
