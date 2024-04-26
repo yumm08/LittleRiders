@@ -1,3 +1,4 @@
+import ChidlList from '@pages/ChildPage/ChildList'
 import PendingList from '@pages/ChildPage/PendingList'
 
 import Spacing from '@components/Shared/Spacing'
@@ -9,6 +10,9 @@ export default function ChildPage() {
     <Page>
       <Spacing style="h-[60px]" />
       <PendingList />
+
+      <Spacing style="h-[100px]" />
+      <ChidlList />
     </Page>
   )
 }
