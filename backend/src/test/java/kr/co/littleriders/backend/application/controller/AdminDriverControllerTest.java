@@ -62,6 +62,24 @@ class AdminDriverControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().string(String.valueOf(1L)))
 				.andDo(print());
+		}
+
+		@Test
+		@DisplayName("실패")
+		void whenFailed() throws Exception {
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			// academyService.save(academy);
+			DriverRegistRequest regist = new DriverRegistRequest("테스트", "010", null);
+			Driver driver = Driver.of(regist, academy, DriverStatus.WORK);
+			// Long driverId = driverService.save(driver);
+
+			mockMvc.perform(
+					post("/admin/driver")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(regist))
+				)
+				.andExpect(status().isNotFound())
+				.andDo(print());
 
 		}
 	}
