@@ -3,7 +3,7 @@ import { CgGenderFemale, CgGenderMale } from 'react-icons/cg'
 interface Props {
   gender: 'FEMALE' | 'MALE'
   size?: string | number
-  style: string
+  style?: string
 }
 
 /**
