@@ -64,14 +64,19 @@ public class JwtProvider {
                 .compact();
     }
 
-    public JwtReIssue getJwtReIssueByRefreshToken(String token){
+    public JwtMemberInfo getJwtMemberInfoByRefreshToken(String token){
+        return getJwtMemberInfoByTokenAndSecret(token,REFRESH_SECRET_KEY);
+    }
 
-        Claims claims = validationAndParseClaimsByTokenAndSecret(token,REFRESH_SECRET_KEY);
+    public JwtMemberInfo getJwtMemberInfoByAccessToken(String token){
+        return getJwtMemberInfoByTokenAndSecret(token,ACCESS_SECRET_KEY);
+    }
+
+    private JwtMemberInfo getJwtMemberInfoByTokenAndSecret(String token, SecretKey secretKey){
+        Claims claims = validationAndParseClaimsByTokenAndSecret(token,secretKey);
         Long id = Long.valueOf(claims.getSubject());
         MemberType memberType = MemberType.valueOf(claims.get(MEMBER_TYPE,String.class));
-
-        return JwtReIssue.of(id,memberType);
-
+        return JwtMemberInfo.of(id,memberType);
     }
 
 //

@@ -10,8 +10,8 @@ import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
 import kr.co.littleriders.backend.domain.token.RefreshTokenService;
 import kr.co.littleriders.backend.domain.token.entity.RefreshToken;
 import kr.co.littleriders.backend.global.entity.MemberType;
+import kr.co.littleriders.backend.global.jwt.JwtMemberInfo;
 import kr.co.littleriders.backend.global.jwt.JwtProvider;
-import kr.co.littleriders.backend.global.jwt.JwtReIssue;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,13 +32,13 @@ class AccountFacadeImpl implements AccountFacade {
     public JwtToken tokenReIssue(final String token) {
         RefreshToken refreshToken = refreshTokenService.findByToken(token);
         refreshTokenService.delete(refreshToken);
-        JwtReIssue jwtReIssue = jwtProvider.getJwtReIssueByRefreshToken(token);
+        JwtMemberInfo jwtMemberInfo = jwtProvider.getJwtMemberInfoByRefreshToken(token);
 
-        Long id = jwtReIssue.getId();
-        MemberType memberType = jwtReIssue.getMemberType();
+        Long id = jwtMemberInfo.getMemberId();
+        MemberType memberType = jwtMemberInfo.getMemberType();
 
         if(memberType == MemberType.FAMILY){ //신원 검증
-            if(familyService.notExistsById(jwtReIssue.getId())){
+            if(familyService.notExistsById(id)){
                 throw FamilyException.from(FamilyErrorCode.NOT_FOUND);
             }
         }
