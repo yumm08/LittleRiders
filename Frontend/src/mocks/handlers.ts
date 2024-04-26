@@ -1,3 +1,3 @@
-import { handlers as childHandlers } from '@mocks/child'
+import { handlers as childManagementHandlers } from '@mocks/child'
 
-export const handlers = [...childHandlers]
+export const handlers = [...childManagementHandlers]
