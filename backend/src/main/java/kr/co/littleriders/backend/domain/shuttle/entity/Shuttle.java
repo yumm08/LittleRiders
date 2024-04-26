@@ -12,7 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity @Getter
-@Table(name = "shuttle")
+@Table(name = "shuttle",
+    uniqueConstraints = @UniqueConstraint(
+        name = "shuttle_unique",
+        columnNames = {"academy_id","licenseNumber"}
+    ))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Shuttle {
 
