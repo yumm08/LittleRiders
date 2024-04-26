@@ -43,7 +43,12 @@ class VerificationServiceImpl implements VerificationService {
         );
         String code = verification.getCode();
         VerificationType verificationType = verification.getType();
-        Verification v = Verification.of(email,code,verificationType);
+        Verification v = Verification.of(email, code, verificationType);
         verificationRepository.save(v);
+    }
+
+    @Override
+    public void delete(Verification verification) {
+        verificationRepository.delete(verification);
     }
 }

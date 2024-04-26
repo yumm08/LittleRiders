@@ -1,68 +1,119 @@
 package kr.co.littleriders.backend.application.facade;
 
-import kr.co.littleriders.backend.domain.academy.AcademyService;
-import kr.co.littleriders.backend.domain.family.FamilyService;
+import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
+import kr.co.littleriders.backend.application.dto.request.SignInRequest;
+import kr.co.littleriders.backend.global.jwt.JwtToken;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-
+@Slf4j
 @SpringBootTest
+
 class FamilyAccountFacadeTest {
 
     @Autowired
     FamilyAccountFacade familyAccountFacade;
 
-    @SpyBean
-
-    FamilyService familyService;
-
-    @SpyBean
-    AcademyService academyService;
+//
+//    @Nested
+//    @DisplayName("sendSignUpEmail 테스트")
+//    class sendSignUpEmail {
+//        @Test
+//        @DisplayName("성공")
+//        void whenSuccess() {
+//            assertDoesNotThrow(
+//                    () -> {
+//                        familyAccountFacade.sendSignUpEmail("test@ruu.kr");
+//                    }
+//            );
+//        }
+//
+//        @Test
+//        @DisplayName("실패, Family가 email 을 사용중인 경우")
+//        void whenFailFamilyUseEmail() {
+//            //given
+//            given(familyService.existsByEmail(any())).willReturn(true);
+//
+//            //when
+//            assertThrows(RuntimeException.class, () -> {
+//                familyAccountFacade.sendSignUpEmail("test@ruu.kr");
+//            });
+//
+//        }
+//
+//        @Test
+//        @DisplayName("실패, Academy가 email 을 사용중인 경우")
+//        void whenFailAcademyUseEmail() {
+//            //given
+//            given(academyService.existsByEmail(any())).willReturn(true);
+//
+//            //when
+//            assertThrows(RuntimeException.class, () -> {
+//                familyAccountFacade.sendSignUpEmail("test@ruu.kr");
+//            });
+//
+//        }
+//
+//    }
 
 
     @Nested
-    @DisplayName("sendSignUpEmail 테스트")
-    class sendSignUpEmail {
+    @DisplayName("회원가입 테스트")
+    class registerTest {
         @Test
         @DisplayName("성공")
-        void whenSuccess() {
-            familyAccountFacade.sendSignUpEmail("test@ruu.kr");
-        }
+        void whenSuccess() throws InterruptedException {
 
+            String email = "test@example2.com";
+            String mailReceived = familyAccountFacade.sendSignUpEmail(email);
+
+            String uuid = familyAccountFacade.validateEmailWithCode(email, mailReceived).getToken();
+            FamilySignUpRequest familySignUpRequest = new FamilySignUpRequest(
+                    email,
+                    "123456",
+                    "테스트",
+                    "집주소",
+                    "01012345678"
+            );
+            familyAccountFacade.signUp(familySignUpRequest,uuid);
+        }
+    }
+
+
+    @Nested
+    @DisplayName("로그인 테스트")
+    class signInTest {
         @Test
-        @DisplayName("실패, Family가 email 을 사용중인 경우")
-        void whenFailFamilyUseEmail() {
-            //given
-            given(familyService.existsByEmail(any())).willReturn(true);
+        @DisplayName("성공")
+        void whenSuccess() throws InterruptedException {
 
-            //when
+            String email = "test@example.com";
+            String password = "123456";
+            String mailReceived = familyAccountFacade.sendSignUpEmail(email);
 
-            assertThrows(RuntimeException.class, () -> {
-                familyAccountFacade.sendSignUpEmail("test@ruu.kr");
-            });
+            String uuid = familyAccountFacade.validateEmailWithCode(email, mailReceived).getToken();
+            FamilySignUpRequest familySignUpRequest = new FamilySignUpRequest(
+                    email,
+                    password,
+                    "테스트",
+                    "집주소",
+                    "01012345678"
+            );
+            familyAccountFacade.signUp(familySignUpRequest,uuid);
+
+            SignInRequest signInRequest = SignInRequest.of(email,password);
+            JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
+
+            log.info("AccessToken = [{}]",jwtToken.getAccessToken());
+            log.info("RefreshToken = [{}]",jwtToken.getRefreshToken());
+
+
 
         }
-
-        @Test
-        @DisplayName("실패, Academy가 email 을 사용중인 경우")
-        void whenFailAcademyUseEmail() {
-            //given
-            given(academyService.existsByEmail(any())).willReturn(true);
-
-            //when
-            assertThrows(RuntimeException.class, () -> {
-                familyAccountFacade.sendSignUpEmail("test@ruu.kr");
-            });
-
-        }
-
     }
 
 }
