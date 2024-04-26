@@ -2,32 +2,35 @@ import { useState } from 'react'
 
 import { ItemListView, NaverMap, RouteList } from '@components/Dispatch'
 
-import { useQuery } from '@tanstack/react-query'
-
-import { getRouteList } from '@apis/dispatch'
+import { useGetRouteList } from '@hooks/dispatch'
 
 import Page from '@layouts/Page'
 
 export default function DispatchPage() {
-  const [selectedRouteId, setSelectedRouteId] = useState<number>(0)
+  const [selectedRouteId, setSelectedRouteId] = useState<number>(-1)
+  const { routeList, isLoading, error } = useGetRouteList()
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ['route'],
-    queryFn: () => {
-      getRouteList()
-    },
-  })
-
+  const handleRouteClick = (id: number) => {
+    setSelectedRouteId(id)
+  }
+  // TODO ERROR, LOADING PAGE
   if (isLoading) {
     return <div> is Loading ... </div>
+  }
+  if (error) {
+    return <div> Error ... </div>
   }
   return (
     <Page>
       <div className="mx-auto flex h-3/6 w-[1536px] justify-center max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
         <NaverMap />
-        <RouteList routeList={data} setSelectedRouteId={setSelectedRouteId} />
+        <RouteList
+          routeList={routeList}
+          selectedRouteId={selectedRouteId}
+          handleRouteClick={handleRouteClick}
+        />
       </div>
-      <ItemListView selectedRouteId />
+      <ItemListView selectedRouteId={selectedRouteId} />
     </Page>
   )
 }
