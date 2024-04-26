@@ -20,6 +20,8 @@ public class Family implements Member {
     @Column(name = "id")
     private Long id; // 보호자 id
 
+
+    @Getter
     @Column(name = "email", nullable = false,unique = true)
     private String email; // 이메일
 
@@ -28,12 +30,18 @@ public class Family implements Member {
     @Column(name = "password", nullable = false)
     private String password; // 비밀번호
 
+
+    @Getter
     @Column(name = "name", nullable = false)
     private String name; // 성명
 
+
+    @Getter
     @Column(name = "address",nullable = false)
     private String address; //주소
 
+
+    @Getter
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 연락처
 
@@ -44,6 +52,7 @@ public class Family implements Member {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
