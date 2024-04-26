@@ -13,9 +13,9 @@ public interface StationService {
 
     boolean notExistsById(Long id);
 
-    boolean existsByName(String name, Long academyId);
+    boolean existsByAcademyIdAndName(Long academyId, String name);
 
     void save(Station station);
 
-    Page<Station> findAllByName(String name, Long academyId, Pageable pageable);
+    Page<Station> findAllByAcademyIdAndName(Long academyId, String name, Pageable pageable);
 }

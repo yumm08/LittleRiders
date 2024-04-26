@@ -2,7 +2,8 @@ package kr.co.littleriders.backend.domain.station.service;
 
 import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
-import lombok.AccessLevel;
+import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
+import kr.co.littleriders.backend.domain.station.error.exception.StationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +18,7 @@ class StationServiceImpl implements StationService {
 
     @Override
     public Station findById(Long id) {
-        return stationRepository.findById(id).orElseThrow(
-                RuntimeException::new //TODO : 커스텀 익셉션 변경 필요
-        );
+        return stationRepository.findById(id).orElseThrow(() -> StationException.from(StationErrorCode.NOT_FOUND));
     }
 
     @Override
@@ -33,7 +32,7 @@ class StationServiceImpl implements StationService {
     }
 
     @Override
-    public boolean existsByName(String name, Long academyId) { return stationRepository.existsByNameAndAcademyId(name, academyId); }
+    public boolean existsByAcademyIdAndName(Long academyId, String name) { return stationRepository.existsByAcademyIdAndName(academyId, name); }
 
     @Override
     public void save(Station station) {
@@ -41,7 +40,8 @@ class StationServiceImpl implements StationService {
     }
 
     @Override
-    public Page<Station> findAllByName(String name, Long academyId, Pageable pageable) {
-        return stationRepository.findByNameAndAcademyId(name, academyId, pageable);
+    public Page<Station> findAllByAcademyIdAndName(Long academyId, String name, Pageable pageable) {
+        return stationRepository.findAllByAcademyIdAndNameContaining(academyId, name, pageable);
     }
+
 }
