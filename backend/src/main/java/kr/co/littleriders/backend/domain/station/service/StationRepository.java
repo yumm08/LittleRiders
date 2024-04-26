@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 interface StationRepository extends JpaRepository<Station,Long> {
-    Page<Station> findByNameAndAcademyId(String name, Long academyId, Pageable pageable);
+    Page<Station> findAllByAcademyIdAndNameContaining(Long academyId, String name, Pageable pageable);
 
-    boolean existsByNameAndAcademyId(String name, Long academyId);
+    boolean existsByAcademyIdAndName(Long academyId, String name);
 }
