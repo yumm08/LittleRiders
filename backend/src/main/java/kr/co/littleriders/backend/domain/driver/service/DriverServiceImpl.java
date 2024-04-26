@@ -29,4 +29,9 @@ class DriverServiceImpl implements DriverService {
     public boolean notExistsById(Long id) {
         return !driverRepository.existsById(id);
     }
+
+    @Override
+    public Long save(Driver driver) {
+        return driverRepository.save(driver).getId();
+    }
 }
