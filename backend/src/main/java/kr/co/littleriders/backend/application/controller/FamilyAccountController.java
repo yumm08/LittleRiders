@@ -34,14 +34,14 @@ public class FamilyAccountController {
     }
 
     @PostMapping("/sign-up/validate")
-    public ResponseEntity<ValidateEmailResponse> validateEmailWithCode(@RequestBody String email, @RequestBody String code, HttpServletResponse response) {
+    public ResponseEntity<Void> validateEmailWithCode(@RequestBody String email, @RequestBody String code, HttpServletResponse response) {
         ValidateEmailResponse validateEmailResponse = familyAccountFacade.validateEmailWithCode(email, code);
         Cookie cookie = new Cookie("signup-token", validateEmailResponse.getToken());
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60*30);
         cookie.setPath("/");
         response.addCookie(cookie);
-        return ResponseEntity.ok().body(validateEmailResponse);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sign-up")
