@@ -1,9 +1,11 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
@@ -27,17 +29,13 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 	public Long insertChild(ChildRegistRequest childRegistRequest, Long familyId) {
 
 		Family family = familyService.findById(familyId);
-		Child child;
+		Child child = childRegistRequest.toEntity(family);
 
-		// 성별
-		Gender gender = Enum.valueOf(Gender.class, childRegistRequest.getGender());
-
-		// 이미지 파일이 있는 경우 이미지 경로 설정
-		if (childRegistRequest.getImage() != null) {
-			String imagePath = rootPath;
-			child = Child.of(childRegistRequest, gender, family, imagePath);
-		} else {
-			child = Child.of(childRegistRequest, gender, family);
+		MultipartFile image = childRegistRequest.getImage();
+		if(image !=null){
+			String imagePath = UUID.randomUUID().toString();
+			// 이미지 저장
+			child.setImagePath(imagePath);
 		}
 
 		return childService.save(child);
