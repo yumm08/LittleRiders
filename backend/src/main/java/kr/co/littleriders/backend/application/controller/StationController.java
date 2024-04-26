@@ -24,8 +24,8 @@ public class StationController {
 
     // 정류장 목록 조회
     @GetMapping
-    public ResponseEntity<?> getAllStationByName(@RequestParam(required = false, defaultValue = "") String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<?> searchStationByName(@RequestParam(required = false, defaultValue = "") String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Academy academy = null;
-        return ResponseEntity.ok().body(stationFacade.getAllStationByName(name, academy, PageRequest.of(page, size)));
+        return ResponseEntity.ok().body(stationFacade.searchByName(name, academy, PageRequest.of(page, size)));
     }
 }
