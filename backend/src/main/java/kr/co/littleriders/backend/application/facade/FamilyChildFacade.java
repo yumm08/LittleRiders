@@ -8,7 +8,7 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 
 public interface FamilyChildFacade {
 
-	Long insertChild(ChildRegistRequest childRegistRequest, Family family);
+	Long insertChild(ChildRegistRequest childRegistRequest, Long familyId);
 
 	List<ChildListResponse> readChildList(Long familyId);
 }

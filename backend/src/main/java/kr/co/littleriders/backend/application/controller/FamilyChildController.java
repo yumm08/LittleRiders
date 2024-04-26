@@ -26,8 +26,8 @@ public class FamilyChildController {
 	@PostMapping
 	public ResponseEntity<Long> addChild(@RequestBody @Valid ChildRegistRequest childRegistRequest) {
 
-		Family family = null; // 검증은 service에서 해야 함
-		Long childId = familyChildFacade.insertChild(childRegistRequest, family);
+		Long familyId = 1L; // 검증은 service에서 해야 함
+		Long childId = familyChildFacade.insertChild(childRegistRequest, familyId);
 
 		return ResponseEntity.ok().body(childId);
 	}
@@ -35,7 +35,7 @@ public class FamilyChildController {
 	@GetMapping
 	public ResponseEntity<List<ChildListResponse>> getChildList() {
 
-		Long familyId = null; // 검증 자체는 service에서 해야 함
+		Long familyId = 1L; // 검증 자체는 service에서 해야 함
 		List<ChildListResponse> childList = familyChildFacade.readChildList(familyId);
 
 		return ResponseEntity.ok().body(childList);

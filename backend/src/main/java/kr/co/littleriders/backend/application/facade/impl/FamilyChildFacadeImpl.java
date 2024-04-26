@@ -10,6 +10,7 @@ import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
 import kr.co.littleriders.backend.application.facade.FamilyChildFacade;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
+import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.global.entity.Gender;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,13 @@ import lombok.RequiredArgsConstructor;
 class FamilyChildFacadeImpl implements FamilyChildFacade {
 
 	private final ChildService childService;
+	private final FamilyService familyService;
 	private final String rootPath = "/image/child";
 
 	@Override
-	public Long insertChild(ChildRegistRequest childRegistRequest, Family family) {
+	public Long insertChild(ChildRegistRequest childRegistRequest, Long familyId) {
 
+		Family family = familyService.findById(familyId);
 		Child child;
 
 		// 성별
@@ -43,9 +46,9 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 	@Override
 	public List<ChildListResponse> readChildList(Long familyId) {
 
-		// family 검증 코드 필수
+		Family family = familyService.findById(familyId);
 
-		List<ChildListResponse> childList = childService.findByFamilyId(familyId)
+		List<ChildListResponse> childList = childService.findByFamilyId(family.getId())
 														.stream()
 														.map(ChildListResponse::from)
 														.collect(Collectors.toList());
