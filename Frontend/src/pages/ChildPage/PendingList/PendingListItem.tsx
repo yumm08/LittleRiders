@@ -9,6 +9,7 @@ interface Props {
   pendingChildInfo: PendingChildInfo
   onChildCheck: (id: number, isChecked: boolean) => void
   isChecked: boolean
+  onApprove: (academyChildAllowPendingId: number) => void
   onReject: (academyChildAllowPendingId: number) => void
 }
 
@@ -16,6 +17,7 @@ export default function PendingListItem({
   pendingChildInfo,
   onChildCheck,
   isChecked,
+  onApprove,
   onReject,
 }: Props) {
   const {
@@ -49,7 +51,10 @@ export default function PendingListItem({
       <td className="px-6 py-4">{address}</td>
       <td className="px-6 py-4">
         <div className="flex justify-end gap-3">
-          <Button color="bg-lightgreen" onClick={() => {}}>
+          <Button
+            color="bg-lightgreen"
+            onClick={() => onApprove(academyChildAllowPendingId)}
+          >
             <span className="font-bold text-white">승인</span>
           </Button>
           <Button
