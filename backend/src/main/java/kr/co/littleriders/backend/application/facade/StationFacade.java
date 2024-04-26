@@ -10,6 +10,6 @@ public interface StationFacade {
 
     void createStation(Academy academy, StationCreateRequest createRequest);
 
-    Page<StationResponse> getAllStationByName(String name, Academy academy, Pageable pageable);
+    Page<StationResponse> searchByName(String name, Academy academy, Pageable pageable);
 
 }
