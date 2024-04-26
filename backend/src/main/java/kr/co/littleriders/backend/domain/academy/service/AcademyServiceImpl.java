@@ -49,4 +49,9 @@ class AcademyServiceImpl implements AcademyService {
         return !academyRepository.existsByEmail(email);
     }
 
+    @Override
+    public void save(Academy academy) {
+        academyRepository.save(academy);
+    }
+
 }
