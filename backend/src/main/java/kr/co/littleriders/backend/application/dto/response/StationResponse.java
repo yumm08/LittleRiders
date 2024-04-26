@@ -1,21 +1,23 @@
 package kr.co.littleriders.backend.application.dto.response;
 
 import kr.co.littleriders.backend.domain.station.entity.Station;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@AllArgsConstructor
+@Getter
 public class StationResponse {
-    private Long id;
+    private long id;
     private String name;
-    private Double latitude;
-    private Double longitude;
-
-    private StationResponse(Station station) {
-        this.id = station.getId();
-        this.name = station.getName();
-        this.latitude = station.getLatitude();
-        this.longitude = station.getLongitude();
-    }
+    private double latitude;
+    private double longitude;
 
     public static StationResponse from(Station station) {
-        return new StationResponse(station);
+        long id = station.getId();
+        String name = station.getName();
+        double latitude = station.getLatitude();
+        double longitude = station.getLongitude();
+
+        return new StationResponse(id, name, latitude, longitude);
     }
 }
