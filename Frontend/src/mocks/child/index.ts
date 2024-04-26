@@ -3,6 +3,9 @@ import { HttpResponse, http } from 'msw'
 
 const BASE_URL = '/api'
 
+type PostChildReqestBody = {
+  academyChildAllowPendingList: number[]
+}
 type DeleteChildRequestBody = {
   academyChildAllowPendingList: number[]
 }
@@ -14,6 +17,26 @@ export const handlers = [
       pendingChildList,
     })
   }),
+  http.post<never, PostChildReqestBody, never>(
+    `${BASE_URL}/admin/child/pending`,
+    async ({ request }) => {
+      console.log('Captured a "POST /child/pending" request')
+      const { academyChildAllowPendingList } = await request.json()
+
+      console.log(request)
+
+      for (const id of academyChildAllowPendingList) {
+        const index = pendingChildList.findIndex(
+          (child) => child.academyChildAllowPendingId === id,
+        )
+        if (index !== -1) {
+          pendingChildList.splice(index, 1)
+        }
+      }
+
+      return new HttpResponse(null, { status: 200 })
+    },
+  ),
   http.delete<never, DeleteChildRequestBody, never>(
     `${BASE_URL}/admin/child/pending`,
     async ({ request }) => {
