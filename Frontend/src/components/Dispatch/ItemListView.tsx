@@ -1,7 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import SortableContainer from './SortableContainer'
-import SortableItem from './SortableItem'
+import SortableContainer from '@components/Dispatch/SortableContainer'
+import SortableItem from '@components/Dispatch/SortableItem'
+
+import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
+import '@hooks/map'
+import { MapHook } from '@hooks/map'
 
 import {
   DndContext,
@@ -26,15 +30,19 @@ interface Props {
 
 // TODO : 함수 분리 해야 한다. Refactor coming soon...
 export default function ItemListView({ selectedRouteId }: Props) {
-  const [items, setItems] = useState<{ [key: string]: Station[] }>({
-    station: Array.from({ length: 10 }, (_, k) => k).map((k) => ({
-      id: `item-${k}`,
-      name: `item-${k}`,
-    })),
-    'selected-station': [],
-  })
-
   const [activeId, setActiveId] = useState<UniqueIdentifier>()
+  const [stationItems, setStationItems] = useState<{
+    [key: string]: Station[]
+  }>({ stationList: [], selectedStationList: [] })
+  const {
+    routeDetail,
+    isLoading: isRouteDetailLoading,
+    isPending: isRouteDetailPending,
+  } = useGetRouteDetail(selectedRouteId)
+
+  const { stationList, isLoading: isStationListLoading } = useGetStationList()
+
+  const { drawRoute, initMap, initPolyLine } = MapHook()
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -44,16 +52,24 @@ export default function ItemListView({ selectedRouteId }: Props) {
     }),
   )
 
+  /**
+   * 지금 집고 있는 아이템이 어느 컨테이너에 있는지 확인하는 함수
+   * @param id 현재 집고 있는 id
+   * @returns
+   */
   const findContainer = (id: UniqueIdentifier) => {
-    if (id in items) {
+    if (id in stationItems) {
       return id
     }
-
-    return Object.keys(items).find((key) =>
-      items[key].some((item) => item.id === id.toString()),
+    return Object.keys(stationItems).find((key) =>
+      stationItems[key].some((item) => item.id === Number(id.toString())),
     )
   }
 
+  /**
+   * 드래그를 시작했을 때 activeId를 설정하는 함수
+   * @param event 드래그 시작 이벤트
+   */
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
     const { id } = active
@@ -79,7 +95,6 @@ export default function ItemListView({ selectedRouteId }: Props) {
 
     const activeContainer = findContainer(id)
     const overContainer = findContainer(over?.id)
-
     if (
       !activeContainer ||
       !overContainer ||
@@ -88,15 +103,16 @@ export default function ItemListView({ selectedRouteId }: Props) {
       return
     }
 
-    setItems((prev) => {
+    setStationItems((prev) => {
       const activeItems = prev[activeContainer]
       const overItems = prev[overContainer]
-
+      console.log(activeItems)
+      console.log(overItems)
       const activeIndex = activeItems.findIndex(
-        (item) => item.id === id.toString(),
+        (item) => item.id === Number(id.toString()),
       )
       const overIndex = overItems.findIndex(
-        (item) => item.id === overId.toString(),
+        (item) => item.id === Number(overId.toString()),
       )
 
       let newIndex: number
@@ -120,13 +136,18 @@ export default function ItemListView({ selectedRouteId }: Props) {
         ],
         [overContainer]: [
           ...prev[overContainer].slice(0, newIndex),
-          items[activeContainer][activeIndex],
+          stationItems[activeContainer][activeIndex],
           ...prev[overContainer].slice(newIndex, prev[overContainer].length),
         ],
       }
     })
   }
 
+  /**
+   * 드래그가 끝났을 때 실행되는 함수 (Drop)
+   * @param DragEndEvent 이벤트 관련 인자
+   * @returns
+   */
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const id = active.id.toString()
     const overId = over?.id
@@ -144,15 +165,15 @@ export default function ItemListView({ selectedRouteId }: Props) {
       return
     }
 
-    const activeIndex = items[activeContainer].findIndex(
-      (item) => item.id === id,
+    const activeIndex = stationItems[activeContainer].findIndex(
+      (item) => item.id === Number(id),
     )
-    const overIndex = items[activeContainer].findIndex(
+    const overIndex = stationItems[activeContainer].findIndex(
       (item) => item.id === overId,
     )
 
     if (activeIndex !== overIndex) {
-      setItems((items) => ({
+      setStationItems((items) => ({
         ...items,
         [overContainer]: arrayMove(
           items[overContainer],
@@ -164,6 +185,42 @@ export default function ItemListView({ selectedRouteId }: Props) {
     setActiveId(undefined)
   }
 
+  useEffect(() => {
+    if (!isRouteDetailLoading && !isRouteDetailPending) {
+      if (!isStationListLoading) {
+        setStationItems((prev) => ({
+          ...prev,
+          stationList: [...stationList],
+        }))
+        setStationItems({
+          stationList: [
+            ...stationList.filter(
+              (item: Station) =>
+                !routeDetail.stationList.some(
+                  (sItem: Station) => sItem.id === item.id,
+                ),
+            ),
+          ],
+          selectedStationList: [...routeDetail.stationList],
+        })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRouteDetailLoading, isStationListLoading])
+
+  useEffect(() => {
+    console.log(stationItems['selectedStationList'])
+    drawRoute(stationItems['selectedStationList'])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stationItems['selectedStationList']])
+  useEffect(() => {
+    const initNaverMap = async () => {
+      initMap('map')
+      initPolyLine()
+    }
+    initNaverMap()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <div className="mx-auto flex h-3/6 w-[1536px] justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
       <DndContext
@@ -176,13 +233,17 @@ export default function ItemListView({ selectedRouteId }: Props) {
       >
         <SortableContainer
           subject="전체 정류장"
-          id="station"
-          items={items['station']}
+          id="stationList"
+          items={stationItems['stationList']}
+          isLoading={isStationListLoading}
+          isPending={isRouteDetailPending}
         />
         <SortableContainer
           subject="선택된 정류장"
-          id="selected-station"
-          items={items['selected-station']}
+          id="selectedStationList"
+          items={stationItems['selectedStationList']}
+          isLoading={isRouteDetailLoading}
+          isPending={isRouteDetailPending}
         />
         <DragOverlay>
           {activeId ? <SortableItem id={activeId} /> : null}
@@ -198,13 +259,17 @@ export default function ItemListView({ selectedRouteId }: Props) {
       >
         <SortableContainer
           subject="모든 어린이"
-          id="station"
-          items={items['station']}
+          id="stationList"
+          items={stationItems['stationList']}
+          isLoading={isRouteDetailLoading}
+          isPending={isRouteDetailPending}
         />
         <SortableContainer
           subject="하차할 어린이"
-          id="selected-station"
-          items={items['selected-station']}
+          id="selectedStationList"
+          items={stationItems['selectedStationList']}
+          isLoading={isRouteDetailLoading}
+          isPending={isRouteDetailPending}
         />
         <DragOverlay>
           {activeId ? <SortableItem id={activeId} /> : null}
