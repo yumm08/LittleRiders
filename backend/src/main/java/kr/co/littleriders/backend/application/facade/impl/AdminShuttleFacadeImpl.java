@@ -1,6 +1,9 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.ShuttleRegistRequest;
 import kr.co.littleriders.backend.application.facade.AdminShuttleFacade;
@@ -9,6 +12,7 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
+import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,16 +28,13 @@ class AdminShuttleFacadeImpl implements AdminShuttleFacade {
 	public Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);
-		Shuttle shuttle;
-		// 동일한 academy 추가되는 license number unique 해야함
+		Shuttle shuttle = shuttleRegistRequest.toEntity(academy);
 
-		if (shuttleRegistRequest.getImage() != null) {
+		MultipartFile image = shuttleRegistRequest.getImage();
+		if(image !=null){
+			String imagePath = UUID.randomUUID().toString();
 			// 이미지 저장
-			String imagePath = rootPath;
-
-			shuttle = Shuttle.of(shuttleRegistRequest, academy, ShuttleStatus.USE, imagePath);
-		} else {
-			shuttle = Shuttle.of(shuttleRegistRequest, academy, ShuttleStatus.USE);
+			shuttle.setImagePath(imagePath);
 		}
 
 		return shuttleService.save(shuttle);

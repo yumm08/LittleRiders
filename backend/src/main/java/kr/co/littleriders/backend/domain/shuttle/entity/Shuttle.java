@@ -10,6 +10,7 @@ import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity @Getter
 @Table(name = "shuttle",
@@ -42,21 +43,14 @@ public class Shuttle {
     @Enumerated(EnumType.STRING)
     private ShuttleStatus status; // 상태
 
+    @Setter
     @Column(name = "image_path")
     private String imagePath; // 이미지 경로
 
     @OneToOne(mappedBy = "shuttle")
     private ShuttleTerminalAttach shuttleTerminalAttach; // 차량 단말기 부착 정보
 
-    private Shuttle(String licenseNumber, String name, String type, Academy academy, ShuttleStatus status) {
-        this.licenseNumber = licenseNumber;
-        this.name = name;
-        this.type = type;
-        this.academy = academy;
-        this.status = status;
-    }
-
-    private Shuttle(String licenseNumber, String name, String type, Academy academy, ShuttleStatus status, String imagePath) {
+    private Shuttle(String licenseNumber, String name, String type, Academy academy, String imagePath, ShuttleStatus status) {
         this.licenseNumber = licenseNumber;
         this.name = name;
         this.type = type;
@@ -65,20 +59,12 @@ public class Shuttle {
         this.imagePath = imagePath;
     }
 
-    public static Shuttle of(ShuttleRegistRequest shuttleRegistRequest, Academy academy, ShuttleStatus status) {
-        return new Shuttle(shuttleRegistRequest.getLicenseNumber()
-                            , shuttleRegistRequest.getName()
-                            , shuttleRegistRequest.getType()
-                            , academy
-                            , status);
-    }
-
-    public static Shuttle of(ShuttleRegistRequest shuttleRegistRequest, Academy academy, ShuttleStatus status, String imagePath) {
-        return new Shuttle(shuttleRegistRequest.getLicenseNumber()
-            , shuttleRegistRequest.getName()
-            , shuttleRegistRequest.getType()
-            , academy
-            , status
-            , imagePath);
+    public static Shuttle of(String licenseNumber, String name, String type, Academy academy, ShuttleStatus status) {
+        return new Shuttle(licenseNumber
+                        , name
+                        , type
+                        , academy
+                        , null
+                        , status);
     }
 }

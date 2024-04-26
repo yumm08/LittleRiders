@@ -3,6 +3,9 @@ package kr.co.littleriders.backend.application.dto.request;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +26,7 @@ public class ShuttleRegistRequest {
 
 	private MultipartFile image;
 
+	public Shuttle toEntity(Academy academy) {
+		return Shuttle.of(this.licenseNumber, this.name, this.type, academy, ShuttleStatus.USE);
+	}
 }
