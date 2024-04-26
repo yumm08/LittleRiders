@@ -1,10 +1,6 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,9 +11,6 @@ import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
-import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
-import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,15 +25,13 @@ class AdminDriverFacadeImpl implements AdminDriverFacade {
 	public Long insertDriver(DriverRegistRequest driverRegistRequest, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);
-		Driver driver;
+		Driver driver = driverRegistRequest.toEntity(academy);
 
-		if (driverRegistRequest.getImage() != null) {
+		MultipartFile image = driverRegistRequest.getImage();
+		if(image !=null){
+			String imagePath = UUID.randomUUID().toString();
 			// 이미지 저장
-			String imagePath = rootPath;
-
-			driver = Driver.of(driverRegistRequest, academy, DriverStatus.WORK, imagePath);
-		} else {
-			driver = Driver.of(driverRegistRequest, academy, DriverStatus.WORK);
+			driver.setImagePath(imagePath);
 		}
 
 		return driverService.save(driver);

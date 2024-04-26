@@ -3,11 +3,11 @@ package kr.co.littleriders.backend.domain.driver.entity;
 import java.util.UUID;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity @Getter
 @Table(name = "driver")
@@ -30,6 +30,7 @@ public class Driver {
     private String phoneNumber; // 전화번호
 
     @Column(name = "image_path")
+    @Setter
     private String imagePath; // 이미지 경로
 
     @Column(name = "status", nullable = false)
@@ -48,32 +49,18 @@ public class Driver {
         this.cardNumber = code;
     }
 
-    private Driver(Academy academy, String name, String phoneNumber, DriverStatus status, String code) {
-        this.academy = academy;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.status = status;
-        this.cardNumber = code;
-    }
-
-    public static Driver of(DriverRegistRequest driverRegistRequest, Academy academy, DriverStatus driverStatus, String imagePath) {
+    public static Driver of(String name, String phoneNumber, Academy academy, DriverStatus driverStatus) {
         return new Driver(academy
-                        , driverRegistRequest.getName()
-                        , driverRegistRequest.getPhoneNumber()
+                        , name
+                        , phoneNumber
                         , driverStatus
-                        , imagePath
+                        , null
                         , generateCode());
-    }
-
-    public static Driver of(DriverRegistRequest driverRegistRequest, Academy academy, DriverStatus driverStatus) {
-        return new Driver(academy
-            , driverRegistRequest.getName()
-            , driverRegistRequest.getPhoneNumber()
-            , driverStatus
-            , generateCode());
     }
 
     private static String generateCode() {
         return UUID.randomUUID().toString();
     }
+
+
 }
