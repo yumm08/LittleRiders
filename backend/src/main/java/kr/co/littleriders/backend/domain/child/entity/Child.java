@@ -61,14 +61,14 @@ public class Child {
     public static Child of(ChildRegistRequest childRegistRequest, Gender gender, Family family) {
         return new Child(family
                         , childRegistRequest.getName()
-                        , childRegistRequest.getDate()
+                        , childRegistRequest.getBirthDate()
                         , gender);
     }
 
     public static Child of(ChildRegistRequest childRegistRequest, Gender gender, Family family, String imagePath) {
         return new Child(family
             , childRegistRequest.getName()
-            , childRegistRequest.getDate()
+            , childRegistRequest.getBirthDate()
             , gender
             , imagePath);
     }
