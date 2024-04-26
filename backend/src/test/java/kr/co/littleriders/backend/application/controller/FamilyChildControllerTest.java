@@ -59,7 +59,7 @@ class FamilyChildControllerTest {
 			Family family = Family.of("test@com", "password", "테스트부모", "테스트시 테스트동", "010-1111");
 			familyService.save(family);
 			ChildRegistRequest regist = new ChildRegistRequest("테스트", LocalDate.of(2024, 4,26), "MALE", null);
-			Child child = Child.of(regist, Gender.MALE, null);
+			Child child = regist.toEntity(family);
 			Long childId = childService.save(child);
 
 

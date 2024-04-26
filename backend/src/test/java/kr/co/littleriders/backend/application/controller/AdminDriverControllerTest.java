@@ -51,7 +51,7 @@ class AdminDriverControllerTest {
 			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
 			academyService.save(academy);
 			DriverRegistRequest regist = new DriverRegistRequest("테스트", "010", null);
-			Driver driver = Driver.of(regist, academy, DriverStatus.WORK);
+			Driver driver = regist.toEntity(academy);
 			// Long driverId = driverService.save(driver);
 
 			mockMvc.perform(
@@ -70,7 +70,7 @@ class AdminDriverControllerTest {
 			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
 			// academyService.save(academy);
 			DriverRegistRequest regist = new DriverRegistRequest("테스트", "010", null);
-			Driver driver = Driver.of(regist, academy, DriverStatus.WORK);
+			Driver driver = regist.toEntity(academy);
 			// Long driverId = driverService.save(driver);
 
 			mockMvc.perform(
