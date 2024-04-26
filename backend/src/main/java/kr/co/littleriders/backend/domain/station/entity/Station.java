@@ -1,7 +1,6 @@
 package kr.co.littleriders.backend.domain.station.entity;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.application.dto.request.StationCreateRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,19 +33,19 @@ public class Station {
     @Column(name = "longitude",nullable = false)
     private double longitude; // 경도
 
-    private Station(final Academy academy, final String name, final Double latitude, final Double longitude) {
+    private Station(final Academy academy, String name, Double latitude, Double longitude) {
         this.academy = academy;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public static Station of(final Academy academy, final StationCreateRequest createRequest) {
+    public static Station of(final Academy academy, String name, Double latitude, Double longitude) {
         return new Station(
                 academy,
-                createRequest.getName(),
-                createRequest.getLatitude(),
-                createRequest.getLongitude()
+                name,
+                latitude,
+                longitude
         );
     }
 }
