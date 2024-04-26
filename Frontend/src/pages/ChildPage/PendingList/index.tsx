@@ -8,34 +8,30 @@ import PendingListTableHeader from '@pages/ChildPage/PendingList/PendingListTabl
 import Divider from '@components/Shared/Divider'
 import Spacing from '@components/Shared/Spacing'
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  useApproveChild,
+  useFetchPendingChildList,
+  useRejectChild,
+} from '@hooks/child'
 
-import { deletePendingChildList } from '@apis/child'
+import { showQuestionAlert, showSuccessAlert } from '@utils/alertUtils'
 
-import COLOR_PALETTE from '@style/ColorPalette'
 import { PendingChildInfo } from '@types'
 import { HttpStatusCode } from 'axios'
-import Swal from 'sweetalert2'
 
-interface Props {
-  pendingChildList: PendingChildInfo[]
-}
-
-export default function PendingList({ pendingChildList }: Props) {
+export default function PendingList() {
   const [checkChildIdList, setCheckChildIdList] = useState<number[]>([])
 
-  const queryClient = useQueryClient()
+  const { pendingChildList, isLoading } = useFetchPendingChildList()
+  const { approveChild } = useApproveChild()
+  const { rejectChild } = useRejectChild()
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   const isAllChecked = pendingChildList.length === checkChildIdList.length
-
-  const { mutate } = useMutation({
-    mutationFn: (checkChildIdList: number[]) =>
-      deletePendingChildList(checkChildIdList),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['getPendingChildList'] })
-      setCheckChildIdList([])
-    },
-  })
+  const checkCount = checkChildIdList.length
 
   const handleChildCheck = (id: number, isChecked: boolean) => {
     if (isChecked) {
@@ -48,37 +44,89 @@ export default function PendingList({ pendingChildList }: Props) {
   const handleAllCheck = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setCheckChildIdList(
-        pendingChildList.map((item) => item.academyChildAllowPendingId),
+        pendingChildList.map(
+          (child: PendingChildInfo) => child.academyChildAllowPendingId,
+        ),
       )
     } else {
       setCheckChildIdList([])
     }
   }
 
-  const handleCheckedChildReject = async () => {
-    const result = await Swal.fire({
-      text: `${checkChildIdList.length}명의 가입을 거절하시겠습니까?`,
-      icon: 'question',
-      showDenyButton: true,
-      confirmButtonText: '예',
-      confirmButtonColor: COLOR_PALETTE.lightgreen,
-      denyButtonText: '아니오',
-      allowOutsideClick: false,
+  const handleCheckedChildApprove = async () => {
+    const result = await showQuestionAlert({
+      text: `${checkChildIdList.length}명의 가입을 승인하시겠습니까?`,
     })
 
     if (result.isDenied) {
       return
     }
 
-    mutate(checkChildIdList, {
+    approveChild(checkChildIdList, {
       onSuccess: (response) => {
         const status = response.status
 
         if (status === HttpStatusCode.Ok) {
-          Swal.fire({
+          showSuccessAlert({
+            text: `${checkChildIdList.length}명의 가입을 승인하였습니다.`,
+          }).then(() => setCheckChildIdList([]))
+        }
+        return
+      },
+    })
+  }
+
+  const handleCheckedChildReject = async () => {
+    const result = await showQuestionAlert({
+      text: `${checkChildIdList.length}명의 가입을 거절하시겠습니까?`,
+    })
+
+    if (result.isDenied) {
+      return
+    }
+
+    rejectChild(checkChildIdList, {
+      onSuccess: (response) => {
+        const status = response.status
+
+        if (status === HttpStatusCode.Ok) {
+          showSuccessAlert({
             text: `${checkChildIdList.length}명의 가입을 거절하였습니다.`,
-            icon: 'success',
-          })
+          }).then(() => setCheckChildIdList([]))
+        }
+        return
+      },
+    })
+  }
+
+  const handleOneChildApprove = async (academyChildAllowPendingId: number) => {
+    const childName = pendingChildList.find(
+      (child: PendingChildInfo) =>
+        child.academyChildAllowPendingId === academyChildAllowPendingId,
+    )?.childName
+
+    const result = await showQuestionAlert({
+      text: `${childName}님의 가입을 승인하시겠습니까?`,
+    })
+
+    if (result.isDenied) {
+      return
+    }
+
+    approveChild([academyChildAllowPendingId], {
+      onSuccess: (response) => {
+        const status = response.status
+
+        if (status === HttpStatusCode.Ok) {
+          showSuccessAlert({
+            text: `${childName}님의 가입을 승인하였습니다.`,
+          }).then(() =>
+            setCheckChildIdList(
+              checkChildIdList.filter(
+                (id) => id !== academyChildAllowPendingId,
+              ),
+            ),
+          )
         }
         return
       },
@@ -87,33 +135,32 @@ export default function PendingList({ pendingChildList }: Props) {
 
   const handleOneChildReject = async (academyChildAllowPendingId: number) => {
     const childName = pendingChildList.find(
-      (child) =>
+      (child: PendingChildInfo) =>
         child.academyChildAllowPendingId === academyChildAllowPendingId,
     )?.childName
 
-    const result = await Swal.fire({
+    const result = await showQuestionAlert({
       text: `${childName}님의 가입을 거절하시겠습니까?`,
-      icon: 'question',
-      showDenyButton: true,
-      confirmButtonText: '예',
-      confirmButtonColor: COLOR_PALETTE.lightgreen,
-      denyButtonText: '아니오',
-      allowOutsideClick: false,
     })
 
     if (result.isDenied) {
       return
     }
 
-    mutate([academyChildAllowPendingId], {
+    rejectChild([academyChildAllowPendingId], {
       onSuccess: (response) => {
         const status = response.status
 
         if (status === HttpStatusCode.Ok) {
-          Swal.fire({
+          showSuccessAlert({
             text: `${childName}님의 가입을 거절하였습니다.`,
-            icon: 'success',
-          })
+          }).then(() =>
+            setCheckChildIdList(
+              checkChildIdList.filter(
+                (id) => id !== academyChildAllowPendingId,
+              ),
+            ),
+          )
         }
         return
       },
@@ -123,7 +170,8 @@ export default function PendingList({ pendingChildList }: Props) {
   return (
     <>
       <PendingListHeader
-        checkCount={checkChildIdList.length}
+        checkCount={checkCount}
+        onApprove={handleCheckedChildApprove}
         onReject={handleCheckedChildReject}
       />
 
@@ -140,6 +188,7 @@ export default function PendingList({ pendingChildList }: Props) {
           pendingChildList={pendingChildList}
           onChildCheck={handleChildCheck}
           checkChildIdList={checkChildIdList}
+          onApprove={handleOneChildApprove}
           onReject={handleOneChildReject}
         />
       </PendingListTable>
