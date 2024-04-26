@@ -1,6 +1,9 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
 import kr.co.littleriders.backend.application.facade.AdminTeacherFacade;
@@ -8,7 +11,6 @@ import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
-import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,14 +25,13 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);
-		Teacher teacher;
+		Teacher teacher = teacherRegistRequest.toEntity(academy);
 
-		if (teacherRegistRequest.getImage() != null) {
-			String imagePath = rootPath;
-
-			teacher = Teacher.of(teacherRegistRequest, academy, TeacherStatus.WORK, imagePath);
-		} else {
-			teacher = Teacher.of(teacherRegistRequest, academy, TeacherStatus.WORK);
+		MultipartFile image = teacherRegistRequest.getImage();
+		if(image !=null){
+			String imagePath = UUID.randomUUID().toString();
+			// 이미지 저장
+			teacher.setImagePath(imagePath);
 		}
 
 		return teacherService.save(teacher);

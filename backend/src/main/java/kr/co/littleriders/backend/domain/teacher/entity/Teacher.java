@@ -3,11 +3,11 @@ package kr.co.littleriders.backend.domain.teacher.entity;
 import java.util.UUID;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity @Getter
 @Table(name = "teacher")
@@ -29,6 +29,7 @@ public class Teacher {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 전화번호
 
+    @Setter
     @Column(name = "image_path")
     private String imagePath; // 이미지 경로
 
@@ -39,14 +40,6 @@ public class Teacher {
     @Column(name = "card_number")
     private String cardNumber; // 카드정보
 
-    private Teacher(Academy academy, String name, String phoneNumber, TeacherStatus status, String code) {
-        this.academy = academy;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.status = status;
-        this.cardNumber = code;
-    }
-
     private Teacher(Academy academy, String name, String phoneNumber, TeacherStatus status, String imagePath, String code) {
         this.academy = academy;
         this.name = name;
@@ -56,22 +49,14 @@ public class Teacher {
         this.cardNumber = code;
     }
 
-    public static Teacher of(TeacherRegistRequest teacherRegistRequest, Academy academy, TeacherStatus status) {
+    public static Teacher of(String name, String phoneNumber, Academy academy, TeacherStatus status) {
         return new Teacher(academy
-                        , teacherRegistRequest.getName()
-                        , teacherRegistRequest.getPhoneNumber()
+                        , name
+                        , phoneNumber
                         , status
+                        , null
                         , generateCode());
 	}
-
-    public static Teacher of(TeacherRegistRequest teacherRegistRequest, Academy academy, TeacherStatus status, String imagePath) {
-        return new Teacher(academy
-                        , teacherRegistRequest.getName()
-                        , teacherRegistRequest.getPhoneNumber()
-                        , status
-                        , imagePath
-                        , generateCode());
-    }
 
     private static String generateCode() {
         return UUID.randomUUID().toString();

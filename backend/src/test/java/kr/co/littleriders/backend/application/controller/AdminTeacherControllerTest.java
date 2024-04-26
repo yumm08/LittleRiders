@@ -52,7 +52,7 @@ class AdminTeacherControllerTest {
 			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
 			academyService.save(academy);
 			TeacherRegistRequest regist = new TeacherRegistRequest("테스트", "010", null);
-			Teacher teacher = Teacher.of(regist, academy, TeacherStatus.WORK);
+			Teacher teacher = regist.toEntity(academy);
 			Long teacherId = teacherService.save(teacher);
 
 			mockMvc.perform(
