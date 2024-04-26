@@ -1,11 +1,13 @@
 export type Station = {
-  id: string
+  id: number
   name: string
-  lat?: number
-  lng?: number
+  latitude: number
+  longitude: number
+  visitOrder?: number
 }
 
 export type Route = {
-  id: number,
-  name: string,
+  id: number
+  name: string
+  stationList?: Station[]
 }
