@@ -2,16 +2,13 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 
 import kr.co.littleriders.backend.application.dto.request.AcademySignUpRequest;
-import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
-import kr.co.littleriders.backend.application.dto.response.ValidateEmailResponse;
 import kr.co.littleriders.backend.application.facade.AcademyAccountFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyException;
 import kr.co.littleriders.backend.domain.family.FamilyService;
-import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.family.error.code.FamilyErrorCode;
 import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
 import kr.co.littleriders.backend.domain.token.RefreshTokenService;
@@ -75,12 +72,12 @@ class AcademyFacade implements AcademyAccountFacade {
     }
 
     @Override
-    public ValidateEmailResponse validateEmailWithCode(final String email, final String code) {
+    public String getSignUpToken(String email, String code){
         Verification verification = verificationService.findAcademySignUpByEmailAndCode(email, code);
         verificationService.delete(verification);
         SignUpToken signUpToken = SignUpToken.of(email, SignUpTokenType.ACADEMY);
         signUpTokenService.save(signUpToken);
-        return ValidateEmailResponse.from(signUpToken);
+        return signUpToken.getToken();
     }
 
     @Override

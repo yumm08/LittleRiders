@@ -3,7 +3,6 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
-import kr.co.littleriders.backend.application.dto.response.ValidateEmailResponse;
 import kr.co.littleriders.backend.application.facade.FamilyAccountFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.family.FamilyService;
@@ -74,12 +73,12 @@ class FamilyFacade implements FamilyAccountFacade {
     }
 
     @Override
-    public ValidateEmailResponse validateEmailWithCode(final String email, final String code) {
+    public String getSignUpToken(final String email, final String code) {
         Verification verification = verificationService.findFamilySignUpByEmailAndCode(email, code);
         verificationService.delete(verification);
         SignUpToken signUpToken = SignUpToken.of(email, SignUpTokenType.FAMILY);
         signUpTokenService.save(signUpToken);
-        return ValidateEmailResponse.from(signUpToken);
+        return signUpToken.getToken();
     }
 
     @Override

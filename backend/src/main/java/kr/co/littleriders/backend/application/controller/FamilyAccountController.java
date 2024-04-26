@@ -7,7 +7,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
-import kr.co.littleriders.backend.application.dto.response.ValidateEmailResponse;
 import kr.co.littleriders.backend.application.facade.FamilyAccountFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
@@ -35,8 +34,8 @@ public class FamilyAccountController {
 
     @PostMapping("/sign-up/validate")
     public ResponseEntity<Void> validateEmailWithCode(@RequestBody String email, @RequestBody String code, HttpServletResponse response) {
-        ValidateEmailResponse validateEmailResponse = familyAccountFacade.validateEmailWithCode(email, code);
-        Cookie cookie = new Cookie("signup-token", validateEmailResponse.getToken());
+        String signUpToken = familyAccountFacade.getSignUpToken(email, code);
+        Cookie cookie = new Cookie("signup-token", signUpToken);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60*30);
         cookie.setPath("/");
