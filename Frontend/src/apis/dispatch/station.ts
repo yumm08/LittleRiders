@@ -8,7 +8,7 @@ const BASE_URL = 'station'
  */
 export const postStation = async () => {
   const res = await axiosInstance.post(`/${BASE_URL}/`)
-  return res.data
+  return res
 }
 /**
  *
@@ -16,7 +16,7 @@ export const postStation = async () => {
  */
 export const getStationList = async () => {
   const res = await axiosInstance.get(`/${BASE_URL}`, {})
-  return res.data
+  return res
 }
 
 /**
@@ -26,7 +26,7 @@ export const getStationList = async () => {
  */
 export const deleteStation = async (stationId: number) => {
   const res = await axiosInstance.delete(`/${BASE_URL}/${stationId}`)
-  return res.data
+  return res
 }
 
 /**
@@ -36,5 +36,5 @@ export const deleteStation = async (stationId: number) => {
  */
 export const putStation = async (stationId: number) => {
   const res = await axiosInstance.put(`/${BASE_URL}/${stationId}`)
-  return res.data
+  return res
 }
