@@ -18,9 +18,8 @@ public class ChildRegistRequest {
 	@NotBlank
 	private String name;
 
-	@NotBlank
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate Date;
+	private LocalDate birthDate;
 
 	@NotBlank
 	private String gender;
