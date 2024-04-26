@@ -5,5 +5,5 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 
 public interface AdminShuttleFacade {
 
-	Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Academy academy);
+	Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Long academyId);
 }

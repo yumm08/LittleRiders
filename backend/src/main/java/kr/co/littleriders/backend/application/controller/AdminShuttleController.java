@@ -23,9 +23,9 @@ public class AdminShuttleController {
 	public ResponseEntity<Long> addShuttle(@RequestBody @Valid ShuttleRegistRequest shuttleRegistRequest) {
 
 		// Academy 회원 vaild 확인
-		Academy academy = null;
+		Long academyId = 1L;
 
-		Long shuttleId = adminShuttleFacade.insertShuttle(shuttleRegistRequest, academy);
+		Long shuttleId = adminShuttleFacade.insertShuttle(shuttleRegistRequest, academyId);
 
 		return ResponseEntity.ok().body(shuttleId);
 	}

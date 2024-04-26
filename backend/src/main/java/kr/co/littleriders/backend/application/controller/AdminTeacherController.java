@@ -24,9 +24,9 @@ public class AdminTeacherController {
 	public ResponseEntity<Long> addTeacher(@RequestBody @Valid TeacherRegistRequest teacherRegistRequest) {
 
 		// valid 확인
-		Academy academy = null;
+		Long academyId = 1L;
 
-		Long teacherId = adminTeacherFacade.insertTeacher(teacherRegistRequest, academy);
+		Long teacherId = adminTeacherFacade.insertTeacher(teacherRegistRequest, academyId);
 
 		return ResponseEntity.ok().body(teacherId);
 	}

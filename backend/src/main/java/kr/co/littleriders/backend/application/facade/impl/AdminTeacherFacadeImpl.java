@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
 import kr.co.littleriders.backend.application.facade.AdminTeacherFacade;
+import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
@@ -15,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 
 	private final TeacherService teacherService;
+	private final AcademyService academyService;
 	private final String rootPath = "/image/teacher";
 
 	@Override
-	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Academy academy) {
+	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Long academyId) {
 
+		Academy academy = academyService.findById(academyId);
 		Teacher teacher;
 
 		if (teacherRegistRequest.getImage() != null) {

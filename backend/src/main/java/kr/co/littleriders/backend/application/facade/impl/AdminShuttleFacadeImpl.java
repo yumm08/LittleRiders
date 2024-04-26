@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.littleriders.backend.application.dto.request.ShuttleRegistRequest;
 import kr.co.littleriders.backend.application.facade.AdminShuttleFacade;
+import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
@@ -15,11 +16,14 @@ import lombok.RequiredArgsConstructor;
 class AdminShuttleFacadeImpl implements AdminShuttleFacade {
 
 	private final ShuttleService shuttleService;
+	private final AcademyService academyService;
 	private final String rootPath = "/image/shuttle";
 
 
 	@Override
-	public Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Academy academy) {
+	public Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Long academyId) {
+
+		Academy academy = academyService.findById(academyId);
 		Shuttle shuttle;
 		// 동일한 academy 추가되는 license number unique 해야함
 

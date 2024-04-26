@@ -24,9 +24,9 @@ public class AdminDriverController {
 	public ResponseEntity<Long> addDriver(@RequestBody @Valid DriverRegistRequest driverRegistRequest) {
 
 		// Academy 회원 vaild 확인
-		Academy academy = null;
+		Long academyId = 1L;
 
-		Long driverId = adminDriverFacade.insertDriver(driverRegistRequest, academy);
+		Long driverId = adminDriverFacade.insertDriver(driverRegistRequest, academyId);
 
 		return ResponseEntity.ok().body(driverId);
 	}
