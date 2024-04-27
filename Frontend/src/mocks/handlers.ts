@@ -1,10 +1,3 @@
-import { HttpResponse, http } from 'msw'
+import { handlers as childManagementHandlers } from '@mocks/child'
 
-export const handlers = [
-  http.get('/posts', () => {
-    console.log('Captured a "GET /posts" request')
-    return HttpResponse.json({
-      message: 'posts mocking success',
-    })
-  }),
-]
+export const handlers = [...childManagementHandlers]

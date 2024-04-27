@@ -3,6 +3,7 @@ import { MouseEventHandler } from 'react'
 import Button from '@components/Shared/Button'
 import Divider from '@components/Shared/Divider'
 import Spacing from '@components/Shared/Spacing'
+import Title from '@components/Shared/Title'
 
 interface Props {
   type: string
@@ -13,7 +14,7 @@ interface Props {
 export default function CardListContainer({ type, onClick, children }: Props) {
   return (
     <div className="flex-col p-2 ">
-      <strong className="text-2xl">{`${type} 관리`}</strong>
+      <Title text={`${type} 관리`} />
       <Divider />
       <Spacing style="h-[15px]" />
       {children}
