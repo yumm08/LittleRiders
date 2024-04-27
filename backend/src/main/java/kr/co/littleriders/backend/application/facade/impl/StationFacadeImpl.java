@@ -10,9 +10,10 @@ import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
 import kr.co.littleriders.backend.domain.station.error.exception.StationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +36,12 @@ class StationFacadeImpl implements StationFacade {
     }
 
     @Override
-    public Page<StationResponse> searchByName(String name, Academy academyDto, Pageable pageable) {
+    public List<StationResponse> searchByName(String name, Academy academyDto) {
         Long academyId = academyDto.getId();
-        Page<Station> stationList = stationService.findAllByAcademyIdAndName(academyId, name, pageable);
-        return stationList.map(StationResponse::from);
+        List<Station> stationList = stationService.findAllByAcademyIdAndName(academyId, name);
+        return stationList.stream()
+                .map(StationResponse::from)
+                .collect(Collectors.toList());
     }
 
 }

@@ -1,8 +1,8 @@
 package kr.co.littleriders.backend.domain.station;
 
 import kr.co.littleriders.backend.domain.station.entity.Station;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface StationService {
 
@@ -17,5 +17,5 @@ public interface StationService {
 
     void save(Station station);
 
-    Page<Station> findAllByAcademyIdAndName(Long academyId, String name, Pageable pageable);
+    List<Station> findAllByAcademyIdAndName(Long academyId, String name);
 }

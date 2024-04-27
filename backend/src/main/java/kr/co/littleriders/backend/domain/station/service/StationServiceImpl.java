@@ -5,9 +5,9 @@ import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
 import kr.co.littleriders.backend.domain.station.error.exception.StationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -40,8 +40,8 @@ class StationServiceImpl implements StationService {
     }
 
     @Override
-    public Page<Station> findAllByAcademyIdAndName(Long academyId, String name, Pageable pageable) {
-        return stationRepository.findAllByAcademyIdAndNameContaining(academyId, name, pageable);
+    public List<Station> findAllByAcademyIdAndName(Long academyId, String name) {
+        return stationRepository.findAllByAcademyIdAndNameContaining(academyId, name);
     }
 
 }
