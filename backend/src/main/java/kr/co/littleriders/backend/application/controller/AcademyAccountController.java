@@ -46,8 +46,6 @@ public class AcademyAccountController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<Void> signUp(@RequestBody AcademySignUpRequest academySignUpRequest, @CookieValue("signup-token") String token) {
-
-        log.info("signup-token = [{}]",token);
         academyAccountFacade.signUp(academySignUpRequest,token);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -71,7 +69,7 @@ public class AcademyAccountController {
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(@Auth AuthAcademy authAcademy) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        log.info("AuthFamily = {}",objectMapper.writeValueAsString(authAcademy));
+        log.info("AuthAcademy = {}",objectMapper.writeValueAsString(authAcademy));
         return ResponseEntity.ok(objectMapper.writeValueAsString(authAcademy));
     }
 }
