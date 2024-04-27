@@ -1,10 +1,10 @@
 import ChildListHeader from '@pages/ChildPage/ChildList/ChildListHeader'
 
-import ChildList from '@components/Child/ChildList'
+import ChildCardList from '@components/Child/ChildCardList'
 
 import { useFetchChildList } from '@hooks/child'
 
-export default function ChidlList() {
+export default function ChildList() {
   const { childList, isLoading } = useFetchChildList()
 
   // TODO: 로딩 컴포넌트 추후에 추가
@@ -16,7 +16,7 @@ export default function ChidlList() {
     <>
       <ChildListHeader />
 
-      <ChildList childList={childList} />
+      <ChildCardList childList={childList} />
     </>
   )
 }
