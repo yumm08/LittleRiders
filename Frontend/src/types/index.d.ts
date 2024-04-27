@@ -3,5 +3,7 @@ const GENDER = {
   MALE: 'MALE',
 } as const
 
-export * from '@types/child'
 export type Gender = (typeof GENDER)[keyof typeof GENDER]
+
+export * from '@types/child'
+export * from '@types/dispatch'
