@@ -1,5 +1,4 @@
-import ChildStatusLabel from '@pages/ChildPage/ChildList/ChildStatusLabel'
-
+import ChildStatusLabel from '@components/Child/ChildStatusLabel'
 import GenderIcon from '@components/Shared/GenderIcon'
 
 import { formatBirthToAge } from '@utils/formatUtils'

@@ -1,9 +1,8 @@
-import ChildCard from '@pages/ChildPage/ChildList/ChildCard'
 import ChildListHeader from '@pages/ChildPage/ChildList/ChildListHeader'
 
-import { useFetchChildList } from '@hooks/child'
+import ChildList from '@components/Child/ChildList'
 
-import { ChildInfo } from '@types'
+import { useFetchChildList } from '@hooks/child'
 
 export default function ChidlList() {
   const { childList, isLoading } = useFetchChildList()
@@ -17,11 +16,7 @@ export default function ChidlList() {
     <>
       <ChildListHeader />
 
-      <div className="grid grid-cols-6 gap-4">
-        {childList.map((child: ChildInfo) => (
-          <ChildCard key={child.academyChildId} childInfo={child} />
-        ))}
-      </div>
+      <ChildList childList={childList} />
     </>
   )
 }
