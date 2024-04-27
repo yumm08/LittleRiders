@@ -3,8 +3,7 @@ import { useState } from 'react'
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
 
-import Modal from '@components/Shared/Modal'
-
+import AddShuttleModal from './AddShuttleModal'
 import ShuttleCard from './ShuttleCard'
 
 interface Props {
@@ -27,9 +26,10 @@ export default function ShuttleList({ show }: Props) {
         </CardCarousel>
       </CardListContainer>
       {modalState && (
-        <Modal modalTitle="차량 등록" openModal={openAddShuttleModal}>
-          <div>hgihihi</div>
-        </Modal>
+        <AddShuttleModal
+          modalTitle="차량 등록"
+          modalSwitch={openAddShuttleModal}
+        />
       )}
     </>
   )
