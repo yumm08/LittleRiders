@@ -26,7 +26,7 @@ public class StationController {
 
     // 정류장 목록 조회
     @GetMapping
-    public ResponseEntity<List<StationResponse>> searchStationByName(@Auth AuthAcademy authAcademy, @RequestParam(required = false, defaultValue = "") String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<List<StationResponse>> searchStationByName(@Auth AuthAcademy authAcademy, @RequestParam(required = false, defaultValue = "") String name) {
         return ResponseEntity.ok().body(stationFacade.searchByName(name, authAcademy));
     }
 }
