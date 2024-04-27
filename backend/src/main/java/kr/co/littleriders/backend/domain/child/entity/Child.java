@@ -3,12 +3,22 @@ package kr.co.littleriders.backend.domain.child.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.global.entity.Gender;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "child")
+@Entity @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "child",
+    uniqueConstraints = @UniqueConstraint(
+        name = "child_unique",
+        columnNames = {"family_id","name","birthDate","gender"}
+    ))
 public class Child {
 
     @Id
@@ -30,7 +40,24 @@ public class Child {
     @Column(name = "gender", nullable = false)
     private Gender gender; // 성별
 
+    @Setter
     @Column(name = "image_path")
     private String imagePath; // 이미지 경로
+
+    private Child(Family family, String name, LocalDate date, Gender gender, String imagePath) {
+        this.family = family;
+        this.name = name;
+        this.birthDate = date;
+        this.gender = gender;
+        this.imagePath = imagePath;
+    }
+
+    public static Child of(String name, LocalDate birthDate, Gender gender, Family family) {
+        return new Child(family
+                        , name
+                        , birthDate
+                        , gender
+                        , null);
+    }
 
 }

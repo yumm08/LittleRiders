@@ -15,4 +15,6 @@ public interface FamilyService {
     boolean existsByEmail(String email);
 
     boolean notExistsByEmail(String email);
+
+    void save(Family family);
 }

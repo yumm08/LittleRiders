@@ -9,32 +9,37 @@ import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
+import kr.co.littleriders.backend.global.entity.Member;
 import lombok.Getter;
 
 import java.util.List;
 
-@Getter
 @Entity
 @Table(name = "academy")
-public class Academy {
+public class Academy implements Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Getter
     private Long id; // 학원id
 
+    @Getter
     @Column(name = "email", nullable = false)
     private String email; // 이메일
 
     @Column(name = "password", nullable = false)
     private String password; // 비밀번호
 
+    @Getter
     @Column(name = "name", nullable = false)
     private String name; // 학원이름
 
+    @Getter
     @Column(name = "address", nullable = false)
     private String address; // 학원주소
 
+    @Getter
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 학원 전화번호
 
