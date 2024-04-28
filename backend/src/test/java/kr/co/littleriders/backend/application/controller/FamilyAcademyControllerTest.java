@@ -72,7 +72,7 @@ class FamilyAcademyControllerTest {
             mockMvc.perform(
 					get("/family/academy")
                             .param("name", "테스트")
-                            .param("page", String.valueOf(1))
+                            .param("page", String.valueOf(0))
                             .contentType(MediaType.APPLICATION_JSON)
 				)
 				.andExpect(status().isOk())
