@@ -19,4 +19,6 @@ public interface AcademyService {
     boolean notExistsByEmail(String email);
 
     Page<Academy> findByName(String name, Pageable pageable);
+
+    void save(Academy academy);
 }

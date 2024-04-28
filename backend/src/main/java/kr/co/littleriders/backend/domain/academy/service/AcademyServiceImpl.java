@@ -54,7 +54,17 @@ class AcademyServiceImpl implements AcademyService {
     @Override
     public Page<Academy> findByName(String name, Pageable pageable) {
 
-        return academyRepository.findByName(name, pageable);
+        Page<Academy> academyList = academyRepository.findByName(name, pageable);
+        if (academyList.getContent().isEmpty()) {
+            throw AcademyException.from(AcademyErrorCode.NOT_FOUND);
+        }
+
+        return academyList;
+    }
+
+    @Override
+    public void save(Academy academy) {
+        academyRepository.save(academy);
     }
 
 }

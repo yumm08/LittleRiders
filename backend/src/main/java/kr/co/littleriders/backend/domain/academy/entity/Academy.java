@@ -10,12 +10,15 @@ import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
 import kr.co.littleriders.backend.global.entity.Member;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "academy")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Academy implements Member {
 
     @Id
@@ -76,4 +79,16 @@ public class Academy implements Member {
 
     @OneToMany(mappedBy = "academy")
     private List<Pending> pendingList; // 원생 승인 신청 목록
+
+    private Academy(String email, String password, String name, String address, String phoneNumber) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public static Academy of(String email, String password, String name, String address, String phoneNumber) {
+        return new Academy(email, password, name, address, phoneNumber);
+    }
 }
