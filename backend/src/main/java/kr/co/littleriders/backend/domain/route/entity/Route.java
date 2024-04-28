@@ -27,7 +27,7 @@ public class Route {
     @Column(name = "name",nullable = false)
     private String name; // 경로명
 
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RouteStation> routeStationList; // 정류장 목록
 
     private Route(final Academy academy, String name, List<RouteStation> routeStationList) {
