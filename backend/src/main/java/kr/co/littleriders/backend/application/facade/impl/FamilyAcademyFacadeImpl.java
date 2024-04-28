@@ -71,7 +71,7 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
     public List<AcademyRegistStatusResponse> readAcademyRegistStatusList(Long familyId) {
 
         List<Child> childList = familyService.findById(familyId).getChild();
-        List<AcademyRegistStatusResponse> academyList = pendingService.findByChildId(childList)
+        List<AcademyRegistStatusResponse> academyList = pendingService.findByChild(childList)
                                                                       .stream()
                                                                       .map(AcademyRegistStatusResponse::from)
                                                                       .collect(Collectors.toList());
