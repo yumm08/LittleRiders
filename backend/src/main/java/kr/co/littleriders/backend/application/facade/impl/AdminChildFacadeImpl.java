@@ -7,6 +7,8 @@ import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
+import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
+import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
 import kr.co.littleriders.backend.domain.history.ChildHistoryService;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import kr.co.littleriders.backend.domain.pending.PendingService;
@@ -51,6 +53,25 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         academyChildList.addAll(attendingChild);
         academyChildList.addAll(notAttendingChild);
         return academyChildList;
+    }
+
+    @Override
+    public Long updateAcademyChild(Long academyId, Long academyChildId, String status) {
+
+        Academy academy = academyService.findById(academyId);
+
+        AcademyChild academyChild = academyChildService.findById(academyChildId);
+        if (academyChild.getAcademy() != academy) {
+            throw AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND); // 추후 다른 에러 메시지로 변경
+        }
+
+        // 원생 정보 update 후 저장
+        academyChild.updateStatus(AcademyChildStatus.valueOf(status.toUpperCase()));
+        academyChildService.save(academyChild);
+
+        // 원생 보호자 정보 update 후 저장 -> 학원에 남아있는 자녀 있.없 확인
+
+        return null;
     }
 
     @Override

@@ -14,4 +14,6 @@ public interface AdminChildFacade {
     void deletePendingList(Long academyId, List<Long> pendingList);
 
     List<AcademyChildResponse> readAcademyChildList(Long academyId);
+
+    Long updateAcademyChild(Long academyId, Long academyChildId, String status);
 }

@@ -8,12 +8,14 @@ import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity @Getter
 @Table(name = "academy_child")
 @NoArgsConstructor
+@DynamicUpdate
 public class AcademyChild {
 
     @Id
@@ -62,5 +64,9 @@ public class AcademyChild {
 
     public static AcademyChild of(Child child, Academy academy, AcademyFamily family, AcademyChildStatus status, CardType type) {
         return new AcademyChild(child, academy, family, status, type);
+    }
+
+    public void updateStatus(AcademyChildStatus status) {
+        this.status = status;
     }
 }

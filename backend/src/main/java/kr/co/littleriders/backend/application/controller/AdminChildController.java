@@ -27,6 +27,18 @@ public class AdminChildController {
         return ResponseEntity.ok().body(academyChildList);
     }
 
+    @PutMapping
+    public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy
+                                                , @RequestParam(value = "academyChildId") Long academyChildId
+                                                , @RequestBody String status) {
+
+        Long academyId = authAcademy.getId();
+        Long updateChildId = adminChildFacade.updateAcademyChild(academyId, academyChildId, status);
+
+        return ResponseEntity.ok().body(updateChildId);
+    }
+
+
     @GetMapping("/pending")
     public ResponseEntity<List<PendingListResponse>> getPendingList(@Auth AuthAcademy authAcademy) {
 
