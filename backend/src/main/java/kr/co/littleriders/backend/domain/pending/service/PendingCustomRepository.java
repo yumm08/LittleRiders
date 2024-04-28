@@ -6,7 +6,7 @@ import kr.co.littleriders.backend.domain.pending.entity.Pending;
 
 import java.util.List;
 
-public interface PendingCustomRepository {
+interface PendingCustomRepository {
 
     List<Pending> findByChild(List<Child> childList);
 
