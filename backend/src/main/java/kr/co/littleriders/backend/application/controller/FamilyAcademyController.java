@@ -17,16 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/family/acadmey")
+@RequestMapping("/family/academy")
 @RequiredArgsConstructor
 public class FamilyAcademyController {
 
     private final FamilyAcademyFacade familyAcademyFacade;
 
     @GetMapping("/status")
-    public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList(@Auth AuthFamily authFamily) {
+//    public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList(@Auth AuthFamily authFamily) {
+    public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList() {
 
-        List<AcademyRegistStatusResponse> academyList = familyAcademyFacade.readAcademyRegistStatusList(authFamily);
+        Long familyId = 1L;
+        List<AcademyRegistStatusResponse> academyList = familyAcademyFacade.readAcademyRegistStatusList(familyId);
 
         return ResponseEntity.ok().body(academyList);
     }
@@ -41,13 +43,15 @@ public class FamilyAcademyController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addAcademyPending(@Auth AuthFamily authFamily
-                                             , @RequestBody @Valid FamilyAcademyRegistRequest familyAcademyRegistRequest) {
+//    public ResponseEntity<Void> addAcademyPending(@Auth AuthFamily authFamily,
+    public ResponseEntity<Long> addAcademyPending(
+                                                @RequestBody @Valid FamilyAcademyRegistRequest familyAcademyRegistRequest) {
 
 
-        familyAcademyFacade.insertAcademyJoin(authFamily, familyAcademyRegistRequest);
+        Long familyId = 1L;
+        Long pendingId = familyAcademyFacade.insertAcademyJoin(familyId, familyAcademyRegistRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(pendingId);
     }
 
 }
