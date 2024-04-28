@@ -23,7 +23,7 @@ public class FamilyAcademyController {
 
     private final FamilyAcademyFacade familyAcademyFacade;
 
-    @GetMapping
+    @GetMapping("/status")
     public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList(@Auth AuthFamily authFamily) {
 
         List<AcademyRegistStatusResponse> academyList = familyAcademyFacade.readAcademyRegistStatusList(authFamily);
@@ -33,7 +33,7 @@ public class FamilyAcademyController {
 
     @GetMapping
     public ResponseEntity<AcademyListResponse> getAcademyList(@RequestParam(value = "name") String name
-                                                                   , @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+                                                            , @PageableDefault(size = 10, sort = "id") Pageable pageable) {
 
         AcademyListResponse academyList = familyAcademyFacade.readAcademyList(name, pageable);
 
