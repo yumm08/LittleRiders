@@ -3,6 +3,7 @@ import DispatchPage from '@pages/DispatchPage'
 import HomePage from '@pages/HomePage'
 import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
+import SignUpPage from '@pages/SignUpPage'
 
 import App from 'App'
 import { createBrowserRouter } from 'react-router-dom'
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     children: [
+      {
+        path: 'signup',
+        element: <SignUpPage />,
+      },
       {
         index: true,
         element: <HomePage />,
