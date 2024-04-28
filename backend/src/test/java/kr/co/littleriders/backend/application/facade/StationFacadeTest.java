@@ -60,7 +60,7 @@ public class StationFacadeTest {
         }
 
         @Test
-        @DisplayName("실패")
+        @DisplayName("정류장 이름 중복 테스트")
         void whenFail() {
             // 이미 존재하는 정류장 이름으로 등록 시 예외 발생
 
