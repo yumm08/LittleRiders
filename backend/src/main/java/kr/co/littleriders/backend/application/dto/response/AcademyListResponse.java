@@ -14,15 +14,18 @@ public class AcademyListResponse {
 
     private Integer page;
 
+    private Integer size;
+
     private Boolean last;
 
-    private AcademyListResponse(List<AcademyList> academyList, int number, boolean last) {
+    private AcademyListResponse(List<AcademyList> academyList, int number, int size, boolean last) {
         this.academyList = academyList;
         this.page = number;
+        this.size = size;
         this.last = last;
     }
 
-    public static AcademyListResponse of(List<AcademyList> academyList, int number, boolean last) {
-        return new AcademyListResponse(academyList, number, last);
+    public static AcademyListResponse of(List<AcademyList> academyList, int number, int size, boolean last) {
+        return new AcademyListResponse(academyList, number, size, last);
     }
 }
