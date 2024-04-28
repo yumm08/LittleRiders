@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 class FamilyFacade implements FamilyAccountFacade {
 
     private final FamilyService familyService;
+
     private final AcademyService academyService;
 
     private final VerificationService verificationService;

@@ -43,6 +43,7 @@ public class Academy implements Member {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 학원 전화번호
 
+    @Getter
     @Column(name = "image_path")
     private String imagePath; // 이미지 경로
 
