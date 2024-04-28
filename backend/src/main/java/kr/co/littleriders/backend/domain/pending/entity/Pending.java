@@ -6,10 +6,13 @@ import kr.co.littleriders.backend.domain.child.entity.Child;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity @Getter
 @Table(name = "academy_child_allow_pending")
 @NoArgsConstructor
+@DynamicUpdate
 public class Pending {
 
 	@Id
@@ -37,5 +40,9 @@ public class Pending {
 
 	public static Pending of(Academy academy, Child child, PendingStatus status) {
 		return new Pending(academy, child, status);
+	}
+
+	public void updatePendingStatus(PendingStatus status) {
+		this.status = status;
 	}
 }

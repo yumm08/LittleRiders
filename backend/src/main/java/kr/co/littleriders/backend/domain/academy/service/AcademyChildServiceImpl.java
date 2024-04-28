@@ -29,4 +29,9 @@ class AcademyChildServiceImpl implements AcademyChildService {
     public boolean notExistsById(Long id) {
         return !academyChildRepository.existsById(id);
     }
+
+    @Override
+    public void save(AcademyChild academyChild) {
+        academyChildRepository.save(academyChild);
+    }
 }

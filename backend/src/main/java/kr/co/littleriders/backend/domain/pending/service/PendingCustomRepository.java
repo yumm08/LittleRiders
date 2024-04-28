@@ -11,4 +11,6 @@ public interface PendingCustomRepository {
     List<Pending> findByChild(List<Child> childList);
 
     List<Pending> findByAcademy(Academy academy);
+
+    List<Pending> findByIdList(List<Long> pendingList);
 }

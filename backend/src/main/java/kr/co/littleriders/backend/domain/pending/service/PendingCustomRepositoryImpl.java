@@ -34,4 +34,13 @@ class PendingCustomRepositoryImpl implements PendingCustomRepository {
                 .where(pending.status.eq(PendingStatus.PENDING))
                 .fetch();
     }
+
+    @Override
+    public List<Pending> findByIdList(List<Long> pendingList) {
+        return jpaQueryFactory
+                .selectFrom(pending)
+                .where(pending.id.in(pendingList))
+                .where(pending.status.eq(PendingStatus.PENDING))
+                .fetch();
+    }
 }

@@ -30,9 +30,6 @@ public class AcademyChild {
     @JoinColumn(name = "academy_id", nullable = false)
     private Academy academy; // 학원
 
-    @OneToMany(mappedBy = "academyChild")
-    private List<ChildBoardDropInfo> childBoardDropInfoList; // 원생 승하차 목록
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private AcademyChildStatus status; // 상태
@@ -49,4 +46,18 @@ public class AcademyChild {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt; // 상태 변경 일자
 
+    @OneToMany(mappedBy = "academyChild")
+    private List<ChildBoardDropInfo> childBoardDropInfoList; // 원생 승하차 목록
+
+    private AcademyChild(Child child, Academy academy, AcademyFamily family, AcademyChildStatus status, CardType type) {
+        this.child = child;
+        this.academy = academy;
+        this.academyFamily = family;
+        this.status = status;
+        this.cardType = type;
+    }
+
+    public static AcademyChild of(Child child, Academy academy, AcademyFamily family, AcademyChildStatus status, CardType type) {
+        return new AcademyChild(child, academy, family, status, type);
+    }
 }

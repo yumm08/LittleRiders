@@ -13,4 +13,6 @@ public interface PendingService {
     List<Pending> findByChild(List<Child> childList);
 
     List<Pending> findByAcademy(Academy academy);
+
+    List<Pending> findByIdAndAcademy(List<Long> pendingList, Academy academy);
 }

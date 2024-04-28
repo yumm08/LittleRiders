@@ -2,11 +2,16 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 import kr.co.littleriders.backend.application.facade.AdminChildFacade;
+import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.academy.entity.*;
 import kr.co.littleriders.backend.domain.pending.PendingService;
+import kr.co.littleriders.backend.domain.pending.entity.Pending;
+import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +22,8 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
 
     private final PendingService pendingService;
     private final AcademyService academyService;
+    private final AcademyFamilyService academyFamilyService;
+    private final AcademyChildService academyChildService;
 
     @Override
     public List<PendingListResponse> readPendingList(Long academyId) {
@@ -27,5 +34,27 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
                                                               .collect(Collectors.toList());
 
         return pendingList;
+    }
+
+    @Override
+    public void addAcademyChildList(Long academyId, List<Long> pendingList) {
+
+        Academy academy = academyService.findById(academyId);
+        List<Pending> pendingAllowList = pendingService.findByIdAndAcademy(pendingList, academy);
+        pendingAllowList.forEach(this::addAcademyChild);
+    }
+
+    @Transactional
+    public void addAcademyChild(Pending pending) {
+
+        pending.updatePendingStatus(PendingStatus.ALLOW);
+        pendingService.save(pending); // pending status ALLOW 변경
+
+        AcademyFamily academyFamily = AcademyFamily.from(pending);
+        academyFamilyService.save(academyFamily); //academyFamily 저장
+
+        AcademyChild academyChild = AcademyChild.of(pending.getChild(), pending.getAcademy(), academyFamily
+                , AcademyChildStatus.ATTENDING, CardType.BEACON);
+        academyChildService.save(academyChild); //academyChild 저장
     }
 }

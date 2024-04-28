@@ -28,4 +28,9 @@ class AcademyFamilyServiceImpl implements AcademyFamilyService {
     public boolean notExistsById(Long id) {
         return !academyFamilyRepository.existsById(id);
     }
+
+    @Override
+    public void save(AcademyFamily academyFamily) {
+        academyFamilyRepository.save(academyFamily);
+    }
 }

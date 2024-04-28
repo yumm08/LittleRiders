@@ -6,9 +6,7 @@ import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +26,14 @@ public class AdminChildController {
         return ResponseEntity.ok().body(pendingList);
     }
 
+    @PostMapping("/pending")
+    public ResponseEntity<Void> addAcademyChild(@Auth AuthAcademy authAcademy
+                                                , @RequestBody List<Long> pendingList) {
+
+        Long academyId = authAcademy.getId();
+        adminChildFacade.addAcademyChildList(academyId, pendingList);
+
+        return ResponseEntity.ok().build();
+    }
 
 }

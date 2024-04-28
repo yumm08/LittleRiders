@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum PendingErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "대기 기록을 찾을수 없습니다");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "대기 기록을 찾을수 없습니다"),
+    ILLEGAL_ACADEMY(HttpStatus.BAD_REQUEST, "002", "요청 매개변수가 유효하지 않습니다");
 
 
     PendingErrorCode(HttpStatus status, String code, String message) {

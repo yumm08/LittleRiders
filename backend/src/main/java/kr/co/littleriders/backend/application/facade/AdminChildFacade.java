@@ -7,4 +7,6 @@ import java.util.List;
 public interface AdminChildFacade {
 
     List<PendingListResponse> readPendingList(Long academyId);
+
+    void addAcademyChildList(Long academyId, List<Long> pendingList);
 }

@@ -10,4 +10,6 @@ public interface AcademyFamilyService {
     boolean existsById(Long id);
 
     boolean notExistsById(Long id);
+
+    void save(AcademyFamily academyFamily);
 }
