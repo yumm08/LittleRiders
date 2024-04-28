@@ -9,6 +9,7 @@ import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
+import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,8 @@ public class RouteFacadeImpl implements RouteFacade {
     private final AcademyService academyService;
 
     @Override
-    public void createRoute(Academy academyDto, RouteCreateRequest createRequest) {
-        Long academyId = academyDto.getId();
+    public void createRoute(AuthAcademy authAcademy, RouteCreateRequest createRequest) {
+        Long academyId = authAcademy.getId();
         Academy academy = academyService.findById(academyId);
 
         String name = createRequest.getName();
@@ -37,8 +38,8 @@ public class RouteFacadeImpl implements RouteFacade {
     }
 
     @Override
-    public List<RouteResponse> getAllRoute(Academy academyDto) {
-        Long academyId = academyDto.getId();
+    public List<RouteResponse> getAllRoute(AuthAcademy authAcademy) {
+        Long academyId = authAcademy.getId();
         List<Route> routeList = routeService.findAllByAcademyId(academyId);
         return routeList.stream()
                 .map(RouteResponse::from)
@@ -46,8 +47,8 @@ public class RouteFacadeImpl implements RouteFacade {
     }
 
     @Override
-    public RouteResponse getRoute(Academy academyDto, Long routeId) {
-        Long academyId = academyDto.getId();
+    public RouteResponse getRoute(AuthAcademy authAcademy, Long routeId) {
+        Long academyId = authAcademy.getId();
         Route route = routeService.findById(routeId);
 
         if(!Objects.equals(academyId, route.getAcademy().getId())) {
