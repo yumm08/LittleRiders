@@ -69,6 +69,7 @@ public class AcademyAccountController {
     }
 
 
+    @Deprecated
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(@Auth AuthAcademy authAcademy) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
