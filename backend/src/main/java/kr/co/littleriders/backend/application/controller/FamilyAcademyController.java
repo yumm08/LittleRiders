@@ -2,7 +2,8 @@ package kr.co.littleriders.backend.application.controller;
 
 
 import jakarta.validation.Valid;
-import kr.co.littleriders.backend.application.dto.request.FamilyAcademyJoinRequest;
+import kr.co.littleriders.backend.application.dto.request.FamilyAcademyRegistRequest;
+import kr.co.littleriders.backend.application.dto.response.AcademyRegistStatusResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyListResponse;
 import kr.co.littleriders.backend.application.facade.FamilyAcademyFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
@@ -23,20 +24,28 @@ public class FamilyAcademyController {
     private final FamilyAcademyFacade familyAcademyFacade;
 
     @GetMapping
-    public ResponseEntity<List<AcademyListResponse>> getAcademyList(@RequestParam(value = "name") String name
-                                                                   , @PageableDefault(size = 20, sort = "id") Pageable pageable) {
+    public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList(@Auth AuthFamily authFamily) {
 
-        List<AcademyListResponse> acadmeyList = familyAcademyFacade.readAcademyList(name, pageable);
+        List<AcademyRegistStatusResponse> academyList = familyAcademyFacade.readAcademyRegistStatusList(authFamily);
 
-        return ResponseEntity.ok().body(acadmeyList);
+        return ResponseEntity.ok().body(academyList);
+    }
+
+    @GetMapping
+    public ResponseEntity<AcademyListResponse> getAcademyList(@RequestParam(value = "name") String name
+                                                                   , @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+
+        AcademyListResponse academyList = familyAcademyFacade.readAcademyList(name, pageable);
+
+        return ResponseEntity.ok().body(academyList);
     }
 
     @PostMapping
     public ResponseEntity<Void> addAcademyPending(@Auth AuthFamily authFamily
-                                             , @RequestBody @Valid FamilyAcademyJoinRequest familyAcademyJoinRequest) {
+                                             , @RequestBody @Valid FamilyAcademyRegistRequest familyAcademyRegistRequest) {
 
 
-        familyAcademyFacade.insertAcademyJoin(authFamily, familyAcademyJoinRequest);
+        familyAcademyFacade.insertAcademyJoin(authFamily, familyAcademyRegistRequest);
 
         return ResponseEntity.ok().build();
     }
