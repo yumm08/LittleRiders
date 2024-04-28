@@ -5,9 +5,13 @@ import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.station.entity.Station;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
 @Entity
 @Table(name = "station_route",
 uniqueConstraints = {
@@ -36,6 +40,22 @@ public class RouteStation {
 
     @Column(name = "visit_order" , nullable = false)
     private Integer visitOrder; // 방문 순서
+
+    private RouteStation(Route route, Academy academy, Station station, int visitOrder) {
+        this.route = route;
+        this.academy = academy;
+        this.station = station;
+        this.visitOrder = visitOrder;
+    }
+
+    public static RouteStation of(Route route, Academy academy, Station station, int visitOrder) {
+        return new RouteStation(
+                route,
+                academy,
+                station,
+                visitOrder
+        );
+    }
 
 //    @OneToMany(mappedBy = "boardRouteStation")
 //    private List<ChildBoardDropInfo> childBoardInfoList;
