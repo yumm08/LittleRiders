@@ -31,3 +31,21 @@ export const formatBirthToAge = (birth: string) => {
 
   return `만 ${age}세`
 }
+
+/**
+ * 초를 받아서 분:초 형태로 반환하는 함수
+ *
+ * @param second 초
+ * @returns 분:초
+ *
+ * @example
+ * ```ts
+ * formatSecondToTime(180) // 03:00
+ * ```
+ */
+export const formatSecondToTime = (second: number) => {
+  const minutes = Math.floor(second / 60)
+  const seconds = second % 60
+
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+}
