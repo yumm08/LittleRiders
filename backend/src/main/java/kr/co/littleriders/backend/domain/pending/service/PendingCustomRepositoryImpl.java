@@ -12,7 +12,7 @@ import static kr.co.littleriders.backend.domain.pending.entity.QPending.pending;
 
 @Repository
 @RequiredArgsConstructor
-public class PendingCustomRepositoryImpl implements PendingCustomRepository {
+class PendingCustomRepositoryImpl implements PendingCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
