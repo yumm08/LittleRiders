@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.controller;
 
+import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 import kr.co.littleriders.backend.application.facade.AdminChildFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
@@ -16,6 +17,15 @@ import java.util.List;
 public class AdminChildController {
 
     private final AdminChildFacade adminChildFacade;
+
+    @GetMapping
+    public ResponseEntity<List<AcademyChildResponse>> getAcademyChildList(@Auth AuthAcademy authAcademy) {
+
+        Long academyId = authAcademy.getId();
+        List<AcademyChildResponse> academyChildList = adminChildFacade.readAcademyChildList(academyId);
+
+        return ResponseEntity.ok().body(academyChildList);
+    }
 
     @GetMapping("/pending")
     public ResponseEntity<List<PendingListResponse>> getPendingList(@Auth AuthAcademy authAcademy) {

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 
 @Repository
-interface AcademyChildRepository extends JpaRepository<AcademyChild, Long> {
+interface AcademyChildRepository extends JpaRepository<AcademyChild, Long>, AcademyChildCustomRepository {
 }

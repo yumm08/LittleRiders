@@ -1,11 +1,14 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 import kr.co.littleriders.backend.application.facade.AdminChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
+import kr.co.littleriders.backend.domain.history.ChildHistoryService;
+import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +28,30 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     private final AcademyService academyService;
     private final AcademyFamilyService academyFamilyService;
     private final AcademyChildService academyChildService;
+    private final ChildHistoryService childHistoryService;
+
+    @Override
+    public List<AcademyChildResponse> readAcademyChildList(Long academyId) {
+
+        Academy academy = academyService.findById(academyId);
+        List<AcademyChildResponse> attendingChild = academyChildService.findAllByAcademyAndAttending(academy)
+                                                                        .stream()
+                                                                        .map(AcademyChildResponse::from)
+                                                                        .collect(Collectors.toList());
+
+        List<AcademyChildResponse> notAttendingChild = academyChildService.findAllByAcademyAndNotAttending(academy)
+                .stream().map(academyChild -> {
+                    ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
+                    AcademyChildResponse childResponse = AcademyChildResponse.of(academyChild, childHistory);
+
+                    return childResponse;
+                }).collect(Collectors.toList());
+
+        List<AcademyChildResponse> academyChildList = new ArrayList<>();
+        academyChildList.addAll(attendingChild);
+        academyChildList.addAll(notAttendingChild);
+        return academyChildList;
+    }
 
     @Override
     public List<PendingListResponse> readPendingList(Long academyId) {
@@ -55,6 +83,7 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
             pendingService.save(pending); // pending status ALLOW 변경
         });
     }
+
 
     @Transactional
     public void insertAcademyChild(Pending pending) {
