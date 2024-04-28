@@ -12,9 +12,9 @@ import java.util.List;
 @Getter
 public class RouteCreateRequest {
     private String name;
-    private List<RouteStation> stationList;
+    private List<RouteStationRequest> routeStationList;
 
-    public Route toRoute(Academy academy) {
-        return Route.of(academy, this.name, this.stationList);
+    public Route toRoute(Academy academy, List<RouteStation> routeStationList) {
+        return Route.of(academy, this.name, routeStationList);
     }
 }
