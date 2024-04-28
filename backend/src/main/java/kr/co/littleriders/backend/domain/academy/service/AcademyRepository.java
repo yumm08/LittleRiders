@@ -15,6 +15,6 @@ interface AcademyRepository extends JpaRepository<Academy, Long> {
 
     boolean existsByEmail(String email);
 
-    @Query()
+    @Query("SELECT a FROM Academy a WHERE a.name LIKE %:name%")
     Page<Academy> findByName(String name, Pageable pageable);
 }
