@@ -5,7 +5,5 @@ type Props = {
 }
 
 export default function Page({ children }: Props) {
-  return (
-    <div className="mx-[200px] w-100vw h-screen mt-[120px]">{children}</div>
-  )
+  return <div className="w-100vw mx-[200px] mt-[120px] h-full">{children}</div>
 }
