@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.facade.AccountFacade;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
@@ -34,7 +35,7 @@ public class AccountController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse response){
+    public ResponseEntity<Void> signIn(@Valid @RequestBody SignInRequest signInRequest, HttpServletResponse response){
         String email = signInRequest.getEmail();
         String password = signInRequest.getPassword();
         JwtToken jwtToken = accountFacade.signIn(email,password);

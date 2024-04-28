@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.AcademySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.dto.request.SignUpValidateEmailRequest;
@@ -34,7 +35,7 @@ public class AcademyAccountController {
     }
 
     @PostMapping("/sign-up/validate")
-    public ResponseEntity<Void> validateEmailWithCode(@RequestBody SignUpValidateEmailRequest signUpValidateEmailRequest, HttpServletResponse response) {
+    public ResponseEntity<Void> validateEmailWithCode(@Valid  @RequestBody SignUpValidateEmailRequest signUpValidateEmailRequest, HttpServletResponse response) {
 
         String email = signUpValidateEmailRequest.getEmail();
         String code = signUpValidateEmailRequest.getCode();

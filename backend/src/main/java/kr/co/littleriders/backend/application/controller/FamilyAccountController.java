@@ -5,6 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.dto.request.SignUpValidateEmailRequest;
@@ -17,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,17 +28,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/family/account")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class FamilyAccountController {
     private final FamilyAccountFacade familyAccountFacade;
 
     @GetMapping("/sign-up/validate")
-    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam String email) {
+    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam @NotBlank String email) { //TODO : 변경필요
         familyAccountFacade.sendSignUpEmail(email);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sign-up/validate")
-    public ResponseEntity<?> validateEmailWithCode(@RequestBody SignUpValidateEmailRequest signUpValidateEmailRequest, HttpServletResponse response) {
+    public ResponseEntity<?> validateEmailWithCode(@Valid @RequestBody SignUpValidateEmailRequest signUpValidateEmailRequest, HttpServletResponse response) {
         log.info("validateEmailWithCode: call");
         String email = signUpValidateEmailRequest.getEmail();
         String code = signUpValidateEmailRequest.getCode();
@@ -48,14 +53,14 @@ public class FamilyAccountController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Void> signUp(@RequestBody FamilySignUpRequest familySignUpRequest, @CookieValue("signup-token") String token) {
+    public ResponseEntity<Void> signUp(@Valid @RequestBody FamilySignUpRequest familySignUpRequest, @CookieValue("signup-token") String token) {
         log.info("signup-token = [{}]",token);
         familyAccountFacade.signUp(familySignUpRequest,token);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse response) {
+    public ResponseEntity<Void> signIn(@Valid @RequestBody SignInRequest signInRequest, HttpServletResponse response) {
         JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
         String accessToken = jwtToken.getAccessToken();
         String refreshToken = jwtToken.getRefreshToken();
