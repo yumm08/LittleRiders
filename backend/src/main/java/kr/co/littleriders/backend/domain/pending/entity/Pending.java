@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity @Getter
 @Table(name = "academy_child_allow_pending")
 @NoArgsConstructor
 public class Pending {
@@ -24,12 +25,17 @@ public class Pending {
 	@JoinColumn(name = "child_id", nullable = false)
 	private Child child; // 자녀
 
-	private Pending(Academy academy, Child child) {
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private PendingStatus status;
+
+	private Pending(Academy academy, Child child, PendingStatus status) {
 		this.academy = academy;
 		this.child = child;
+		this.status = status;
 	}
 
-	public static Pending of(Academy academy, Child child) {
-		return new Pending(academy, child);
+	public static Pending of(Academy academy, Child child, PendingStatus status) {
+		return new Pending(academy, child, status);
 	}
 }

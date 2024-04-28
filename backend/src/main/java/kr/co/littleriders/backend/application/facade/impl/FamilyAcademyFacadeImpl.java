@@ -1,8 +1,10 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 
-import kr.co.littleriders.backend.application.dto.request.FamilyAcademyJoinRequest;
+import kr.co.littleriders.backend.application.dto.request.FamilyAcademyRegistRequest;
+import kr.co.littleriders.backend.application.dto.response.AcademyList;
 import kr.co.littleriders.backend.application.dto.response.AcademyListResponse;
+import kr.co.littleriders.backend.application.dto.response.AcademyRegistStatusResponse;
 import kr.co.littleriders.backend.application.facade.FamilyAcademyFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
@@ -14,8 +16,10 @@ import kr.co.littleriders.backend.domain.family.error.code.FamilyChildErrorCode;
 import kr.co.littleriders.backend.domain.family.error.exception.FamilyChildException;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
+import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
 import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
@@ -32,28 +36,43 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
     private final PendingService pendingService;
 
     @Override
-    public List<AcademyListResponse> readAcademyList(String name, Pageable pageable) {
+    public AcademyListResponse readAcademyList(String name, Pageable pageable) {
 
-        List<AcademyListResponse> academyList = academyService.findByName(name, pageable)
-                                                              .stream()
-                                                              .map(AcademyListResponse::from)
-                                                              .collect(Collectors.toList());
+        Page<Academy> academyPage = academyService.findByName(name, pageable);
 
-        return academyList;
+        List<AcademyList> academyList = academyPage.getContent()
+                                                   .stream()
+                                                   .map(AcademyList::from)
+                                                   .collect(Collectors.toList());
+
+
+        return AcademyListResponse.of(academyList, academyPage.getNumber(), academyPage.isLast());
     }
 
     @Override
-    public void insertAcademyJoin(AuthFamily authFamily, FamilyAcademyJoinRequest familyAcademyJoinRequest) {
+    public void insertAcademyJoin(AuthFamily authFamily, FamilyAcademyRegistRequest familyAcademyRegistRequest) {
 
-        Academy academy = academyService.findById(familyAcademyJoinRequest.getAcademyId());
-        Child child = childService.findById(familyAcademyJoinRequest.getChildId());
+        Academy academy = academyService.findById(familyAcademyRegistRequest.getAcademyId());
+        Child child = childService.findById(familyAcademyRegistRequest.getChildId());
         Family family = familyService.findById(authFamily.getId());
 
         if (!family.getChild().contains(child)) {
             throw FamilyChildException.from(FamilyChildErrorCode.NOT_FOUND);
         }
 
-        Pending pending = Pending.of(academy, child);
+        Pending pending = Pending.of(academy, child, PendingStatus.PENDING);
         pendingService.save(pending);
+    }
+
+    @Override
+    public List<AcademyRegistStatusResponse> readAcademyRegistStatusList(AuthFamily authFamily) {
+
+        List<Child> childList = familyService.findById(authFamily.getId()).getChild();
+        List<AcademyRegistStatusResponse> academyList = pendingService.findByChildId(childList)
+                                                                      .stream()
+                                                                      .map(AcademyRegistStatusResponse::from)
+                                                                      .collect(Collectors.toList());
+
+        return academyList;
     }
 }
