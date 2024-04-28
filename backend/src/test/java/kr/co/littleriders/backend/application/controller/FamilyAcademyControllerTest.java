@@ -16,11 +16,9 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
-import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -89,7 +87,7 @@ class FamilyAcademyControllerTest {
         void whenSuccess() throws Exception {
             Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
             academyService.save(academy);
-            Family family = Family.of("test@com", "password", "테스트부모", "테스트시 테스트동", "010-1111");
+            Family family = Family.of("test1@com", "password", "테스트부모", "테스트시 테스트동", "010-1111");
             familyService.save(family);
             ChildRegistRequest childRegist = new ChildRegistRequest("테스트", LocalDate.of(2024, 4,26), "MALE", null);
             Child child = childRegist.toEntity(family);
