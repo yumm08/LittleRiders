@@ -1,7 +1,11 @@
 package kr.co.littleriders.backend.application.dto.response;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class AcademyList {
     private Long academyId;
 
