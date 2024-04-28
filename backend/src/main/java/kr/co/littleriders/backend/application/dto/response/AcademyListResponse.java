@@ -4,37 +4,25 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class AcademyListResponse {
 
-    private Long academyId;
+    private List<AcademyList> academyList;
 
-    private String name;
+    private Integer page;
 
-    private String address;
+    private Boolean last;
 
-    private String phoneNumber;
-
-    private String email;
-
-    private String image;
-
-    public AcademyListResponse(Long id, String name, String address, String phoneNumber, String email, String imagePath) {
-        this.academyId = id;
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.image = imagePath;
+    private AcademyListResponse(List<AcademyList> academyList, int number, boolean last) {
+        this.academyList = academyList;
+        this.page = number;
+        this.last = last;
     }
 
-    public static AcademyListResponse from(Academy academy) {
-        return new AcademyListResponse(academy.getId()
-                , academy.getName()
-                , academy.getAddress()
-                , academy.getPhoneNumber()
-                , academy.getEmail()
-                , academy.getImagePath());
+    public static AcademyListResponse of(List<AcademyList> academyList, int number, boolean last) {
+        return new AcademyListResponse(academyList, number, last);
     }
 }

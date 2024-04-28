@@ -7,6 +7,7 @@ import kr.co.littleriders.backend.domain.academy.error.exception.AcademyExceptio
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
@@ -51,11 +52,9 @@ class AcademyServiceImpl implements AcademyService {
     }
 
     @Override
-    public List<Academy> findByName(String name, Pageable pageable) {
+    public Page<Academy> findByName(String name, Pageable pageable) {
 
-        List<Academy> academyList = academyRepository.findByName(name, pageable).getContent();
-
-        return academyList;
+        return academyRepository.findByName(name, pageable);
     }
 
 }

@@ -37,6 +37,7 @@ public class AcademyChild {
     @Column(name = "status")
     private AcademyChildStatus status; // 상태
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "card_type", nullable = false)
     private CardType cardType; // 카드 종류
 
