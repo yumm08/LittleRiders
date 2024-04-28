@@ -1,7 +1,11 @@
 package kr.co.littleriders.backend.application.dto.response;
 
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class AcademyRegistStatusResponse {
 
     private Long academyId;
@@ -27,6 +31,7 @@ public class AcademyRegistStatusResponse {
         this.academyId = academyId;
         this.academyName = academyName;
         this.academyAddress = academyAddress;
+        this.academyPhoneNumber = academyPhoneNumber;
         this.academyImagePath = academyImagePath;
         this.childName = childName;
         this.childImagePath = childImagePath;
