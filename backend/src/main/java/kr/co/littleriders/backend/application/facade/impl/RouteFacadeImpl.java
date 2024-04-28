@@ -9,6 +9,9 @@ import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
+import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
+import kr.co.littleriders.backend.domain.station.StationService;
+import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class RouteFacadeImpl implements RouteFacade {
 
     private final RouteService routeService;
     private final AcademyService academyService;
+    private final StationService stationService;
 
     @Override
     public void createRoute(AuthAcademy authAcademy, RouteCreateRequest createRequest) {
@@ -33,7 +37,16 @@ public class RouteFacadeImpl implements RouteFacade {
         if (routeService.existsByAcademyIdAndName(academyId, name)) {
             throw RouteException.from(RouteErrorCode.DUPLICATE_NAME);
         }
-        Route route = createRequest.toRoute(academy);
+
+        List<RouteStation> routeStationList = createRequest.getRouteStationList().stream()
+                .map(routeStation -> {
+                    Station station = stationService.findById(routeStation.getStationId());
+                    return RouteStation.of(null, academy, station, routeStation.getVisitOrder());
+                })
+                .collect(Collectors.toList());
+
+        Route route = createRequest.toRoute(academy, routeStationList);
+
         routeService.save(route);
     }
 
