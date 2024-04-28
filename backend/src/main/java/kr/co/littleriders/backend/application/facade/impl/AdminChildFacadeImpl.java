@@ -37,15 +37,27 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     }
 
     @Override
-    public void addAcademyChildList(Long academyId, List<Long> pendingList) {
+    public void insertAcademyChildList(Long academyId, List<Long> pendingList) {
 
         Academy academy = academyService.findById(academyId);
         List<Pending> pendingAllowList = pendingService.findByIdAndAcademy(pendingList, academy);
-        pendingAllowList.forEach(this::addAcademyChild);
+        pendingAllowList.forEach(this::insertAcademyChild);
+    }
+
+    @Override
+    public void deletePendingList(Long academyId, List<Long> pendingList) {
+
+        Academy academy = academyService.findById(academyId);
+        List<Pending> pendingDenyList = pendingService.findByIdAndAcademy(pendingList, academy);
+
+        pendingDenyList.forEach(pending -> {
+            pending.updatePendingStatus(PendingStatus.DENY);
+            pendingService.save(pending); // pending status ALLOW 변경
+        });
     }
 
     @Transactional
-    public void addAcademyChild(Pending pending) {
+    public void insertAcademyChild(Pending pending) {
 
         pending.updatePendingStatus(PendingStatus.ALLOW);
         pendingService.save(pending); // pending status ALLOW 변경

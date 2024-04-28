@@ -31,7 +31,17 @@ public class AdminChildController {
                                                 , @RequestBody List<Long> pendingList) {
 
         Long academyId = authAcademy.getId();
-        adminChildFacade.addAcademyChildList(academyId, pendingList);
+        adminChildFacade.insertAcademyChildList(academyId, pendingList);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/pending")
+    public ResponseEntity<Void> removePendingList(@Auth AuthAcademy authAcademy
+                                                , @RequestBody List<Long> pendingList) {
+
+        Long academyId = authAcademy.getId();
+        adminChildFacade.deletePendingList(academyId, pendingList);
 
         return ResponseEntity.ok().build();
     }

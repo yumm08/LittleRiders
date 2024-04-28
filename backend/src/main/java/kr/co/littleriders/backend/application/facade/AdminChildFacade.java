@@ -8,5 +8,7 @@ public interface AdminChildFacade {
 
     List<PendingListResponse> readPendingList(Long academyId);
 
-    void addAcademyChildList(Long academyId, List<Long> pendingList);
+    void insertAcademyChildList(Long academyId, List<Long> pendingList);
+
+    void deletePendingList(Long academyId, List<Long> pendingList);
 }
