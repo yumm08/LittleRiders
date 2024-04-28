@@ -24,10 +24,9 @@ public class FamilyAcademyController {
     private final FamilyAcademyFacade familyAcademyFacade;
 
     @GetMapping("/status")
-//    public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList(@Auth AuthFamily authFamily) {
-    public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList() {
+    public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList(@Auth AuthFamily authFamily) {
 
-        Long familyId = 1L;
+        Long familyId = authFamily.getId();
         List<AcademyRegistStatusResponse> academyList = familyAcademyFacade.readAcademyRegistStatusList(familyId);
 
         return ResponseEntity.ok().body(academyList);
@@ -43,12 +42,11 @@ public class FamilyAcademyController {
     }
 
     @PostMapping
-//    public ResponseEntity<Void> addAcademyPending(@Auth AuthFamily authFamily,
-    public ResponseEntity<Long> addAcademyPending(
+    public ResponseEntity<Long> addAcademyPending(@Auth AuthFamily authFamily,
                                                 @RequestBody @Valid FamilyAcademyRegistRequest familyAcademyRegistRequest) {
 
 
-        Long familyId = 1L;
+        Long familyId = authFamily.getId();
         Long pendingId = familyAcademyFacade.insertAcademyJoin(familyId, familyAcademyRegistRequest);
 
         return ResponseEntity.ok().body(pendingId);
