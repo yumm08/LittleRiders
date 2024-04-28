@@ -2,8 +2,8 @@ package kr.co.littleriders.backend.domain.academy;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface AcademyService {
     Academy findById(Long id);
@@ -18,7 +18,7 @@ public interface AcademyService {
 
     boolean notExistsByEmail(String email);
 
-    Page<Academy> findByName(String name, Pageable pageable);
+    Slice<Academy> findByName(String name, Pageable pageable);
 
     void save(Academy academy);
 }

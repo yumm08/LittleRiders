@@ -21,6 +21,7 @@ import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
@@ -39,15 +40,14 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
     @Override
     public AcademyListResponse readAcademyList(String name, Pageable pageable) {
 
-        Page<Academy> academyPage = academyService.findByName(name, pageable);
+        Slice<Academy> academyPage = academyService.findByName(name, pageable);
 
         List<AcademyList> academyList = academyPage.getContent()
                                                    .stream()
                                                    .map(AcademyList::from)
                                                    .collect(Collectors.toList());
 
-
-        AcademyListResponse academyListResponse = AcademyListResponse.of(academyList, academyPage.getNumber(), academyPage.getNumber(), academyPage.isLast());
+        AcademyListResponse academyListResponse = AcademyListResponse.of(academyList, academyPage.getNumber(), academyPage.hasNext());
 
         return academyListResponse;
     }
@@ -58,7 +58,6 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
 
         Academy academy = academyService.findById(familyAcademyRegistRequest.getAcademyId());
         Child child = childService.findById(familyAcademyRegistRequest.getChildId());
-        Family family = familyService.findById(familyId);
 
         if (childService.findByFamilyId(familyId).contains(child)){
             throw FamilyChildException.from(FamilyChildErrorCode.NOT_FOUND);

@@ -11,11 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-interface AcademyRepository extends JpaRepository<Academy, Long> {
+interface AcademyRepository extends JpaRepository<Academy, Long>, AcademyCustomRepository {
     Optional<Academy> findByEmail(String email);
 
     boolean existsByEmail(String email);
 
-    @Query("SELECT a FROM Academy a WHERE a.name LIKE concat('%', :name, '%') ")
-    Page<Academy> findByName(@Param("name") String name, Pageable pageable);
 }

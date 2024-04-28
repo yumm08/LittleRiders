@@ -5,11 +5,10 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,9 +51,9 @@ class AcademyServiceImpl implements AcademyService {
     }
 
     @Override
-    public Page<Academy> findByName(String name, Pageable pageable) {
+    public Slice<Academy> findByName(String name, Pageable pageable) {
 
-        Page<Academy> academyList = academyRepository.findByName(name, pageable);
+        Slice<Academy> academyList = academyRepository.findByName(name, pageable);
         if (academyList.getContent().isEmpty()) {
             throw AcademyException.from(AcademyErrorCode.NOT_FOUND);
         }

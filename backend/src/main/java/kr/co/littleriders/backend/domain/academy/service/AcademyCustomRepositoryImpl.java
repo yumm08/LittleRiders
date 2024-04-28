@@ -23,7 +23,7 @@ class AcademyCustomRepositoryImpl implements AcademyCustomRepository {
     public Slice<Academy> findByName(String name, Pageable pageable) {
         List<Academy> academyList = jpaQueryFactory
                                     .selectFrom(academy)
-                                    .where(academy.name.like(name))
+                                    .where(academy.name.contains(name))
                                     .offset(pageable.getOffset())
                                     .limit(pageable.getPageSize() + 1)
                                     .fetch();
