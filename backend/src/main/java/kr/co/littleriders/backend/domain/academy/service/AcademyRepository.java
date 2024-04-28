@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-interface AcademyRepository extends JpaRepository<Academy, Long>, AcademyCustomRepository {
+interface AcademyRepository extends JpaRepository<Academy, Long> {
     Optional<Academy> findByEmail(String email);
 
     boolean existsByEmail(String email);
