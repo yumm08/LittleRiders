@@ -9,10 +9,13 @@ import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
 import kr.co.littleriders.backend.domain.station.error.exception.StationException;
+import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +24,10 @@ class StationFacadeImpl implements StationFacade {
     private final StationService stationService;
     private final AcademyService academyService;
 
+    @Transactional
     @Override
-    public void createStation(Academy academyDto, StationCreateRequest createRequest) {
-        Long academyId = academyDto.getId();
+    public void createStation(AuthAcademy authAcademy, StationCreateRequest createRequest) {
+        Long academyId = authAcademy.getId();
         Academy academy = academyService.findById(academyId);
 
         String name = createRequest.getName();
@@ -35,10 +39,12 @@ class StationFacadeImpl implements StationFacade {
     }
 
     @Override
-    public Page<StationResponse> searchByName(String name, Academy academyDto, Pageable pageable) {
-        Long academyId = academyDto.getId();
-        Page<Station> stationList = stationService.findAllByAcademyIdAndName(academyId, name, pageable);
-        return stationList.map(StationResponse::from);
+    public List<StationResponse> searchByName(String name, AuthAcademy authAcademy) {
+        Long academyId = authAcademy.getId();
+        List<Station> stationList = stationService.findAllByAcademyIdAndName(academyId, name);
+        return stationList.stream()
+                .map(StationResponse::from)
+                .collect(Collectors.toList());
     }
 
 }

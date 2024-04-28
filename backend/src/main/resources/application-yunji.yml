@@ -11,15 +11,17 @@ spring:
     properties:
       hibernate.format_sql: true
   jwt:
-    accessSecret: myaccesssecret1234
-    refreshSecret: myrefreshsecret1234
-    accessExpTime: 3000
-    refreshExpTime: 6000
+    access:
+      secret: accessabcdefg1234567891011121314151617181920
+      expTime: 120000
+    refresh:
+      secret: refreshabcdefg1234567891011121314151617181920
+      expTime: 86400000
 
 
   data:
     mongodb:
-      uri: mongodb://user:password@mongo.littleriders:37017/mydatabase?authSource=admin
+      uri: mongodb://user:password@mongo.littleriders.co.kr:37017/mydatabase?authSource=admin
 
     redis:
       host: littleriders.co.kr

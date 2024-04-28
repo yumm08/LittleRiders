@@ -6,15 +6,17 @@ spring:
     password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate.format_sql: true
   jwt:
-    accessSecret: ${ACCESS_SECRET}
-    refreshSecret: ${REFRESH_SECRET}
-    accessExpTime: 3000
-    refreshExpTime: 6000
+    access:
+      secret: ${ACCESS_SECRET}
+      expTime: ${ACCESS_EXP_TIME}
+    refresh:
+      secret: ${REFRESH_SECRET}
+      expTime: ${REFRESH_EXP_TIME}
 
   data:
     mongodb:
