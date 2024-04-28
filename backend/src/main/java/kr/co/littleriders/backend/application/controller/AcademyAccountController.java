@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.littleriders.backend.application.dto.request.AcademySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
+import kr.co.littleriders.backend.application.dto.request.SignUpValidateEmailRequest;
 import kr.co.littleriders.backend.application.facade.AcademyAccountFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
@@ -33,8 +34,10 @@ public class AcademyAccountController {
     }
 
     @PostMapping("/sign-up/validate")
-    public ResponseEntity<Void> validateEmailWithCode(@RequestBody String email, @RequestBody String code, HttpServletResponse response) {
+    public ResponseEntity<Void> validateEmailWithCode(@RequestBody SignUpValidateEmailRequest signUpValidateEmailRequest, HttpServletResponse response) {
 
+        String email = signUpValidateEmailRequest.getEmail();
+        String code = signUpValidateEmailRequest.getCode();
         String signUpToken = academyAccountFacade.getSignUpToken(email, code);
         Cookie cookie = new Cookie("signup-token", signUpToken);
         cookie.setHttpOnly(true);
