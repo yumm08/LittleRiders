@@ -12,6 +12,7 @@ import kr.co.littleriders.backend.domain.station.error.exception.StationExceptio
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ class StationFacadeImpl implements StationFacade {
     private final StationService stationService;
     private final AcademyService academyService;
 
+    @Transactional
     @Override
     public void createStation(AuthAcademy authAcademy, StationCreateRequest createRequest) {
         Long academyId = authAcademy.getId();
