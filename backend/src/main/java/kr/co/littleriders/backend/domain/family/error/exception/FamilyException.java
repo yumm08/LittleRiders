@@ -7,8 +7,6 @@ import lombok.Getter;
 @Getter
 public final class FamilyException extends LittleRidersException {
 
-
-
     FamilyException(FamilyErrorCode errorCode) {
         super(errorCode);
     }
