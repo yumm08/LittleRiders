@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.facade;
 
 import kr.co.littleriders.backend.application.dto.request.FamilyAcademyRegistRequest;
+import kr.co.littleriders.backend.application.dto.response.AcademyList;
 import kr.co.littleriders.backend.application.dto.response.AcademyListResponse;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyRegistStatusResponse;
@@ -12,7 +13,7 @@ public interface FamilyAcademyFacade {
 
     AcademyListResponse readAcademyList(String name, Pageable pageable);
 
-    void insertAcademyJoin(AuthFamily authFamily, FamilyAcademyRegistRequest familyAcademyRegistRequest);
+    Long insertAcademyJoin(Long familyId, FamilyAcademyRegistRequest familyAcademyRegistRequest);
 
-    List<AcademyRegistStatusResponse> readAcademyRegistStatusList(AuthFamily authFamily);
+    List<AcademyRegistStatusResponse> readAcademyRegistStatusList(Long familyId);
 }

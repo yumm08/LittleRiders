@@ -19,6 +19,7 @@ import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
 import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -46,28 +47,31 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
                                                    .collect(Collectors.toList());
 
 
-        return AcademyListResponse.of(academyList, academyPage.getNumber(), academyPage.isLast());
+        AcademyListResponse academyListResponse = AcademyListResponse.of(academyList, academyPage.getNumber(), academyPage.getNumber(), academyPage.isLast());
+
+        return academyListResponse;
     }
 
     @Override
-    public void insertAcademyJoin(AuthFamily authFamily, FamilyAcademyRegistRequest familyAcademyRegistRequest) {
+    public Long insertAcademyJoin(Long familyId
+            , FamilyAcademyRegistRequest familyAcademyRegistRequest) {
 
         Academy academy = academyService.findById(familyAcademyRegistRequest.getAcademyId());
         Child child = childService.findById(familyAcademyRegistRequest.getChildId());
-        Family family = familyService.findById(authFamily.getId());
+        Family family = familyService.findById(familyId);
 
-        if (!family.getChild().contains(child)) {
+        if (childService.findByFamilyId(familyId).contains(child)){
             throw FamilyChildException.from(FamilyChildErrorCode.NOT_FOUND);
         }
 
         Pending pending = Pending.of(academy, child, PendingStatus.PENDING);
-        pendingService.save(pending);
+        return pendingService.save(pending);
     }
 
     @Override
-    public List<AcademyRegistStatusResponse> readAcademyRegistStatusList(AuthFamily authFamily) {
+    public List<AcademyRegistStatusResponse> readAcademyRegistStatusList(Long familyId) {
 
-        List<Child> childList = familyService.findById(authFamily.getId()).getChild();
+        List<Child> childList = familyService.findById(familyId).getChild();
         List<AcademyRegistStatusResponse> academyList = pendingService.findByChildId(childList)
                                                                       .stream()
                                                                       .map(AcademyRegistStatusResponse::from)

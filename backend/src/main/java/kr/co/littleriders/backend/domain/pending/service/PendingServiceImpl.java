@@ -16,8 +16,8 @@ class PendingServiceImpl implements PendingService {
     private final PendingRespository pendingRespository;
 
     @Override
-    public void save(Pending pending) {
-        pendingRespository.save(pending);
+    public Long save(Pending pending) {
+        return pendingRespository.save(pending).getId();
     }
 
     @Override
