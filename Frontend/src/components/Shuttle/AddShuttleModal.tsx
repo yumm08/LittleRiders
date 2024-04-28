@@ -1,10 +1,12 @@
 import { MouseEventHandler } from 'react'
 
 import Button from '@components/Shared/Button'
+import ImageUploadButton from '@components/Shared/ImageUploadButton'
 import Modal from '@components/Shared/Modal'
 import Spacing from '@components/Shared/Spacing'
 import TextField from '@components/Shared/TextField'
 
+import useFileUpload from '@hooks/useFileUpload'
 import useInput from '@hooks/useInput'
 
 type Props = {
@@ -21,6 +23,7 @@ export default function AddShuttleModal({ modalSwitch, modalTitle }: Props) {
   const { state: carName, onChange: handleChangeCarName } = useInput<string>({
     data: '',
   })
+  const { uploadImgUrl, onChangeImageUpload } = useFileUpload()
   const submitCarData = () => {
     const data = {
       licenseNumber: licenseNumber,
@@ -29,6 +32,7 @@ export default function AddShuttleModal({ modalSwitch, modalTitle }: Props) {
     }
     return data
   }
+
   return (
     <Modal modalSwitch={modalSwitch} modalTitle={modalTitle}>
       <TextField
@@ -52,7 +56,15 @@ export default function AddShuttleModal({ modalSwitch, modalTitle }: Props) {
         onChange={handleChangeCarName}
       />
       <Spacing style="h-3" />
-      {/* TODO : 이 부분에 사진 첨부 기능을 넣을 것입니다 */}
+      <div className="flex flex-col">
+        <strong className="flex">사진 첨부</strong>
+      </div>
+      <Spacing style="h-3" />
+      <ImageUploadButton
+        uploadImgUrl={uploadImgUrl}
+        onChangeImageUpload={onChangeImageUpload}
+      />
+      <Spacing style="h-3" />
       <Button full onClick={submitCarData} color="bg-lightgreen">
         <strong className="text-white">차량 등록</strong>
       </Button>
