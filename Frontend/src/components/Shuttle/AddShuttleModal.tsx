@@ -6,6 +6,7 @@ import Modal from '@components/Shared/Modal'
 import Spacing from '@components/Shared/Spacing'
 import TextField from '@components/Shared/TextField'
 
+import { useAddNewShuttle } from '@hooks/shuttle/addNewShuttle'
 import useFileUpload from '@hooks/useFileUpload'
 import useInput from '@hooks/useInput'
 
@@ -17,22 +18,15 @@ type Props = {
 export default function AddShuttleModal({ modalSwitch, modalTitle }: Props) {
   const { state: licenseNumber, onChange: handleChangeCarNumber } =
     useInput<string>({ data: '' })
-  const { state: carType, onChange: handleChangeCarType } = useInput<string>({
+  const { state: type, onChange: handleChangeCarType } = useInput<string>({
     data: '',
   })
-  const { state: carName, onChange: handleChangeCarName } = useInput<string>({
+  const { state: name, onChange: handleChangeCarName } = useInput<string>({
     data: '',
   })
-  const { uploadImgUrl, onChangeImageUpload } = useFileUpload()
-  const submitCarData = () => {
-    const data = {
-      licenseNumber: licenseNumber,
-      type: carType,
-      name: carName,
-    }
-    return data
-  }
+  const { uploadImgUrl, uploadFile, onChangeImageUpload } = useFileUpload()
 
+  const { addNewShuttle } = useAddNewShuttle()
   return (
     <Modal modalSwitch={modalSwitch} modalTitle={modalTitle}>
       <TextField
@@ -65,7 +59,13 @@ export default function AddShuttleModal({ modalSwitch, modalTitle }: Props) {
         onChangeImageUpload={onChangeImageUpload}
       />
       <Spacing style="h-3" />
-      <Button full onClick={submitCarData} color="bg-lightgreen">
+      <Button
+        full
+        onClick={() => {
+          addNewShuttle({ licenseNumber, type, name, image: uploadFile })
+        }}
+        color="bg-lightgreen"
+      >
         <strong className="text-white">차량 등록</strong>
       </Button>
     </Modal>
