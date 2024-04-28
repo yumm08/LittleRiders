@@ -6,6 +6,7 @@ import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ class RouteServiceImpl implements RouteService {
         return routeRepository.existsByAcademyIdAndName(academyId, name);
     }
 
+    @Transactional
     @Override
     public void save(Route route) { routeRepository.save(route); }
 
