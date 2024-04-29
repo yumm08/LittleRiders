@@ -63,7 +63,7 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         Academy academy = academyService.findById(academyId);
 
         AcademyChild academyChild = academyChildService.findById(academyChildId);
-        if (academyChild.getAcademy() != academy) {
+        if (!academyChild.equalsAcademy(academy)) {
             throw AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND); // 추후 다른 에러 메시지로 변경
         }
 

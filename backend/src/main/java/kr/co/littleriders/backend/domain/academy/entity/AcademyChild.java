@@ -69,4 +69,8 @@ public class AcademyChild {
     public void updateStatus(AcademyChildStatus status) {
         this.status = status;
     }
+
+    public boolean equalsAcademy(Academy academy) {
+        return this.academy.equals(academy);
+    }
 }
