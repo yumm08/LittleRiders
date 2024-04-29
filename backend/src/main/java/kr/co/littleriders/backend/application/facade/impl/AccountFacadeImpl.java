@@ -53,4 +53,10 @@ class AccountFacadeImpl implements AccountFacade {
         refreshTokenService.save(refreshToken);
         return jwtToken;
     }
+
+    @Override
+    public void signOut(String requestRefreshToken) {
+        RefreshToken refreshToken = refreshTokenService.findByToken(requestRefreshToken);
+        refreshTokenService.delete(refreshToken);
+    }
 }

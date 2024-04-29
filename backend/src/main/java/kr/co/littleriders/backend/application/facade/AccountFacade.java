@@ -5,4 +5,6 @@ import kr.co.littleriders.backend.global.jwt.JwtToken;
 public interface AccountFacade {
 
     JwtToken tokenReIssue(String token);
+
+    void signOut(String requestRefreshToken);
 }
