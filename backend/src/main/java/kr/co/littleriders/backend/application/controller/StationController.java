@@ -6,6 +6,7 @@ import kr.co.littleriders.backend.application.facade.StationFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class StationController {
     @PostMapping
     public ResponseEntity<Void> createStation(@Auth AuthAcademy authAcademy, @RequestBody StationCreateRequest createRequest) {
         stationFacade.createStation(authAcademy, createRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 정류장 목록 조회
