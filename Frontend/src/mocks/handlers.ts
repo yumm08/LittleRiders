@@ -1,7 +1,7 @@
-import { handlers as operationManagementhandlers } from '@mocks/academy'
-import { handlers as childManagementHandlers } from '@mocks/child'
 
-export const handlers = [
-  ...childManagementHandlers,
-  ...operationManagementhandlers,
-]
+import { handlers as authHandlers } from '@mocks/auth'
+import { handlers as childManagementHandlers } from '@mocks/child'
+import { handlers as operationManagementhandlers } from '@mocks/academy'
+
+export const handlers = [...childManagementHandlers, ...authHandlers,...operationManagementhandlers,]
+
