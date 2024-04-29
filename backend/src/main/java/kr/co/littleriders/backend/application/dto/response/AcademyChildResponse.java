@@ -2,7 +2,11 @@ package kr.co.littleriders.backend.application.dto.response;
 
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class AcademyChildResponse {
 
     private Long academyChildId;
