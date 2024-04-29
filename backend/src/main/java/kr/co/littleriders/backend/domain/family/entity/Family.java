@@ -45,6 +45,7 @@ public class Family implements Member {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 연락처
 
+    @Getter
     @OneToMany(mappedBy = "family")
     private List<Child> child; // 자녀 목록
 

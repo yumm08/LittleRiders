@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 
 @Repository
-interface ChildHistoryRepository extends JpaRepository<ChildHistory, Long> {
+interface ChildHistoryRepository extends JpaRepository<ChildHistory, Long>, ChildHistoryCustomRepository {
+
 }

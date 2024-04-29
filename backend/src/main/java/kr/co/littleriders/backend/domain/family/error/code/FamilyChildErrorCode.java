@@ -1,19 +1,18 @@
-package kr.co.littleriders.backend.domain.pending.error.code;
+package kr.co.littleriders.backend.domain.family.error.code;
 
 import kr.co.littleriders.backend.global.error.code.LittleRidersErrorCode;
 import org.springframework.http.HttpStatus;
 
 
-public enum PendingErrorCode implements LittleRidersErrorCode {
+public enum FamilyChildErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "대기 기록을 찾을수 없습니다"),
-    ILLEGAL_ACADEMY(HttpStatus.BAD_REQUEST, "002", "요청 매개변수가 유효하지 않습니다");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "자녀를 찾을수 없습니다");
 
 
-    PendingErrorCode(HttpStatus status, String code, String message) {
+    FamilyChildErrorCode(HttpStatus status, String code, String message) {
         this.status = status;
-        this.code = "PENDING_" + code;
+        this.code = "FAMILY_CHILD_" + code;
         this.message = message;
     }
 

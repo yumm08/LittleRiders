@@ -9,4 +9,6 @@ public interface ChildService {
 	Long save(Child child);
 
 	List<Child> findByFamilyId(Long familyId);
+
+	Child findById(Long childId);
 }

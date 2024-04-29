@@ -4,14 +4,21 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.family.entity.Family;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "academy_family")
+@NoArgsConstructor
+@DynamicUpdate
 public class AcademyFamily {
 
-    @Id
+    @Id @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id; // 보호자 정보 id
@@ -32,5 +39,21 @@ public class AcademyFamily {
     @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt; // 상태 변경 일자
+
+    private AcademyFamily(Family family, Academy academy, AcademyFamilyStatus academyFamilyStatus) {
+        this.family = family;
+        this.academy = academy;
+        this.status = academyFamilyStatus;
+    }
+
+    public static AcademyFamily of(Family family, Academy academy, AcademyFamilyStatus status) {
+        return new AcademyFamily(family
+                                , academy
+                                , status);
+    }
+
+    public void updateStatus(AcademyFamilyStatus status) {
+        this.status = status;
+    }
 }
 
