@@ -29,15 +29,15 @@ export default function SortableContainer({
 
   if (isLoading || isPending || !items) {
     return (
-      <div className="m-5 flex-row p-1">
+      <div className="m-5 h-5/6 flex-row p-1">
         <p className="m-1 text-xl font-bold">
           {subject ? subject : '임시 제목'}
         </p>
         <div
           ref={setNodeRef}
-          className="h-5/6 w-80  overflow-y-scroll rounded-md border bg-lightgreen p-1 shadow-md"
+          className="flex h-5/6 w-80 items-center justify-center overflow-y-scroll rounded-md border bg-lightgreen p-1 shadow-md"
         >
-          선택된 노선이 없습니다.
+          <p>선택된 노선이 없습니다.</p>
         </div>
       </div>
     )

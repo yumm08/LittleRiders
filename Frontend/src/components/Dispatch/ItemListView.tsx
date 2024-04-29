@@ -1,15 +1,19 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 
 import SortableContainer from '@components/Dispatch/SortableContainer'
+import Button from '@components/Shared/Button'
 
 import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
 import '@hooks/map'
 import { MapHook } from '@hooks/map'
 
+import SortableItem from './SortableItem'
+
 import {
   DndContext,
   DragEndEvent,
   DragOverEvent,
+  DragOverlay,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -29,6 +33,7 @@ interface Props {
 // TODO : 함수 분리 해야 한다. Refactor coming soon...
 export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   const mapRef = useRef<naver.maps.Map | null>(null)
+  const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [stationItems, setStationItems] = useState<{
     [key: string]: Station[]
   }>({ stationList: [], selectedStationList: [] })
@@ -40,7 +45,11 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
 
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
 
-  const { drawRoute, initMap, initPolyLine, deleteMarkers } = MapHook(mapRef)
+  const { drawRoute, initMap, initPolyLine, deleteMarkers } = MapHook(
+    mapRef,
+    markerList,
+    setMarkerList,
+  )
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -176,6 +185,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
    * stationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
    */
   useEffect(() => {
+    console.log('Loading Changed')
     if (!isRouteDetailLoading && !isRouteDetailPending) {
       if (!isStationListLoading) {
         setStationItems((prev) => ({
@@ -199,20 +209,21 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   }, [isRouteDetailLoading, isStationListLoading])
 
   useEffect(() => {
-    initMap(mapDiv)
+    console.log('selectedStationListChanged')
     drawRoute(stationItems['selectedStationList'])
-    return () => deleteMarkers()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stationItems['selectedStationList']])
 
   useEffect(() => {
+    console.log('init')
     initMap(mapDiv)
     initPolyLine()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   return (
-    <div className="mx-auto flex h-3/6 w-[1536px] justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
+    <div className="mx-auto flex h-[350px] w-[1536px] justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -233,7 +244,20 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
         />
+        <DragOverlay>
+          <div>+</div>
+        </DragOverlay>
       </DndContext>
+      <div className=" flex-row justify-center  self-center">
+        <div className="m-1 mb-3">
+          <Button onClick={() => {}}>수정</Button>
+        </div>
+        <div className="m-1 mt-3">
+          <Button color="bg-yellow" onClick={() => {}}>
+            취소
+          </Button>
+        </div>
+      </div>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
