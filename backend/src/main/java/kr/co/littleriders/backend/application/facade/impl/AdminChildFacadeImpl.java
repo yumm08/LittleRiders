@@ -38,12 +38,12 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     public List<AcademyChildResponse> readAcademyChildList(Long academyId) {
 
         Academy academy = academyService.findById(academyId);
-        List<AcademyChildResponse> attendingChild = academyChildService.findAllByAcademyAndAttending(academy)
+        List<AcademyChildResponse> attendingChild = academyChildService.searchByAcademyAndAttending(academy)
                                                                         .stream()
                                                                         .map(AcademyChildResponse::from)
                                                                         .collect(Collectors.toList());
 
-        List<AcademyChildResponse> notAttendingChild = academyChildService.findAllByAcademyAndNotAttending(academy)
+        List<AcademyChildResponse> notAttendingChild = academyChildService.searchByAcademyAndNotAttending(academy)
                 .stream().map(academyChild -> {
                     ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
                     AcademyChildResponse childResponse = AcademyChildResponse.of(academyChild, childHistory);
@@ -71,9 +71,14 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         academyChild.updateStatus(AcademyChildStatus.valueOf(status.toUpperCase()));
         academyChildService.save(academyChild);
 
-        // 원생 보호자 정보 update 후 저장 -> 학원에 남아있는 자녀 있.없 확인
+        // 원생 보호자 정보 update 후 저장 => 학원에 남아있는 자녀 있.없 확인
+        AcademyFamily academyFamily = academyChild.getAcademyFamily();
+        if (!academyChildService.existsByAcademyFamilyAndAttending(academyFamily)) {
+            academyFamily.updateStatus(AcademyFamilyStatus.NOT_AVAIL);
+            academyFamilyService.save(academyFamily);
+        }
 
-        return null;
+        return academyChild.getId();
     }
 
     @Override
@@ -109,7 +114,6 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         });
     }
 
-
     @Transactional
     public void insertAcademyChild(Pending pending, Academy academy) {
 
@@ -120,11 +124,13 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         pending.updatePendingStatus(PendingStatus.ALLOW);
         pendingService.save(pending); // pending status ALLOW 변경
 
-        AcademyFamily academyFamily = AcademyFamily.from(pending);
-        academyFamilyService.save(academyFamily); //academyFamily 저장
+        // academyFamily 존재하는 지 확인 후 없으면 만들어서 반환
+        AcademyFamily academyFamily = academyFamilyService.findByFamilyAndAcademy(pending.getChild().getFamily(), academy);
 
-        AcademyChild academyChild = AcademyChild.of(pending.getChild(), pending.getAcademy(), academyFamily
-                , AcademyChildStatus.ATTENDING, CardType.BEACON);
+        AcademyChild academyChild = AcademyChild.of(pending.getChild()
+                                                    , pending.getAcademy()
+                                                     , academyFamily
+                                                    , AcademyChildStatus.ATTENDING, CardType.BEACON);
         academyChildService.save(academyChild); //academyChild 저장
     }
 
