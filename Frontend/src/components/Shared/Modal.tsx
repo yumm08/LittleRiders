@@ -27,7 +27,7 @@ export default function Modal({ modalSwitch, children, modalTitle }: Props) {
           onClick={(e) => {
             e.stopPropagation()
           }}
-          className=" relative left-1/2 top-1/2 z-20 flex w-[760px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md bg-white p-4 text-center"
+          className=" relative left-1/2 top-[300px] z-20 flex w-[760px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md bg-white p-4 text-center"
         >
           <strong className="mx-auto inline-block">{modalTitle}</strong>
           {children}

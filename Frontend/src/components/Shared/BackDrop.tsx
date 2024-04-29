@@ -13,7 +13,7 @@ export default function BackDrop({ onClick, children }: Props) {
   return (
     <div
       onClick={onClick}
-      className="bg-black-400 fixed z-10 h-screen w-screen bg-black bg-opacity-70"
+      className="bg-black-400 fixed z-50 h-screen w-screen bg-black bg-opacity-70"
     >
       {children}
     </div>
