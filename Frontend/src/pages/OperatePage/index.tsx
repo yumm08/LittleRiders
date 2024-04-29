@@ -13,7 +13,7 @@ export default function OperatePage() {
       <Spacing style="h-5" />
       <EmployeeList show={7} />
       <Spacing style="h-5" />
-      <DriverList show={7} />a
+      <DriverList show={7} />
       <Spacing style="h-5" />
     </Page>
   )
