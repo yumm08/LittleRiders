@@ -4,7 +4,7 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.Getter;
 
 @Getter
-public class AuthAcademy {
+public class AuthAcademy  implements AuthDTO{
 
 
     private final long id;

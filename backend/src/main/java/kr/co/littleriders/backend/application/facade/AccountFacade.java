@@ -7,4 +7,6 @@ public interface AccountFacade {
     JwtToken tokenReIssue(String token);
 
     void signOut(String requestRefreshToken);
+
+    JwtToken signIn(String email,String password);
 }

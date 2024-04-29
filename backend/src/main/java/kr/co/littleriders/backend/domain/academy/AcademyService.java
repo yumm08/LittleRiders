@@ -21,4 +21,5 @@ public interface AcademyService {
     Slice<Academy> findByName(String name, Pageable pageable);
 
     void save(Academy academy);
+
 }

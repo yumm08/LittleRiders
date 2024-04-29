@@ -5,7 +5,7 @@ import lombok.Getter;
 
 
 @Getter
-public class AuthFamily {
+public class AuthFamily implements AuthDTO {
 
     private final long id;
     private final String email;

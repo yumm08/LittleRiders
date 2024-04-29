@@ -1,6 +1,6 @@
 package kr.co.littleriders.backend.application.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.AllArgsConstructor;
@@ -8,25 +8,16 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class FamilySignUpRequest {
+public class AcademySignUpRequest {
 
-
-    @NotBlank(message = "이메일")
+    //TODO: Validator 추가
     private String email;
-
-    @NotBlank
     private String password;
-
-    @NotBlank
     private String name;
-
-    @NotBlank
     private String address;
-
-    @NotBlank
     private String phoneNumber;
 
-    public Family toFamily(PasswordUtil passwordUtil) {
-        return Family.of(this.email, passwordUtil.encrypt(this.password), this.name,this.address, this.phoneNumber);
+    public Academy toAcademy(PasswordUtil passwordUtil) {
+        return Academy.of(this.email, passwordUtil.encrypt(this.password), this.name,this.address, this.phoneNumber);
     }
 }
