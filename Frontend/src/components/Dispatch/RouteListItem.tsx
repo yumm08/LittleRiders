@@ -16,7 +16,6 @@ export default function RouteListItem({
   onRouteClick,
 }: Props) {
   const [isClicked, setIsClicked] = useState<boolean>(false)
-  console.log(id, name)
 
   useEffect(() => {
     setIsClicked(id === selectedRouteId)
