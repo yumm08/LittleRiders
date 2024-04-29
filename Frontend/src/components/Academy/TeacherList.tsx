@@ -3,31 +3,29 @@ import { useState } from 'react'
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
 
-import { useFetchDriverList } from '@hooks/academy/useFetchDriverList'
+import { useFetchTeacherList } from '@hooks/academy/useFetchTeacherList'
 
-import AddDriverModal from './AddDriverModal'
-import DriverCard from './DriverCard'
+import AddTeacherModal from './AddTeacherModal'
+import TeacherCard from './TeacherCard'
 
 type Props = {
   show: number
 }
 
-export default function DriverList({ show }: Props) {
+export default function TeacherList({ show }: Props) {
   const [modalState, setModalState] = useState(false)
-  const openAddDriverModal = () => {
+  const openAddTeacherModal = () => {
     setModalState(!modalState)
   }
-  const { driverList, isLoading } = useFetchDriverList()
-
+  const { teacherList, isLoading } = useFetchTeacherList()
   if (isLoading) return <div>Loading...</div>
-
   return (
     <>
-      <CardListContainer type="기사" openModal={openAddDriverModal}>
+      <CardListContainer type="직원" openModal={openAddTeacherModal}>
         <CardCarousel show={show}>
-          {driverList?.map((data) => {
+          {teacherList?.map((data) => {
             return (
-              <DriverCard
+              <TeacherCard
                 name={data.name}
                 phoneNumber={data.phoneNumber}
                 image={data.image}
@@ -37,9 +35,9 @@ export default function DriverList({ show }: Props) {
         </CardCarousel>
       </CardListContainer>
       {modalState && (
-        <AddDriverModal
-          modalTitle="기사 등록"
-          modalSwitch={openAddDriverModal}
+        <AddTeacherModal
+          modalTitle="직원 등록"
+          modalSwitch={openAddTeacherModal}
         />
       )}
     </>

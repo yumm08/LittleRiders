@@ -1,7 +1,7 @@
-import employee from '@assets/Mock/employee.jpg'
+import { Teacher } from '@types'
 import { MdCancel } from 'react-icons/md'
 
-export default function EmployeeCard() {
+export default function TeacherCard({ name, phoneNumber, image }: Teacher) {
   return (
     <div className="relative w-[150px] flex-col items-center justify-center">
       <MdCancel
@@ -11,13 +11,13 @@ export default function EmployeeCard() {
       <div>
         <img
           className="h-[150px] w-full rounded-md border-2 border-slate-300 "
-          src={employee}
+          src={image}
         ></img>
       </div>
       <div className="flex items-center justify-between pt-1">
         <div className="flex flex-col">
-          <strong className="text-xm">차은우</strong>
-          <span className="text-xs text-darkgray">010-9212-4492</span>
+          <strong className="text-xm">{name}</strong>
+          <span className="text-xs text-darkgray">{phoneNumber}</span>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import DriverList from '@components/Academy/DriverList'
-import EmployeeList from '@components/Academy/EmployeeList'
+import TeacherList from '@components/Academy/TeacherList'
 import Spacing from '@components/Shared/Spacing'
 import ShuttleList from '@components/Shuttle/ShuttleList'
 
@@ -11,7 +11,7 @@ export default function OperatePage() {
       <Spacing style="h-[60px]" />
       <ShuttleList show={5} />
       <Spacing style="h-5" />
-      <EmployeeList show={7} />
+      <TeacherList show={7} />
       <Spacing style="h-5" />
       <DriverList show={7} />
       <Spacing style="h-5" />
