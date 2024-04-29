@@ -4,18 +4,17 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface AcademyChildService {
 
-    AcademyChild findById(Long id);
+    AcademyChild findById(long id);
 
-    boolean existsById(Long id);
+    boolean existsById(long id);
 
-    boolean notExistsById(Long id);
+    boolean notExistsById(long id);
 
-    void save(AcademyChild academyChild);
+    long save(AcademyChild academyChild);
 
 	boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily);
 

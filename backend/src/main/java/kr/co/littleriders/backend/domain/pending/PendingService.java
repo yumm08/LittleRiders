@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PendingService {
 
-    Long save(Pending pending);
+    long save(Pending pending);
 
     List<Pending> searchByChild(List<Child> childList);
 

@@ -17,7 +17,7 @@ class AcademyServiceImpl implements AcademyService {
     private final AcademyRepository academyRepository;
 
     @Override
-    public Academy findById(final Long id) {
+    public Academy findById(final long id) {
         return academyRepository.findById(id).orElseThrow(
                 () -> AcademyException.from(AcademyErrorCode.NOT_FOUND)
         );
@@ -31,12 +31,12 @@ class AcademyServiceImpl implements AcademyService {
     }
 
     @Override
-    public boolean existsById(final Long id) {
+    public boolean existsById(final long id) {
         return academyRepository.existsById(id);
     }
 
     @Override
-    public boolean notExistsById(final Long id) {
+    public boolean notExistsById(final long id) {
         return !academyRepository.existsById(id);
     }
 
@@ -62,8 +62,8 @@ class AcademyServiceImpl implements AcademyService {
     }
 
     @Override
-    public void save(Academy academy) {
-        academyRepository.save(academy);
+    public long save(Academy academy) {
+        return academyRepository.save(academy).getId();
     }
 
 }

@@ -7,15 +7,15 @@ import java.util.List;
 public interface StationService {
 
 
-    Station findById(Long id);
+    Station findById(long id);
 
-    boolean existsById(Long id);
+    boolean existsById(long id);
 
-    boolean notExistsById(Long id);
+    boolean notExistsById(long id);
 
-    boolean existsByAcademyIdAndName(Long academyId, String name);
+    boolean existsByAcademyIdAndName(long academyId, String name);
 
-    void save(Station station);
+    long save(Station station);
 
-    List<Station> findAllByAcademyIdAndName(Long academyId, String name);
+    List<Station> findAllByAcademyIdAndName(long academyId, String name);
 }

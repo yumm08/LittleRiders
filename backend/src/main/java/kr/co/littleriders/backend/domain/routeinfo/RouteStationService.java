@@ -5,9 +5,13 @@ import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
 
 public interface RouteStationService {
 
-    RouteStation findById(Long id);
+    RouteStation findById(long id);
 
-    boolean existsById(Long id);
+    boolean existsById(long id);
 
-    boolean notExistsById(Long id);
+    boolean notExistsById(long id);
+
+    long save(RouteStation routeStation);
+
+
 }

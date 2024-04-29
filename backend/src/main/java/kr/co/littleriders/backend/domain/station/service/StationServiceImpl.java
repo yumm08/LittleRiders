@@ -17,30 +17,32 @@ class StationServiceImpl implements StationService {
     private final StationRepository stationRepository;
 
     @Override
-    public Station findById(Long id) {
+    public Station findById(long id) {
         return stationRepository.findById(id).orElseThrow(() -> StationException.from(StationErrorCode.NOT_FOUND));
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(long id) {
         return stationRepository.existsById(id);
     }
 
     @Override
-    public boolean notExistsById(Long id) {
+    public boolean notExistsById(long id) {
         return !stationRepository.existsById(id);
     }
 
     @Override
-    public boolean existsByAcademyIdAndName(Long academyId, String name) { return stationRepository.existsByAcademyIdAndName(academyId, name); }
-
-    @Override
-    public void save(Station station) {
-        stationRepository.save(station);
+    public boolean existsByAcademyIdAndName(long academyId, String name) {
+        return stationRepository.existsByAcademyIdAndName(academyId, name);
     }
 
     @Override
-    public List<Station> findAllByAcademyIdAndName(Long academyId, String name) {
+    public long save(Station station) {
+        return stationRepository.save(station).getId();
+    }
+
+    @Override
+    public List<Station> findAllByAcademyIdAndName(long academyId, String name) {
         return stationRepository.findAllByAcademyIdAndNameContaining(academyId, name);
     }
 

@@ -18,7 +18,7 @@ class AcademyChildServiceImpl implements AcademyChildService {
     private final AcademyChildRepository academyChildRepository;
 
     @Override
-    public AcademyChild findById(Long id) {
+    public AcademyChild findById(long id) {
         return academyChildRepository.findById(id).orElseThrow(
                 () -> AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND)
         );
@@ -35,18 +35,18 @@ class AcademyChildServiceImpl implements AcademyChildService {
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(long id) {
         return academyChildRepository.existsById(id);
     }
 
     @Override
-    public boolean notExistsById(Long id) {
+    public boolean notExistsById(long id) {
         return !academyChildRepository.existsById(id);
     }
 
     @Override
-    public void save(AcademyChild academyChild) {
-        academyChildRepository.save(academyChild);
+    public long save(AcademyChild academyChild) {
+        return academyChildRepository.save(academyChild).getId();
     }
 
 

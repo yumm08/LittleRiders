@@ -14,7 +14,7 @@ class FamilyServiceImpl implements FamilyService {
     private final FamilyRepository familyRepository;
 
     @Override
-    public Family findById(Long id) {
+    public Family findById(long id) {
         return familyRepository.findById(id).orElseThrow(
                 () -> FamilyException.from(FamilyErrorCode.NOT_FOUND)
         );
@@ -28,12 +28,12 @@ class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(long id) {
         return familyRepository.existsById(id);
     }
 
     @Override
-    public boolean notExistsById(Long id) {
+    public boolean notExistsById(long id) {
         return !familyRepository.existsById(id);
     }
 
@@ -48,7 +48,7 @@ class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public void save(Family family) {
-        familyRepository.save(family);
+    public long save(Family family) {
+        return familyRepository.save(family).getId();
     }
 }
