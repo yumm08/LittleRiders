@@ -4,8 +4,10 @@ import DriveHistoryPage from '@pages/DriveHistoryPage'
 import HomePage from '@pages/HomePage'
 import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
+import SignInPage from '@pages/SignInPage'
 import SignUpPage from '@pages/SignUpPage'
 
+import ProtectedRoute from '@routes/ProtectedRoute'
 import App from 'App'
 import { createBrowserRouter } from 'react-router-dom'
 
@@ -19,38 +21,46 @@ const router = createBrowserRouter([
         element: <SignUpPage />,
       },
       {
-        index: true,
-        element: <HomePage />,
+        path: 'signin',
+        element: <SignInPage />,
       },
       {
-        path: 'home',
-        element: <HomePage />,
-      },
-      {
-        path: 'manage',
+        element: <ProtectedRoute />,
         children: [
           {
-            path: 'child',
-            element: <ChildPage />,
+            index: true,
+            element: <HomePage />,
           },
           {
-            path: 'dispatch',
-            element: <DispatchPage />,
+            path: 'home',
+            element: <HomePage />,
           },
           {
-            path: 'operate',
-            element: <OperatePage />,
-
+            path: 'manage',
+            children: [
+              {
+                path: 'child',
+                element: <ChildPage />,
+              },
+              {
+                path: 'dispatch',
+                element: <DispatchPage />,
+              },
+              {
+                path: 'operate',
+                element: <OperatePage />,
+              },
+              {
+                path: 'drive-history/:id',
+                element: <DriveHistoryPage />,
+              },
+            ],
           },
           {
-            path : 'drive-history/:id',
-            element:<DriveHistoryPage/>
-          }
+            path: 'mypage',
+            element: <MyPage />,
+          },
         ],
-      },
-      {
-        path: 'mypage',
-        element: <MyPage />,
       },
     ],
   },
