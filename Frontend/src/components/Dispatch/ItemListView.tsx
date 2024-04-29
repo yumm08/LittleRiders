@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 
-import SortableContainer from './SortableContainer'
-import SortableItem from './SortableItem'
+import SortableContainer from '@components/Dispatch/SortableContainer'
+
+import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
+import '@hooks/map'
+import { MapHook } from '@hooks/map'
 
 import {
   DndContext,
   DragEndEvent,
   DragOverEvent,
-  DragOverlay,
-  DragStartEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -20,44 +21,52 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { Station } from '@types'
 
-// TODO : 함수 분리 해야 한다. Refactor coming soon...
-export default function ItemListView() {
-  const [items, setItems] = useState<{ [key: string]: Station[] }>({
-    station: Array.from({ length: 10 }, (_, k) => k).map((k) => ({
-      id: `item-${k}`,
-      name: `item-${k}`,
-    })),
-    'selected-station': [],
-  })
+interface Props {
+  selectedRouteId: number
+  mapDiv: RefObject<HTMLDivElement>
+}
 
-  const [activeId, setActiveId] = useState<UniqueIdentifier>()
+// TODO : 함수 분리 해야 한다. Refactor coming soon...
+export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
+  const mapRef = useRef<naver.maps.Map | null>(null)
+  const [stationItems, setStationItems] = useState<{
+    [key: string]: Station[]
+  }>({ stationList: [], selectedStationList: [] })
+  const {
+    routeDetail,
+    isLoading: isRouteDetailLoading,
+    isPending: isRouteDetailPending,
+  } = useGetRouteDetail(selectedRouteId)
+
+  const { stationList, isLoading: isStationListLoading } = useGetStationList()
+
+  const { drawRoute, initMap, initPolyLine, deleteMarkers } = MapHook(mapRef)
 
   const sensors = useSensors(
-    useSensor(MouseSensor),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
     useSensor(TouchSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   )
 
+  /**
+   * 지금 집고 있는 아이템이 어느 컨테이너에 있는지 확인하는 함수
+   * @param id 현재 집고 있는 id
+   * @returns
+   */
   const findContainer = (id: UniqueIdentifier) => {
-    if (id in items) {
+    if (id in stationItems) {
       return id
     }
-
-    return Object.keys(items).find((key) =>
-      items[key].some((item) => item.id === id.toString()),
+    return Object.keys(stationItems).find((key) =>
+      stationItems[key].some((item) => item.id === Number(id.toString())),
     )
   }
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event
-    const { id } = active
-
-    setActiveId(id)
-  }
-
-  const handleDragCancel = () => setActiveId(undefined)
 
   /**
    * Container가 다른 곳의 Over 됐을 때의 Event 처리
@@ -71,11 +80,10 @@ export default function ItemListView() {
 
     if (!overId) return
 
-    // container 찾기
+    // 선택한 아이템의 container와 아이템이 올라가 있는 container 찾기
 
     const activeContainer = findContainer(id)
     const overContainer = findContainer(over?.id)
-
     if (
       !activeContainer ||
       !overContainer ||
@@ -84,17 +92,17 @@ export default function ItemListView() {
       return
     }
 
-    setItems((prev) => {
+    setStationItems((prev) => {
       const activeItems = prev[activeContainer]
       const overItems = prev[overContainer]
-
       const activeIndex = activeItems.findIndex(
-        (item) => item.id === id.toString(),
+        (item) => item.id === Number(id.toString()),
       )
       const overIndex = overItems.findIndex(
-        (item) => item.id === overId.toString(),
+        (item) => item.id === Number(overId.toString()),
       )
 
+      // 아이템을 인덱스에 추가하고, 아이템이 콘테이너 밖(위, 아래) 로 간 경우 처리
       let newIndex: number
       if (overId in prev) {
         newIndex = overItems.length + 1
@@ -116,13 +124,18 @@ export default function ItemListView() {
         ],
         [overContainer]: [
           ...prev[overContainer].slice(0, newIndex),
-          items[activeContainer][activeIndex],
+          stationItems[activeContainer][activeIndex],
           ...prev[overContainer].slice(newIndex, prev[overContainer].length),
         ],
       }
     })
   }
 
+  /**
+   * 드래그가 끝났을 때 실행되는 함수 (Drop)
+   * @param DragEndEvent 이벤트 관련 인자
+   * @returns
+   */
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const id = active.id.toString()
     const overId = over?.id
@@ -140,15 +153,15 @@ export default function ItemListView() {
       return
     }
 
-    const activeIndex = items[activeContainer].findIndex(
-      (item) => item.id === id,
+    const activeIndex = stationItems[activeContainer].findIndex(
+      (item) => item.id === Number(id),
     )
-    const overIndex = items[activeContainer].findIndex(
+    const overIndex = stationItems[activeContainer].findIndex(
       (item) => item.id === overId,
     )
 
     if (activeIndex !== overIndex) {
-      setItems((items) => ({
+      setStationItems((items) => ({
         ...items,
         [overContainer]: arrayMove(
           items[overContainer],
@@ -157,54 +170,90 @@ export default function ItemListView() {
         ),
       }))
     }
-    setActiveId(undefined)
   }
 
+  /**
+   * stationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
+   */
+  useEffect(() => {
+    if (!isRouteDetailLoading && !isRouteDetailPending) {
+      if (!isStationListLoading) {
+        setStationItems((prev) => ({
+          ...prev,
+          stationList: [...stationList],
+        }))
+        setStationItems({
+          stationList: [
+            ...stationList.filter(
+              (item: Station) =>
+                !routeDetail.stationList.some(
+                  (sItem: Station) => sItem.id === item.id,
+                ),
+            ),
+          ],
+          selectedStationList: [...routeDetail.stationList],
+        })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRouteDetailLoading, isStationListLoading])
+
+  useEffect(() => {
+    initMap(mapDiv)
+    drawRoute(stationItems['selectedStationList'])
+    return () => deleteMarkers()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stationItems['selectedStationList']])
+
+  useEffect(() => {
+    initMap(mapDiv)
+    initPolyLine()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
-    <div className="w-[1536px] max-2xl:flex-row max-2xl:w-full max-2xl:mx-10 h-3/6 flex mx-auto justify-evenly">
+    <div className="mx-auto flex h-3/6 w-[1536px] justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
       >
         <SortableContainer
           subject="전체 정류장"
-          id="station"
-          items={items['station']}
+          id="stationList"
+          items={stationItems['stationList']}
+          isLoading={isStationListLoading}
+          isPending={isRouteDetailPending}
         />
         <SortableContainer
           subject="선택된 정류장"
-          id="selected-station"
-          items={items['selected-station']}
+          id="selectedStationList"
+          items={stationItems['selectedStationList']}
+          isLoading={isRouteDetailLoading}
+          isPending={isRouteDetailPending}
         />
-        <DragOverlay>
-          {activeId ? <SortableItem id={activeId} /> : null}
-        </DragOverlay>
       </DndContext>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
       >
         <SortableContainer
           subject="모든 어린이"
-          id="station"
-          items={items['station']}
+          id="stationList"
+          items={stationItems['stationList']}
+          isLoading={isRouteDetailLoading}
+          isPending={isRouteDetailPending}
         />
         <SortableContainer
           subject="하차할 어린이"
-          id="selected-station"
-          items={items['selected-station']}
+          id="selectedStationList"
+          items={stationItems['selectedStationList']}
+          isLoading={isRouteDetailLoading}
+          isPending={isRouteDetailPending}
         />
-        <DragOverlay>
-          {activeId ? <SortableItem id={activeId} /> : null}
-        </DragOverlay>
       </DndContext>
     </div>
   )
