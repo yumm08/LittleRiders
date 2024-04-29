@@ -10,9 +10,9 @@ public interface PendingService {
 
     Long save(Pending pending);
 
-    List<Pending> findByChild(List<Child> childList);
+    List<Pending> searchByChild(List<Child> childList);
 
-    List<Pending> findByAcademy(Academy academy);
+    List<Pending> searchByAcademy(Academy academy);
 
-    List<Pending> findByIdAndAcademy(List<Long> pendingList, Academy academy);
+    List<Pending> searchById(List<Long> pendingList);
 }

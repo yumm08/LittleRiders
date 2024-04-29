@@ -24,24 +24,20 @@ class PendingServiceImpl implements PendingService {
     }
 
     @Override
-    public List<Pending> findByChild(List<Child> childList) {
-        return pendingRepository.findByChild(childList);
+    public List<Pending> searchByChild(List<Child> childList) {
+        return pendingRepository.searchByChild(childList);
     }
 
     @Override
-    public List<Pending> findByAcademy(Academy academy) {
-        return pendingRepository.findByAcademy(academy);
+    public List<Pending> searchByAcademy(Academy academy) {
+        return pendingRepository.searchByAcademy(academy);
     }
 
     @Override
-    public List<Pending> findByIdAndAcademy(List<Long> pendingList, Academy academy) {
+    public List<Pending> searchById(List<Long> pendingIdList) {
 
-        List<Pending> pendingAllowList = pendingRepository.findByIdList(pendingList);
+        List<Pending> pendingList = pendingRepository.searchById(pendingIdList);
 
-        if (pendingAllowList.stream().anyMatch(pending -> !pending.getAcademy().equals(academy))) {
-            throw PendingException.from(PendingErrorCode.ILLEGAL_ACADEMY);
-        }
-
-        return pendingAllowList;
+        return pendingList;
     }
 }

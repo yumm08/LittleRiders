@@ -14,6 +14,8 @@ import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
+import kr.co.littleriders.backend.domain.pending.error.code.PendingErrorCode;
+import kr.co.littleriders.backend.domain.pending.error.exception.PendingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +80,7 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     public List<PendingListResponse> readPendingList(Long academyId) {
 
         Academy academy = academyService.findById(academyId);
-        List<PendingListResponse> pendingList = pendingService.findByAcademy(academy).stream()
+        List<PendingListResponse> pendingList = pendingService.searchByAcademy(academy).stream()
                                                               .map(PendingListResponse::from)
                                                               .collect(Collectors.toList());
 
@@ -89,25 +91,31 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     public void insertAcademyChildList(Long academyId, List<Long> pendingList) {
 
         Academy academy = academyService.findById(academyId);
-        List<Pending> pendingAllowList = pendingService.findByIdAndAcademy(pendingList, academy);
-        pendingAllowList.forEach(this::insertAcademyChild);
+        List<Pending> pendingAllowList = pendingService.searchById(pendingList);
+
+        pendingAllowList.forEach(pending -> {
+            insertAcademyChild(pending, academy);
+        });
     }
 
     @Override
     public void deletePendingList(Long academyId, List<Long> pendingList) {
 
         Academy academy = academyService.findById(academyId);
-        List<Pending> pendingDenyList = pendingService.findByIdAndAcademy(pendingList, academy);
+        List<Pending> pendingDenyList = pendingService.searchById(pendingList);
 
         pendingDenyList.forEach(pending -> {
-            pending.updatePendingStatus(PendingStatus.DENY);
-            pendingService.save(pending); // pending status ALLOW 변경
+            deletePending(pending, academy);
         });
     }
 
 
     @Transactional
-    public void insertAcademyChild(Pending pending) {
+    public void insertAcademyChild(Pending pending, Academy academy) {
+
+        if (!pending.getAcademy().equals(academy)) {
+            throw PendingException.from(PendingErrorCode.ILLEGAL_ACADEMY);
+        }
 
         pending.updatePendingStatus(PendingStatus.ALLOW);
         pendingService.save(pending); // pending status ALLOW 변경
@@ -118,5 +126,16 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         AcademyChild academyChild = AcademyChild.of(pending.getChild(), pending.getAcademy(), academyFamily
                 , AcademyChildStatus.ATTENDING, CardType.BEACON);
         academyChildService.save(academyChild); //academyChild 저장
+    }
+
+    @Transactional
+    public void deletePending(Pending pending, Academy academy) {
+
+        if (!pending.getAcademy().equals(academy)) {
+            throw PendingException.from(PendingErrorCode.ILLEGAL_ACADEMY);
+        }
+
+        pending.updatePendingStatus(PendingStatus.DENY);
+        pendingService.save(pending); // pending status DENY 변경
     }
 }

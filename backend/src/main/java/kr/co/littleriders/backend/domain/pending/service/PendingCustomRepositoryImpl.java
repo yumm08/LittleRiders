@@ -19,7 +19,7 @@ class PendingCustomRepositoryImpl implements PendingCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Pending> findByChild(List<Child> childList) {
+    public List<Pending> searchByChild(List<Child> childList) {
         return jpaQueryFactory
                 .selectFrom(pending)
                 .where(pending.child.in(childList))
@@ -27,7 +27,7 @@ class PendingCustomRepositoryImpl implements PendingCustomRepository {
     }
 
     @Override
-    public List<Pending> findByAcademy(Academy academy) {
+    public List<Pending> searchByAcademy(Academy academy) {
         return jpaQueryFactory
                 .selectFrom(pending)
                 .where(pending.academy.eq(academy))
@@ -36,7 +36,7 @@ class PendingCustomRepositoryImpl implements PendingCustomRepository {
     }
 
     @Override
-    public List<Pending> findByIdList(List<Long> pendingList) {
+    public List<Pending> searchById(List<Long> pendingList) {
         return jpaQueryFactory
                 .selectFrom(pending)
                 .where(pending.id.in(pendingList))

@@ -8,9 +8,9 @@ import java.util.List;
 
 interface PendingCustomRepository {
 
-    List<Pending> findByChild(List<Child> childList);
+    List<Pending> searchByChild(List<Child> childList);
 
-    List<Pending> findByAcademy(Academy academy);
+    List<Pending> searchByAcademy(Academy academy);
 
-    List<Pending> findByIdList(List<Long> pendingList);
+    List<Pending> searchById(List<Long> pendingList);
 }
