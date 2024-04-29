@@ -2,9 +2,12 @@ package kr.co.littleriders.backend.domain.station.service;
 
 import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
-import lombok.AccessLevel;
+import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
+import kr.co.littleriders.backend.domain.station.error.exception.StationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -15,9 +18,7 @@ class StationServiceImpl implements StationService {
 
     @Override
     public Station findById(Long id) {
-        return stationRepository.findById(id).orElseThrow(
-                RuntimeException::new //TODO : 커스텀 익셉션 변경 필요
-        );
+        return stationRepository.findById(id).orElseThrow(() -> StationException.from(StationErrorCode.NOT_FOUND));
     }
 
     @Override
@@ -29,4 +30,18 @@ class StationServiceImpl implements StationService {
     public boolean notExistsById(Long id) {
         return !stationRepository.existsById(id);
     }
+
+    @Override
+    public boolean existsByAcademyIdAndName(Long academyId, String name) { return stationRepository.existsByAcademyIdAndName(academyId, name); }
+
+    @Override
+    public void save(Station station) {
+        stationRepository.save(station);
+    }
+
+    @Override
+    public List<Station> findAllByAcademyIdAndName(Long academyId, String name) {
+        return stationRepository.findAllByAcademyIdAndNameContaining(academyId, name);
+    }
+
 }
