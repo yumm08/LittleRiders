@@ -6,6 +6,7 @@ import DriveHistory from '@components/Shuttle/DriveHistory'
 import DriveHistoryNaverMap from '@components/Shuttle/DriveHistoryNaverMap'
 
 import Page from '@layouts/Page'
+import { DUMMY_DRIVE_HISTORY } from '@mocks/shuttle/dummy'
 
 const DUMMY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 export default function DriveHistoryPage() {
@@ -29,7 +30,7 @@ export default function DriveHistoryPage() {
           <div className="flex h-14 w-full items-center justify-center rounded-t-xl bg-lightgreen">
             <span className="text-xl text-white">운행 기록</span>
           </div>
-          <ul className="h-full w-full overflow-scroll overflow-x-hidden">
+          <ul className="h-[400px] w-full overflow-scroll overflow-x-hidden">
             {DUMMY.map((e, i) => {
               return (
                 <DriveHistory
@@ -43,7 +44,7 @@ export default function DriveHistoryPage() {
         </div>
         {/* 네이버 지도 */}
         <Spacing style="w-[40px]" />
-        <DriveHistoryNaverMap historyId={historyId} />
+        <DriveHistoryNaverMap data={DUMMY_DRIVE_HISTORY(historyId)} />
       </div>
     </Page>
   )
