@@ -22,6 +22,7 @@ class ChildHistoryCustomRepositoryImpl implements ChildHistoryCustomRepository {
                 .where(childHistory.child.eq(child))
                 .where(childHistory.child.eq(child),
                         childHistory.createdAt.before(updatedAt))
+                .orderBy(childHistory.createdAt.desc())
                 .fetchOne();
     }
 }
