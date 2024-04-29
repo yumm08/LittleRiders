@@ -4,9 +4,10 @@ import { CSS } from '@dnd-kit/utilities'
 
 interface Props {
   id: UniqueIdentifier
+  name: string
 }
 
-export default function SortableItem({ id }: Props) {
+export default function SortableItem({ id, name }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id })
 
@@ -16,9 +17,11 @@ export default function SortableItem({ id }: Props) {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className="border w-auto h-auto m-3 p-3 rounded-md shadow-md bg-white"
+      className="m-3 h-auto w-auto rounded-md border bg-white p-3 shadow-md"
     >
-      <div className="text-center">{id}</div>
+      <div className="text-center">
+        <p>{name}</p>
+      </div>
     </div>
   )
 }

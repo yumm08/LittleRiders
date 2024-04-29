@@ -57,7 +57,7 @@ export default function SortableContainer({
           className="h-5/6 w-80  overflow-y-scroll rounded-md border bg-lightgreen p-1 shadow-md"
         >
           {items.map((item) => (
-            <SortableItem key={item.id} id={item.id} />
+            <SortableItem key={item.id} id={item.id} name={item.name} />
           ))}
         </div>
       </div>

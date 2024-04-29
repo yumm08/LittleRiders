@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 
 import SortableContainer from '@components/Dispatch/SortableContainer'
-import SortableItem from '@components/Dispatch/SortableItem'
 
 import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
 import '@hooks/map'
@@ -11,8 +10,6 @@ import {
   DndContext,
   DragEndEvent,
   DragOverEvent,
-  DragOverlay,
-  DragStartEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -26,11 +23,12 @@ import { Station } from '@types'
 
 interface Props {
   selectedRouteId: number
+  mapDiv: RefObject<HTMLDivElement>
 }
 
 // TODO : 함수 분리 해야 한다. Refactor coming soon...
-export default function ItemListView({ selectedRouteId }: Props) {
-  const [activeId, setActiveId] = useState<UniqueIdentifier>()
+export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
+  const mapRef = useRef<naver.maps.Map | null>(null)
   const [stationItems, setStationItems] = useState<{
     [key: string]: Station[]
   }>({ stationList: [], selectedStationList: [] })
@@ -42,10 +40,14 @@ export default function ItemListView({ selectedRouteId }: Props) {
 
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
 
-  const { drawRoute, initMap, initPolyLine } = MapHook()
+  const { drawRoute, initMap, initPolyLine, deleteMarkers } = MapHook(mapRef)
 
   const sensors = useSensors(
-    useSensor(MouseSensor),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
     useSensor(TouchSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
@@ -67,19 +69,6 @@ export default function ItemListView({ selectedRouteId }: Props) {
   }
 
   /**
-   * 드래그를 시작했을 때 activeId를 설정하는 함수
-   * @param event 드래그 시작 이벤트
-   */
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event
-    const { id } = active
-
-    setActiveId(id)
-  }
-
-  const handleDragCancel = () => setActiveId(undefined)
-
-  /**
    * Container가 다른 곳의 Over 됐을 때의 Event 처리
    * @param event dragOverEvent
    * @returns
@@ -91,7 +80,7 @@ export default function ItemListView({ selectedRouteId }: Props) {
 
     if (!overId) return
 
-    // container 찾기
+    // 선택한 아이템의 container와 아이템이 올라가 있는 container 찾기
 
     const activeContainer = findContainer(id)
     const overContainer = findContainer(over?.id)
@@ -106,8 +95,6 @@ export default function ItemListView({ selectedRouteId }: Props) {
     setStationItems((prev) => {
       const activeItems = prev[activeContainer]
       const overItems = prev[overContainer]
-      console.log(activeItems)
-      console.log(overItems)
       const activeIndex = activeItems.findIndex(
         (item) => item.id === Number(id.toString()),
       )
@@ -115,6 +102,7 @@ export default function ItemListView({ selectedRouteId }: Props) {
         (item) => item.id === Number(overId.toString()),
       )
 
+      // 아이템을 인덱스에 추가하고, 아이템이 콘테이너 밖(위, 아래) 로 간 경우 처리
       let newIndex: number
       if (overId in prev) {
         newIndex = overItems.length + 1
@@ -182,9 +170,11 @@ export default function ItemListView({ selectedRouteId }: Props) {
         ),
       }))
     }
-    setActiveId(undefined)
   }
 
+  /**
+   * stationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
+   */
   useEffect(() => {
     if (!isRouteDetailLoading && !isRouteDetailPending) {
       if (!isStationListLoading) {
@@ -209,16 +199,16 @@ export default function ItemListView({ selectedRouteId }: Props) {
   }, [isRouteDetailLoading, isStationListLoading])
 
   useEffect(() => {
-    console.log(stationItems['selectedStationList'])
+    initMap(mapDiv)
     drawRoute(stationItems['selectedStationList'])
+    return () => deleteMarkers()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stationItems['selectedStationList']])
+
   useEffect(() => {
-    const initNaverMap = async () => {
-      initMap('map')
-      initPolyLine()
-    }
-    initNaverMap()
+    initMap(mapDiv)
+    initPolyLine()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
@@ -226,10 +216,8 @@ export default function ItemListView({ selectedRouteId }: Props) {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
       >
         <SortableContainer
           subject="전체 정류장"
@@ -245,17 +233,12 @@ export default function ItemListView({ selectedRouteId }: Props) {
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
         />
-        <DragOverlay>
-          {activeId ? <SortableItem id={activeId} /> : null}
-        </DragOverlay>
       </DndContext>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
       >
         <SortableContainer
           subject="모든 어린이"
@@ -271,9 +254,6 @@ export default function ItemListView({ selectedRouteId }: Props) {
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
         />
-        <DragOverlay>
-          {activeId ? <SortableItem id={activeId} /> : null}
-        </DragOverlay>
       </DndContext>
     </div>
   )
