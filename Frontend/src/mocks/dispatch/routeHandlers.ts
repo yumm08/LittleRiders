@@ -1,67 +1,46 @@
+import { routeDetail, routeList } from '@mocks/dispatch/dummy'
+import { Route, Station } from '@types'
 import { HttpResponse, http } from 'msw'
 
 const BASE_URL = 'route'
 
 export const routeHandlers = [
+  // get route list
   http.get(`/api/${BASE_URL}`, () => {
-    console.log('Captured a "GET /route" request')
-    return HttpResponse.json([
-      {
-        id: 1,
-        name: '동원 A',
-      },
-      {
-        id: 2,
-        name: '등원B',
-      },
-      {
-        id: 3,
-        name: '하원A',
-      },
-    ])
+    return HttpResponse.json(routeList)
   }),
+  // get route detail
   http.get(`/api/${BASE_URL}/:id`, ({ params }) => {
     const { id } = params
-    return HttpResponse.json({
-      id: id,
-      name: `등원 ${id}`,
-      stationList: [
-        {
-          id: 1,
-          name: '대봉 빌딩 앞',
-          latitude: 37.5021259,
-          longitude: 127.042259,
-          visitOrder: 1,
-        },
-        {
-          id: 2,
-          name: '신라스테이 역삼 앞',
-          latitude: 37.504858,
-          longitude: 127.041869,
-          visitOrder: 2,
-        },
-        {
-          id: 3,
-          name: '신한 은행 앞',
-          latitude: 37.508435,
-          longitude: 127.038947,
-          visitOrder: 3,
-        },
-        {
-          id: 4,
-          name: '언주역 앞',
-          latitude: 37.507503,
-          longitude: 127.0342544,
-          visitOrder: 4,
-        },
-        {
-          id: 5,
-          name: '국민은행 역삼역 지점',
-          latitude: 37.4999198,
-          longitude: 127.0377596,
-          visitOrder: 5,
-        },
-      ],
-    })
+    console.log(id)
+    return HttpResponse.json(routeDetail)
+  }),
+
+  // post route
+  http.post(`/api/${BASE_URL}`, async ({ request }) => {
+    const data = await request.json()
+    console.log(data)
+    const routeDetail = data as Route
+    routeDetail.id = routeList.length + 1
+    routeList.push(routeDetail)
+    console.log(routeList)
+    return HttpResponse.json({}, { status: 200 })
+  }),
+
+  http.put(`/api/${BASE_URL}/:routeId`, async ({ params, request }) => {
+    const { stationId } = params
+    console.log(stationId)
+    console.log(request)
+    const data = await request.json()
+    const stationDetail = data as Station
+    routeDetail.stationList!.push(stationDetail)
+    return HttpResponse.json({}, { status: 200 })
+  }),
+  //delete route
+  http.delete(`/api/${BASE_URL}/:routeId`, ({ params }) => {
+    const { routeId } = params
+    console.log(routeId)
+
+    return HttpResponse.json({}, { status: 200 })
   }),
 ]
