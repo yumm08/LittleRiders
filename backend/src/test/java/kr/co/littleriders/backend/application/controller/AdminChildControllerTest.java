@@ -92,7 +92,7 @@ class AdminChildControllerTest {
 
 			AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
 			AcademyChild academyChild = AcademyChild.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
-			AcademyChild academyChild1 = AcademyChild.of(child1, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
+			AcademyChild academyChild1 = AcademyChild.of(child1, academy, academyFamily, AcademyChildStatus.LEAVE, CardType.BEACON);
 			academyFamilyService.save(academyFamily);
 			academyChildService.save(academyChild);
 			academyChildService.save(academyChild1);
@@ -104,8 +104,8 @@ class AdminChildControllerTest {
 
 			List<AcademyChildResponse> academyChildList = new ArrayList<>();
 			academyChildList.add(AcademyChildResponse.from(academyChild));
-			academyChildList.add(AcademyChildResponse.from(academyChild1));
 			academyChildList.add(AcademyChildResponse.from(academyChild2));
+			academyChildList.add(AcademyChildResponse.from(academyChild1));
 
 			mockMvc.perform(
 					get("/admin/child")
@@ -255,7 +255,7 @@ class AdminChildControllerTest {
 					.allMatch(pending -> pending.getStatus() == PendingStatus.ALLOW),
 				"Not all pendings are in ALLOW status");
 
-			List<AcademyChild> academyChildList = academyChildService.searchByAcademyAndAttending(academy);
+			List<AcademyChild> academyChildList = academyChildService.findByAcademy(academy);
 			assertFalse(academyChildList.isEmpty(), "No academyChild found with given academy");
 			// 상태별로 검증하는 다른 방식
 			for (AcademyChild academyChild : academyChildList) {

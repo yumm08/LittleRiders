@@ -25,18 +25,13 @@ class AcademyChildServiceImpl implements AcademyChildService {
     }
 
     @Override
-    public List<AcademyChild> searchByAcademyAndAttending(Academy academy) {
-        return academyChildRepository.searchByAcademyAndAttending(academy);
-    }
-
-    @Override
-    public List<AcademyChild> searchByAcademyAndNotAttending(Academy academy) {
-        return academyChildRepository.searchByAcademyAndNotAttending(academy);
-    }
-
-    @Override
     public boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily) {
         return academyChildRepository.existsByAcademyFamilyAndAttending(academyFamily);
+    }
+
+    @Override
+    public List<AcademyChild> findByAcademy(Academy academy) {
+        return academyChildRepository.findByAcademy(academy);
     }
 
     @Override

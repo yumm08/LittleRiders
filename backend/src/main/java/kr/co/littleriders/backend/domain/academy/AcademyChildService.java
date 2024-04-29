@@ -4,6 +4,7 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface AcademyChildService {
@@ -16,9 +17,7 @@ public interface AcademyChildService {
 
     void save(AcademyChild academyChild);
 
-    List<AcademyChild> searchByAcademyAndAttending(Academy academy);
-
-    List<AcademyChild> searchByAcademyAndNotAttending(Academy academy);
-
 	boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily);
+
+	List<AcademyChild> findByAcademy(Academy academy);
 }

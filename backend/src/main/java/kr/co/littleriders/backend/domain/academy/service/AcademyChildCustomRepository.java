@@ -9,9 +9,5 @@ import java.util.List;
 
 interface AcademyChildCustomRepository {
 
-    List<AcademyChild> searchByAcademyAndAttending(Academy academy);
-
-    List<AcademyChild> searchByAcademyAndNotAttending(Academy academy);
-
     boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily);
 }

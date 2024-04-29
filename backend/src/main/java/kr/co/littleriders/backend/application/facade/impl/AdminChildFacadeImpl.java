@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,28 +32,20 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     private final AcademyService academyService;
     private final AcademyFamilyService academyFamilyService;
     private final AcademyChildService academyChildService;
-    private final ChildHistoryService childHistoryService;
 
     @Override
     public List<AcademyChildResponse> readAcademyChildList(Long academyId) {
 
         Academy academy = academyService.findById(academyId);
-        List<AcademyChildResponse> attendingChild = academyChildService.searchByAcademyAndAttending(academy)
-                                                                        .stream()
-                                                                        .map(AcademyChildResponse::from)
-                                                                        .collect(Collectors.toList());
 
-        List<AcademyChildResponse> notAttendingChild = academyChildService.searchByAcademyAndNotAttending(academy)
-                .stream().map(academyChild -> {
-                    ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
-                    AcademyChildResponse childResponse = AcademyChildResponse.of(academyChild, childHistory);
+        List<AcademyChildResponse> academyChildList = academyChildService.findByAcademy(academy)
+            .stream()
+            .sorted(Comparator.comparing(child -> {
+                return child.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
+            }))
+            .map(AcademyChildResponse::from)
+            .collect(Collectors.toList());
 
-                    return childResponse;
-                }).collect(Collectors.toList());
-
-        List<AcademyChildResponse> academyChildList = new ArrayList<>();
-        academyChildList.addAll(attendingChild);
-        academyChildList.addAll(notAttendingChild);
         return academyChildList;
     }
 
