@@ -2,17 +2,19 @@ package kr.co.littleriders.backend.domain.station.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@Getter
 @Entity
 @Table(name = "station",
 uniqueConstraints = @UniqueConstraint(
         name = "station_latitude_longitude_unique",
         columnNames = {"academy_id","latitude","longitude"}
 ))
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Station {
 
     @Id

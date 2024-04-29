@@ -1,14 +1,17 @@
 package kr.co.littleriders.backend.domain.history.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.family.entity.Family;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "family_history")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FamilyHistory {
 
 	@Id

@@ -19,36 +19,30 @@ import java.util.List;
 @Entity
 @Table(name = "academy")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Academy implements Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @Getter
     private Long id; // 학원id
 
-    @Getter
     @Column(name = "email", nullable = false)
     private String email; // 이메일
 
 
-    @Getter
     @Column(name = "password", nullable = false)
     private String password; // 비밀번호
 
-    @Getter
     @Column(name = "name", nullable = false)
     private String name; // 학원이름
 
-    @Getter
     @Column(name = "address", nullable = false)
     private String address; // 학원주소
 
-    @Getter
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 학원 전화번호
 
-    @Getter
     @Column(name = "image_path")
     private String imagePath; // 이미지 경로
 

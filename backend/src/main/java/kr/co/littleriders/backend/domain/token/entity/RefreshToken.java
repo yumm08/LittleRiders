@@ -7,9 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RedisHash(value = "refresh_token")
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class RefreshToken {
 

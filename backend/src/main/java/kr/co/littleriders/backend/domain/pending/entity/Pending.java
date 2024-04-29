@@ -6,12 +6,12 @@ import kr.co.littleriders.backend.domain.child.entity.Child;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
-@Entity @Getter
+@Entity
 @Table(name = "academy_child_allow_pending")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @DynamicUpdate
 public class Pending {
 

@@ -1,7 +1,5 @@
 package kr.co.littleriders.backend.domain.teacher.entity;
 
-import java.util.UUID;
-
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.AccessLevel;
@@ -9,9 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity @Getter
+import java.util.UUID;
+
+@Entity
 @Table(name = "teacher")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Teacher {
 
     @Id

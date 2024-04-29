@@ -2,9 +2,14 @@ package kr.co.littleriders.backend.domain.terminal.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "terminal")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Terminal {
 
     @Id

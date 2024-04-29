@@ -12,8 +12,8 @@ import org.springframework.data.redis.core.TimeToLive;
 
 import java.util.UUID;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RedisHash(value = "sign_up_token")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class SignUpToken {
 

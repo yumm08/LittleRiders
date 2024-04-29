@@ -4,6 +4,9 @@ package kr.co.littleriders.backend.domain.routeinfo.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,6 +14,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "child_board_drop_info")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class ChildBoardDropInfo {
 
     @Id

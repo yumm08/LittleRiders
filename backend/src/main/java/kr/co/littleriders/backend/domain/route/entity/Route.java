@@ -3,11 +3,16 @@ package kr.co.littleriders.backend.domain.route.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "route")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Route {
 
     @Id
