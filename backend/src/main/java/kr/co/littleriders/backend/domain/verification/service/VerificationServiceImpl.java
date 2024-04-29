@@ -27,6 +27,11 @@ class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
+    public Verification findAcademySignUpByEmailAndCode(String email, String code) {
+        return findByEmailAndCodeAndType(email, code, VerificationType.ACADEMY_SIGN_UP);
+    }
+
+    @Override
     public Verification findFamilySignUpByEmailAndCode(String email, String code) {
         return findByEmailAndCodeAndType(email, code, VerificationType.FAMILY_SIGN_UP);
     }

@@ -36,7 +36,7 @@ class AccountFacadeTest {
             String password = "123456";
             String mailReceived = familyAccountFacade.sendSignUpEmail(email);
 
-            String uuid = familyAccountFacade.validateEmailWithCode(email, mailReceived).getToken();
+            String uuid = familyAccountFacade.getSignUpToken(email, mailReceived);
             FamilySignUpRequest familySignUpRequest = new FamilySignUpRequest(
                     email,
                     password,
