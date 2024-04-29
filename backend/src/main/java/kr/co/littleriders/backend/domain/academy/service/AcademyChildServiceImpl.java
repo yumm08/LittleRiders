@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.domain.academy.service;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,18 @@ class AcademyChildServiceImpl implements AcademyChildService {
     }
 
     @Override
-    public List<AcademyChild> findAllByAcademyAndAttending(Academy academy) {
-        return academyChildRepository.findAllByAcademyAndAttending(academy);
+    public List<AcademyChild> searchByAcademyAndAttending(Academy academy) {
+        return academyChildRepository.searchByAcademyAndAttending(academy);
     }
 
     @Override
-    public List<AcademyChild> findAllByAcademyAndNotAttending(Academy academy) {
-        return academyChildRepository.findAllByAcademyAndNotAttending(academy);
+    public List<AcademyChild> searchByAcademyAndNotAttending(Academy academy) {
+        return academyChildRepository.searchByAcademyAndNotAttending(academy);
+    }
+
+    @Override
+    public boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily) {
+        return academyChildRepository.existsByAcademyFamilyAndAttending(academyFamily);
     }
 
     @Override

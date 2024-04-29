@@ -1,10 +1,9 @@
 package kr.co.littleriders.backend.domain.academy;
 
-import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 
-import java.util.Arrays;
 import java.util.List;
 
 public interface AcademyChildService {
@@ -17,7 +16,9 @@ public interface AcademyChildService {
 
     void save(AcademyChild academyChild);
 
-    List<AcademyChild> findAllByAcademyAndAttending(Academy academy);
+    List<AcademyChild> searchByAcademyAndAttending(Academy academy);
 
-    List<AcademyChild> findAllByAcademyAndNotAttending(Academy academy);
+    List<AcademyChild> searchByAcademyAndNotAttending(Academy academy);
+
+	boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily);
 }

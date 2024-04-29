@@ -1,20 +1,15 @@
 package kr.co.littleriders.backend.domain.academy.service;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static kr.co.littleriders.backend.domain.academy.entity.QAcademy.academy;
 import static kr.co.littleriders.backend.domain.academy.entity.QAcademyChild.academyChild;
 
 @Repository
@@ -24,7 +19,7 @@ class AcademyChildCustomRepositoryImpl implements AcademyChildCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<AcademyChild> findAllByAcademyAndAttending(Academy academy) {
+    public List<AcademyChild> searchByAcademyAndAttending(Academy academy) {
 
         return jpaQueryFactory
                 .selectFrom(academyChild)
@@ -35,7 +30,7 @@ class AcademyChildCustomRepositoryImpl implements AcademyChildCustomRepository{
     }
 
     @Override
-    public List<AcademyChild> findAllByAcademyAndNotAttending(Academy academy) {
+    public List<AcademyChild> searchByAcademyAndNotAttending(Academy academy) {
 
         return jpaQueryFactory
                 .selectFrom(academyChild)
@@ -43,5 +38,17 @@ class AcademyChildCustomRepositoryImpl implements AcademyChildCustomRepository{
                         academyChild.status.in(AcademyChildStatus.LEAVE, AcademyChildStatus.GRADUATE))
                 .orderBy(academyChild.id.asc())
                 .fetch();
+    }
+
+    @Override
+    public boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily) {
+
+        long count = jpaQueryFactory
+            .selectFrom(academyChild)
+            .where(academyChild.academyFamily.eq(academyFamily),
+                academyChild.status.in(AcademyChildStatus.ATTENDING))
+            .fetchCount();
+
+        return count > 0;
     }
 }
