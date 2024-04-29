@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
 
@@ -8,8 +10,12 @@ type Props = {
 }
 
 export default function DriverList({ show }: Props) {
+  const [modalState, setModalState] = useState(false)
+  const openAddDriverModal = () => {
+    setModalState(!modalState)
+  }
   return (
-    <CardListContainer type="기사" onClick={() => {}}>
+    <CardListContainer type="기사" openModal={openAddDriverModal}>
       <CardCarousel show={show}>
         <EmployeeCard />
         <EmployeeCard />
