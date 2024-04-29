@@ -1,34 +1,65 @@
 import axiosInstance from '@utils/httpCommons'
 
+import { Route } from '@types'
+
 const BASE_URL = 'route'
 
+/**
+ * get Route List Axios Call
+ * @returns response
+ */
 export const getRouteList = async () => {
-  const res = await axiosInstance.get(`/${BASE_URL}`)
-  console.log(res)
-  return res
+  const response = await axiosInstance.get(`/${BASE_URL}`)
+  return response
 }
 
+/**
+ * get Route Detail Axios Call
+ * @param routeId : number
+ * @returns response
+ */
 export const getRouteDetail = async (routeId: number) => {
-  const res = await axiosInstance.get(`/${BASE_URL}/${routeId}`)
-  return res
+  const response = await axiosInstance.get(`/${BASE_URL}/${routeId}`)
+  return response
 }
 
-export const postRoute = async () => {
-  const res = await axiosInstance.post(`/${BASE_URL}`)
-  return res
+/**
+ * post, Add Route Detail to Server, Axios Call
+ * @param route  Route, Route Detail Data
+ * @returns response
+ */
+export const postRoute = async (route: Route) => {
+  const response = await axiosInstance.post(`/${BASE_URL}`, route)
+  return response
 }
 
-export const putRoute = async (routeId: number) => {
-  const res = await axiosInstance.put(`/${BASE_URL}/${routeId}`)
-  return res
+/**
+ * put, Modify Route Detail to Server, Axios Call
+ * @param routeId : number
+ * @param route: Route
+ * @returns response
+ */
+export const putRoute = async (routeId: number, route: Route) => {
+  const response = await axiosInstance.put(`/${BASE_URL}/${routeId}`, route)
+  return response
 }
 
+/**
+ * delete Route Axios Call
+ * @param routeId : number
+ * @returns response
+ */
 export const deleteRoute = async (routeId: number) => {
-  const res = await axiosInstance.delete(`/${BASE_URL}/${routeId}`)
-  return res
+  const response = await axiosInstance.delete(`/${BASE_URL}/${routeId}`)
+  return response
 }
 
+// TODO 원생 노선 추가 (원생 Type 지정, API 작성 대기)
+/**
+ *
+ * @returns
+ */
 export const postRouteChild = async () => {
-  const res = await axiosInstance.get(`/${BASE_URL}/`)
-  return res
+  const response = await axiosInstance.get(`/${BASE_URL}/child`)
+  return response
 }

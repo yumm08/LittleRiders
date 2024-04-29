@@ -1,13 +1,20 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { getRouteDetail, getRouteList, getStationList } from '@apis/dispatch'
+import {
+  getRouteDetail,
+  getRouteList,
+  getStationList,
+  postRoute,
+  putRoute,
+} from '@apis/dispatch'
+
+import { Route } from '@types'
 
 export const useGetRouteList = () => {
   const { data: routeList, ...rest } = useQuery({
     queryKey: ['routeList'],
     queryFn: getRouteList,
     select: (data) => {
-      console.log(data)
       const routeList = data?.data
       return routeList
     },
@@ -56,8 +63,29 @@ export const useGetStationList = () => {
 
 //   return { childList, ...rest }
 // }
+export const usePostRoute = () => {
+  const queryClient = useQueryClient()
+  const { mutate: addRoute, ...rest } = useMutation({
+    mutationFn: (route: Route) => postRoute(route),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['routeList'] })
+    },
+  })
 
-export const RouteModifyMutate = () => {}
+  return { addRoute, ...rest }
+}
+export const usePutRoute = () => {
+  const queryClient = useQueryClient()
+  const { mutate: modifyRoute, ...rest } = useMutation({
+    mutationFn: ({ routeId, route }: { routeId: number; route: Route }) =>
+      putRoute(routeId, route),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['routeList'] })
+    },
+  })
+
+  return { modifyRoute, ...rest }
+}
 
 export const StationModifyMutate = () => {}
 
