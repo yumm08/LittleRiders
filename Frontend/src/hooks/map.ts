@@ -1,21 +1,17 @@
-import { useRef, useState } from 'react'
-
-import { wow } from '../assets/image/academy.svg'
+import { RefObject, useState } from 'react'
 
 import { BASE_LAT, BASE_LNG } from '@constants/map'
 import { Station } from '@types'
 
 const DEFAULT_OPTION = {
   center: new naver.maps.LatLng(BASE_LAT, BASE_LNG),
-  zoom: 7,
+  zoom: 15,
   minZoom: 7,
   ZoomControl: true,
   disableKineticPan: false,
 }
 
-export function MapHook() {
-  const map = useRef<naver.maps.Map>()
-  const [pathList, setPathList] = useState<naver.maps.LatLng[]>([])
+export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
   const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [polyline, setPolyline] = useState<naver.maps.Polyline>()
   //const [circleList, setCircleList] = useState<naver.maps.Circle[]>([])
@@ -25,10 +21,12 @@ export function MapHook() {
    * @param mapId map 을 생성할 div의 id
    * @param options map에 들어갈 여러가지 option, 없을 경우 defaultOption으로 생성
    */
-  const initMap = (mapId: string, options = DEFAULT_OPTION) => {
-    if (map.current) return
-    map.current = new naver.maps.Map(mapId, options)
-    console.log(map.current)
+  const initMap = (
+    mapDiv: RefObject<HTMLDivElement>,
+    options = DEFAULT_OPTION,
+  ) => {
+    if (mapRef.current) return
+    mapRef.current = new naver.maps.Map(mapDiv.current!, options)
   }
 
   /**
@@ -37,8 +35,8 @@ export function MapHook() {
   const initPolyLine = () => {
     setPolyline(
       new naver.maps.Polyline({
-        map: map.current,
-        path: pathList,
+        map: mapRef.current!,
+        path: [],
         strokeWeight: 3,
         strokeColor: '#555555',
         strokeOpacity: 0.8,
@@ -63,22 +61,34 @@ export function MapHook() {
       pixelOffset: new naver.maps.Point(20, -20),
     })
     naver.maps.Event.addListener(marker, 'mouseon', () => {
-      if (map.current) infoWindow.open(map.current, marker)
+      console.log('mouseon')
+      if (mapRef.current) infoWindow.open(mapRef.current, marker)
     })
 
     naver.maps.Event.addListener(marker, 'mouseout', () => {
-      if (map.current) infoWindow.close()
+      console.log('mouseout')
+      if (mapRef.current) infoWindow.close()
     })
+  }
+
+  const deleteMarkers = () => {
+    for (let k = 0; k < markerList.length; k++) {
+      markerList[k].setMap(null)
+      // console.log(markerList)
+    }
+    setMarkerList([])
   }
 
   /**
    * Route에 따른 정류장과 어린이집 마커 추가
    */
-  const drawRouteMarkers = async (newPathList: naver.maps.LatLng[]) => {
+  const drawRouteMarkers = (newPathList: naver.maps.LatLng[]) => {
+    deleteMarkers()
+
     setMarkerList([
       new naver.maps.Marker({
         position: newPathList[0],
-        map: map.current,
+        map: mapRef.current!,
         icon: {
           content:
             '<img src="/src/assets/image/academy.svg" style="width:30px; height:30px"/>',
@@ -95,7 +105,7 @@ export function MapHook() {
     ].join('')
 
     addInfoWindow(markerList[0], academyInfoWindowContent)
-
+    console.log(newPathList)
     for (let k = 1; k < newPathList.length - 1; k++) {
       const stationInfoWindowContent = [
         '<div class="iw_inner">',
@@ -106,7 +116,7 @@ export function MapHook() {
         ...prev,
         new naver.maps.Marker({
           position: newPathList[k],
-          map: map.current,
+          map: mapRef.current!,
           icon: {
             content: [
               '<img src="/src/assets/image/bus-stop.svg" style="width:30px; height:30px"/>',
@@ -117,6 +127,8 @@ export function MapHook() {
           },
         }),
       ])
+      // console.log(mapRef)
+      // console.log(markerList)
       addInfoWindow(markerList[k], stationInfoWindowContent)
     }
   }
@@ -136,42 +148,33 @@ export function MapHook() {
   const drawRoute = (stationRoute: Station[]) => {
     const newPathList = []
     // TODO 이부분에 args 로 받은 학원 좌표 추가
-    console.log(map.current)
     newPathList.push(new naver.maps.LatLng(BASE_LAT, BASE_LNG))
 
     for (let k = 0; k < stationRoute.length; k++) {
       newPathList.push(
         new naver.maps.LatLng(
-          stationRoute[k].latitude,
-          stationRoute[k].longitude,
+          stationRoute[k].latitude!,
+          stationRoute[k].longitude!,
         ),
       )
     }
     // TODO 여기도 마찬가지로 학원 좌표 추가
     newPathList.push(new naver.maps.LatLng(BASE_LAT, BASE_LNG))
 
-    console.log(newPathList)
-    setPathList(newPathList)
-
-    drawPolyLines(newPathList)
     drawRouteMarkers(newPathList)
+    drawPolyLines(newPathList)
   }
 
-  naver.maps.InfoWindow
-
-  /**
-   * \
-   */
   // const drawCircleList = () => {}
 
   return {
-    map,
-    pathList,
+    map: mapRef,
     markerList,
     polyline,
     initMap,
     initPolyLine,
     addInfoWindow,
+    deleteMarkers,
     drawPolyLines,
     drawRoute,
     drawRouteMarkers,
