@@ -1,9 +1,15 @@
 import Button from '@components/Shared/Button'
 
 import shuttle from '@assets/Mock/shuttle.png'
-
-export default function ShuttleCard() {
-  const handleShuttleCardClick = () => {}
+import { useNavigate } from 'react-router'
+interface Props {
+  id : number
+}
+export default function ShuttleCard({id}:Props) {
+  const navigate = useNavigate()
+  const handleShuttleCardClick = () => {
+    navigate(`/manage/drive-history/${id}`)
+  }
   return (
     <div className="w-[200px] flex-col justify-center items-center">
       <div className="relative">
