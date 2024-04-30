@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.littleriders.backend.application.dto.response.ChildDetailHistoryResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildBoardHistoryResponse;
 import kr.co.littleriders.backend.application.facade.ChildBoardHistoryFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
@@ -24,11 +25,21 @@ public class FamilyHistoryController {
 	@GetMapping("/child/{childId}")
 	public ResponseEntity<ChildBoardHistoryResponse> getChildBoardHistory(@Auth AuthFamily authFamily
 																		, @PathVariable(value = "childId") Long childId
-																		, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+						 												, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
 
 		Long familyId = authFamily.getId();
-		childBoardHistoryFacade.readChildBoardHistory(familyId, childId, pageable);
+		ChildBoardHistoryResponse historyList = childBoardHistoryFacade.readChildBoardHistory(familyId, childId, pageable);
 
-		return ResponseEntity.ok().body(null);
+		return ResponseEntity.ok().body(historyList);
+	}
+
+	@GetMapping("/{historyId}")
+	public ResponseEntity<ChildDetailHistoryResponse> getDetailHistory(@Auth AuthFamily authFamily
+																	, @PathVariable(value = "historyId") Long histroyId) {
+
+		Long familyId = authFamily.getId();
+		ChildDetailHistoryResponse history = childBoardHistoryFacade.readDetailHistory(familyId, histroyId);
+
+		return ResponseEntity.ok().body(history);
 	}
 }

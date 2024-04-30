@@ -2,13 +2,14 @@ package kr.co.littleriders.backend.application.dto.response;
 
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChildBoardHistoryResponse {
 
 	private List<ChildBoardHistory> boardHistoryList;

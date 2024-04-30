@@ -4,6 +4,7 @@ package kr.co.littleriders.backend.domain.history.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.family.entity.Family;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,4 +48,8 @@ public class BoardDropHistory {
     @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     @Column(name = "created_at",nullable = false)
     private LocalDateTime createdAt; // 탑승 시간
+
+    public boolean equalsFamily(Family family) {
+        return this.academyChild.getChild().getFamily().equals(family);
+    }
 }

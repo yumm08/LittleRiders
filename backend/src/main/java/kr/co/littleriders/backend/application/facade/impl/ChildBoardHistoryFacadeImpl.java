@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.littleriders.backend.application.dto.response.ChildBoardHistory;
 import kr.co.littleriders.backend.application.dto.response.ChildBoardHistoryResponse;
+import kr.co.littleriders.backend.application.dto.response.ChildDetailHistoryResponse;
 import kr.co.littleriders.backend.application.facade.ChildBoardHistoryFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
@@ -20,6 +21,8 @@ import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.history.BoardDropHistoryService;
 import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
+import kr.co.littleriders.backend.domain.history.error.code.BoardDropHistoryErrorCode;
+import kr.co.littleriders.backend.domain.history.error.exception.BoardDropHistoryException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -50,4 +53,23 @@ class ChildBoardHistoryFacadeImpl implements ChildBoardHistoryFacade {
 		return ChildBoardHistoryResponse.of(boardHistoryList, boardHistoryPage.getNumber(), boardHistoryPage.hasNext());
 
 	}
+
+	@Override
+	public ChildDetailHistoryResponse readDetailHistory(Long familyId, Long histroyId) {
+
+		Family family = familyService.findById(familyId);
+
+		// detail 조회
+		BoardDropHistory boardDropHistory = boardDropHistoryService.findById(histroyId);
+
+		// family 접근 권한 확인
+		if (!boardDropHistory.equalsFamily(family)) {
+			throw BoardDropHistoryException.from(BoardDropHistoryErrorCode.NOT_FOUND); // 추후 에러 수정 예정
+		}
+
+		ChildDetailHistoryResponse childDetailHistoryResponse = ChildDetailHistoryResponse.from(boardDropHistory);
+
+		return childDetailHistoryResponse;
+	}
+
 }
