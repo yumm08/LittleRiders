@@ -78,3 +78,62 @@ export const DUMMY_DRIVE_HISTORY = (id: number) => {
     },
   ][id % 2]
 }
+
+/**
+ * 날짜id, 운행정보 id 전달
+ *
+ */
+
+export const 운행기록 = [
+  { time: '2022-01-14' },
+  { time: '2022-01-14' },
+  { time: '2022-01-14' },
+]
+
+export const 운행정보 = [
+  { id: 0, routeName: 'A노선', startTime: '12:24', endTime: '13:35' },
+  { id: 1, routeName: 'A노선', startTime: '12:24', endTime: '11:11' },
+]
+
+export const HistoryDetail = {
+  driver: {
+    name: '김기사',
+    phone: '010123456778',
+  },
+  teacher: {
+    name: '햄버거',
+    phone: '01012345',
+  },
+  shuttle: {
+    name: '1호차',
+    licenseNumber: 'asdasd',
+  },
+  locationList: [
+    {
+      speed: '30',
+      latitude: 37.368520071054576,
+      longitude: 127.11473464965819,
+    },
+    {
+      speed: '40',
+      latitude: 37.368520071054576,
+      longitude: 127.11473464965819,
+    },
+  ],
+  childList: [
+    {
+      id: 0,
+      name: '김민준',
+      time: 'string',
+      latitude: 37.378546827477855,
+      longitude: 127.11984157562254,
+    },
+    {
+      id: 1,
+      name: '김곤우',
+      time: 'string',
+      latitude: 37.378546827477855,
+      longitude: 127.11984157562254,
+    },
+  ],
+}

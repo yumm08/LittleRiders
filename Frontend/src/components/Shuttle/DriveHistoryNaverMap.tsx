@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import {
   useRedrawMarkers,
   useRedrawPolyLine,
@@ -7,15 +5,8 @@ import {
   useSetMap,
 } from '@hooks/shuttle/driveHistoryMap'
 
-const options = {
-  center: new naver.maps.LatLng(37.359924641705476, 127.1148204803467),
-  zoom: 13,
-  minZoom: 7,
-  zoomControl: true,
-  disableKineticPOan: false,
-}
-const focused = 'border-lightgreen text-lightgreen'
-const nonFocused = 'border-lightgray text-lightgray'
+import { ChildLogDropDown } from './ChildLogDropDown'
+import { RouteLogDropDown } from './RouteLogDropDown'
 
 interface Props {
   data: any
@@ -28,14 +19,10 @@ interface Props {
  */
 
 export default function DriveHistoryNaverMap({ data }: Props) {
-  const [type, setType] = useState<string>('등원')
-  const onClickTypeHandler = (e: any) => {
-    const id = e.target.id
-    if (id === '등원' && type === '하원') setType('등원')
-    else if (id === '하원' && type === '등원') setType('하원')
-  }
+  const type = '등원'
+
   // Map 초기화
-  const { naverMap } = useSetMap({ options })
+  const { naverMap } = useSetMap({ type, data: data[type] })
   // Map에 마커 찍기
   useRedrawMarkers({ naverMap, data: data[type] })
   useRedrawStudentMarkers({ naverMap, data: data[type] })
@@ -45,22 +32,10 @@ export default function DriveHistoryNaverMap({ data }: Props) {
   return (
     <div
       id="map"
-      className="max-2xl:w-ful relative h-[450px] w-screen rounded-md"
+      className="relative h-[450px] w-screen rounded-md max-2xl:w-full"
     >
-      <div
-        onClick={onClickTypeHandler}
-        id="등원"
-        className={`border-c-lightgreen absolute left-[50px] top-[10px] z-50 rounded-xl border-2  bg-white p-2 font-bold ${type === '등원' ? focused : nonFocused}`}
-      >
-        등원 : {data['등원'].노선이름}
-      </div>
-      <div
-        onClick={onClickTypeHandler}
-        id="하원"
-        className={`border-c-lightgreen absolute left-[180px] top-[10px] z-50 rounded-xl border-2  bg-white p-2 font-bold ${type === '하원' ? focused : nonFocused}`}
-      >
-        하원 : {data['하원'].노선이름}
-      </div>
+      <RouteLogDropDown />
+      <ChildLogDropDown />
     </div>
   )
 }

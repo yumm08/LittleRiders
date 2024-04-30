@@ -4,24 +4,40 @@ import COLOR_PALETTE from '@style/ColorPalette'
 import student from 'assets/Mock/employee.jpg'
 
 type UseSetMapProps = {
-  options: naver.maps.NaverStyleMapTypeOptions
+  type: string
+  data: any
 }
 
-export function useSetMap({ options }: UseSetMapProps) {
+/**
+ *
+ * @summary 네이버맵 컴포넌트를 생성하는 훅
+ */
+export function useSetMap({ type, data }: UseSetMapProps) {
+  const options = {
+    // center: new naver.maps.LatLng(37.359924641705476, 127.1148204803467),
+    center: new naver.maps.LatLng(37.359924641705476, 127.1148204803467),
+    zoom: 13,
+    minZoom: 7,
+    zoomControl: true,
+    disableKineticPOan: false,
+  }
   const [naverMap, setNaverMap] = useState<naver.maps.Map>()
 
   useEffect(() => {
     const map = new naver.maps.Map('map', options)
     setNaverMap(map)
   }, [])
-  return { naverMap }
+  return { naverMap, type }
 }
 
 type useRedrawMarkersProps = {
   naverMap: naver.maps.Map | undefined
   data: any
 }
-
+/**
+ *
+ * @summary 매 렌더링 시 정류장 마커를 지우고 다시 생성하는 훅
+ */
 export function useRedrawMarkers({ naverMap, data }: useRedrawMarkersProps) {
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([])
   useEffect(() => {
@@ -95,7 +111,10 @@ export function useRedrawPolyLine({ naverMap, data }: UseRedrawPolyLineProps) {
     setPolyLines(polyline)
   }, [data, naverMap])
 }
-
+/**
+ *
+ * @summary 매 렌더링 시 원생 마커를 지우고 다시 생성하는 훅
+ */
 export function useRedrawStudentMarkers({
   naverMap,
   data,
