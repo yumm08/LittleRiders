@@ -1,7 +1,9 @@
 package kr.co.littleriders.backend.domain.route;
 
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.entity.Route;
-import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface RouteService {
     Route findById(Long id);
@@ -10,5 +12,7 @@ public interface RouteService {
     boolean existsById(Long id);
 
     boolean notExistsById(Long id);
+
+    List<Route> findAllByAcademy(Academy academy);
 
 }

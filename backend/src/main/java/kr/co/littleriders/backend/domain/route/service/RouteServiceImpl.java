@@ -1,10 +1,12 @@
 package kr.co.littleriders.backend.domain.route.service;
 
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,11 @@ class RouteServiceImpl implements RouteService {
     @Override
     public boolean notExistsById(Long id) {
         return !routeRepository.existsById(id);
+    }
+
+    @Override
+    public List<Route> findAllByAcademy(Academy academy) {
+        return routeRepository.findAllByAcademy(academy);
     }
 
 

@@ -3,10 +3,13 @@ package kr.co.littleriders.backend.application.controller;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/shuttle")
@@ -16,9 +19,8 @@ public class ShuttleController {
 
     // 운행 가능 노선 목록 조회
     @GetMapping("/route")
-    public ResponseEntity<?> getRouteList() {
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<ShuttleRouteResponse>> getRouteList() {
+        return ResponseEntity.ok().body(shuttleFacade.getRouteList());
     }
 
     // 운행 시작

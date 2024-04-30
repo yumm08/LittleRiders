@@ -3,8 +3,10 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
@@ -27,7 +29,9 @@ import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherExceptio
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +47,19 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final ShuttleLocationHistoryService shuttleLocationHistoryService;
     private final ShuttleDriveService shuttleDriveService;
     private final ShuttleChildRideService shuttleChildRideService;
+
+    @Override
+    public List<ShuttleRouteResponse> getRouteList() {
+        Long shuttleId = 1L;
+        Shuttle shuttle = shuttleService.findById(shuttleId);
+        Academy academy = shuttle.getAcademy();
+
+        List<Route> routeList = routeService.findAllByAcademy(academy);
+
+        return routeList.stream()
+                .map(ShuttleRouteResponse::from)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void startDrive(ShuttleStartRequest startRequest) {
