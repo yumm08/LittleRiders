@@ -10,4 +10,6 @@ public interface AcademyChildService {
     boolean existsById(Long id);
 
     boolean notExistsById(Long id);
+
+    AcademyChild findByCardNumber(String cardNumber);
 }

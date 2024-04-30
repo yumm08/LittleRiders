@@ -29,4 +29,12 @@ class AcademyChildServiceImpl implements AcademyChildService {
     public boolean notExistsById(Long id) {
         return !academyChildRepository.existsById(id);
     }
+
+    @Override
+    public AcademyChild findByCardNumber(String cardNumber) {
+        return academyChildRepository.findByCardNumber(cardNumber).orElseThrow(
+                () -> AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND)
+        );
+
+    }
 }

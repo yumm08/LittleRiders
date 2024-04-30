@@ -3,10 +3,12 @@ package kr.co.littleriders.backend.domain.child.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.global.entity.Gender;
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+@Getter
 @Entity
 @Table(name = "child")
 public class Child {

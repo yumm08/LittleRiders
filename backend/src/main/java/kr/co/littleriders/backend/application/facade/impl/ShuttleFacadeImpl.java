@@ -4,7 +4,8 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideReques
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
@@ -36,6 +37,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final RouteService routeService;
     private final DriverService driverService;
     private final TeacherService teacherService;
+    private final AcademyChildService academyChildService;
 
     private final ShuttleLocationService shuttleLocationService;
     private final ShuttleLocationHistoryService shuttleLocationHistoryService;
@@ -84,8 +86,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         Long shuttleId = 1L;
 
-        // TODO: childCardNumber를 childId로 변환
-        Long childId = 10L;
+        AcademyChild academyChild = academyChildService.findByCardNumber(rideRequest.getChildCardNumber());
+        Long childId = academyChild.getChild().getId();
 
         ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, childId);
         shuttleChildRideService.save(shuttleChildRide);

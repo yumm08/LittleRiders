@@ -6,9 +6,11 @@ import java.util.List;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
+import lombok.Getter;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Getter
 @Entity
 @Table(name = "academy_child")
 public class AcademyChild {
