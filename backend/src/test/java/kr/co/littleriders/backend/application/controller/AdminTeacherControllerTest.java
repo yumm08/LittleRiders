@@ -1,9 +1,11 @@
 package kr.co.littleriders.backend.application.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
+import kr.co.littleriders.backend.domain.academy.AcademyService;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.teacher.TeacherService;
+import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,19 +14,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
-import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminDriverFacade;
-import kr.co.littleriders.backend.domain.academy.AcademyService;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.driver.DriverService;
-import kr.co.littleriders.backend.domain.driver.entity.Driver;
-import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
-import kr.co.littleriders.backend.domain.teacher.TeacherService;
-import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
-import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -49,7 +43,7 @@ class AdminTeacherControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
 			TeacherRegistRequest regist = new TeacherRegistRequest("테스트", "010", null);
 			Teacher teacher = regist.toEntity(academy);

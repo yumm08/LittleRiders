@@ -72,7 +72,7 @@ class AdminChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
 			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
 			familyService.save(family);
@@ -119,7 +119,7 @@ class AdminChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
 			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
 			familyService.save(family);
@@ -170,7 +170,7 @@ class AdminChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
 			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
 			familyService.save(family);
@@ -212,7 +212,7 @@ class AdminChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
 			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
 			familyService.save(family);
@@ -268,7 +268,7 @@ class AdminChildControllerTest {
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
 
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
 			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
 			familyService.save(family);

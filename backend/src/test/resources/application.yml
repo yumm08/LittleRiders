@@ -8,6 +8,10 @@ server:
       force: true
 
 spring:
+  naver:
+    key: ${NAVER_KEY}
+    secret: ${NAVER_SECRET}
+
   mail:
     host: littleriders.co.kr
     port: 1025
@@ -44,6 +48,9 @@ spring:
       console:
         enabled: true
         path: /h2-console
+
+
+
 
 
 
