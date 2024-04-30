@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react'
+import { RefObject, SetStateAction, useState } from 'react'
 
 import { BASE_LAT, BASE_LNG } from '@constants'
 import { Station } from '@types'
@@ -13,8 +13,11 @@ const DEFAULT_OPTION = {
 
 export function MapHook(
   mapRef: React.MutableRefObject<naver.maps.Map | null>,
-  markerList,
-  setMarkerList,
+  markerList: naver.maps.Marker[],
+  setMarkerList: {
+    (value: SetStateAction<naver.maps.Marker[]>): void
+    (arg0: never[]): void
+  },
 ) {
   // const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [polyline, setPolyline] = useState<naver.maps.Polyline>()
@@ -44,7 +47,7 @@ export function MapHook(
         map: mapRef.current!,
         path: [],
         strokeWeight: 3,
-        strokeColor: '#555555',
+        strokeColor: '#007F73',
         strokeOpacity: 0.8,
       }),
     )
@@ -61,15 +64,17 @@ export function MapHook(
       maxWidth: 140,
       backgroundColor: '#EEEEEE',
       borderColor: '#111111',
-      borderWidth: 5,
-      anchorSize: new naver.maps.Size(30, 30),
+      borderWidth: 1,
+      anchorSize: new naver.maps.Size(5, 5),
       anchorSkew: true,
       anchorColor: '#EEEEEE',
-      pixelOffset: new naver.maps.Point(20, -20),
+      pixelOffset: new naver.maps.Point(10, -5),
     })
-    naver.maps.Event.addListener(marker, 'mouseon', () => {
+    naver.maps.Event.addListener(marker, 'mouseover', () => {
       console.log('mouseon')
-      if (mapRef.current) infoWindow.open(mapRef.current, marker)
+      if (mapRef.current) {
+        infoWindow.open(mapRef.current, marker)
+      }
     })
 
     naver.maps.Event.addListener(marker, 'mouseout', () => {
@@ -90,57 +95,37 @@ export function MapHook(
   /**
    * Route에 따른 정류장과 어린이집 마커 추가
    */
-  const drawRouteMarkers = async (newPathList: naver.maps.LatLng[]) => {
-    console.log('drawRouteMarkers')
-    console.log(markerList)
-    deleteMarkers()
-    const tmpMarkerList = []
-    tmpMarkerList.push(
-      new naver.maps.Marker({
-        position: newPathList[0],
-        map: mapRef.current!,
-        icon: {
-          content:
-            '<img src="/src/assets/image/academy.svg" style="width:30px; height:30px"/>',
-          anchor: new naver.maps.Point(16, 16),
-          origin: new naver.maps.Point(29, 50),
-        },
-      }),
-    )
+  const drawRouteMarkers = async (
+    newPathList: naver.maps.LatLng[],
+    markerImg?: string,
+    size?: naver.maps.Size,
+    anchor?: naver.maps.Point,
+    origin?: naver.maps.Point,
+    infoWindowContent?: string,
+  ) => {
+    // 그릴 마커 리스트
+    const tmpMarkerList: naver.maps.Marker[] = []
 
-    const academyInfoWindowContent = [
-      '<div class="iw_inner">',
-      '  <h3>어린이집</h3>',
-      '</div>',
-    ].join('')
-
-    // addInfoWindow(markerList[0], academyInfoWindowContent)
-    for (let k = 1; k < newPathList.length - 1; k++) {
-      const stationInfoWindowContent = [
-        '<div class="iw_inner">',
-        ` <h3>정류장 ${k}</h3>`,
-        '</div>',
-      ].join('')
-      console.log(`marker added once ${k}`)
-
+    for (let k = 0; k < newPathList.length; k++) {
       tmpMarkerList.push(
         new naver.maps.Marker({
           position: newPathList[k],
           map: mapRef.current!,
           icon: {
             content: [
-              '<img src="/src/assets/image/bus-stop.svg" style="width:30px; height:30px"/>',
+              `<img src="/src/assets/image/${markerImg}" style="width:30px; height:30px"/>`,
             ].join(''),
-            size: new naver.maps.Size(50, 52),
-            anchor: new naver.maps.Point(15, 30),
-            origin: new naver.maps.Point(29, 50),
+            size,
+            anchor,
+            origin,
           },
         }),
       )
-      console.log(markerList)
-      // addInfoWindow(markerList[k], stationInfoWindowContent)
+      if (infoWindowContent) {
+        addInfoWindow(tmpMarkerList[k], infoWindowContent)
+      }
     }
-    setMarkerList(tmpMarkerList)
+    setMarkerList((prev: naver.maps.Marker[]) => [...prev, ...tmpMarkerList])
   }
 
   /**
@@ -157,9 +142,10 @@ export function MapHook(
    * @param stationRoute station 배열 정보
    */
   const drawRoute = (stationRoute: Station[]) => {
-    console.log('drawRoute')
+    // 기존 마커 삭제
     deleteMarkers()
     const newPathList = []
+
     // TODO 이부분에 args 로 받은 학원 좌표 추가
     newPathList.push(new naver.maps.LatLng(BASE_LAT, BASE_LNG))
     for (let k = 0; k < stationRoute.length; k++) {
@@ -173,7 +159,26 @@ export function MapHook(
     // TODO 여기도 마찬가지로 학원 좌표 추가
     newPathList.push(new naver.maps.LatLng(BASE_LAT, BASE_LNG))
 
-    drawRouteMarkers(newPathList)
+    drawRouteMarkers(
+      [newPathList[0]],
+      'academy.svg',
+      new naver.maps.Size(30, 30),
+      new naver.maps.Point(16, 16),
+      new naver.maps.Point(29, 50),
+      ['<div class="iw_inner px-2">', '  <h3>어린이집</h3>', '</div>'].join(''),
+    )
+
+    if (newPathList.length > 2) {
+      drawRouteMarkers(
+        [...newPathList.slice(1, newPathList.length - 1)],
+        'bus-stop.svg',
+        new naver.maps.Size(50, 52),
+        new naver.maps.Point(15, 30),
+        new naver.maps.Point(29, 50),
+        ['<div class="iw_inner px-2">', '  <h3>정류장</h3>', '</div>'].join(''),
+      )
+    }
+
     drawPolyLines(newPathList)
   }
 
