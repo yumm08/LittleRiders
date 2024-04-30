@@ -40,7 +40,7 @@ class ChildBoardHistoryFacadeImpl implements ChildBoardHistoryFacade {
 		Family family = familyService.findById(familyId);
 		Child child = childService.findById(childId);
 		if (child.equalsFamily(family)) {
-			throw ChildException.from(ChildErrorCode.NOT_FOUND); // 메세지 추후 변경 예정
+			throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
 		}
 
 		List<AcademyChild> academyChildList = academyChildService.findByChild(child);
@@ -64,7 +64,7 @@ class ChildBoardHistoryFacadeImpl implements ChildBoardHistoryFacade {
 
 		// family 접근 권한 확인
 		if (!boardDropHistory.equalsFamily(family)) {
-			throw BoardDropHistoryException.from(BoardDropHistoryErrorCode.NOT_FOUND); // 추후 에러 수정 예정
+			throw BoardDropHistoryException.from(BoardDropHistoryErrorCode.ILLEGAL_ACCESS); // 추후 에러 수정 예정
 		}
 
 		ChildDetailHistoryResponse childDetailHistoryResponse = ChildDetailHistoryResponse.from(boardDropHistory);

@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ChildErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "어린이를 찾을수 없습니다");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "어린이를 찾을수 없습니다"),
+    ILLEGAL_ACCESS(HttpStatus.BAD_REQUEST, "002", "접근 권한이 없습니다");
 
 
     ChildErrorCode(HttpStatus status, String code, String message) {
