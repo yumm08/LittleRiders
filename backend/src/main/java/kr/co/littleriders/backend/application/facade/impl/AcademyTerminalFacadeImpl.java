@@ -9,7 +9,6 @@ import kr.co.littleriders.backend.domain.terminal.TerminalService;
 import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
 import kr.co.littleriders.backend.domain.terminal.error.code.TerminalErrorCode;
 import kr.co.littleriders.backend.domain.terminal.error.exception.TerminalException;
-import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +21,13 @@ class AcademyTerminalFacadeImpl implements AcademyTerminalFacade {
 
 
     @Override
-    public void registerTerminal(AuthAcademy authAcademy, AcademyTerminalRegisterRequest academyTerminalRegisterRequest) {
+    public void registerTerminal(long academyId, AcademyTerminalRegisterRequest academyTerminalRegisterRequest) {
 
         String terminalNumber = academyTerminalRegisterRequest.getTerminalNumber();
         if(terminalService.existsByTerminalNumber(terminalNumber)){
             throw TerminalException.from(TerminalErrorCode.ALREADY_REGISTERED);
         }
-        Academy academy = academyService.findById(authAcademy.getId());
+        Academy academy = academyService.findById(academyId);
         Terminal terminal = academyTerminalRegisterRequest.toTerminal(academy);
         terminalService.save(terminal);
     }

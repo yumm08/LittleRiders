@@ -24,7 +24,7 @@ public class AcademyTerminalController {
 
     @PostMapping("")
     public ResponseEntity<Void> registerTerminal(@Auth AuthAcademy authAcademy, @Valid @RequestBody AcademyTerminalRegisterRequest academyTerminalRegisterRequest) {
-        academyTerminalFacade.registerTerminal(authAcademy, academyTerminalRegisterRequest);
+        academyTerminalFacade.registerTerminal(authAcademy.getId(), academyTerminalRegisterRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
