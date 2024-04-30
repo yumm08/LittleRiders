@@ -84,8 +84,8 @@ class AccountControllerTest {
                     .andDo(print())
                     .andReturn();
             Cookie cookie = signInResult.getResponse().getCookie("refresh-token");
-            String acessToken = signInResult.getResponse().getHeader("Authorization");
-            log.info("accessToken=[{}]", acessToken);
+            String accessToken = signInResult.getResponse().getHeader("Authorization");
+            log.info("accessToken=[{}]", accessToken);
             MvcResult reIssueResult = mockMvc.perform(
                             get("/account/re-issue")
                                     .contentType(MediaType.APPLICATION_JSON)
@@ -94,11 +94,18 @@ class AccountControllerTest {
                     .andExpect(status().isOk())
                     .andDo(print())
                     .andReturn();
+
             String signInRefresh = cookie.getValue();
             String reIssueRefresh = reIssueResult.getResponse().getCookie("refresh-token").getValue();
+            log.info("signInRefresh = {}",signInRefresh);
+            log.info("reIssueRefresh = {}",reIssueRefresh);
             assertNotEquals(signInRefresh, reIssueRefresh);
         }
     }
+
+
+
+
 
     @Nested
     @DisplayName("ArgumentResolver e2e 테스트")
@@ -205,4 +212,74 @@ class AccountControllerTest {
         }
 
     }
+
+
+
+
+    @Nested
+    @DisplayName("로그아웃 테스트")
+    class signOut {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            //회원가입 후
+            //로그인 한 다음
+            String email = "test@example.com";
+            String password = "1234";
+            String name = "54";
+            String phoneNumber = "123456";
+            Family family = new FamilySignUpRequest(
+                    email,
+                    password,
+                    name,
+                    "집주소",
+                    phoneNumber
+            ).toFamily(
+                    passwordUtil
+            );
+            log.info("family = [{}]",objectMapper.writeValueAsString(family));
+            familyService.save(family);
+            SignInRequest signInRequest = SignInRequest.of(email, password);
+            MvcResult signInResult = mockMvc.perform(
+                            post("/family/account/sign-in")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(signInRequest))
+
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(header().exists("Authorization"))
+                    .andDo(print())
+                    .andReturn();
+            Cookie cookie = signInResult.getResponse().getCookie("refresh-token");
+            String accessToken = signInResult.getResponse().getHeader("Authorization");
+            log.info("accessToken=[{}]", accessToken);
+
+
+
+
+            String signInRefresh = cookie.getValue();
+
+            mockMvc.perform(
+                    get("/account/sign-out")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .cookie(cookie)
+
+            )
+                    .andExpect(status().isOk())
+                    .andDo(print());
+
+
+            MvcResult reIssueResult = mockMvc.perform(
+                            get("/account/re-issue")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .cookie(cookie)
+                    )
+                    .andExpect(status().isNotFound())
+                    .andDo(print())
+                    .andReturn();
+        }
+    }
+
+
 }

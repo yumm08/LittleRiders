@@ -26,7 +26,7 @@ public class AccountController {
         String refreshToken = jwtToken.getRefreshToken();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        jakarta.servlet.http.Cookie cookie = new Cookie("refresh-token", refreshToken);
+        Cookie cookie = new Cookie("refresh-token", refreshToken);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
@@ -49,6 +49,16 @@ public class AccountController {
         cookie.setPath("/");
         response.addCookie(cookie);
         return ResponseEntity.ok().headers(headers).build();
+    }
+
+    @GetMapping("/sign-out")
+    public ResponseEntity<Void> signOut(@CookieValue("refresh-token") String requestRefreshToken, HttpServletResponse response){
+        accountFacade.signOut(requestRefreshToken);
+        Cookie cookie = new Cookie("refresh-token",null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
     }
 
 

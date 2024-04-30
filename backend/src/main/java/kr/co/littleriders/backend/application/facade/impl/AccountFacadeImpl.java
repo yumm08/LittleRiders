@@ -63,6 +63,12 @@ class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
+    public void signOut(String requestRefreshToken) {
+        RefreshToken refreshToken = refreshTokenService.findByToken(requestRefreshToken);
+        refreshTokenService.delete(refreshToken);
+    }
+
+    @Override
     public JwtToken signIn(String email, String password) { //리팩토링이 될거같음
         if(familyService.existsByEmail(email)){
             Family family = familyService.findByEmail(email);

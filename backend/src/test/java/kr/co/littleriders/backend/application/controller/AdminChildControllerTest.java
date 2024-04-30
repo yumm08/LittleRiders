@@ -1,37 +1,13 @@
 package kr.co.littleriders.backend.application.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kr.co.littleriders.backend.application.dto.request.AcademyChildUpdateRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyFamilyStatus;
-import kr.co.littleriders.backend.domain.academy.entity.CardType;
+import kr.co.littleriders.backend.domain.academy.entity.*;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.family.FamilyService;
@@ -40,9 +16,29 @@ import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
 import kr.co.littleriders.backend.global.entity.Gender;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class AdminChildControllerTest {
 
 	@Autowired
