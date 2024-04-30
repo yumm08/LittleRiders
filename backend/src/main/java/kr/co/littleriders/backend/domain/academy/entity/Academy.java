@@ -43,6 +43,12 @@ public class Academy implements Member {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 학원 전화번호
 
+    @Column(name = "latitude",nullable = false)
+    private double latitude;
+
+    @Column(name = "longitude",nullable = false)
+    private double longitude;
+
     @Column(name = "image_path")
     private String imagePath; // 이미지 경로
 
@@ -76,15 +82,17 @@ public class Academy implements Member {
     @OneToMany(mappedBy = "academy")
     private List<Pending> pendingList; // 원생 승인 신청 목록
 
-    private Academy(String email, String password, String name, String address, String phoneNumber) {
+    private Academy(String email, String password, String name, String address, String phoneNumber, double latitude, double longitude) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public static Academy of(String email, String password, String name, String address, String phoneNumber) {
-        return new Academy(email, password, name, address, phoneNumber);
+    public static Academy of(String email, String password, String name, String address, String phoneNumber, double latitude, double longitude) {
+        return new Academy(email, password, name, address, phoneNumber, latitude, longitude);
     }
 }

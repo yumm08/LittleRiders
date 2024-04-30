@@ -1,16 +1,15 @@
 package kr.co.littleriders.backend.global.error;
 
 
-import jakarta.validation.ConstraintViolationException;
 import kr.co.littleriders.backend.global.error.code.LittleRidersErrorCode;
 import kr.co.littleriders.backend.global.error.exception.LittleRidersException;
 import kr.co.littleriders.backend.global.response.api.LittleRidersErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +34,24 @@ public class GlobalExceptionHandler {
         response.put("error",e.getMessage());
 
         return ResponseEntity.status(500).body(response);
+    }
+
+
+    @ExceptionHandler
+    protected ResponseEntity<?> handleWebClientException(WebClientResponseException e){
+        Throwable rootCause = e.getRootCause();
+        if(rootCause instanceof LittleRidersException){
+            throw (LittleRidersException)rootCause;
+        }
+
+        //TODO 수정 필요
+        Map<String,String> response = new HashMap<>();
+        response.put("code","ERROR_1");
+        response.put("error",e.getMessage());
+        return ResponseEntity.status(500).body(response);
+
+
+
     }
 
 }

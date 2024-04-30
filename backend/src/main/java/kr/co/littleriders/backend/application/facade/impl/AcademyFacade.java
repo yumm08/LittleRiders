@@ -1,6 +1,9 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 
+import kr.co.littleriders.backend.application.client.AddressConvertFetchAPI;
+import kr.co.littleriders.backend.application.client.AddressConvertPositionClientRequest;
+import kr.co.littleriders.backend.application.client.AddressConvertPositionClientResponse;
 import kr.co.littleriders.backend.application.dto.request.AcademySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.facade.AcademyAccountFacade;
@@ -48,6 +51,8 @@ class AcademyFacade implements AcademyAccountFacade {
 
     private final JwtProvider jwtProvider;
 
+    private final AddressConvertFetchAPI addressConvertFetchAPI;
+
     @Override
     public String sendSignUpEmail(final String email) {
         if (familyService.existsByEmail(email) || academyService.existsByEmail(email)) {
@@ -83,13 +88,24 @@ class AcademyFacade implements AcademyAccountFacade {
     @Override
     @Transactional
     public void signUp(final AcademySignUpRequest academySignUpRequest, final String token) {
+
         String email = academySignUpRequest.getEmail();
         SignUpToken signUpToken = signUpTokenService.findFamilySignUpTokenByEmailAndToken(email, token);
         signUpTokenService.delete(signUpToken);
-        Academy academy = academySignUpRequest.toAcademy(passwordUtil);
         if (familyService.existsByEmail(email) || academyService.existsByEmail(email)) {
             throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);
         }
+
+        String address = academySignUpRequest.getAddress();
+        AddressConvertPositionClientRequest addressConvertPositionClientRequest = AddressConvertPositionClientRequest.from(address);
+
+        AddressConvertPositionClientResponse addressConvertPositionClientResponse = addressConvertFetchAPI.fetchAPI(addressConvertPositionClientRequest);
+
+        double latitude = addressConvertPositionClientResponse.getLatitude();
+        double longitude = addressConvertPositionClientResponse.getLongitude();
+
+
+        Academy academy = academySignUpRequest.toAcademy(passwordUtil,latitude,longitude);
         academyService.save(academy);
     }
 
