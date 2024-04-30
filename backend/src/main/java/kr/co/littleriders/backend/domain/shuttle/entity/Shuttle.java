@@ -1,10 +1,6 @@
 package kr.co.littleriders.backend.domain.shuttle.entity;
 
-import org.springframework.http.codec.cbor.Jackson2CborDecoder;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.application.dto.request.ShuttleRegistRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
 import lombok.AccessLevel;
@@ -12,13 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity @Getter
+@Entity
 @Table(name = "shuttle",
     uniqueConstraints = @UniqueConstraint(
         name = "shuttle_unique",
         columnNames = {"academy_id","licenseNumber"}
     ))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Shuttle {
 
     @Id

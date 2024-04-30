@@ -4,17 +4,17 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 
 public interface FamilyService {
 
-    Family findById(Long id);
+    Family findById(long id);
 
     Family findByEmail(String email);
 
-    boolean existsById(Long id);
+    boolean existsById(long id);
 
-    boolean notExistsById(Long id);
+    boolean notExistsById(long id);
 
     boolean existsByEmail(String email);
 
     boolean notExistsByEmail(String email);
 
-    void save(Family family);
+    long save(Family family);
 }

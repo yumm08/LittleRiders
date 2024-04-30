@@ -12,13 +12,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Entity @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "child",
     uniqueConstraints = @UniqueConstraint(
         name = "child_unique",
         columnNames = {"family_id","name","birthDate","gender"}
     ))
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Child {
 
     @Id

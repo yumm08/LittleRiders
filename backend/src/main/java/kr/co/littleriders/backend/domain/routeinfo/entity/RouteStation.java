@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.station.entity.Station;
-
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "station_route",
@@ -16,6 +17,8 @@ uniqueConstraints = {
                 columnNames = {"route_id","station_id","academy_id","visit_order"}
         )
 })
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class RouteStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,14 +1,14 @@
 package kr.co.littleriders.backend.domain.child;
 
-import java.util.List;
-
 import kr.co.littleriders.backend.domain.child.entity.Child;
+
+import java.util.List;
 
 public interface ChildService {
 
-	Long save(Child child);
+	long save(Child child);
 
-	List<Child> findByFamilyId(Long familyId);
+	List<Child> findByFamilyId(long familyId);
 
-	Child findById(Long childId);
+	Child findById(long childId);
 }

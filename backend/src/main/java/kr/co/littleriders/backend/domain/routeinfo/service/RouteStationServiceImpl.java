@@ -1,7 +1,9 @@
 package kr.co.littleriders.backend.domain.routeinfo.service;
 
+import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.routeinfo.RouteStationService;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
+import kr.co.littleriders.backend.domain.routeinfo.error.exception.RouteStationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +13,26 @@ class RouteStationServiceImpl implements RouteStationService {
     private final RouteStationRepository routeStationRepository;
 
     @Override
-    public RouteStation findById(Long id) {
+    public RouteStation findById(final long id) {
         return routeStationRepository.findById(id).orElseThrow(
-                RuntimeException::new //TODO : CUSTOM EXCEPTION 으로 수정
+                () -> RouteStationException.from(RouteErrorCode.NOT_FOUND)
         );
     }
 
 
     @Override
-    public boolean existsById(Long id){
+    public boolean existsById(final long id) {
         return routeStationRepository.existsById(id);
     }
 
     @Override
-    public boolean notExistsById(Long id){
+    public boolean notExistsById(final long id) {
         return !routeStationRepository.existsById(id);
+    }
+
+    @Override
+    public long save(RouteStation routeStation) {
+        return routeStationRepository.save(routeStation).getId();
     }
 
 }

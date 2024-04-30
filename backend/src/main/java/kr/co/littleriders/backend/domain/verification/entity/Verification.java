@@ -9,8 +9,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RedisHash(value = "family_sign_up_email_verification")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public final class Verification {
 

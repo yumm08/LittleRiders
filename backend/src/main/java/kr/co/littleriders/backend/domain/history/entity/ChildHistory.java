@@ -3,7 +3,9 @@ package kr.co.littleriders.backend.domain.history.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.global.entity.Gender;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity @Getter
 @Table(name = "child_history")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChildHistory {
 
     @Id

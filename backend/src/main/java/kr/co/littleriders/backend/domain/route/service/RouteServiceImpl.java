@@ -2,7 +2,8 @@ package kr.co.littleriders.backend.domain.route.service;
 
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
-import lombok.AccessLevel;
+import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
+import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,21 +14,25 @@ class RouteServiceImpl implements RouteService {
     private final RouteRepository routeRepository;
 
     @Override
-    public Route findById(Long id) {
+    public Route findById(long id) {
         return routeRepository.findById(id).orElseThrow(
-                RuntimeException::new //TODO : 커스텀 익셉션 변경 필요
+                () -> RouteException.from(RouteErrorCode.NOT_FOUND)
         );
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(final long id) {
         return routeRepository.existsById(id);
     }
 
     @Override
-    public boolean notExistsById(Long id) {
+    public boolean notExistsById(final long id) {
         return !routeRepository.existsById(id);
     }
 
+    @Override
+    public long save(Route route) {
+        return routeRepository.save(route).getId();
+    }
 
 }

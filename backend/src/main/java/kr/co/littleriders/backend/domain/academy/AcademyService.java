@@ -6,13 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 public interface AcademyService {
-    Academy findById(Long id);
+    Academy findById(long id);
 
     Academy findByEmail(String email);
 
-    boolean existsById(Long id);
+    boolean existsById(long id);
 
-    boolean notExistsById(Long id);
+    boolean notExistsById(long id);
 
     boolean existsByEmail(String email);
 
@@ -20,6 +20,6 @@ public interface AcademyService {
 
     Slice<Academy> findByName(String name, Pageable pageable);
 
-    void save(Academy academy);
+    long save(Academy academy);
 
 }

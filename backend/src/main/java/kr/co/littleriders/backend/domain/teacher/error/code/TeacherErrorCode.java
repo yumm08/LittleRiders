@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum TeacherErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "뭘 넣어야 할까요;;;"); //TODO : 진짜 뭐넣지
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "해당 교사를 찾을수 없습니다.");
 
 
     TeacherErrorCode(HttpStatus status, String code, String message) {

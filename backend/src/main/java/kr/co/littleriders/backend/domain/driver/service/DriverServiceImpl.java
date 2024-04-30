@@ -14,24 +14,24 @@ class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
 
     @Override
-    public Driver findById(Long id) {
+    public Driver findById(long id) {
         return driverRepository.findById(id).orElseThrow(
                 () -> DriverException.from(DriverErrorCode.NOT_FOUND)
         );
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(long id) {
         return driverRepository.existsById(id);
     }
 
     @Override
-    public boolean notExistsById(Long id) {
+    public boolean notExistsById(long id) {
         return !driverRepository.existsById(id);
     }
 
     @Override
-    public Long save(Driver driver) {
+    public long save(Driver driver) {
         return driverRepository.save(driver).getId();
     }
 }

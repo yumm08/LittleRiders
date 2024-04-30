@@ -2,13 +2,10 @@ package kr.co.littleriders.backend.domain.pending.service;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.child.entity.Child;
-import kr.co.littleriders.backend.domain.pending.entity.Pending;
-import kr.co.littleriders.backend.domain.pending.error.code.PendingErrorCode;
-import kr.co.littleriders.backend.domain.pending.error.exception.PendingException;
-import org.springframework.stereotype.Service;
-
 import kr.co.littleriders.backend.domain.pending.PendingService;
+import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,7 +16,7 @@ class PendingServiceImpl implements PendingService {
     private final PendingRepository pendingRepository;
 
     @Override
-    public Long save(Pending pending) {
+    public long save(Pending pending) {
         return pendingRepository.save(pending).getId();
     }
 
@@ -36,8 +33,6 @@ class PendingServiceImpl implements PendingService {
     @Override
     public List<Pending> searchById(List<Long> pendingIdList) {
 
-        List<Pending> pendingList = pendingRepository.searchById(pendingIdList);
-
-        return pendingList;
+        return pendingRepository.searchById(pendingIdList);
     }
 }

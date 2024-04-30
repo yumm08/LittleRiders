@@ -1,24 +1,24 @@
 package kr.co.littleriders.backend.domain.academy.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.family.entity.Family;
-
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "academy_family")
-@NoArgsConstructor
 @DynamicUpdate
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class AcademyFamily {
 
-    @Id @Getter
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id; // 보호자 정보 id

@@ -2,9 +2,14 @@ package kr.co.littleriders.backend.domain.terminal.entity;
 
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "shuttle_terminal_attach")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class ShuttleTerminalAttach {
 
     @Id

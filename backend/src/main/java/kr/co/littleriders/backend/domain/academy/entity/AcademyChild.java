@@ -1,20 +1,22 @@
 package kr.co.littleriders.backend.domain.academy.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Entity @Getter
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
 @Table(name = "academy_child")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @DynamicUpdate
 public class AcademyChild {
 
