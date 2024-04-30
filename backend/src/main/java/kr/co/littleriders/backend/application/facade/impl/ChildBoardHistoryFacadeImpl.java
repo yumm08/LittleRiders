@@ -55,12 +55,12 @@ class ChildBoardHistoryFacadeImpl implements ChildBoardHistoryFacade {
 	}
 
 	@Override
-	public ChildDetailHistoryResponse readDetailHistory(Long familyId, Long histroyId) {
+	public ChildDetailHistoryResponse readDetailHistory(Long familyId, Long historyId) {
 
 		Family family = familyService.findById(familyId);
 
 		// detail 조회
-		BoardDropHistory boardDropHistory = boardDropHistoryService.findById(histroyId);
+		BoardDropHistory boardDropHistory = boardDropHistoryService.findById(historyId);
 
 		// family 접근 권한 확인
 		if (!boardDropHistory.equalsFamily(family)) {

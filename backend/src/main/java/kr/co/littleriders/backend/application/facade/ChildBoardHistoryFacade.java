@@ -8,5 +8,5 @@ import kr.co.littleriders.backend.application.dto.response.ChildDetailHistoryRes
 public interface ChildBoardHistoryFacade {
 	ChildBoardHistoryResponse readChildBoardHistory(Long familyId, Long childId, Pageable pageable);
 
-	ChildDetailHistoryResponse readDetailHistory(Long familyId, Long histroyId);
+	ChildDetailHistoryResponse readDetailHistory(Long familyId, Long historyId);
 }

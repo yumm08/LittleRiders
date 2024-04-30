@@ -17,4 +17,6 @@ public interface BoardDropHistoryService {
     boolean notExistsById(Long id);
 
 	Slice<BoardDropHistory> findByAcademyChild(List<AcademyChild> academyChildList, Pageable pageable);
+
+	Long save(BoardDropHistory boardDropHistory);
 }

@@ -37,6 +37,11 @@ class BoardDropHistoryServiceImpl implements BoardDropHistoryService {
 
     @Override
     public Slice<BoardDropHistory> findByAcademyChild(List<AcademyChild> academyChildList, Pageable pageable) {
-        return null;
+        return boardDropHistoryRepository.findByAcademyChild(academyChildList);
+    }
+
+    @Override
+    public Long save(BoardDropHistory boardDropHistory) {
+        return boardDropHistoryRepository.save(boardDropHistory).getId();
     }
 }
