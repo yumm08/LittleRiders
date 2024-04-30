@@ -35,10 +35,10 @@ public class FamilyHistoryController {
 
 	@GetMapping("/{historyId}")
 	public ResponseEntity<ChildDetailHistoryResponse> getDetailHistory(@Auth AuthFamily authFamily
-																	, @PathVariable(value = "historyId") Long histroyId) {
+																	, @PathVariable(value = "historyId") Long historyId) {
 
 		Long familyId = authFamily.getId();
-		ChildDetailHistoryResponse history = childBoardHistoryFacade.readDetailHistory(familyId, histroyId);
+		ChildDetailHistoryResponse history = childBoardHistoryFacade.readDetailHistory(familyId, historyId);
 
 		return ResponseEntity.ok().body(history);
 	}
