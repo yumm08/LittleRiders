@@ -7,11 +7,12 @@ public interface TerminalService {
     Terminal findById(long id);
 
     Terminal findByTerminalNumber(String terminalNumber);
-
+    
     boolean existsById(long id);
 
     boolean notExistsById(long id);
-
+    
     long save(Terminal terminal);
 
+    boolean existsByTerminalNumber(String terminalNumber);
 }

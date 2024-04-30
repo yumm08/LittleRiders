@@ -10,4 +10,6 @@ import java.util.Optional;
 interface TerminalRepository extends JpaRepository<Terminal, Long> {
 
     Optional<Terminal> findByTerminalNumber(String terminalNumber);
+
+    boolean existsByTerminalNumber(String terminalNumber);
 }
