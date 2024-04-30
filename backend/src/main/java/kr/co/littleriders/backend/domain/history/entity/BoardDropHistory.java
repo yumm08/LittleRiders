@@ -61,7 +61,6 @@ public class BoardDropHistory {
 
     public static BoardDropHistory of(Academy academy, AcademyChild academyChild, double latitude, double longitude, BoardDropHistoryStatus boardDropHistoryStatus) {
         return new BoardDropHistory(academy, academyChild, latitude, longitude, boardDropHistoryStatus);
-
     }
 
     public boolean equalsFamily(Family family) {
