@@ -9,4 +9,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
+
+    @Override
+    public boolean notExistsById(Long id) {
+        return !teacherRepository.existsById(id);
+    }
 }
