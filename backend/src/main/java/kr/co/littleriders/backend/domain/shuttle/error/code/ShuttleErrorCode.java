@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ShuttleErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "뭘 넣어야 할까요;;;"); //TODO : 진짜 뭐넣지
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "셔틀을 찾을 수 없습니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "002", "해당 경로에 접근할 권한이 없습니다.");
 
 
     ShuttleErrorCode(HttpStatus status, String code, String message) {
