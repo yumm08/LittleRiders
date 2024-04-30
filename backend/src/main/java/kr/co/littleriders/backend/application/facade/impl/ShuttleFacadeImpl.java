@@ -4,10 +4,12 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideReques
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
 import kr.co.littleriders.backend.domain.route.RouteService;
+import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
@@ -15,12 +17,16 @@ import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
+import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
 import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +47,6 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         Long shuttleId = 1L;
 
-        Shuttle shuttle = shuttleService.findById(shuttleId);
-        // TODO: shuttleId 퍼미션 체크
-
         if (routeService.notExistsById(startRequest.getRouteId())) {
             throw RouteException.from(RouteErrorCode.NOT_FOUND);
         }
@@ -54,6 +57,13 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         if (teacherService.notExistsById(startRequest.getTeacherId())) {
             throw TeacherException.from(TeacherErrorCode.NOT_FOUND);
+        }
+
+        Shuttle shuttle = shuttleService.findById(shuttleId);
+        Route route = routeService.findById(startRequest.getRouteId());
+
+        if(!Objects.equals(shuttle.getAcademy().getId(), route.getAcademy().getId())) {
+            throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
         }
 
         ShuttleDrive shuttleDrive = startRequest.toShuttleDrive(shuttleId);
