@@ -6,6 +6,7 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,27 +28,27 @@ public class ShuttleController {
     @PostMapping("/start")
     public ResponseEntity<Void> startDrive(@RequestBody ShuttleStartRequest startRequest) {
         shuttleFacade.startDrive(startRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 운행 종료
     @PostMapping("/end")
     public ResponseEntity<Void> endDrive() {
         shuttleFacade.endDrive();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 원생 승하차
     @PostMapping("/child/ride")
     public ResponseEntity<Void> recordChildRiding(@RequestBody ShuttleChildRideRequest rideRequest) {
         shuttleFacade.recordChildRiding(rideRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 위도 경도 업로드
     @PostMapping("/location")
     public ResponseEntity<Void> uploadLocation(@RequestBody ShuttleLocationRequest locationRequest) {
         shuttleFacade.uploadLocation(locationRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
