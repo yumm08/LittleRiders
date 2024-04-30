@@ -49,6 +49,19 @@ public class BoardDropHistory {
     @Column(name = "created_at",nullable = false)
     private LocalDateTime createdAt; // 탑승 시간
 
+    private BoardDropHistory(Academy academy, AcademyChild academyChild, double latitude, double longitude, BoardDropHistoryStatus boardDropHistoryStatus) {
+        this.academy = academy;
+        this.academyChild = academyChild;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.status = boardDropHistoryStatus;
+    }
+
+    public static BoardDropHistory of(Academy academy, AcademyChild academyChild, double latitude, double longitude, BoardDropHistoryStatus boardDropHistoryStatus) {
+        return new BoardDropHistory(academy, academyChild, latitude, longitude, boardDropHistoryStatus);
+
+    }
+
     public boolean equalsFamily(Family family) {
         return this.academyChild.getChild().getFamily().equals(family);
     }
