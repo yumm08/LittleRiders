@@ -15,7 +15,10 @@ public enum AuthErrorCode implements LittleRidersErrorCode {
 
     PASSWORD_NOT_EQUAL(HttpStatus.BAD_REQUEST,"006","비밀번호가 일치하지 않습니다"),
 
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND,"007","일치하는 정보를 찾을수 없습니다");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND,"007","일치하는 정보를 찾을수 없습니다"),
+
+    UUID_NOT_FOUND(HttpStatus.NOT_FOUND,"008","토큰을 찾을수 없습니다"),
+    UUID_NOT_VALID(HttpStatus.BAD_REQUEST,"009","유효하지 않은 토큰입니다");
 
 
     AuthErrorCode(HttpStatus status, String code, String message) {
