@@ -17,22 +17,25 @@ export default function RouteListItem({
 }: Props) {
   const [isClicked, setIsClicked] = useState<boolean>(false)
 
+  // TODO Modify and Delete Feature Need to ADD
   useEffect(() => {
     setIsClicked(id === selectedRouteId)
   }, [selectedRouteId, id])
 
   return (
     <div
-      className={`m-2 flex h-16 items-center rounded border-2  p-5 shadow-sm transition-all hover:border-lightgreen
-      ${isClicked ? `  bg-lightgreen` : ` bg-slate-200`}`}
+      className={`m-2 flex h-16 items-center rounded-lg border-2  p-5 shadow-sm transition-all hover:border-lightgreen
+      ${isClicked ? `  bg-lightgreen text-white` : ` bg-slate-200`}`}
       onClick={() => {
         onRouteClick(id)
       }}
     >
-      <FaRoute className="me-5" size={24} />
-      <p className="text-xl">{name}</p>
-      <FaPencilAlt />
-      <FaTrashAlt />
+      <FaRoute className="me-5" size={50} />
+      <p className="w-full text-xl">{name}</p>
+      <div className="flex w-full justify-end gap-3">
+        <FaPencilAlt />
+        <FaTrashAlt />
+      </div>
     </div>
   )
 }

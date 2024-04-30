@@ -3,6 +3,7 @@ import { RefObject, useEffect, useRef, useState } from 'react'
 import SortableContainer from '@components/Dispatch/SortableContainer'
 import Button from '@components/Shared/Button'
 
+import { useFetchChildList } from '@hooks/child'
 import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
 import '@hooks/map'
 import { MapHook } from '@hooks/map'
@@ -14,6 +15,7 @@ import {
   DragEndEvent,
   DragOverEvent,
   DragOverlay,
+  DragStartEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -32,11 +34,17 @@ interface Props {
 
 // TODO : 함수 분리 해야 한다. Refactor coming soon...
 export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
-  const mapRef = useRef<naver.maps.Map | null>(null)
+  const [activeStationId, setActiveStationId] = useState<UniqueIdentifier>()
+  const [activeChildId, setActiveChildId] = useState<UniqueIdentifier>()
+  const [activeStationName, setActiveStationName] = useState<string>('')
+  const [activeChildName, setActiveChildName] = useState<string>('')
   const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [stationItems, setStationItems] = useState<{
     [key: string]: Station[]
   }>({ stationList: [], selectedStationList: [] })
+
+  const mapRef = useRef<naver.maps.Map | null>(null)
+
   const {
     routeDetail,
     isLoading: isRouteDetailLoading,
@@ -44,8 +52,9 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   } = useGetRouteDetail(selectedRouteId)
 
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
+  const { childList, isLoading: isChildListLoading } = useFetchChildList()
 
-  const { drawRoute, initMap, initPolyLine, deleteMarkers } = MapHook(
+  const { drawRoute, initMap, initPolyLine } = MapHook(
     mapRef,
     markerList,
     setMarkerList,
@@ -62,125 +71,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   )
-
-  /**
-   * 지금 집고 있는 아이템이 어느 컨테이너에 있는지 확인하는 함수
-   * @param id 현재 집고 있는 id
-   * @returns
-   */
-  const findContainer = (id: UniqueIdentifier) => {
-    if (id in stationItems) {
-      return id
-    }
-    return Object.keys(stationItems).find((key) =>
-      stationItems[key].some((item) => item.id === Number(id.toString())),
-    )
-  }
-
-  /**
-   * Container가 다른 곳의 Over 됐을 때의 Event 처리
-   * @param event dragOverEvent
-   * @returns
-   */
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event
-    const id = active.id.toString()
-    const overId = over?.id
-
-    if (!overId) return
-
-    // 선택한 아이템의 container와 아이템이 올라가 있는 container 찾기
-
-    const activeContainer = findContainer(id)
-    const overContainer = findContainer(over?.id)
-    if (
-      !activeContainer ||
-      !overContainer ||
-      activeContainer === overContainer
-    ) {
-      return
-    }
-
-    setStationItems((prev) => {
-      const activeItems = prev[activeContainer]
-      const overItems = prev[overContainer]
-      const activeIndex = activeItems.findIndex(
-        (item) => item.id === Number(id.toString()),
-      )
-      const overIndex = overItems.findIndex(
-        (item) => item.id === Number(overId.toString()),
-      )
-
-      // 아이템을 인덱스에 추가하고, 아이템이 콘테이너 밖(위, 아래) 로 간 경우 처리
-      let newIndex: number
-      if (overId in prev) {
-        newIndex = overItems.length + 1
-      } else {
-        const activeTop = active.rect.current.translated?.top ?? 0
-        const isBelowLastItem =
-          over &&
-          overIndex === overItems.length - 1 &&
-          activeTop > over.rect.top + over.rect.height
-
-        const modifier = isBelowLastItem ? 1 : 0
-        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1
-      }
-
-      return {
-        ...prev,
-        [activeContainer]: [
-          ...prev[activeContainer].filter((item) => item.id !== active.id),
-        ],
-        [overContainer]: [
-          ...prev[overContainer].slice(0, newIndex),
-          stationItems[activeContainer][activeIndex],
-          ...prev[overContainer].slice(newIndex, prev[overContainer].length),
-        ],
-      }
-    })
-  }
-
-  /**
-   * 드래그가 끝났을 때 실행되는 함수 (Drop)
-   * @param DragEndEvent 이벤트 관련 인자
-   * @returns
-   */
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    const id = active.id.toString()
-    const overId = over?.id
-
-    if (!overId) return
-
-    const activeContainer = findContainer(id)
-    const overContainer = findContainer(overId)
-
-    if (
-      !activeContainer ||
-      !overContainer ||
-      activeContainer !== overContainer
-    ) {
-      return
-    }
-
-    const activeIndex = stationItems[activeContainer].findIndex(
-      (item) => item.id === Number(id),
-    )
-    const overIndex = stationItems[activeContainer].findIndex(
-      (item) => item.id === overId,
-    )
-
-    if (activeIndex !== overIndex) {
-      setStationItems((items) => ({
-        ...items,
-        [overContainer]: arrayMove(
-          items[overContainer],
-          activeIndex,
-          overIndex,
-        ),
-      }))
-    }
-  }
-
+  
   /**
    * stationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
    */
@@ -206,7 +97,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRouteDetailLoading, isStationListLoading])
+  }, [isRouteDetailLoading, isStationListLoading, selectedRouteId])
 
   useEffect(() => {
     console.log('selectedStationListChanged')
@@ -227,8 +118,16 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
+        onDragStart={(e) => {
+          handleDragStart(e)
+        }}
+        onDragOver={(e) => {
+          handleDragOver(e)
+        }}
+        onDragEnd={(e) => {
+          handleDragEnd(e)
+        }}
+        onDragCancel={handleDragCancel}
       >
         <SortableContainer
           subject="전체 정류장"
@@ -245,7 +144,11 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
           isPending={isRouteDetailPending}
         />
         <DragOverlay>
-          <div>+</div>
+          <SortableItem
+            id={activeStationId!}
+            name={activeStationName}
+            index={0}
+          />
         </DragOverlay>
       </DndContext>
       <div className=" flex-row justify-center  self-center">

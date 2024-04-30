@@ -35,7 +35,7 @@ export default function SortableContainer({
         </p>
         <div
           ref={setNodeRef}
-          className="flex h-5/6 w-80 items-center justify-center overflow-y-scroll rounded-md border bg-lightgreen p-1 shadow-md"
+          className="flex h-5/6 w-80 items-center justify-center overflow-y-scroll rounded-md border bg-white p-1 shadow-md"
         >
           <p>선택된 노선이 없습니다.</p>
         </div>
@@ -54,10 +54,16 @@ export default function SortableContainer({
         </p>
         <div
           ref={setNodeRef}
-          className="h-5/6 w-80  overflow-y-scroll rounded-md border bg-lightgreen p-1 shadow-md"
+          className="h-5/6 w-80 flex-row items-center overflow-y-scroll rounded-md border bg-white p-1 shadow-md"
         >
-          {items.map((item) => (
-            <SortableItem key={item.id} id={item.id} name={item.name} />
+          {items.map((item, index) => (
+            <SortableItem
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              type={id}
+              index={index}
+            />
           ))}
         </div>
       </div>
