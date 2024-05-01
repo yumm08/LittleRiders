@@ -1,9 +1,6 @@
 package kr.co.littleriders.backend.application.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
 import kr.co.littleriders.backend.application.dto.request.FamilyAcademyRegistRequest;
 import kr.co.littleriders.backend.application.facade.FamilyAcademyFacade;
@@ -24,9 +21,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -60,11 +61,11 @@ class FamilyAcademyControllerTest {
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
-            Academy academy1 = Academy.of("test1@com", "password", "테스트학원1", "테스트시 테스트동", "010-1112");
+            Academy academy1 = Academy.of("test1@com", "password", "테스트학원1", "테스트시 테스트동", "010-1112",3,4);
             academyService.save(academy1);
-            Academy academy2 = Academy.of("test2@com", "password", "테스트학원2", "테스트시 테스트동", "010-1113");
+            Academy academy2 = Academy.of("test2@com", "password", "테스트학원2", "테스트시 테스트동", "010-1113",3,4);
             academyService.save(academy2);
 
             mockMvc.perform(
@@ -85,7 +86,7 @@ class FamilyAcademyControllerTest {
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
-            Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+            Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
             academyService.save(academy);
             Family family = Family.of("test1@com", "password", "테스트부모", "테스트시 테스트동", "010-1111");
             familyService.save(family);
@@ -111,7 +112,7 @@ class FamilyAcademyControllerTest {
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
-            Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+            Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
             academyService.save(academy);
             Family family = Family.of("test@com", "password", "테스트부모", "테스트시 테스트동", "010-1111");
             familyService.save(family);

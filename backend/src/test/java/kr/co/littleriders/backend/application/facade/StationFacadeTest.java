@@ -36,7 +36,7 @@ public class StationFacadeTest {
 
     @BeforeEach
     void setUp() {
-        academy = Academy.of("test@gmail", "1234", "test학원", "test주소", "010-1111-1111");
+        academy = Academy.of("test@gmail", "1234", "test학원", "test주소", "010-1111-1111",33.12,11.23);
         academyService.save(academy);
         authAcademy = AuthAcademy.from(academy);
     }

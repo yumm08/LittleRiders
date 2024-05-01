@@ -12,3 +12,8 @@ spring:
     host: littleriders.co.kr
     port: 1025
     from: admin@littleriders.co.kr
+
+
+  naver:
+    key: ${NAVER_KEY}
+    secret: ${NAVER_SECRET}
