@@ -103,6 +103,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         Long shuttleId = 1L;
 
+        // TODO: 탈퇴한 회원에 대한 valid check 추가
+
         AcademyChild academyChild = academyChildService.findByCardNumber(rideRequest.getChildCardNumber());
         Long childId = academyChild.getChild().getId();
 
