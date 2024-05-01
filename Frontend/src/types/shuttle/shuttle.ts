@@ -1,3 +1,3 @@
-export interface DriveHistory {
+export interface DriveHistoryType {
   time: string
 }

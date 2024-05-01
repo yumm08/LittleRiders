@@ -10,6 +10,9 @@ import { RouteLogDropDown } from './RouteLogDropDown'
 
 interface Props {
   data: any
+  driveInfoByDayList: any
+  driveDetailInfoByHistoryList: any
+  onClickHistoryId: (id: number) => void
 }
 
 /**
