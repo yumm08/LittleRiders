@@ -14,6 +14,7 @@ public interface AcademyChildService {
 
     boolean notExistsById(long id);
 
+    AcademyChild findByCardNumber(String cardNumber);
     long save(AcademyChild academyChild);
 
 	boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily);

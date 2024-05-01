@@ -45,6 +45,14 @@ class AcademyChildServiceImpl implements AcademyChildService {
     }
 
     @Override
+    public AcademyChild findByCardNumber(String cardNumber) {
+        return academyChildRepository.findByCardNumber(cardNumber).orElseThrow(
+                () -> AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND)
+        );
+
+    }
+
+    @Override
     public long save(AcademyChild academyChild) {
         return academyChildRepository.save(academyChild).getId();
     }

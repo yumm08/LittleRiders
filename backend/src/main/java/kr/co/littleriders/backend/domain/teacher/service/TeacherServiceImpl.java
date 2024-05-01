@@ -34,4 +34,5 @@ class TeacherServiceImpl implements TeacherService {
     public long save(final Teacher teacher) {
         return teacherRepository.save(teacher).getId();
     }
+
 }
