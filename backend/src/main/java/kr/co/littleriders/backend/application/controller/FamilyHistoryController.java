@@ -23,22 +23,21 @@ public class FamilyHistoryController {
 	private final ChildBoardHistoryFacade childBoardHistoryFacade;
 
 	@GetMapping("/child/{childId}")
-	// public ResponseEntity<ChildBoardHistoryResponse> getChildBoardHistory(@Auth AuthFamily authFamily,
-	public ResponseEntity<ChildBoardHistoryResponse> getChildBoardHistory(@PathVariable(value = "childId") Long childId
+	 public ResponseEntity<ChildBoardHistoryResponse> getChildBoardHistory(@Auth AuthFamily authFamily
+																		,@PathVariable(value = "childId") Long childId
 						 												, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
 
-		Long familyId = 1L;
+		Long familyId = authFamily.getId();
 		ChildBoardHistoryResponse historyList = childBoardHistoryFacade.readChildBoardHistory(familyId, childId, pageable);
 
 		return ResponseEntity.ok().body(historyList);
 	}
 
 	@GetMapping("/{historyId}")
-	// public ResponseEntity<ChildDetailHistoryResponse> getDetailHistory(@Auth AuthFamily authFamily
-	public ResponseEntity<ChildDetailHistoryResponse> getDetailHistory(
-																	 @PathVariable(value = "historyId") Long historyId) {
+	 public ResponseEntity<ChildDetailHistoryResponse> getDetailHistory(@Auth AuthFamily authFamily
+																	 , @PathVariable(value = "historyId") Long historyId) {
 
-		Long familyId = 1L;
+		Long familyId = authFamily.getId();
 		ChildDetailHistoryResponse history = childBoardHistoryFacade.readDetailHistory(familyId, historyId);
 
 		return ResponseEntity.ok().body(history);
