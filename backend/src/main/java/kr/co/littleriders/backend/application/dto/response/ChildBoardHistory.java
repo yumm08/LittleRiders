@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.dto.response;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChildBoardHistory {
 
-	private Long histroyId;
+	private Long historyId;
 
 	private String academyName;
 
@@ -19,10 +20,10 @@ public class ChildBoardHistory {
 
 	private String status;
 
-	private String createdAt;
+	private LocalDateTime createdAt;
 
-	public ChildBoardHistory(Long histroyId, String academyName, String childName, String status, String createdAt) {
-		this.histroyId = histroyId;
+	public ChildBoardHistory(Long historyId, String academyName, String childName, String status, LocalDateTime createdAt) {
+		this.historyId = historyId;
 		this.academyName = academyName;
 		this.childName = childName;
 		this.status = status;
@@ -30,12 +31,9 @@ public class ChildBoardHistory {
 	}
 
 	public static ChildBoardHistory from(BoardDropHistory boardDropHistory) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss");
-		String formattedDate = boardDropHistory.getCreatedAt().format(formatter);
-
 		return new ChildBoardHistory(boardDropHistory.getId(),
 			boardDropHistory.getAcademy().getName(),
 			boardDropHistory.getAcademyChild().getChild().getName(),
-			boardDropHistory.getStatus().name(), formattedDate);
+			boardDropHistory.getStatus().name(), boardDropHistory.getCreatedAt());
 	}
 }
