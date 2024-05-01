@@ -136,17 +136,6 @@ class FamilyHistoryControllerTest {
 		@DisplayName("실패")
 		void whenFailed() throws Exception {
 
-			// family 생성
-
-			// family1 생성
-
-			// family1 - child 생성
-
-			// history 생성
-			// history1 생성
-			// history2 생성
-
-			// test
 		}
 
 	}
@@ -159,15 +148,50 @@ class FamilyHistoryControllerTest {
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
 
+
+			// academy 생성
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			academyService.save(academy);
+
 			// family 생성
+			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			familyService.save(family);
+			Long familyId = family.getId();
 
 			// child 생성
+			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			childService.save(child);
+
+			// academyFamily 생성
+			AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
+			academyFamilyService.save(academyFamily);
+
+			// academyChild 생성
+			AcademyChild academyChild = AcademyChild.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
+			academyChildService.save(academyChild);
 
 			// history 생성
+			BoardDropHistory history = BoardDropHistory.of(academy, academyChild, 37.50142, 127.0396, BoardDropHistoryStatus.BOARD);
+			boardDropHistoryService.save(history);
 
+//			// history1 생성
+//			BoardDropHistory history1 = BoardDropHistory.of(academy, academyChild, 37.5, 127.0396, BoardDropHistoryStatus.DROP);
+//			boardDropHistoryService.save(history1);
+//
+//			// history2 생성
+//			BoardDropHistory history2 = BoardDropHistory.of(academy, academyChild, 37.442, 127.0396, BoardDropHistoryStatus.BOARD);
+//			boardDropHistoryService.save(history2);
 
+			ChildDetailHistoryResponse childDetailHistoryResponse = ChildDetailHistoryResponse.from(history);
 
 			// test
+			mockMvc.perform(
+							get("/family/history/" + history.getId())
+							// .param("page", S)
+					)
+					.andExpect(status().isOk())
+					.andExpect(content().json(objectMapper.writeValueAsString(childDetailHistoryResponse)))
+					.andDo(print());
 		}
 
 		@Test
