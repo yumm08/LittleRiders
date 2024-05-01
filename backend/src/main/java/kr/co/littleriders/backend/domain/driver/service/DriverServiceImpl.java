@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.domain.driver.service;
 
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
@@ -7,6 +8,8 @@ import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,5 +36,10 @@ class DriverServiceImpl implements DriverService {
     @Override
     public long save(Driver driver) {
         return driverRepository.save(driver).getId();
+    }
+
+    @Override
+    public List<Driver> findByAcademy(Academy academy) {
+        return driverRepository.findByAcademy(academy);
     }
 }
