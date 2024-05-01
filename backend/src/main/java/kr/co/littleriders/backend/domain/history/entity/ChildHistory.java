@@ -32,7 +32,6 @@ public class ChildHistory {
     private String name; // 성명
 
     @Column(name = "birth_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate; // 생년월일
 
     @Column(name = "gender", nullable = false)
@@ -42,7 +41,6 @@ public class ChildHistory {
     private String imagePath; // 이미지 경로
 
     @CreatedDate
-    @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt; // 생성일자
 

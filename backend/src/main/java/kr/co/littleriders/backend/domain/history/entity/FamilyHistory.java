@@ -36,7 +36,6 @@ public class FamilyHistory {
 	private String phoneNumber; // 전화번호
 
 	@CreatedDate
-	@DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt; // 생성일자
 }

@@ -47,7 +47,6 @@ public class BoardDropHistory {
     private BoardDropHistoryStatus status; // 승차/하차
 
     @CreatedDate
-    @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     @Column(name = "created_at",nullable = false)
     private LocalDateTime createdAt; // 탑승 시간
 
