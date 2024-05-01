@@ -1,7 +1,11 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import kr.co.littleriders.backend.application.dto.response.AcademyShuttleResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,5 +42,21 @@ class AdminShuttleFacadeImpl implements AdminShuttleFacade {
 		}
 
 		return shuttleService.save(shuttle);
+	}
+
+	@Override
+	public List<AcademyShuttleResponse> readShuttleList(Long academyId) {
+
+		Academy academy = academyService.findById(academyId);
+
+		List<AcademyShuttleResponse> shuttleList = shuttleService.findByAcademy(academy)
+																 .stream()
+																 .sorted(Comparator.comparing(shuttle -> shuttle.getStatus() == ShuttleStatus.USE ? 0 : 1))
+																 .map(AcademyShuttleResponse::from)
+																 .collect(Collectors.toList());
+
+
+
+		return shuttleList;
 	}
 }

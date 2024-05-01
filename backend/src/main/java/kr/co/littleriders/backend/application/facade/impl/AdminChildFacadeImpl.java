@@ -39,12 +39,12 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         Academy academy = academyService.findById(academyId);
 
         List<AcademyChildResponse> academyChildList = academyChildService.findByAcademy(academy)
-            .stream()
-            .sorted(Comparator.comparing(child -> {
-                return child.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
-            }))
-            .map(AcademyChildResponse::from)
-            .collect(Collectors.toList());
+                                                                         .stream()
+                                                                         .sorted(Comparator.comparing(child -> {
+                                                                             return child.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
+                                                                         }))
+                                                                         .map(AcademyChildResponse::from)
+                                                                         .collect(Collectors.toList());
 
         return academyChildList;
     }
