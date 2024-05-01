@@ -13,7 +13,7 @@ public interface ShuttleFacade {
 
     void startDrive(ShuttleStartRequest startRequest);
 
-    void endDrive();
+    void endDrive(long shuttleId);
 
     ShuttleChildRideResponse recordChildRiding(ShuttleChildRideRequest rideRequest);
 

@@ -6,4 +6,7 @@ public interface ShuttleChildRideService {
 
     void save(ShuttleChildRide shuttleChildRide);
 
+    ShuttleChildRide findByShuttleId(long shuttleId);
+
+    void delete(ShuttleChildRide shuttleChildRide);
 }
