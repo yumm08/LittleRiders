@@ -44,7 +44,7 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 	public List<AcademyTeacherResponse> readTeacherList(Long academyId) {
 
 		Academy academy = academyService.findById(academyId);
-		List<AcademyTeacherResponse> teacherList = academyService.findByAcademy(academy)
+		List<AcademyTeacherResponse> teacherList = teacherService.findByAcademy(academy)
 													.stream()
 													.map(AcademyTeacherResponse::from)
 													.collect(Collectors.toList());

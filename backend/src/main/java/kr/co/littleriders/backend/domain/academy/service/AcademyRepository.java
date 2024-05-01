@@ -14,5 +14,4 @@ interface AcademyRepository extends JpaRepository<Academy, Long>, AcademyCustomR
 
     boolean existsByEmail(String email);
 
-    List<Teacher> findByAcademy(Academy academy);
 }

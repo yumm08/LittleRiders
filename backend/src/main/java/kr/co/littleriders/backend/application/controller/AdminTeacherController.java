@@ -21,8 +21,8 @@ public class AdminTeacherController {
 	private final AdminTeacherFacade adminTeacherFacade;
 
 	@PostMapping
-	public ResponseEntity<Long> addTeacher(@Auth AuthAcademy authAcademy
-										, @RequestBody @Valid TeacherRegistRequest teacherRegistRequest) {
+	public ResponseEntity<Long> addTeacher(@Auth AuthAcademy authAcademy,
+										   @RequestBody @Valid TeacherRegistRequest teacherRegistRequest) {
 
 		Long academyId = authAcademy.getId();
 

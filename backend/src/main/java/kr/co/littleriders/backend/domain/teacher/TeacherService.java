@@ -1,6 +1,9 @@
 package kr.co.littleriders.backend.domain.teacher;
 
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
+
+import java.util.List;
 
 public interface TeacherService {
 
@@ -12,5 +15,5 @@ public interface TeacherService {
 
 	long save(Teacher teacher);
 
-
+    List<Teacher> findByAcademy(Academy academy);
 }

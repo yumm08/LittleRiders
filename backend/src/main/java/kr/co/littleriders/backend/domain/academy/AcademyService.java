@@ -24,6 +24,4 @@ public interface AcademyService {
     Slice<Academy> findByName(String name, Pageable pageable);
 
     long save(Academy academy);
-
-    List<Teacher> findByAcademy(Academy academy);
 }
