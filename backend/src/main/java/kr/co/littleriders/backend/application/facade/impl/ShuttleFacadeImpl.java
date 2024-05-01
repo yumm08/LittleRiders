@@ -101,6 +101,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     @Override
     public void endDrive(long shuttleId) {
 
+        //TODO : ifnotexists then throw error 추가
+
 
         //실시간 위도 경도 정보
         ShuttleLocationHistory shuttleLocationHistory = shuttleLocationHistoryService.findByShuttleId(shuttleId);
@@ -131,6 +133,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                 teacher,
                 shuttleLocationDTOList);
 
+        //TODO:어린이 저장 필요
         //mongoDB 에 저장
         shuttleDriveHistoryService.save(shuttleDriveHistory);
 
@@ -143,9 +146,9 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         ShuttleLocation shuttleLocation = shuttleLocationService.findByShuttleId(shuttleId);
         shuttleLocationService.delete(shuttleLocation);
 
+        //TODO : 어린이 삭제 필요
 
-        // TODO: mongoDB에 저장
-        // TODO: redis에서 shuttleId 에 해당하는 데이터 삭제
+
     }
 
     @Override
