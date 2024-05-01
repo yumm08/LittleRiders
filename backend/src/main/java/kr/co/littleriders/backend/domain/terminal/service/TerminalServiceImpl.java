@@ -44,4 +44,9 @@ class TerminalServiceImpl implements TerminalService {
     public long save(final Terminal terminal) {
         return terminalRepository.save(terminal).getId();
     }
+
+    @Override
+    public boolean existsByTerminalNumber(String terminalNumber) {
+        return terminalRepository.existsByTerminalNumber(terminalNumber);
+    }
 }
