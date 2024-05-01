@@ -54,9 +54,11 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
         log.info("resolving argument before casting = {}", parameterType);
 
+        //코드상에서 @Auth 가 붙었을떄 valid 한 타입인지 확인
         MemberType parameterMemberType = MemberType.valueOf(parameterType); //parameterType.equals(AuthFamily.class) ? MemberType.FAMILY : MemberType.ACADEMY;
 
 
+        //jwt 헤더에서 파싱 부분
         HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         if (httpServletRequest == null) {
             throw AuthException.from(AuthErrorCode.JWT_NOT_FOUND);
@@ -69,14 +71,19 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         if (!token.startsWith("Bearer ")) {
             throw AuthException.from(AuthErrorCode.AUTHORIZATION_NOT_VALID);
         }
+
+        //멤버 조회
         token = token.substring(7);
         JwtMemberInfo jwtMemberInfo = jwtProvider.getJwtMemberInfoByAccessToken(token);
-
         long memberId = jwtMemberInfo.getMemberId();
         MemberType memberType = jwtMemberInfo.getMemberType();
+
+        //유효하지 않은 멤버 타입인 경우
         if (parameterMemberType != memberType) {
             throw AuthException.from(AuthErrorCode.JWT_NOT_SUPPORT);
         }
+
+
         if (memberType == MemberType.ACADEMY) {
             Academy academy = academyService.findById(memberId);
             return AuthAcademy.from(academy);
@@ -88,6 +95,8 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         if(memberType == MemberType.TERMINAL){
             Terminal terminal = terminalService.findById(memberId);
             ShuttleTerminalAttach shuttleTerminalAttach = terminal.getShuttleTerminalAttach();
+
+            //부착 정보가 없으면 익셉션 발생
             if(shuttleTerminalAttach == null){
                 throw ShuttleTerminalAttachException.from(ShuttleTerminalAttachErrorCode.NOT_FOUND);
             }
