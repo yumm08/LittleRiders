@@ -6,10 +6,17 @@ import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
+import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.terminal.TerminalService;
+import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
+import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
+import kr.co.littleriders.backend.domain.terminal.error.code.ShuttleTerminalAttachErrorCode;
+import kr.co.littleriders.backend.domain.terminal.error.exception.ShuttleTerminalAttachException;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import kr.co.littleriders.backend.global.auth.dto.AuthDTO;
 import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
+import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import kr.co.littleriders.backend.global.entity.MemberType;
 import kr.co.littleriders.backend.global.error.code.AuthErrorCode;
 import kr.co.littleriders.backend.global.error.exception.AuthException;
@@ -31,6 +38,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     private final JwtProvider jwtProvider;
     private final FamilyService familyService;
     private final AcademyService academyService;
+    private final TerminalService terminalService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -44,9 +52,9 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
         Class<?> parameterType = parameter.getParameterType();
 
-        log.info("resolving argument before casting = {}",parameterType);
+        log.info("resolving argument before casting = {}", parameterType);
 
-        MemberType parameterMemberType = parameterType.equals(AuthFamily.class) ? MemberType.FAMILY : MemberType.ACADEMY;
+        MemberType parameterMemberType = MemberType.valueOf(parameterType); //parameterType.equals(AuthFamily.class) ? MemberType.FAMILY : MemberType.ACADEMY;
 
 
         HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
@@ -66,15 +74,29 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
         long memberId = jwtMemberInfo.getMemberId();
         MemberType memberType = jwtMemberInfo.getMemberType();
-        if(parameterMemberType != memberType){
+        if (parameterMemberType != memberType) {
             throw AuthException.from(AuthErrorCode.JWT_NOT_SUPPORT);
         }
-        if(memberType == MemberType.ACADEMY){
+        if (memberType == MemberType.ACADEMY) {
             Academy academy = academyService.findById(memberId);
             return AuthAcademy.from(academy);
         }
-        Family family = familyService.findById(memberId);
-        return AuthFamily.from(family);
+        if (memberType == MemberType.FAMILY) {
+            Family family = familyService.findById(memberId);
+            return AuthFamily.from(family);
+        }
+        if(memberType == MemberType.TERMINAL){
+            Terminal terminal = terminalService.findById(memberId);
+            ShuttleTerminalAttach shuttleTerminalAttach = terminal.getShuttleTerminalAttach();
+            if(shuttleTerminalAttach == null){
+                throw ShuttleTerminalAttachException.from(ShuttleTerminalAttachErrorCode.NOT_FOUND);
+            }
+            Shuttle shuttle = shuttleTerminalAttach.getShuttle();
+
+            return AuthTerminal.of(terminal,shuttle);
+
+        }
+        throw AuthException.from(AuthErrorCode.UNKNOWN_ERROR);
 
     }
 }

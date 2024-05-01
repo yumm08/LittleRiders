@@ -9,4 +9,6 @@ public interface AccountFacade {
     void signOut(String requestRefreshToken);
 
     JwtToken signIn(String email,String password);
+
+    JwtToken signInByTerminalNumber(String terminalNumber);
 }

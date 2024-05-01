@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ShuttleTerminalAttachErrorCode implements LittleRidersErrorCode {
 
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "뭘 넣어야 할까요;;;"); //TODO : 진짜 뭐넣지
+    NOT_FOUND(HttpStatus.NOT_FOUND, "001", "부착된 셔틀을 찾을수 없습니다."); //TODO : 진짜 뭐넣지
 
 
     ShuttleTerminalAttachErrorCode(HttpStatus status, String code, String message) {

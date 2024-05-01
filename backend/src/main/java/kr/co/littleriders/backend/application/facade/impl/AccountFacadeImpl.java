@@ -1,6 +1,5 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
-import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.facade.AccountFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
@@ -10,6 +9,10 @@ import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.family.error.code.FamilyErrorCode;
 import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
+import kr.co.littleriders.backend.domain.terminal.TerminalService;
+import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
+import kr.co.littleriders.backend.domain.terminal.error.code.ShuttleTerminalAttachErrorCode;
+import kr.co.littleriders.backend.domain.terminal.error.exception.ShuttleTerminalAttachException;
 import kr.co.littleriders.backend.domain.token.RefreshTokenService;
 import kr.co.littleriders.backend.domain.token.entity.RefreshToken;
 import kr.co.littleriders.backend.global.entity.MemberType;
@@ -35,6 +38,8 @@ class AccountFacadeImpl implements AccountFacade {
     private final AcademyService academyService;
 
     private final PasswordUtil passwordUtil;
+
+    private final TerminalService terminalService;
 
     @Override
     public JwtToken tokenReIssue(final String token) {
@@ -94,11 +99,17 @@ class AccountFacadeImpl implements AccountFacade {
 
     }
 
-
-
-
-
-
+    @Override
+    public JwtToken signInByTerminalNumber(String terminalNumber) {
+        Terminal terminal = terminalService.findByTerminalNumber(terminalNumber);
+        if(terminal.getShuttleTerminalAttach() == null){
+            throw ShuttleTerminalAttachException.from(ShuttleTerminalAttachErrorCode.NOT_FOUND);
+        }
+        JwtToken jwtToken = jwtProvider.createToken(terminal.getId(), MemberType.TERMINAL);
+        RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
+        refreshTokenService.save(refreshToken);
+        return jwtToken;
+    }
 
 
 }
