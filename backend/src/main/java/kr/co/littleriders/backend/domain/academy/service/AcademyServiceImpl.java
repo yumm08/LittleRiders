@@ -69,9 +69,4 @@ class AcademyServiceImpl implements AcademyService {
         return academyRepository.save(academy).getId();
     }
 
-    @Override
-    public List<Teacher> findByAcademy(Academy academy) {
-        return academyRepository.findByAcademy(academy);
-    }
-
 }
