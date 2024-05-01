@@ -14,6 +14,7 @@ public interface AcademyFamilyService {
 
     long save(AcademyFamily academyFamily);
 
-    AcademyFamily findByFamilyAndAcademy(Family family, Academy academy);
+    boolean existsByFamilyAndAcademy(Family family, Academy academy);
 
+    AcademyFamily findByFamilyAndAcademy(Family family, Academy academy);
 }

@@ -116,8 +116,14 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
         pending.updatePendingStatus(PendingStatus.ALLOW);
         pendingService.save(pending); // pending status ALLOW 변경
 
+        AcademyFamily academyFamily;
         // academyFamily 존재하는 지 확인 후 없으면 만들어서 반환
-        AcademyFamily academyFamily = academyFamilyService.findByFamilyAndAcademy(pending.getChild().getFamily(), academy);
+        if(academyFamilyService.existsByFamilyAndAcademy(pending.getChild().getFamily(), academy)) {
+            academyFamily = AcademyFamily.of(pending.getChild().getFamily(), academy, AcademyFamilyStatus.AVAIL);
+            academyFamilyService.save(academyFamily);
+        } else {
+            academyFamily = academyFamilyService.findByFamilyAndAcademy(pending.getChild().getFamily(), academy);
+        }
 
         AcademyChild academyChild = AcademyChild.of(pending.getChild()
                                                     , pending.getAcademy()
