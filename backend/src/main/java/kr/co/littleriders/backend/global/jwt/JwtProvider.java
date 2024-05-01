@@ -35,12 +35,10 @@ public class JwtProvider {
     }
 
     public JwtToken createToken(Long id, MemberType memberType) {
-
         long now = System.currentTimeMillis();
         String userId = id.toString();
         String accessToken = createAccessToken(userId, now, memberType);
         String refreshToken = createRefreshToken(userId, now, memberType);
-
         return JwtToken.of(accessToken, ACCESS_TOKEN_EXPIRE_TIME, refreshToken, REFRESH_TOKEN_EXPIRE_TIME);
     }
 
@@ -103,7 +101,7 @@ public class JwtProvider {
         } catch (UnsupportedJwtException e) {
             throw AuthException.from(AuthErrorCode.JWT_NOT_SUPPORT);
         } catch (IllegalArgumentException e) {
-            throw AuthException.from(AuthErrorCode.JWT_KET_NOT_VALID);
+            throw AuthException.from(AuthErrorCode.JWT_KEY_NOT_VALID);
         }
     }
 
