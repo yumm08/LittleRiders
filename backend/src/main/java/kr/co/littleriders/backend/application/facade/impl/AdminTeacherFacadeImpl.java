@@ -1,10 +1,12 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
+import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +48,7 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 		Academy academy = academyService.findById(academyId);
 		List<AcademyTeacherResponse> teacherList = teacherService.findByAcademy(academy)
 													.stream()
+													.sorted(Comparator.comparing(teacher -> teacher.getStatus() == TeacherStatus.WORK ? 0 : 1))
 													.map(AcademyTeacherResponse::from)
 													.collect(Collectors.toList());
 
