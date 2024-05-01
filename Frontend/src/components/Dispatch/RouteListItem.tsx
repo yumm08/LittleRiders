@@ -25,7 +25,7 @@ export default function RouteListItem({
   return (
     <div
       className={`m-2 flex h-16 items-center rounded-lg border-2  p-5 shadow-sm transition-all hover:border-lightgreen
-      ${isClicked ? `  bg-lightgreen text-white` : ` bg-slate-200`}`}
+      ${isClicked ? `  border-lightgreen bg-lightgreen text-white` : ` bg-slate-200`}`}
       onClick={() => {
         onRouteClick(id)
       }}

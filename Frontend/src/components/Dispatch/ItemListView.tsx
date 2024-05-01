@@ -1,6 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 
 import SortableContainer from '@components/Dispatch/SortableContainer'
+import SortableItem from '@components/Dispatch/SortableItem'
 import Button from '@components/Shared/Button'
 
 import { useFetchChildList } from '@hooks/child'
@@ -8,14 +9,20 @@ import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
 import '@hooks/map'
 import { MapHook } from '@hooks/map'
 
-import SortableItem from './SortableItem'
+import {
+  handleChildDragCancel,
+  handleChildDragEnd,
+  handleChildDragOver,
+  handleChildDragStart,
+  handleStationDragCancel,
+  handleStationDragEnd,
+  handleStationDragOver,
+  handleStationDragStart,
+} from '@utils/dndUtils'
 
 import {
   DndContext,
-  DragEndEvent,
-  DragOverEvent,
   DragOverlay,
-  DragStartEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -24,8 +31,8 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { Station } from '@types'
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
+import { ChildInfo, Station } from '@types'
 
 interface Props {
   selectedRouteId: number
@@ -35,16 +42,23 @@ interface Props {
 // TODO : 함수 분리 해야 한다. Refactor coming soon...
 export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   const [activeStationId, setActiveStationId] = useState<UniqueIdentifier>()
-  const [activeChildId, setActiveChildId] = useState<UniqueIdentifier>()
   const [activeStationName, setActiveStationName] = useState<string>('')
-  const [activeChildName, setActiveChildName] = useState<string>('')
-  const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [stationItems, setStationItems] = useState<{
     [key: string]: Station[]
   }>({ stationList: [], selectedStationList: [] })
+  const [activeChildId, setActiveChildId] = useState<UniqueIdentifier>()
+  const [activeChildName, setActiveChildName] = useState<string>('')
+  const [childItems, setChildItems] = useState<{
+    [key: string]: ChildInfo[]
+  }>({ childList: [], selectedChildList: [] })
 
+  const [selectedStation, setSelectedStation] = useState<number>(-1)
+  const [hoveredStation, setHoveredStation] = useState<number>(-1)
+  const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const mapRef = useRef<naver.maps.Map | null>(null)
-
+  const [selectedStationMarker, setSelectedStationMarker] = useState<
+    naver.maps.Marker[]
+  >([])
   const {
     routeDetail,
     isLoading: isRouteDetailLoading,
@@ -54,11 +68,8 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
   const { childList, isLoading: isChildListLoading } = useFetchChildList()
 
-  const { drawRoute, initMap, initPolyLine } = MapHook(
-    mapRef,
-    markerList,
-    setMarkerList,
-  )
+  const { drawRoute, initMap, initPolyLine, drawRouteMarkers, deleteMarkers } =
+    MapHook(mapRef)
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -71,7 +82,37 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   )
-  
+
+  const handleStationItemClick = (stationId: number) => {
+    setSelectedStation(stationId)
+    console.log(stationId)
+    deleteMarkers(selectedStationMarker, setSelectedStationMarker)
+
+    let station: Station | undefined
+    for (const key of Object.keys(stationItems)) {
+      const stations = stationItems[key]
+      station = stations.find((station) => {
+        console.log(station)
+        return station.id === stationId
+      })
+      if (station) break
+    }
+    console.log(station)
+    if (station) {
+      console.log(station)
+      drawRouteMarkers(
+        setSelectedStationMarker,
+        [new naver.maps.LatLng(station.latitude!, station.longitude!)],
+        'bus-stop-clicked.svg',
+        new naver.maps.Size(50, 52),
+        new naver.maps.Point(15, 30),
+        new naver.maps.Point(29, 50),
+      )
+    }
+  }
+
+  const handleStationItemHover = () => {}
+
   /**
    * stationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
    */
@@ -100,8 +141,17 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   }, [isRouteDetailLoading, isStationListLoading, selectedRouteId])
 
   useEffect(() => {
+    if (!isChildListLoading) {
+      setChildItems({
+        childList: [...childList],
+        selectedChildList: [],
+      })
+    }
+  }, [isChildListLoading])
+
+  useEffect(() => {
     console.log('selectedStationListChanged')
-    drawRoute(stationItems['selectedStationList'])
+    drawRoute(stationItems['selectedStationList'], markerList, setMarkerList)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stationItems['selectedStationList']])
@@ -119,29 +169,43 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
         sensors={sensors}
         collisionDetection={closestCorners}
         onDragStart={(e) => {
-          handleDragStart(e)
+          handleStationDragStart(
+            e,
+            stationItems,
+            setActiveStationId,
+            setActiveStationName,
+          )
         }}
         onDragOver={(e) => {
-          handleDragOver(e)
+          handleStationDragOver(
+            e,
+            stationItems,
+            setActiveStationId,
+            setStationItems,
+          )
         }}
         onDragEnd={(e) => {
-          handleDragEnd(e)
+          handleStationDragEnd(e, stationItems, setStationItems)
         }}
-        onDragCancel={handleDragCancel}
+        onDragCancel={() => handleStationDragCancel(setActiveStationId)}
       >
         <SortableContainer
           subject="전체 정류장"
           id="stationList"
+          selectedStation={selectedStation}
           items={stationItems['stationList']}
           isLoading={isStationListLoading}
           isPending={isRouteDetailPending}
+          onClick={handleStationItemClick}
         />
         <SortableContainer
           subject="선택된 정류장"
           id="selectedStationList"
+          selectedStation={selectedStation}
           items={stationItems['selectedStationList']}
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
+          onClick={handleStationItemClick}
         />
         <DragOverlay>
           <SortableItem
@@ -164,23 +228,39 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
+        onDragStart={(e) => {
+          handleChildDragStart(
+            e,
+            childItems,
+            setActiveChildId,
+            setActiveChildName,
+          )
+        }}
+        onDragOver={(e) => {
+          handleChildDragOver(e, childItems, setActiveChildId, setChildItems)
+        }}
+        onDragEnd={(e) => {
+          handleChildDragEnd(e, childItems, setChildItems)
+        }}
+        onDragCancel={() => handleChildDragCancel(setActiveChildId)}
       >
         <SortableContainer
           subject="모든 어린이"
-          id="stationList"
-          items={stationItems['stationList']}
+          id="childList"
+          items={childItems['childList']}
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
         />
         <SortableContainer
           subject="하차할 어린이"
-          id="selectedStationList"
-          items={stationItems['selectedStationList']}
+          id="selectedChildList"
+          items={childItems['selectedChildList']}
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
         />
+        <DragOverlay>
+          <SortableItem id={activeChildId!} name={activeChildName} index={0} />
+        </DragOverlay>
       </DndContext>
     </div>
   )
