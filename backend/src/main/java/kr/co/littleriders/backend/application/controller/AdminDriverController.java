@@ -36,7 +36,7 @@ public class AdminDriverController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<AcademyDriverResponse>> getTeacherList(@Auth AuthAcademy authAcademy) {
+	public ResponseEntity<List<AcademyDriverResponse>> getDriverList(@Auth AuthAcademy authAcademy) {
 
 		Long academyId = authAcademy.getId();
 

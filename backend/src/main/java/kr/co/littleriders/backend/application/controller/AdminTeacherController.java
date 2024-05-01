@@ -32,9 +32,10 @@ public class AdminTeacherController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<AcademyTeacherResponse>> getTeacherList(@Auth AuthAcademy authAcademy) {
+//	public ResponseEntity<List<AcademyTeacherResponse>> getTeacherList(@Auth AuthAcademy authAcademy) {
+	public ResponseEntity<List<AcademyTeacherResponse>> getTeacherList() {
 
-		Long academyId = authAcademy.getId();
+		Long academyId = 1L;
 
 		List<AcademyTeacherResponse> teacherList = adminTeacherFacade.readTeacherList(academyId);
 
