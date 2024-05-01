@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ShuttleLocationHistoryService {
 
-    List<ShuttleLocationHistory> findAllByShuttleId(Long shuttleId);
+    List<ShuttleLocationHistory> findAllByShuttleId(long shuttleId);
 
     void save(ShuttleLocationHistory location);
 

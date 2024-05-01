@@ -12,7 +12,7 @@ class ShuttleLocationHistoryServiceImpl implements ShuttleLocationHistoryService
     private final ShuttleLocationHistoryRepository shuttleLocationRepository;
 
     @Override
-    public List<ShuttleLocationHistory> findAllByShuttleId(Long shuttleId) {
+    public List<ShuttleLocationHistory> findAllByShuttleId(long shuttleId) {
         return shuttleLocationRepository.findAllByShuttleId(shuttleId);
     }
 
