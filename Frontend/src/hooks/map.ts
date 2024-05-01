@@ -11,14 +11,7 @@ const DEFAULT_OPTION = {
   disableKineticPan: false,
 }
 
-export function MapHook(
-  mapRef: React.MutableRefObject<naver.maps.Map | null>,
-  markerList: naver.maps.Marker[],
-  setMarkerList: {
-    (value: SetStateAction<naver.maps.Marker[]>): void
-    (arg0: never[]): void
-  },
-) {
+export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
   // const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [polyline, setPolyline] = useState<naver.maps.Polyline>()
   //const [circleList, setCircleList] = useState<naver.maps.Circle[]>([])
@@ -83,7 +76,13 @@ export function MapHook(
     })
   }
 
-  const deleteMarkers = () => {
+  const deleteMarkers = (
+    markerList: naver.maps.Marker[],
+    setMarkerList: {
+      (value: SetStateAction<naver.maps.Marker[]>): void
+      (arg0: never[]): void
+    },
+  ) => {
     console.log('deleteMarkers')
     console.log(markerList)
     for (let k = 0; k < markerList.length; k++) {
@@ -96,6 +95,9 @@ export function MapHook(
    * Route에 따른 정류장과 어린이집 마커 추가
    */
   const drawRouteMarkers = async (
+    setMarkerList: {
+      (value: SetStateAction<naver.maps.Marker[]>): void
+    },
     newPathList: naver.maps.LatLng[],
     markerImg?: string,
     size?: naver.maps.Size,
@@ -141,9 +143,16 @@ export function MapHook(
    * draw whole rotue to the map
    * @param stationRoute station 배열 정보
    */
-  const drawRoute = (stationRoute: Station[]) => {
+  const drawRoute = (
+    stationRoute: Station[],
+    markerList: naver.maps.Marker[],
+    setMarkerList: {
+      (value: SetStateAction<naver.maps.Marker[]>): void
+      (arg0: never[]): void
+    },
+  ) => {
     // 기존 마커 삭제
-    deleteMarkers()
+    deleteMarkers(markerList, setMarkerList)
     const newPathList = []
 
     // TODO 이부분에 args 로 받은 학원 좌표 추가
@@ -160,6 +169,7 @@ export function MapHook(
     newPathList.push(new naver.maps.LatLng(BASE_LAT, BASE_LNG))
 
     drawRouteMarkers(
+      setMarkerList,
       [newPathList[0]],
       'academy.svg',
       new naver.maps.Size(30, 30),
@@ -170,6 +180,7 @@ export function MapHook(
 
     if (newPathList.length > 2) {
       drawRouteMarkers(
+        setMarkerList,
         [...newPathList.slice(1, newPathList.length - 1)],
         'bus-stop.svg',
         new naver.maps.Size(50, 52),
@@ -186,7 +197,6 @@ export function MapHook(
 
   return {
     map: mapRef,
-    markerList,
     polyline,
     initMap,
     initPolyLine,
