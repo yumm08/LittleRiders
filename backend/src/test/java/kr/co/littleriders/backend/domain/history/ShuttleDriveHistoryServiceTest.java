@@ -47,6 +47,37 @@ class ShuttleDriveHistoryServiceTest {
     @Autowired
     ObjectMapper objectMapper;
 
+
+    @Nested
+    @DisplayName("findByShuttleIdAndStartAt 테스트")
+    class findByShuttleIdAndStartAt{
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws JsonProcessingException {
+            LocalDateTime now = LocalDateTime.now();
+            int year = now.getYear();
+            int month = now.getMonthValue();
+            int day = now.getDayOfMonth();
+            log.info("year={},month={},day={}",year,month,day);
+            List<ShuttleDriveHistory> shuttleDriveHistoryList = shuttleDriveHistoryService.findByShuttleIdAndStartAt(1,year,month,day);
+            String out = objectMapper.writeValueAsString(shuttleDriveHistoryList);
+            log.info("out = {}",out);
+        }
+    }
+
+    @Nested
+    @DisplayName("findDistinctYearAndMonthAndDayList 테스트")
+    class findDistinctYearAndMonthAndDayList{
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess(){
+            List<LocalDateTime> dateList = shuttleDriveHistoryService.findDistinctYearAndMonthAndDayListByShuttleId(1);
+            log.info("response = {}",dateList);
+        }
+    }
+
     @Nested
     @DisplayName("save 테스트")
     class save{
@@ -54,8 +85,8 @@ class ShuttleDriveHistoryServiceTest {
         @Test
         @DisplayName("성공")
         void whenSucces() throws JsonProcessingException {
-            LocalDateTime start = LocalDateTime.of(2024,3,11,13,12);
-            LocalDateTime end = LocalDateTime.now();
+            LocalDateTime start = LocalDateTime.now();
+            LocalDateTime end = LocalDateTime.of(2024,3,11,13,12);
 
             Academy academy = Academy.of(
                     "a",
