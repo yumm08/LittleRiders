@@ -31,6 +31,11 @@ public class ShuttleLocationHistory {
         return new ShuttleLocationHistory(shuttleId, list);
     }
 
+    public void addLocation(double latitude, double longitude, int speed) {
+        LocationInfo newLocationInfo = new LocationInfo(latitude, longitude, speed);
+        this.locationInfoList.add(newLocationInfo);
+    }
+
     public static class LocationInfo {
         private double latitude;
 

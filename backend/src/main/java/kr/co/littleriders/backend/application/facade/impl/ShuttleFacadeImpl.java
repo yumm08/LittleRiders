@@ -81,7 +81,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         Shuttle shuttle = shuttleService.findById(shuttleId);
         Route route = routeService.findById(startRequest.getRouteId());
 
-        if(!Objects.equals(shuttle.getAcademy().getId(), route.getAcademy().getId())) {
+        if (!Objects.equals(shuttle.getAcademy().getId(), route.getAcademy().getId())) {
             throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
         }
 
@@ -122,7 +122,19 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         ShuttleLocation location = locationRequest.toShuttleLocation(shuttleId);
         shuttleLocationService.save(location);
 
-        ShuttleLocationHistory locationHistory = locationRequest.toShuttleLocationHistory(shuttleId);
+        ShuttleLocationHistory locationHistory;
+
+        if (shuttleLocationHistoryService.existsByShuttleId(shuttleId)) {
+            locationHistory = shuttleLocationHistoryService.findByShuttleId(shuttleId);
+            double latitude = locationRequest.getLatitude();
+            double longitude = locationRequest.getLongitude();
+            int speed = locationRequest.getSpeed();
+            locationHistory.addLocation(latitude, longitude, speed);
+        } else {
+            locationHistory = locationRequest.toShuttleLocationHistory(shuttleId);
+        }
+
         shuttleLocationHistoryService.save(locationHistory);
     }
+
 }
