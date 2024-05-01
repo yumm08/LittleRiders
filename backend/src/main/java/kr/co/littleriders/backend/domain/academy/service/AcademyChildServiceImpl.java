@@ -8,6 +8,7 @@ import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildExc
 import org.springframework.stereotype.Service;
 
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.child.entity.Child;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -32,6 +33,11 @@ class AcademyChildServiceImpl implements AcademyChildService {
     @Override
     public List<AcademyChild> findByAcademy(Academy academy) {
         return academyChildRepository.findByAcademy(academy);
+    }
+
+    @Override
+    public List<AcademyChild> findByChild(Child child) {
+        return academyChildRepository.findByChild(child);
     }
 
     @Override

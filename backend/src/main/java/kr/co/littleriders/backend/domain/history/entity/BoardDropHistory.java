@@ -4,6 +4,9 @@ package kr.co.littleriders.backend.domain.history.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "board_drop_history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class BoardDropHistory {
 
     @Id

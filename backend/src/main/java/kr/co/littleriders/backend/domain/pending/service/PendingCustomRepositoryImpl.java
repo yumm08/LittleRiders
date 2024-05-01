@@ -30,8 +30,8 @@ class PendingCustomRepositoryImpl implements PendingCustomRepository {
     public List<Pending> searchByAcademy(Academy academy) {
         return jpaQueryFactory
                 .selectFrom(pending)
-                .where(pending.academy.eq(academy))
-                .where(pending.status.eq(PendingStatus.PENDING))
+                .where(pending.academy.eq(academy)
+                        , pending.status.eq(PendingStatus.PENDING))
                 .fetch();
     }
 
@@ -39,8 +39,8 @@ class PendingCustomRepositoryImpl implements PendingCustomRepository {
     public List<Pending> searchById(List<Long> pendingList) {
         return jpaQueryFactory
                 .selectFrom(pending)
-                .where(pending.id.in(pendingList))
-                .where(pending.status.eq(PendingStatus.PENDING))
+                .where(pending.id.in(pendingList)
+                      , pending.status.eq(PendingStatus.PENDING))
                 .fetch();
     }
 }

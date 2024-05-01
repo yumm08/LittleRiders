@@ -62,4 +62,8 @@ public class Child {
                         , null);
     }
 
+    public boolean equalsFamily(Family family) {
+        return this.family.equals(family);
+    }
+
 }
