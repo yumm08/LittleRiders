@@ -6,15 +6,18 @@ import Button from '@components/Shared/Button'
 
 import { useQuery } from '@tanstack/react-query'
 
-import { useValidate } from '@hooks/auth'
-
 import { getValidate } from '@apis/auth'
 
 import { VALIDATE_REGEX } from '@constants'
 import { SignUpInfo } from '@types'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-export default function SignUpFormBody() {
+interface Props {
+  validate: ({ email, code }: { email: string; code: string }) => void
+  validateSuccess: boolean
+}
+
+export default function SignUpFormBody({ validate, validateSuccess }: Props) {
   const [tryValidate, setTryValidate] = useState(false)
   const [timer, setTimer] = useState(180)
   const codeInputRef = useRef<HTMLInputElement | null>(null)
@@ -32,8 +35,6 @@ export default function SignUpFormBody() {
     queryFn: () => getValidate(email),
     enabled: tryValidate,
   })
-
-  const { validate, isSuccess: validateSuccess } = useValidate()
 
   const validRequestClickHandler = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -115,62 +116,67 @@ export default function SignUpFormBody() {
         <p className="pl-3 text-sm text-darkgreen">인증이 완료되었습니다</p>
       )}
 
-      <input
-        {...register('password', {
-          required: '비밀번호는 필수 입력 항목입니다.',
-        })}
-        type="password"
-        placeholder="비밀번호를 입력해주세요"
-        className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
-        required
-      />
-      {errors.password && (
-        <SignUpFormInputError text={errors.password?.message} />
-      )}
+      {validateSuccess && (
+        <>
+          <input
+            {...register('password', {
+              required: '비밀번호는 필수 입력 항목입니다.',
+            })}
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
+            required
+          />
+          {errors.password && (
+            <SignUpFormInputError text={errors.password?.message} />
+          )}
 
-      <input
-        {...register('name', {
-          required: '이름은 필수 입력 항목입니다.',
-          pattern: {
-            value: VALIDATE_REGEX.NAME,
-            message: '이름은 한글로만 입력해 주세요.',
-          },
-        })}
-        placeholder="이름을 입력해주세요"
-        type="text"
-        className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
-        required
-      />
-      {errors.name && <SignUpFormInputError text={errors.name?.message} />}
+          <input
+            {...register('name', {
+              required: '이름은 필수 입력 항목입니다.',
+              pattern: {
+                value: VALIDATE_REGEX.NAME,
+                message: '이름은 한글로만 입력해 주세요.',
+              },
+            })}
+            placeholder="이름을 입력해주세요"
+            type="text"
+            className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
+            required
+          />
+          {errors.name && <SignUpFormInputError text={errors.name?.message} />}
 
-      <input
-        {...register('address', {
-          required: '주소는 필수 입력 항목입니다.',
-        })}
-        placeholder="주소를 입력해주세요"
-        type="text"
-        className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
-        required
-      />
-      {/* // TODO: 주소 검색 필요 */}
-      {errors.address && (
-        <SignUpFormInputError text={errors.address?.message} />
-      )}
+          <input
+            {...register('address', {
+              required: '주소는 필수 입력 항목입니다.',
+            })}
+            placeholder="주소를 입력해주세요"
+            type="text"
+            className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
+            required
+          />
+          {/* // TODO: 주소 검색 필요 */}
+          {errors.address && (
+            <SignUpFormInputError text={errors.address?.message} />
+          )}
 
-      <input
-        {...register('phoneNumber', {
-          required: '전화번호는 필수 입력 항목입니다.',
-          pattern: {
-            value: VALIDATE_REGEX.PHONE_NUMBER,
-            message: '전화번호 형식이 올바르지 않습니다. (예: 010-0000-0000)',
-          },
-        })}
-        placeholder="전화번호를 입력해주세요 (ex. 010-0000-0000)"
-        type="tel"
-        className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
-      />
-      {errors.phoneNumber && (
-        <SignUpFormInputError text={errors.phoneNumber?.message} />
+          <input
+            {...register('phoneNumber', {
+              required: '전화번호는 필수 입력 항목입니다.',
+              pattern: {
+                value: VALIDATE_REGEX.PHONE_NUMBER,
+                message:
+                  '전화번호 형식이 올바르지 않습니다. (예: 010-0000-0000)',
+              },
+            })}
+            placeholder="전화번호를 입력해주세요 (ex. 010-0000-0000)"
+            type="tel"
+            className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
+          />
+          {errors.phoneNumber && (
+            <SignUpFormInputError text={errors.phoneNumber?.message} />
+          )}
+        </>
       )}
     </div>
   )
