@@ -1,7 +1,10 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,5 +38,17 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 		}
 
 		return teacherService.save(teacher);
+	}
+
+	@Override
+	public List<AcademyTeacherResponse> readTeacherList(Long academyId) {
+
+		Academy academy = academyService.findById(academyId);
+		List<AcademyTeacherResponse> teacherList = academyService.findByAcademy(academy)
+													.stream()
+													.map(AcademyTeacherResponse::from)
+													.collect(Collectors.toList());
+
+		return teacherList;
 	}
 }
