@@ -55,9 +55,16 @@ class AccountFacadeImpl implements AccountFacade {
                 throw FamilyException.from(FamilyErrorCode.NOT_FOUND);
             }
         }
-        else{
+
+        if(memberType == MemberType.ACADEMY){
             if(academyService.notExistsById(id)){ //신원 검증
                 throw AcademyException.from(AcademyErrorCode.NOT_FOUND);
+            }
+        }
+        if(memberType == MemberType.TERMINAL){
+            Terminal terminal = terminalService.findById(id);
+            if(terminal.getShuttleTerminalAttach() == null){
+                throw ShuttleTerminalAttachException.from(ShuttleTerminalAttachErrorCode.NOT_FOUND);
             }
         }
 
