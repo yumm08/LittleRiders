@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @NoArgsConstructor
 public class ChildDetailHistoryResponse {
@@ -34,11 +36,15 @@ public class ChildDetailHistoryResponse {
 	}
 
 	public static ChildDetailHistoryResponse from(BoardDropHistory boardDropHistory) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss");
+		String formattedDate = boardDropHistory.getCreatedAt().format(formatter);
+
 		return new ChildDetailHistoryResponse(boardDropHistory.getId()
 											, boardDropHistory.getAcademy().getName()
 											, boardDropHistory.getAcademyChild().getChild().getName()
 											, boardDropHistory.getStatus().name()
-											, boardDropHistory.getCreatedAt().toString()
+											, formattedDate
 											, boardDropHistory.getLatitude()
 											, boardDropHistory.getLongitude());
 	}
