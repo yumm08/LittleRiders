@@ -133,7 +133,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                 teacher,
                 shuttleLocationDTOList);
 
-        //TODO:어린이 저장 필요
+        //TODO - 김도현 - 어린이 저장 및 정상 종료 여부 확인하기
         //mongoDB 에 저장
         shuttleDriveHistoryService.save(shuttleDriveHistory);
 
@@ -141,12 +141,11 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         shuttleLocationHistoryService.delete(shuttleLocationHistory);
         shuttleDriveService.delete(shuttleDrive);
         shuttleChildRideService.delete(shuttleChildRide);
-        //지워버리자 ㅇㅇ
 
         ShuttleLocation shuttleLocation = shuttleLocationService.findByShuttleId(shuttleId);
         shuttleLocationService.delete(shuttleLocation);
 
-        //TODO : 어린이 삭제 필요
+        //TODO - 김도현: 어린이 삭제 필요
 
 
     }
