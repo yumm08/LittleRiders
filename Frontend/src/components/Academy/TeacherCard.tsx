@@ -1,7 +1,11 @@
-import { Teacher } from '@types'
+import { TeacherCardType } from '@types'
 import { MdCancel } from 'react-icons/md'
 
-export default function TeacherCard({ name, phoneNumber, image }: Teacher) {
+export default function TeacherCard({
+  name,
+  phoneNumber,
+  image,
+}: TeacherCardType) {
   return (
     <div className="relative w-[150px] flex-col items-center justify-center">
       <MdCancel
