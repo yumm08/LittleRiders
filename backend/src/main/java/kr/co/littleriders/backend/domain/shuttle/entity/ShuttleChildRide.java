@@ -30,8 +30,9 @@ public class ShuttleChildRide {
         return new ShuttleChildRide(shuttleId, list);
     }
 
+    @Getter
     public static class RideInfo {
-        private long childId;
+        private long academyChildId;
 
         private double latitude;
 
@@ -39,8 +40,8 @@ public class ShuttleChildRide {
 
         private LocalDateTime time;
 
-        private RideInfo(final long childId, final double latitude, final double longitude) {
-            this.childId = childId;
+        private RideInfo(final long academyChildId, final double latitude, final double longitude) {
+            this.academyChildId = academyChildId;
             this.latitude = latitude;
             this.longitude = longitude;
             this.time = LocalDateTime.now();
