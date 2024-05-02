@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
@@ -99,7 +100,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
-    public void recordChildRiding(ShuttleChildRideRequest rideRequest) {
+    public ShuttleChildRideResponse recordChildRiding(ShuttleChildRideRequest rideRequest) {
 
         Long shuttleId = 1L;
 
@@ -111,7 +112,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, childId);
         shuttleChildRideService.save(shuttleChildRide);
 
-        // TODO: Response - 아이 이름, 상태(탑승/하차), academyChildId, time,
+        return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
     }
 
     @Override
