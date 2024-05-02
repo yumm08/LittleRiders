@@ -1,7 +1,5 @@
 package kr.co.littleriders.backend.application.dto.request;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.validation.constraints.NotBlank;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
@@ -9,6 +7,7 @@ import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor

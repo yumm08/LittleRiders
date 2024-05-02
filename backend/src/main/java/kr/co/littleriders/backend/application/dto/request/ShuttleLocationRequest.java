@@ -2,9 +2,13 @@ package kr.co.littleriders.backend.application.dto.request;
 
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocationHistory;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ShuttleLocationRequest {
     private double latitude;
     private double longitude;

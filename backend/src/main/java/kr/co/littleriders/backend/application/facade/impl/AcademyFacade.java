@@ -90,7 +90,7 @@ class AcademyFacade implements AcademyAccountFacade {
     public void signUp(final AcademySignUpRequest academySignUpRequest, final String token) {
 
         String email = academySignUpRequest.getEmail();
-        SignUpToken signUpToken = signUpTokenService.findFamilySignUpTokenByEmailAndToken(email, token);
+        SignUpToken signUpToken = signUpTokenService.findAcademySignUpTokenByEmailAndToken(email, token);
         signUpTokenService.delete(signUpToken);
         if (familyService.existsByEmail(email) || academyService.existsByEmail(email)) {
             throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);

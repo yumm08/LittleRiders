@@ -5,8 +5,6 @@ import kr.co.littleriders.backend.domain.token.entity.SignUpToken;
 import kr.co.littleriders.backend.domain.token.entity.SignUpTokenType;
 import kr.co.littleriders.backend.domain.token.error.code.SignUpTokenErrorCode;
 import kr.co.littleriders.backend.domain.token.error.exception.SignUpTokenException;
-import kr.co.littleriders.backend.domain.verification.error.code.VerificationErrorCode;
-import kr.co.littleriders.backend.domain.verification.error.exception.VerificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +41,11 @@ class SignUpTokenServiceImpl implements SignUpTokenService { //write and check ë
     @Override
     public void delete(SignUpToken signUpToken) {
         signUpTokenRepository.delete(signUpToken);
+    }
+
+    @Override
+    public SignUpToken findAcademySignUpTokenByEmailAndToken(String email, String token) {
+        return findByEmailAndTokenAndType(email,token,SignUpTokenType.ACADEMY);
     }
 
 

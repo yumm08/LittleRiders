@@ -5,8 +5,10 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class FamilySignUpRequest {
 

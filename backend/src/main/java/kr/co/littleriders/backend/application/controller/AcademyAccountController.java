@@ -14,7 +14,6 @@ import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/academy/account")
 @RequiredArgsConstructor
-@Slf4j
 public class AcademyAccountController {
     private final AcademyAccountFacade academyAccountFacade;
 
@@ -74,7 +72,6 @@ public class AcademyAccountController {
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(@Auth AuthAcademy authAcademy) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        log.info("AuthAcademy = {}",objectMapper.writeValueAsString(authAcademy));
         return ResponseEntity.ok(objectMapper.writeValueAsString(authAcademy));
     }
 }

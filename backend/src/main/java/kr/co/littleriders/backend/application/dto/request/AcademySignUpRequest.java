@@ -4,8 +4,10 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class AcademySignUpRequest {
 

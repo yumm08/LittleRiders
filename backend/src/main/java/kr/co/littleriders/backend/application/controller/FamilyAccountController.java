@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
@@ -74,7 +73,7 @@ public class FamilyAccountController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-
+    @Deprecated
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(@Auth AuthFamily authFamily) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
