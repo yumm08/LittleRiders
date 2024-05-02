@@ -80,7 +80,7 @@ class FamilyHistoryControllerTest {
 		void whenSuccess() throws Exception {
 
 			// academy 생성
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111", 3, 2);
 			academyService.save(academy);
 
 			// family 생성
@@ -150,7 +150,7 @@ class FamilyHistoryControllerTest {
 
 
 			// academy 생성
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111");
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111", 3, 2);
 			academyService.save(academy);
 
 			// family 생성

@@ -68,7 +68,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 		Family family = familyService.findById(familyId);
 
 		Child child = childService.findById(childId);
-		if (child.equalsFamily(family)) {
+		if (!child.equalsFamily(family)) {
 			throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
 		}
 
