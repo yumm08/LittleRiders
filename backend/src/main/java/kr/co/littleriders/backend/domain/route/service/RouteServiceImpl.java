@@ -34,7 +34,7 @@ class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public boolean existsByAcademyIdAndName(Long academyId, String name) {
+    public boolean existsByAcademyIdAndName(long academyId, String name) {
         return routeRepository.existsByAcademyIdAndName(academyId, name);
     }
 

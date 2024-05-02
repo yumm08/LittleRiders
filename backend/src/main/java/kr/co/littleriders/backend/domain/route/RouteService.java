@@ -12,7 +12,7 @@ public interface RouteService {
 
     boolean notExistsById(long id);
 
-    boolean existsByAcademyIdAndName(Long academyId, String name);
+    boolean existsByAcademyIdAndName(long academyId, String name);
 
     long save(Route route);
 
