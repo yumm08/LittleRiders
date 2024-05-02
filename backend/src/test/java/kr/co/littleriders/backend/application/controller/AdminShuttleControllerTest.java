@@ -54,7 +54,7 @@ class AdminShuttleControllerTest {
 	ObjectMapper objectMapper;
 
 	@Nested
-	@DisplayName("셔틅ㅇ 추가 기능")
+	@DisplayName("셔틀 추가 기능")
 	class addShuttle {
 
 		@Test
