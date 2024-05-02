@@ -27,6 +27,7 @@ public class FamilyAcademyController {
     public ResponseEntity<List<AcademyRegistStatusResponse>> getAcademyStatusList(@Auth AuthFamily authFamily) {
 
         Long familyId = authFamily.getId();
+
         List<AcademyRegistStatusResponse> academyList = familyAcademyFacade.readAcademyRegistStatusList(familyId);
 
         return ResponseEntity.ok().body(academyList);
@@ -47,6 +48,7 @@ public class FamilyAcademyController {
 
 
         Long familyId = authFamily.getId();
+
         Long pendingId = familyAcademyFacade.insertAcademyJoin(familyId, familyAcademyRegistRequest);
 
         return ResponseEntity.ok().body(pendingId);

@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/driver")
+@RequestMapping("/academy/driver")
 @RequiredArgsConstructor
 public class AdminDriverController {
 
@@ -27,7 +27,6 @@ public class AdminDriverController {
 	public ResponseEntity<Long> addDriver(@Auth AuthAcademy authAcademy,
 										  @RequestBody @Valid DriverRegistRequest driverRegistRequest) {
 
-		// Academy 회원 vaild 확인
 		Long academyId = authAcademy.getId();
 
 		Long driverId = adminDriverFacade.insertDriver(driverRegistRequest, academyId);

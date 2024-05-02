@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/shuttle")
+@RequestMapping("/academy/shuttle")
 @RequiredArgsConstructor
 public class AdminShuttleController {
 

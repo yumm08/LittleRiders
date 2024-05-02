@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/teacher")
+@RequestMapping("/academy/teacher")
 @RequiredArgsConstructor
 public class AdminTeacherController {
 
@@ -32,10 +32,9 @@ public class AdminTeacherController {
 	}
 
 	@GetMapping
-//	public ResponseEntity<List<AcademyTeacherResponse>> getTeacherList(@Auth AuthAcademy authAcademy) {
-	public ResponseEntity<List<AcademyTeacherResponse>> getTeacherList() {
+	public ResponseEntity<List<AcademyTeacherResponse>> getTeacherList(@Auth AuthAcademy authAcademy) {
 
-		Long academyId = 1L;
+		Long academyId = authAcademy.getId();
 
 		List<AcademyTeacherResponse> teacherList = adminTeacherFacade.readTeacherList(academyId);
 
