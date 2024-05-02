@@ -1,6 +1,6 @@
 import axiosInstance from '@utils/httpCommons'
 
-const BASE_URL = 'admin'
+const BASE_URL = 'academy'
 
 export const getDriverList = async () => {
   const response = await axiosInstance.get(`${BASE_URL}/driver`)
