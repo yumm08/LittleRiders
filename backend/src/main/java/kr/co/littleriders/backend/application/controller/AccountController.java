@@ -4,14 +4,15 @@ package kr.co.littleriders.backend.application.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import kr.co.littleriders.backend.application.dto.request.ChangePasswordRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.dto.request.ValidateEmailRequest;
 import kr.co.littleriders.backend.application.facade.AccountFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
-import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
-import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
+import kr.co.littleriders.backend.global.auth.dto.AuthDTO;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/account")
+@Slf4j
 public class AccountController {
 
     private final AccountFacade accountFacade;
@@ -89,16 +91,9 @@ public class AccountController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@Auth AuthFamily authFamily,@RequestBody String password){
-        accountFacade.changePassword(authFamily,password);
+    public ResponseEntity<Void> changePassword(@Auth AuthDTO authDTO, @RequestBody ChangePasswordRequest changePasswordRequest){
+        accountFacade.changePassword(authDTO,changePasswordRequest.getPassword());
         return ResponseEntity.ok().build();
     }
-
-    @PutMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@Auth AuthAcademy authAcademy,@RequestBody String password){
-        accountFacade.changePassword(authAcademy,password);
-        return ResponseEntity.ok().build();
-    }
-
 
 }

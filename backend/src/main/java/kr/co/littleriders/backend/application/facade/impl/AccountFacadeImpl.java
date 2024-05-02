@@ -21,6 +21,7 @@ import kr.co.littleriders.backend.domain.verification.entity.VerificationType;
 import kr.co.littleriders.backend.domain.verification.error.code.VerificationErrorCode;
 import kr.co.littleriders.backend.domain.verification.error.exception.VerificationException;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
+import kr.co.littleriders.backend.global.auth.dto.AuthDTO;
 import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import kr.co.littleriders.backend.global.entity.MemberType;
 import kr.co.littleriders.backend.global.error.code.AuthErrorCode;
@@ -31,9 +32,11 @@ import kr.co.littleriders.backend.global.jwt.JwtToken;
 import kr.co.littleriders.backend.global.mail.MailHelper;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 class AccountFacadeImpl implements AccountFacade {
 
@@ -62,25 +65,25 @@ class AccountFacadeImpl implements AccountFacade {
         Long id = jwtMemberInfo.getMemberId();
         MemberType memberType = jwtMemberInfo.getMemberType();
 
-        if(memberType == MemberType.FAMILY){ //신원 검증
-            if(familyService.notExistsById(id)){
+        if (memberType == MemberType.FAMILY) { //신원 검증
+            if (familyService.notExistsById(id)) {
                 throw FamilyException.from(FamilyErrorCode.NOT_FOUND);
             }
         }
 
-        if(memberType == MemberType.ACADEMY){
-            if(academyService.notExistsById(id)){ //신원 검증
+        if (memberType == MemberType.ACADEMY) {
+            if (academyService.notExistsById(id)) { //신원 검증
                 throw AcademyException.from(AcademyErrorCode.NOT_FOUND);
             }
         }
-        if(memberType == MemberType.TERMINAL){
+        if (memberType == MemberType.TERMINAL) {
             Terminal terminal = terminalService.findById(id);
-            if(terminal.getShuttleTerminalAttach() == null){
+            if (terminal.getShuttleTerminalAttach() == null) {
                 throw ShuttleTerminalAttachException.from(ShuttleTerminalAttachErrorCode.NOT_FOUND);
             }
         }
 
-        JwtToken jwtToken =  jwtProvider.createToken(id,memberType);
+        JwtToken jwtToken = jwtProvider.createToken(id, memberType);
         refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
         refreshTokenService.save(refreshToken);
         return jwtToken;
@@ -94,7 +97,7 @@ class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public JwtToken signIn(String email, String password) { //리팩토링이 될거같음
-        if(familyService.existsByEmail(email)){
+        if (familyService.existsByEmail(email)) {
             Family family = familyService.findByEmail(email);
             if (passwordUtil.notEqualsPassword(password, family.getPassword())) {
                 throw AuthException.from(AuthErrorCode.PASSWORD_NOT_EQUAL);
@@ -104,9 +107,9 @@ class AccountFacadeImpl implements AccountFacade {
             refreshTokenService.save(refreshToken);
             return jwtToken;
         }
-        if(academyService.existsByEmail(email)){
+        if (academyService.existsByEmail(email)) {
             Academy academy = academyService.findByEmail(email);
-            if(passwordUtil.notEqualsPassword(password,academy.getPassword())){
+            if (passwordUtil.notEqualsPassword(password, academy.getPassword())) {
                 throw AuthException.from(AuthErrorCode.PASSWORD_NOT_EQUAL);
             }
             JwtToken jwtToken = jwtProvider.createToken(academy.getId(), MemberType.ACADEMY);
@@ -121,7 +124,7 @@ class AccountFacadeImpl implements AccountFacade {
     @Override
     public JwtToken signInByTerminalNumber(String terminalNumber) {
         Terminal terminal = terminalService.findByTerminalNumber(terminalNumber);
-        if(terminal.getShuttleTerminalAttach() == null){
+        if (terminal.getShuttleTerminalAttach() == null) {
             throw ShuttleTerminalAttachException.from(ShuttleTerminalAttachErrorCode.NOT_FOUND);
         }
         JwtToken jwtToken = jwtProvider.createToken(terminal.getId(), MemberType.TERMINAL);
@@ -132,7 +135,7 @@ class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public void sendChangePasswordEmail(String email) {
-        if(familyService.existsByEmail(email) && academyService.notExistsByEmail(email)){
+        if (familyService.existsByEmail(email) && academyService.notExistsByEmail(email)) {
             throw AuthException.from(AuthErrorCode.USER_NOT_FOUND);
         }
         VerificationType verificationType = familyService.existsByEmail(email) ? VerificationType.FAMILY_CHANGE_PASSWORD : VerificationType.ACADEMY_CHANGE_PASSWORD;
@@ -147,12 +150,12 @@ class AccountFacadeImpl implements AccountFacade {
     public JwtToken signInByEmailAndVerificationCode(String email, String code) {
         Verification verification = verificationService.findByEmail(email);
         VerificationType verificationType = verification.getType();
-        if (verificationType != VerificationType.ACADEMY_CHANGE_PASSWORD && verificationType != VerificationType.FAMILY_CHANGE_PASSWORD){
+        if (verificationType != VerificationType.ACADEMY_CHANGE_PASSWORD && verificationType != VerificationType.FAMILY_CHANGE_PASSWORD) {
             throw VerificationException.from(VerificationErrorCode.NOT_FOUND);
         }
         MemberType memberType = verificationType == VerificationType.ACADEMY_CHANGE_PASSWORD ? MemberType.ACADEMY : MemberType.FAMILY;
         long id = 0;
-        if(memberType == MemberType.ACADEMY){
+        if (memberType == MemberType.ACADEMY) {
             id = academyService.findByEmail(email).getId();
         }
         id = familyService.findByEmail(email).getId();
@@ -164,18 +167,23 @@ class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
-    public void changePassword(AuthFamily authFamily, String password) {
-        Family family = familyService.findById(authFamily.getId());
+    public void changePassword(AuthDTO authDTO, String password) {
+        log.info("changePasswordCalled");
         String encrypted = passwordUtil.encrypt(password);
-        family.setPassword(encrypted);
-        familyService.save(family);
+        if (authDTO instanceof AuthFamily authFamily) {
+            Family family = familyService.findById(authFamily.getId());
+            family.setPassword(encrypted);
+            familyService.save(family);
+            return;
+        }
+        if(authDTO instanceof AuthAcademy authAcademy){
+            Academy academy = academyService.findById(authAcademy.getId());
+            academy.setPassword(encrypted);
+            academyService.save(academy);
+            return;
+        }
+        throw AuthException.from(AuthErrorCode.NOT_VALID_REQUEST);
     }
 
-    @Override
-    public void changePassword(AuthAcademy authAcademy, String password) {
-        Academy academy = academyService.findById(authAcademy.getId());
-        String encrypted = passwordUtil.encrypt(password);
-        academy.setPassword(encrypted);
-        academyService.save(academy);
-    }
+
 }

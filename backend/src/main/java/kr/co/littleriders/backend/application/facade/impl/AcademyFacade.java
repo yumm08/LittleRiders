@@ -61,7 +61,7 @@ class AcademyFacade implements AcademyAccountFacade {
         Verification verification = Verification.of(email, VerificationType.ACADEMY_SIGN_UP);
         verificationService.save(verification);
         String code = verification.getCode();
-        mailHelper.sendVerificationEmail(email, code);
+        mailHelper.sendSignUpVerificationEmail(email, code);
         return code;
     }
 
@@ -73,7 +73,7 @@ class AcademyFacade implements AcademyAccountFacade {
         Verification verification = Verification.of(email, VerificationType.ACADEMY_CHANGE_PASSWORD);
         verificationService.save(verification);
         String code = verification.getCode();
-        mailHelper.sendVerificationEmail(email, code);
+        mailHelper.sendChangePasswordVerificationEmail(email, code);
     }
 
     @Override
