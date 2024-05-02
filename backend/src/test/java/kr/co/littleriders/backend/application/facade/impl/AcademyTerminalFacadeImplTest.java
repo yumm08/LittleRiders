@@ -47,7 +47,7 @@ class AcademyTerminalFacadeImplTest {
                     "1234",
                     "dummy",
                     "apple",
-                    "010"
+                    "010", 2,3
             );
 
             academyService.save(academy);
@@ -70,7 +70,7 @@ class AcademyTerminalFacadeImplTest {
                     "1234",
                     "dummy",
                     "apple",
-                    "010"
+                    "010", 2, 3
             );
 
             academyService.save(academy);

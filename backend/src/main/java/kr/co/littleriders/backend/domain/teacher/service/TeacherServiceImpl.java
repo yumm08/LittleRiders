@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.domain.teacher.service;
 
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
@@ -7,6 +8,8 @@ import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherExceptio
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,6 +36,11 @@ class TeacherServiceImpl implements TeacherService {
     @Override
     public long save(final Teacher teacher) {
         return teacherRepository.save(teacher).getId();
+    }
+
+    @Override
+    public List<Teacher> findByAcademy(Academy academy) {
+        return teacherRepository.findByAcademy(academy);
     }
 
 }

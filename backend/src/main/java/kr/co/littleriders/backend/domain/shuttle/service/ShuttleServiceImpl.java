@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.domain.shuttle.service;
 
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
@@ -7,6 +8,8 @@ import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleExceptio
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,5 +36,10 @@ class ShuttleServiceImpl implements ShuttleService {
     @Override
     public long save(Shuttle shuttle) {
         return shuttleRepository.save(shuttle).getId();
+    }
+
+    @Override
+    public List<Shuttle> findByAcademy(Academy academy) {
+        return shuttleRepository.findByAcademy(academy);
     }
 }

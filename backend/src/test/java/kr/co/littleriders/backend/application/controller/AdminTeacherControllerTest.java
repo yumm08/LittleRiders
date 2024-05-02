@@ -2,10 +2,12 @@ package kr.co.littleriders.backend.application.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
+import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
+import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,6 +62,47 @@ class AdminTeacherControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().string(String.valueOf(teacherId)))
 				.andDo(print());
+
+		}
+	}
+
+	@Nested
+	@DisplayName("선탑자 목록 조회 기능")
+	class getTeacherList {
+
+		@Test
+		@DisplayName("성공")
+		void whenSuccess() throws Exception {
+
+			// 학원 생성
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+			academyService.save(academy);
+
+			// 선탑자 생성
+			Teacher teacher = Teacher.of("선탑자", "010-1111-1111", academy, TeacherStatus.WORK);
+			teacherService.save(teacher);
+
+			Teacher teacher1 = Teacher.of("선탑자1", "010-1111-1112", academy, TeacherStatus.RESIGN);
+			teacherService.save(teacher1);
+
+			Teacher teacher2 = Teacher.of("선탑자2", "010-1111-1113", academy, TeacherStatus.WORK);
+			teacherService.save(teacher2);
+
+			List<AcademyTeacherResponse> teacherList = new ArrayList<AcademyTeacherResponse>();
+			AcademyTeacherResponse teacherResponse = AcademyTeacherResponse.from(teacher);
+			AcademyTeacherResponse teacherResponse1 = AcademyTeacherResponse.from(teacher1);
+			AcademyTeacherResponse teacherResponse2 = AcademyTeacherResponse.from(teacher2);
+			teacherList.add(teacherResponse);
+			teacherList.add(teacherResponse2);
+			teacherList.add(teacherResponse1);
+
+
+			mockMvc.perform(
+							get("/admin/teacher")
+					)
+					.andExpect(status().isOk())
+					.andExpect(content().json(objectMapper.writeValueAsString(teacherList)))
+					.andDo(print());
 
 		}
 	}

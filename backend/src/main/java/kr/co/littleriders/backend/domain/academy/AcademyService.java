@@ -2,8 +2,11 @@ package kr.co.littleriders.backend.domain.academy;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 
+import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+
+import java.util.List;
 
 public interface AcademyService {
     Academy findById(long id);
@@ -21,5 +24,4 @@ public interface AcademyService {
     Slice<Academy> findByName(String name, Pageable pageable);
 
     long save(Academy academy);
-
 }
