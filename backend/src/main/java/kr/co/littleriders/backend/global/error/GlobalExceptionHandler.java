@@ -20,8 +20,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     protected ResponseEntity<LittleRidersErrorResponse> handleBaseException(LittleRidersException e) {
+        e.printStackTrace();
         final LittleRidersErrorCode littleRidersErrorCode = e.getErrorCode();
-        return ResponseEntity.status(littleRidersErrorCode.getStatus()).body(LittleRidersErrorResponse.from(littleRidersErrorCode.getCode()));
+        return ResponseEntity.status(littleRidersErrorCode.getStatus()).body(LittleRidersErrorResponse.of(littleRidersErrorCode.getCode(),littleRidersErrorCode.getMessage()));
     }
 
     @ExceptionHandler
