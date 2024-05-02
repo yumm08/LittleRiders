@@ -24,4 +24,13 @@ public class ShuttleTerminalAttach {
     @OneToOne
     @JoinColumn(name = "terminal_id")
     private Terminal terminal; // 단말기
+
+    private ShuttleTerminalAttach(Shuttle shuttle, Terminal terminal) {
+        this.shuttle = shuttle;
+        this.terminal = terminal;
+    }
+
+    public static ShuttleTerminalAttach of(Shuttle shuttle, Terminal terminal) {
+        return new ShuttleTerminalAttach(shuttle, terminal);
+    }
 }

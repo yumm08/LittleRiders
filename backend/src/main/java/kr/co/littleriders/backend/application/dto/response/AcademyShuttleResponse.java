@@ -1,6 +1,10 @@
 package kr.co.littleriders.backend.application.dto.response;
 
+import java.util.Optional;
+
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
+import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,12 +38,16 @@ public class AcademyShuttleResponse {
     }
 
     public static AcademyShuttleResponse from(Shuttle shuttle) {
+
         return new AcademyShuttleResponse(shuttle.getId()
                                         , shuttle.getName()
                                         , shuttle.getLicenseNumber()
                                         , shuttle.getType()
                                         , shuttle.getImagePath()
-                                        , shuttle.getShuttleTerminalAttach().getTerminal().getTerminalNumber()
+                                        , Optional.ofNullable(shuttle.getShuttleTerminalAttach())
+                                                  .map(ShuttleTerminalAttach::getTerminal)
+                                                  .map(Terminal::getTerminalNumber)
+                                                  .orElse(null)
                                         , shuttle.getStatus().name());
 
     }

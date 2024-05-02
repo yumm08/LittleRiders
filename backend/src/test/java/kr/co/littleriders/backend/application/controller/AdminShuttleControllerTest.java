@@ -8,6 +8,11 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
+import kr.co.littleriders.backend.domain.terminal.ShuttleTerminalAttachService;
+import kr.co.littleriders.backend.domain.terminal.TerminalService;
+import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
+import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,6 +40,12 @@ class AdminShuttleControllerTest {
 
 	@Autowired
 	private ShuttleService shuttleService;
+
+	@Autowired
+	private TerminalService terminalService;
+
+	@Autowired
+	private ShuttleTerminalAttachService shuttleTerminalAttachService;
 
 	@Autowired
 	MockMvc mockMvc;
@@ -82,12 +93,24 @@ class AdminShuttleControllerTest {
 			// 기사 생성
 			Shuttle shuttle = Shuttle.of("TESTLICENSE", "1호차", "차량", academy, ShuttleStatus.USE);
 			shuttleService.save(shuttle);
+			Terminal terminal = Terminal.of(academy, "terminalNumber");
+			terminalService.save(terminal);
+			ShuttleTerminalAttach shuttleTerminalAttach = ShuttleTerminalAttach.of(shuttle, terminal);
+			shuttleTerminalAttachService.save(shuttleTerminalAttach);
 
 			Shuttle shuttle1 = Shuttle.of("TESTLICENSE1", "2호차", "차량", academy, ShuttleStatus.REPAIRING);
 			shuttleService.save(shuttle1);
+			Terminal terminal1 = Terminal.of(academy, "terminalNumber1");
+			terminalService.save(terminal1);
+			ShuttleTerminalAttach shuttleTerminalAttach1 = ShuttleTerminalAttach.of(shuttle1, terminal1);
+			shuttleTerminalAttachService.save(shuttleTerminalAttach1);
 
 			Shuttle shuttle2 = Shuttle.of("TESTLICENSE2", "3호차", "차량", academy, ShuttleStatus.USE);
 			shuttleService.save(shuttle2);
+			Terminal terminal2 = Terminal.of(academy, "terminalNumber2");
+			terminalService.save(terminal2);
+			ShuttleTerminalAttach shuttleTerminalAttach2 = ShuttleTerminalAttach.of(shuttle2, terminal2);
+			shuttleTerminalAttachService.save(shuttleTerminalAttach2);
 
 
 			List<AcademyShuttleResponse> shuttleList = new ArrayList<>();
@@ -100,7 +123,7 @@ class AdminShuttleControllerTest {
 
 
 			mockMvc.perform(
-							get("/admin/shuttle")
+							get("/academy/shuttle")
 					)
 					.andExpect(status().isOk())
 					.andExpect(content().json(objectMapper.writeValueAsString(shuttleList)))
