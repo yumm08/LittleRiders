@@ -8,10 +8,11 @@ import java.util.List;
 public interface RouteService {
     Route findById(long id);
 
-
     boolean existsById(long id);
 
     boolean notExistsById(long id);
+
+    boolean existsByAcademyIdAndName(Long academyId, String name);
 
     long save(Route route);
 
