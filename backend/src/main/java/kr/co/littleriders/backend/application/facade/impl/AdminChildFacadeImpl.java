@@ -52,7 +52,11 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     public AcademyChildDetailResponse readAcademyChildDetail(Long academyId, Long academyChildId) {
 
         Academy academy = academyService.findById(academyId);
+        // academyChild 가져오기
 
+        // status에 따른 접근 테이블 분리
+
+        // AcademyChildDetailResponse 생성
 
 
         return null;
@@ -65,9 +69,10 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
 
         AcademyChild academyChild = academyChildService.findById(academyChildId);
         if (!academyChild.equalsAcademy(academy)) {
-            throw AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND); // 추후 다른 에러 메시지로 변경
+            throw AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND); // TODO-이윤지-에러 메시지 변경
         }
 
+        // TODO-이윤지-attending->graduate/leave 만 가능하도록 제약
         // 원생 정보 update 후 저장
         academyChild.updateStatus(AcademyChildStatus.valueOf(status.toUpperCase()));
         academyChildService.save(academyChild);
@@ -135,6 +140,7 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
             academyFamily = academyFamilyService.findByFamilyAndAcademy(pending.getChild().getFamily(), academy);
         }
 
+        // TODO-이윤지-전에 다녔던 학생인지 확인 후 insert 필수
         AcademyChild academyChild = AcademyChild.of(pending.getChild()
                                                     , pending.getAcademy()
                                                      , academyFamily

@@ -29,14 +29,13 @@ public class AdminChildController {
     }
 
     @GetMapping("/{academyChildId}")
-    public ResponseEntity<?> getAcademyChildDetail(@Auth AuthAcademy authAcademy,
-                                                @PathVariable(value = "academyChildId") Long academyChildId) {
+    public ResponseEntity<AcademyChildDetailResponse> getAcademyChildDetail(@Auth AuthAcademy authAcademy,
+                                                                            @PathVariable(value = "academyChildId") Long academyChildId) {
 
         Long academyId = authAcademy.getId();
         AcademyChildDetailResponse academyChildDetailResponse = adminChildFacade.readAcademyChildDetail(academyId, academyChildId);
 
-
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(academyChildDetailResponse);
     }
 
     @PutMapping

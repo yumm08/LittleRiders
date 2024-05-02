@@ -57,11 +57,11 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
         Academy academy = academyService.findById(familyAcademyRegistRequest.getAcademyId());
         Child child = childService.findById(familyAcademyRegistRequest.getChildId());
 
-        // 부모 - 자녀 연결 확인
         if (child.equalsFamily(family)){
             throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
         }
 
+        // TODO-이윤지-이전에 신청한 내역이 있는지 확인 후 생성
         Pending pending = Pending.of(academy, child, PendingStatus.PENDING);
         return pendingService.save(pending);
     }
