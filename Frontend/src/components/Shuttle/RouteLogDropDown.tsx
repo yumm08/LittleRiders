@@ -10,35 +10,29 @@ import {
   CommandItem,
 } from '@shadcn/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/ui/popover'
+import { DriveInfoByDay } from '@types'
 import { CommandList } from 'cmdk'
 
-const frameworks = [
-  {
-    value: 'next.js',
-    label: 'Next.js',
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit',
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js',
-  },
-  {
-    value: 'remix',
-    label: 'Remix',
-  },
-  {
-    value: 'astro',
-    label: 'Astro',
-  },
-]
-
-export function RouteLogDropDown() {
+interface Props {
+  driveInfoByDayList: DriveInfoByDay[]
+  onClickHistoryId: (id: number) => void
+  historyId: number
+}
+/**
+ *
+ * @param driveInfoByDayList 특정 날짜의 운행 기록 리스트 조회
+ * @param onClickHistoryId API로 호출 할 운행 기록 id를 변경 시키는 함수
+ * @param historyId 현재 선택한 운행 기록 id
+ * @returns
+ */
+export function RouteLogDropDown({
+  driveInfoByDayList,
+  onClickHistoryId,
+  historyId,
+}: Props) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState('')
-
+  console.log(historyId)
   return (
     <div className="absolute left-[50px] top-[20px] z-50">
       <Popover open={open} onOpenChange={setOpen}>
@@ -49,26 +43,25 @@ export function RouteLogDropDown() {
             aria-expanded={open}
             className="w-[200px] items-center justify-center bg-lightgreen font-bold text-white"
           >
-            {value
-              ? frameworks.find((framework) => framework.value === value)?.label
-              : '운행 정보 🚍'}
+            <span>{driveInfoByDayList[historyId].routeName}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0">
           <Command>
             <CommandList>
-              <CommandEmpty>No framework found.</CommandEmpty>
+              <CommandEmpty>No driveInfo found.</CommandEmpty>
               <CommandGroup>
-                {frameworks.map((framework) => (
+                {driveInfoByDayList.map((driveInfo, i) => (
                   <CommandItem
-                    key={framework.value}
-                    value={framework.value}
+                    key={driveInfo.id}
+                    value={driveInfo.routeName}
                     onSelect={(currentValue) => {
                       setValue(currentValue === value ? '' : currentValue)
                       setOpen(false)
+                      onClickHistoryId(i)
                     }}
                   >
-                    {framework.label}
+                    {driveInfo.routeName}🚍
                   </CommandItem>
                 ))}
               </CommandGroup>

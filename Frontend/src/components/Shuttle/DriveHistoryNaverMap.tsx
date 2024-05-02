@@ -1,44 +1,59 @@
 import {
   useRedrawMarkers,
   useRedrawPolyLine,
-  useRedrawStudentMarkers,
   useSetMap,
 } from '@hooks/shuttle/driveHistoryMap'
 
-import { ChildLogDropDown } from './ChildLogDropDown'
 import { RouteLogDropDown } from './RouteLogDropDown'
 
+import { DriveDetailInfoByHistory, DriveInfoByDay, DriveLocation } from '@types'
+
 interface Props {
-  data: any
-  driveInfoByDayList: any
-  driveDetailInfoByHistoryList: any
+  driveInfoByDayList: DriveInfoByDay[] | undefined
+  driveDetailInfoByHistory: DriveDetailInfoByHistory | undefined
   onClickHistoryId: (id: number) => void
+  historyId: number
 }
 
 /**
- *
- * @summary Route 페이지에서 사용되는 NaverMap
- * @returns
+ * @summary 운행 기록 페이지에서 사용되는 NaverMap
  */
 
-export default function DriveHistoryNaverMap({ data }: Props) {
-  const type = '등원'
+export default function DriveHistoryNaverMap({
+  driveInfoByDayList,
+  driveDetailInfoByHistory,
+  onClickHistoryId,
+  historyId,
+}: Props) {
+  // const type = '등원'
 
   // Map 초기화
-  const { naverMap } = useSetMap({ type, data: data[type] })
-  // Map에 마커 찍기
-  useRedrawMarkers({ naverMap, data: data[type] })
-  useRedrawStudentMarkers({ naverMap, data: data[type] })
-  // Map에 선 그리기
-  useRedrawPolyLine({ naverMap, data: data[type] })
+  const { naverMap } = useSetMap({
+    data: driveDetailInfoByHistory?.locationList as DriveLocation[],
+  })
+  // // Map에 마커 찍기
+  useRedrawMarkers({
+    naverMap,
+    data: driveDetailInfoByHistory?.locationList as DriveLocation[],
+  })
+  // useRedrawStudentMarkers({ naverMap, data: data[type] })
+  // // Map에 선 그리기
+  useRedrawPolyLine({
+    naverMap,
+    data: driveDetailInfoByHistory?.locationList as DriveLocation[],
+  })
 
   return (
     <div
       id="map"
       className="relative h-[450px] w-screen rounded-md max-2xl:w-full"
     >
-      <RouteLogDropDown />
-      <ChildLogDropDown />
+      <RouteLogDropDown
+        driveInfoByDayList={driveInfoByDayList as DriveInfoByDay[]}
+        onClickHistoryId={onClickHistoryId}
+        historyId={historyId}
+      />
+      {/* <ChildLogDropDown />  */}
     </div>
   )
 }

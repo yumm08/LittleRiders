@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react'
 
+import calculateCenterMap from '@utils/calculateCenterMap'
+
 import COLOR_PALETTE from '@style/ColorPalette'
-import student from 'assets/Mock/employee.jpg'
+import { DriveLocation } from '@types'
 
 type UseSetMapProps = {
-  type: string
-  data: any
+  data: DriveLocation[]
 }
-
 /**
  *
  * @summary 네이버맵 컴포넌트를 생성하는 훅
  */
-export function useSetMap({ type, data }: UseSetMapProps) {
+export function useSetMap({ data }: UseSetMapProps) {
+  const { avgLat, avgLng } = calculateCenterMap(data)
   const options = {
     // center: new naver.maps.LatLng(37.359924641705476, 127.1148204803467),
-    center: new naver.maps.LatLng(37.359924641705476, 127.1148204803467),
+    center: new naver.maps.LatLng(avgLat, avgLng),
     zoom: 13,
     minZoom: 7,
     zoomControl: true,
@@ -27,12 +28,12 @@ export function useSetMap({ type, data }: UseSetMapProps) {
     const map = new naver.maps.Map('map', options)
     setNaverMap(map)
   }, [])
-  return { naverMap, type }
+  return { naverMap }
 }
 
 type useRedrawMarkersProps = {
   naverMap: naver.maps.Map | undefined
-  data: any
+  data: DriveLocation[]
 }
 /**
  *
@@ -46,9 +47,9 @@ export function useRedrawMarkers({ naverMap, data }: useRedrawMarkersProps) {
     })
     const markerArray: naver.maps.Marker[] = []
     // marker 업데이트
-    data.정류장리스트.forEach((e: any) => {
+    data.forEach((location) => {
       const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(e.위도, e.경도),
+        position: new naver.maps.LatLng(location.latitude, location.longitude),
         map: naverMap,
       })
       markerArray.push(marker)
@@ -93,7 +94,7 @@ export function useRedrawMarkers({ naverMap, data }: useRedrawMarkersProps) {
 
 type UseRedrawPolyLineProps = {
   naverMap: naver.maps.Map | undefined
-  data: any
+  data: DriveLocation[]
 }
 
 export function useRedrawPolyLine({ naverMap, data }: UseRedrawPolyLineProps) {
@@ -102,8 +103,8 @@ export function useRedrawPolyLine({ naverMap, data }: UseRedrawPolyLineProps) {
     polyLines?.setMap(null)
     const polyline = new naver.maps.Polyline({
       map: naverMap,
-      path: data.정류장리스트.map((e: any) => {
-        return new naver.maps.LatLng(e.위도, e.경도)
+      path: data.map((location) => {
+        return new naver.maps.LatLng(location.latitude, location.longitude)
       }),
       strokeColor: COLOR_PALETTE['lightgreen'],
       strokeWeight: 5,
@@ -115,64 +116,64 @@ export function useRedrawPolyLine({ naverMap, data }: UseRedrawPolyLineProps) {
  *
  * @summary 매 렌더링 시 원생 마커를 지우고 다시 생성하는 훅
  */
-export function useRedrawStudentMarkers({
-  naverMap,
-  data,
-}: useRedrawMarkersProps) {
-  const [markers, setMarkers] = useState<naver.maps.Marker[]>([])
-  useEffect(() => {
-    markers.forEach((marker) => {
-      marker.setMap(null)
-    })
-    const markerArray: naver.maps.Marker[] = []
-    // marker 업데이트
-    data.원생승하차지점.forEach((e: any) => {
-      const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(e.위도, e.경도),
-        map: naverMap,
-        icon: {
-          url: student,
-          size: new naver.maps.Size(25, 25),
-          origin: new naver.maps.Point(0, 0),
-          anchor: new naver.maps.Point(25, 26),
-        },
-      })
-      markerArray.push(marker)
-    })
-    if (naverMap)
-      naver.maps.Event.addListener(naverMap, 'idle', function () {
-        updateMarkers(naverMap, markerArray)
-      })
-    setMarkers(markerArray)
+// export function useRedrawStudentMarkers({
+//   naverMap,
+//   data,
+// }: useRedrawMarkersProps) {
+//   const [markers, setMarkers] = useState<naver.maps.Marker[]>([])
+//   useEffect(() => {
+//     markers.forEach((marker) => {
+//       marker.setMap(null)
+//     })
+//     const markerArray: naver.maps.Marker[] = []
+//     // marker 업데이트
+//     data.원생승하차지점.forEach((e: any) => {
+//       const marker = new naver.maps.Marker({
+//         position: new naver.maps.LatLng(e.위도, e.경도),
+//         map: naverMap,
+//         icon: {
+//           url: student,
+//           size: new naver.maps.Size(25, 25),
+//           origin: new naver.maps.Point(0, 0),
+//           anchor: new naver.maps.Point(25, 26),
+//         },
+//       })
+//       markerArray.push(marker)
+//     })
+//     if (naverMap)
+//       naver.maps.Event.addListener(naverMap, 'idle', function () {
+//         updateMarkers(naverMap, markerArray)
+//       })
+//     setMarkers(markerArray)
 
-    function updateMarkers(
-      map: naver.maps.Map | undefined,
-      markerArray: naver.maps.Marker[],
-    ) {
-      if (!map) return
-      markers.forEach((marker) => {
-        marker.setMap(null)
-      })
-      const mapBounds: naver.maps.Bounds = map.getBounds()
-      let marker, position
-      for (let i = 0; i < markerArray.length; i++) {
-        marker = markerArray[i]
-        position = marker.getPosition()
-        if ((mapBounds as naver.maps.LatLngBounds).hasLatLng(position)) {
-          showMarker(map, marker)
-        } else {
-          hideMarker(marker)
-        }
-      }
-    }
+//     function updateMarkers(
+//       map: naver.maps.Map | undefined,
+//       markerArray: naver.maps.Marker[],
+//     ) {
+//       if (!map) return
+//       markers.forEach((marker) => {
+//         marker.setMap(null)
+//       })
+//       const mapBounds: naver.maps.Bounds = map.getBounds()
+//       let marker, position
+//       for (let i = 0; i < markerArray.length; i++) {
+//         marker = markerArray[i]
+//         position = marker.getPosition()
+//         if ((mapBounds as naver.maps.LatLngBounds).hasLatLng(position)) {
+//           showMarker(map, marker)
+//         } else {
+//           hideMarker(marker)
+//         }
+//       }
+//     }
 
-    function showMarker(map: naver.maps.Map, marker: naver.maps.Marker) {
-      marker.setMap(map)
-    }
+//     function showMarker(map: naver.maps.Map, marker: naver.maps.Marker) {
+//       marker.setMap(map)
+//     }
 
-    function hideMarker(marker: naver.maps.Marker) {
-      marker.setMap(null)
-    }
-  }, [data, naverMap])
-  return {}
-}
+//     function hideMarker(marker: naver.maps.Marker) {
+//       marker.setMap(null)
+//     }
+//   }, [data, naverMap])
+//   return {}
+// }

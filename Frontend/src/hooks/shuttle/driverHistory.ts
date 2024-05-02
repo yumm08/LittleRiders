@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 
+import { getDriveDetailInfoByHistory } from '@apis/shuttle/getDriveDetailInfoByHistory'
 import { getDriveHistoryList } from '@apis/shuttle/getDriveHistory'
 import { getDriveInfoByDayList } from '@apis/shuttle/getDriveInfoByDayList'
-import { getDriveDetailInfoByHistoryList } from '@apis/shuttle/getDriveInfoByRouteList'
 
-import { DriveHistoryType } from '@types'
+import { DriveDetailInfoByHistory, DriveHistoryType } from '@types'
 
 /**
  * @summary 차량ID를 넘겨 차량별 운행 날짜 리스트를 받아오는 훅
@@ -28,12 +28,17 @@ export const useFetchDriveHistoryList = (shuttleId: number) => {
  * @param date
  * @returns
  */
-export const useFetchDriveInfoByDayList = (date: string) => {
+export const useFetchDriveInfoByDayList = (
+  shuttleId: number,
+  driveHistoryList: DriveHistoryType[] | undefined,
+  dateId: number,
+) => {
   const { data: driveInfoByDayList, ...rest } = useQuery({
-    queryKey: ['getDriveInfoByDayList', date],
-    queryFn: () => getDriveInfoByDayList(date),
+    queryKey: ['getDriveInfoByDayList', dateId],
+    queryFn: () => getDriveInfoByDayList(shuttleId, driveHistoryList, dateId),
+    enabled: driveHistoryList !== undefined,
     select: (data) => {
-      const driveInfoByDayList: any[] = data.data
+      const driveInfoByDayList: any[] = data?.data
       return driveInfoByDayList
     },
   })
@@ -45,15 +50,15 @@ export const useFetchDriveInfoByDayList = (date: string) => {
  * @param id 노선 id
  * @returns
  */
-export const useFetchDriveDetailInfoByHistoryList = (id: number) => {
-  const { data: driveDetailInfoByHistoryList, ...rest } = useQuery({
+export const useFetchDriveDetailInfoByHistory = (id: number) => {
+  const { data: driveDetailInfoByHistory, ...rest } = useQuery({
     queryKey: ['getDriveInfoByRouteList', id],
-    queryFn: () => getDriveDetailInfoByHistoryList(id),
+    queryFn: () => getDriveDetailInfoByHistory(id),
     select: (data) => {
-      const driveDetailInfoByHistoryList: any[] = data.data
-      return driveDetailInfoByHistoryList
+      const driveDetailInfoByHistory: DriveDetailInfoByHistory = data.data
+      return driveDetailInfoByHistory
     },
   })
 
-  return { driveDetailInfoByHistoryList, ...rest }
+  return { driveDetailInfoByHistory, ...rest }
 }
