@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 
+import SearchAddressModal from '@components/Auth/SignUp/SearchAddressModal'
 import SignUpFormInputError from '@components/Auth/SignUp/SignUpFormInputError'
 import Timer from '@components/Auth/SignUp/Timer'
 import Button from '@components/Shared/Button'
@@ -8,8 +9,11 @@ import { useQuery } from '@tanstack/react-query'
 
 import { getValidate } from '@apis/auth'
 
+import { showErrorAlert } from '@utils/alertUtils'
+
 import { VALIDATE_REGEX } from '@constants'
 import { SignUpInfo } from '@types'
+import axios, { HttpStatusCode } from 'axios'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 interface Props {
@@ -20,6 +24,7 @@ interface Props {
 export default function SignUpFormBody({ validate, validateSuccess }: Props) {
   const [tryValidate, setTryValidate] = useState(false)
   const [timer, setTimer] = useState(180)
+  const [openAddressSearchModal, setOpenAddressSearchModal] = useState(false)
   const codeInputRef = useRef<HTMLInputElement | null>(null)
 
   const {
@@ -30,10 +35,17 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
   } = useFormContext<SignUpInfo>()
 
   const email = useWatch({ name: 'email', control })
-  const { isSuccess } = useQuery({
+  const {
+    isSuccess,
+    refetch,
+    isError: validateError,
+    error,
+  } = useQuery({
     queryKey: [],
     queryFn: () => getValidate(email),
-    enabled: tryValidate,
+    enabled: false,
+    refetchOnWindowFocus: false,
+    retry: 0,
   })
 
   const validRequestClickHandler = async (e: React.MouseEvent) => {
@@ -43,10 +55,20 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
 
     if (result) {
       setTryValidate(true)
+
+      const refetchResult = await refetch()
+      if (refetchResult.isError) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === HttpStatusCode.Conflict) {
+            showErrorAlert({ text: '이미 등록된 이메일입니다 ' })
+            return
+          }
+        }
+      }
+
       setTimer(180)
-      alert('인증 코드를 발송하였습니다')
     } else {
-      alert('입력한 이메일이 유효하지 않습니다')
+      showErrorAlert({ text: '입력한 이메일이 유효하지 않습니다' })
     }
   }
 
@@ -60,6 +82,16 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
     const code = codeInputRef.current.value
 
     validate({ email, code })
+  }
+
+  const searchAddressClickHandler = async (e: React.MouseEvent) => {
+    e.preventDefault()
+
+    setOpenAddressSearchModal(true)
+  }
+
+  const modalToggleHandler = () => {
+    setOpenAddressSearchModal((prev) => !prev)
   }
 
   return (
@@ -82,7 +114,7 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
           onClick={(e) => validRequestClickHandler(e)}
         >
           <p className="w-28 font-bold text-white">
-            {tryValidate ? '재전송' : '인증하기'}
+            {tryValidate && !validateError ? '재전송' : '인증하기'}
           </p>
         </Button>
       </div>
@@ -104,7 +136,7 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
         >
           <p className="w-28 font-bold text-white">확인</p>
         </Button>
-        {tryValidate && !validateSuccess && (
+        {tryValidate && !validateSuccess && !validateError && (
           <Timer
             timer={timer}
             setTimer={setTimer}
@@ -146,16 +178,28 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
           />
           {errors.name && <SignUpFormInputError text={errors.name?.message} />}
 
-          <input
-            {...register('address', {
-              required: '주소는 필수 입력 항목입니다.',
-            })}
-            placeholder="주소를 입력해주세요"
-            type="text"
-            className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
-            required
-          />
-          {/* // TODO: 주소 검색 필요 */}
+          <div className="flex gap-2">
+            <input
+              {...register('address', {
+                required: '주소는 필수 입력 항목입니다.',
+              })}
+              placeholder="주소를 입력해주세요"
+              type="text"
+              className="bg-lightblue text-md pointer-events-none w-full rounded-md border border-lightgray p-3"
+              required
+              readOnly
+            />
+            <Button
+              color="bg-lightgreen"
+              onClick={(e) => searchAddressClickHandler(e)}
+            >
+              <p className="w-20 font-bold text-white">주소 검색</p>
+            </Button>
+            {/* // TODO: 주소 검색 필요 */}
+            {openAddressSearchModal && (
+              <SearchAddressModal onModalToggle={modalToggleHandler} />
+            )}
+          </div>
           {errors.address && (
             <SignUpFormInputError text={errors.address?.message} />
           )}
