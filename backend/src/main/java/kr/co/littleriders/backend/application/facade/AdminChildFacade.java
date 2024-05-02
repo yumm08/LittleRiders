@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.facade;
 
+import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 
@@ -16,4 +17,6 @@ public interface AdminChildFacade {
     List<AcademyChildResponse> readAcademyChildList(Long academyId);
 
     Long updateAcademyChild(Long academyId, Long academyChildId, String status);
+
+    AcademyChildDetailResponse readAcademyChildDetail(Long academyId, Long academyChildId);
 }

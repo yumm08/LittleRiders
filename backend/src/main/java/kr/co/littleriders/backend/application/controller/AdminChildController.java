@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.controller;
 
+import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 import kr.co.littleriders.backend.application.facade.AdminChildFacade;
@@ -25,6 +26,17 @@ public class AdminChildController {
         List<AcademyChildResponse> academyChildList = adminChildFacade.readAcademyChildList(academyId);
 
         return ResponseEntity.ok().body(academyChildList);
+    }
+
+    @GetMapping("/{academyChildId}")
+    public ResponseEntity<?> getAcademyChildDetail(@Auth AuthAcademy authAcademy,
+                                                @PathVariable(value = "academyChildId") Long academyChildId) {
+
+        Long academyId = authAcademy.getId();
+        AcademyChildDetailResponse academyChildDetailResponse = adminChildFacade.readAcademyChildDetail(academyId, academyChildId);
+
+
+        return ResponseEntity.ok().body(null);
     }
 
     @PutMapping

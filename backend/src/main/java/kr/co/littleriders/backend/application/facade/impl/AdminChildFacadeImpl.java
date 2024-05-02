@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 import kr.co.littleriders.backend.application.facade.AdminChildFacade;
@@ -9,8 +10,6 @@ import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
-import kr.co.littleriders.backend.domain.history.ChildHistoryService;
-import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
@@ -50,6 +49,16 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
     }
 
     @Override
+    public AcademyChildDetailResponse readAcademyChildDetail(Long academyId, Long academyChildId) {
+
+        Academy academy = academyService.findById(academyId);
+
+
+
+        return null;
+    }
+
+    @Override
     public Long updateAcademyChild(Long academyId, Long academyChildId, String status) {
 
         Academy academy = academyService.findById(academyId);
@@ -72,6 +81,7 @@ public class AdminChildFacadeImpl implements AdminChildFacade {
 
         return academyChild.getId();
     }
+
 
     @Override
     public List<PendingListResponse> readPendingList(Long academyId) {
