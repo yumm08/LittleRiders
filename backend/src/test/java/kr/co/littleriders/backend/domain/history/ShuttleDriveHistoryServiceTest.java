@@ -2,11 +2,19 @@ package kr.co.littleriders.backend.domain.history;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.littleriders.backend.domain.academy.AcademyService;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
+import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import kr.co.littleriders.backend.domain.history.entity.ShuttleDriveHistory;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
+import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
+import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,6 +33,18 @@ class ShuttleDriveHistoryServiceTest {
     ShuttleDriveHistoryService shuttleDriveHistoryService;
 
     @Autowired
+    ShuttleService shuttleService;
+
+    @Autowired
+    AcademyService academyService;
+
+    @Autowired
+    DriverService driverService;
+
+    @Autowired
+    TeacherService teacherService;
+
+    @Autowired
     ObjectMapper objectMapper;
 
     @Nested
@@ -37,24 +57,40 @@ class ShuttleDriveHistoryServiceTest {
             LocalDateTime start = LocalDateTime.of(2024,3,11,13,12);
             LocalDateTime end = LocalDateTime.now();
 
-            Shuttle shuttle = Shuttle.builder()
-                    .id(1L)
-                    .name("1호차")
-                    .type("스타렉스")
-                    .licenseNumber("가1234")
-                    .build();
+            Academy academy = Academy.of(
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    3,
+                    4
+            );
+            academyService.save(academy);
+            Shuttle shuttle = Shuttle.of(
+                    "가1234",
+                    "이름",
+                    "타입",
+                    academy,
+                    ShuttleStatus.USE
+            );
+            shuttleService.save(shuttle);
 
-            Driver driver = Driver.builder()
-                    .id(1L)
-                    .name("김가네")
-                    .phoneNumber("0101234")
-                    .build();
+            Driver driver = Driver.of(
+                    "기사",
+                    "전화번호",
+                    academy,
+                    DriverStatus.WORK
+            );
+            driverService.save(driver);
+            Teacher teacher = Teacher.of(
+                    "선생",
+                    "전화번호",
+                    academy,
+                    TeacherStatus.WORK
+            );
 
-            Teacher teacher = Teacher.builder()
-                    .id(1L)
-                    .name("박가네")
-                    .phoneNumber("1234")
-                    .build();
+            teacherService.save(teacher);
 
             List<ShuttleLocationDTO> shuttleLocationDTOList = new ArrayList<>();
             shuttleLocationDTOList.add( ShuttleLocationDTO.of(1,2,LocalDateTime.now()));
