@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.child.entity.Child;
 
 import java.util.Optional;
 
@@ -15,4 +16,6 @@ interface AcademyChildRepository extends JpaRepository<AcademyChild, Long>, Acad
 	List<AcademyChild> findByAcademy(Academy academy);
     Optional<AcademyChild> findByCardNumber(String cardNumber);
 
+
+	List<AcademyChild> findByChild(Child child);
 }

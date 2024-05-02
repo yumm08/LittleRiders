@@ -10,17 +10,14 @@ import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
+import kr.co.littleriders.backend.domain.child.error.code.ChildErrorCode;
+import kr.co.littleriders.backend.domain.child.error.exception.ChildException;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
-import kr.co.littleriders.backend.domain.family.error.code.FamilyChildErrorCode;
-import kr.co.littleriders.backend.domain.family.error.exception.FamilyChildException;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
-import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -56,11 +53,13 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
     public Long insertAcademyJoin(Long familyId
             , FamilyAcademyRegistRequest familyAcademyRegistRequest) {
 
+        Family family = familyService.findById(familyId);
         Academy academy = academyService.findById(familyAcademyRegistRequest.getAcademyId());
         Child child = childService.findById(familyAcademyRegistRequest.getChildId());
 
-        if (childService.findByFamilyId(familyId).contains(child)){
-            throw FamilyChildException.from(FamilyChildErrorCode.NOT_FOUND);
+        // 부모 - 자녀 연결 확인
+        if (child.equalsFamily(family)){
+            throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
         }
 
         Pending pending = Pending.of(academy, child, PendingStatus.PENDING);

@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Entity @Getter
 @Table(name = "child_history")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChildHistory {
 
@@ -30,7 +32,6 @@ public class ChildHistory {
     private String name; // 성명
 
     @Column(name = "birth_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate; // 생년월일
 
     @Column(name = "gender", nullable = false)
@@ -40,7 +41,6 @@ public class ChildHistory {
     private String imagePath; // 이미지 경로
 
     @CreatedDate
-    @DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt; // 생성일자
 

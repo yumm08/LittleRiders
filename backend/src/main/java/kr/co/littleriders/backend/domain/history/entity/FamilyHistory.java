@@ -5,12 +5,15 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "family_history")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FamilyHistory {
 
@@ -33,7 +36,6 @@ public class FamilyHistory {
 	private String phoneNumber; // 전화번호
 
 	@CreatedDate
-	@DateTimeFormat(pattern = "yyyy-MM-dd/HH:mm:ss")
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt; // 생성일자
 }

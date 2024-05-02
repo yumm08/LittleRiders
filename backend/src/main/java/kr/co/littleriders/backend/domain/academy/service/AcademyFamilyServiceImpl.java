@@ -3,7 +3,6 @@ package kr.co.littleriders.backend.domain.academy.service;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyFamilyStatus;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyFamilyErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyFamilyException;
 import kr.co.littleriders.backend.domain.family.entity.Family;
@@ -39,9 +38,15 @@ class AcademyFamilyServiceImpl implements AcademyFamilyService {
     }
 
     @Override
+    public boolean existsByFamilyAndAcademy(Family family, Academy academy) {
+        return academyFamilyRepository.existsByFamilyAndAcademy(family, academy);
+    }
+
+    @Override
     public AcademyFamily findByFamilyAndAcademy(Family family, Academy academy) {
-        return academyFamilyRepository.findByFamilyAndAcademy(family, academy)
-                .orElseGet(() -> academyFamilyRepository.save(AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL)));
+        return academyFamilyRepository.findByFamilyAndAcademy(family, academy).orElseThrow(
+                () -> AcademyFamilyException.from(AcademyFamilyErrorCode.NOT_FOUND)
+        );
     }
 
 }
