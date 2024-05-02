@@ -10,5 +10,5 @@ export const worker = setupWorker(
 )
 
 if (process.env.NODE_ENV === 'development') {
-  worker.start()
+  worker.start({ onUnhandledRequest: 'bypass' })
 }
