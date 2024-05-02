@@ -125,7 +125,7 @@ class AdminDriverControllerTest {
 							get("/admin/driver")
 					)
 					.andExpect(status().isOk())
-					.andExpect(content().string(String.valueOf(driverList)))
+					.andExpect(content().json(objectMapper.writeValueAsString(driverList)))
 					.andDo(print());
 
 		}

@@ -103,7 +103,7 @@ class AdminShuttleControllerTest {
 							get("/admin/shuttle")
 					)
 					.andExpect(status().isOk())
-					.andExpect(content().string(String.valueOf(shuttleList)))
+					.andExpect(content().json(objectMapper.writeValueAsString(shuttleList)))
 					.andDo(print());
 
 		}

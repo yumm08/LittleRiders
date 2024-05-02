@@ -88,8 +88,7 @@ class AdminTeacherControllerTest {
 			Teacher teacher2 = Teacher.of("선탑자2", "010-1111-1113", academy, TeacherStatus.WORK);
 			teacherService.save(teacher2);
 
-
-			List<AcademyTeacherResponse> teacherList = new ArrayList<>();
+			List<AcademyTeacherResponse> teacherList = new ArrayList<AcademyTeacherResponse>();
 			AcademyTeacherResponse teacherResponse = AcademyTeacherResponse.from(teacher);
 			AcademyTeacherResponse teacherResponse1 = AcademyTeacherResponse.from(teacher1);
 			AcademyTeacherResponse teacherResponse2 = AcademyTeacherResponse.from(teacher2);
@@ -102,7 +101,7 @@ class AdminTeacherControllerTest {
 							get("/admin/teacher")
 					)
 					.andExpect(status().isOk())
-					.andExpect(content().string(String.valueOf(teacherList)))
+					.andExpect(content().json(objectMapper.writeValueAsString(teacherList)))
 					.andDo(print());
 
 		}
