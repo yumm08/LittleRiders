@@ -3,7 +3,7 @@ export interface DriverInfo {
   phoneNumber: string
   image: File | null
 }
-export interface Driver {
+export interface DriverCardType {
   name: string
   phoneNumber: string
   image: string

@@ -3,7 +3,7 @@ export interface TeacherInfo {
   phoneNumber: string
   image: File | null
 }
-export interface Teacher {
+export interface TeacherCardType {
   name: string
   phoneNumber: string
   image: string
