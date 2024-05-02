@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 interface RouteRepository extends JpaRepository<Route,Long> {
+    boolean existsByAcademyIdAndName(Long academyId, String name);
 
     List<Route> findAllByAcademy(Academy academy);
 
