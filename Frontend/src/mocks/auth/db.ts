@@ -2,7 +2,15 @@ import { SignUpInfo } from '@types'
 
 type UserInfo = SignUpInfo
 
-const userList: UserInfo[] = []
+const userList: UserInfo[] = [
+  {
+    email: 'test@test.test',
+    password: '1',
+    name: '관리자',
+    address: '임시주소',
+    phoneNumber: '010-1234-1234',
+  },
+]
 
 export const addUser = (userInfo: UserInfo) => {
   userList.push(userInfo)

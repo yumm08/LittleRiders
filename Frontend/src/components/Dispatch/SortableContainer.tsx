@@ -6,7 +6,7 @@ import { ChildInfo, Station } from '@types'
 
 interface Props {
   id: string
-  items: Station[] | ChildInfo[]
+  items: Station[] | ChildInfo[] | undefined
   subject: string
   isLoading: boolean
   isPending?: boolean

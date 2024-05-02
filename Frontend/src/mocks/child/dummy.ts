@@ -12,7 +12,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 2,
-    name: '김민준1',
+    name: '김민준2',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -21,7 +21,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 3,
-    name: '김민준1',
+    name: '김민준3',
     birthDate: '1999-08-05',
     gender: 'FEMALE',
     imagePath:
@@ -30,7 +30,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 4,
-    name: '김민준1',
+    name: '김민준4',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -39,7 +39,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 5,
-    name: '김민준1',
+    name: '김민준5',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -48,7 +48,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 6,
-    name: '김민준1',
+    name: '김민준6',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -57,7 +57,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 7,
-    name: '김민준1',
+    name: '김민준7',
     birthDate: '1999-08-05',
     gender: 'FEMALE',
     imagePath:
@@ -66,7 +66,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 8,
-    name: '김민준1',
+    name: '김민준8',
     birthDate: '1999-08-05',
     gender: 'FEMALE',
     imagePath:
@@ -75,7 +75,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 9,
-    name: '김민준1',
+    name: '김민준9',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -84,7 +84,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 10,
-    name: '김민준1',
+    name: '김민준10',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -93,7 +93,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 11,
-    name: '김민준1',
+    name: '김민준11',
     birthDate: '1999-08-05',
     gender: 'FEMALE',
     imagePath:
@@ -102,7 +102,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 12,
-    name: '김민준1',
+    name: '김민준12',
     birthDate: '1999-08-05',
     gender: 'FEMALE',
     imagePath:
@@ -111,7 +111,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 13,
-    name: '김민준1',
+    name: '김민준13',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -120,7 +120,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 14,
-    name: '김민준1',
+    name: '김민준14',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:
@@ -129,7 +129,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 15,
-    name: '김민준1',
+    name: '김민준15',
     birthDate: '1999-08-05',
     gender: 'FEMALE',
     imagePath:
@@ -138,7 +138,7 @@ export const childList: ChildInfo[] = [
   },
   {
     academyChildId: 16,
-    name: '김민준1',
+    name: '김민준16',
     birthDate: '1999-08-05',
     gender: 'MALE',
     imagePath:

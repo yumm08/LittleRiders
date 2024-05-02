@@ -195,6 +195,10 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
 
   // const drawCircleList = () => {}
 
+  const moveMap = (latLng: naver.maps.LatLng) => {
+    mapRef.current?.setCenter(latLng)
+  }
+
   return {
     map: mapRef,
     polyline,
@@ -205,5 +209,6 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     drawPolyLines,
     drawRoute,
     drawRouteMarkers,
+    moveMap,
   }
 }

@@ -191,7 +191,6 @@ export const handleStationDragEnd = (
  */
 
 const findChildContainer = (id: UniqueIdentifier, childItems: ChildItems) => {
-  console.log(id)
   if (id in childItems) {
     return id
   }
@@ -324,7 +323,6 @@ export const handleChildDragEnd = (
     }>
   >,
 ) => {
-  console.log(active, over)
   const id = active.id.toString()
   const overId = over?.id
 
@@ -332,7 +330,6 @@ export const handleChildDragEnd = (
 
   const activeContainer = findChildContainer(id, childItems)
   const overContainer = findChildContainer(overId, childItems)
-  console.log(activeContainer, overContainer)
   if (!activeContainer || !overContainer || activeContainer !== overContainer) {
     return
   }

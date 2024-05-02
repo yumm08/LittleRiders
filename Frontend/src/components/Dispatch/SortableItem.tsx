@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { FaChild } from 'react-icons/fa'
 import { MdDragHandle } from 'react-icons/md'
 
 interface Props {
@@ -44,8 +45,18 @@ export default function SortableItem({
     if (type.includes('childList')) return <></>
   }
 
+  const childrenNumberIcon = (type: string | undefined) => {
+    if (type === 'selectedStationList')
+      return (
+        <div>
+          <FaChild />
+          <p className="w-8 text-center text-xl font-bold">{index}</p>
+        </div>
+      )
+    return <></>
+  }
+
   useEffect(() => {
-    console.log(selectedStation)
     setIsClicked(selectedStation === Number(id.toString()))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStation])
@@ -72,6 +83,7 @@ export default function SortableItem({
       <div className="flex items-center justify-start">
         {sortIcon(type)}
         <p className="ms-2 text-center">{name}</p>
+        {childrenNumberIcon(type)}
       </div>
     </div>
   )

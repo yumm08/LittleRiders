@@ -53,7 +53,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   }>({ childList: [], selectedChildList: [] })
 
   const [selectedStation, setSelectedStation] = useState<number>(-1)
-  const [hoveredStation, setHoveredStation] = useState<number>(-1)
+  // const [hoveredStation, setHoveredStation] = useState<number>(-1)
   const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const mapRef = useRef<naver.maps.Map | null>(null)
   const [selectedStationMarker, setSelectedStationMarker] = useState<
@@ -68,9 +68,14 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
   const { childList, isLoading: isChildListLoading } = useFetchChildList()
 
-  const { drawRoute, initMap, initPolyLine, drawRouteMarkers, deleteMarkers } =
-    MapHook(mapRef)
-
+  const {
+    drawRoute,
+    initMap,
+    initPolyLine,
+    drawRouteMarkers,
+    deleteMarkers,
+    moveMap,
+  } = MapHook(mapRef)
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -85,21 +90,20 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
 
   const handleStationItemClick = (stationId: number) => {
     setSelectedStation(stationId)
-    console.log(stationId)
     deleteMarkers(selectedStationMarker, setSelectedStationMarker)
 
     let station: Station | undefined
+    // let containerKey: string
     for (const key of Object.keys(stationItems)) {
       const stations = stationItems[key]
       station = stations.find((station) => {
-        console.log(station)
         return station.id === stationId
       })
-      if (station) break
+      if (station) {
+        break
+      }
     }
-    console.log(station)
     if (station) {
-      console.log(station)
       drawRouteMarkers(
         setSelectedStationMarker,
         [new naver.maps.LatLng(station.latitude!, station.longitude!)],
@@ -108,16 +112,40 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
         new naver.maps.Point(15, 30),
         new naver.maps.Point(29, 50),
       )
+      moveMap(new naver.maps.LatLng(station.latitude!, station.longitude!))
     }
   }
 
   const handleStationItemHover = () => {}
 
+  const handleModifyClick = () => {}
+
+  const handleCancelClick = () => {}
+
+  useEffect(() => {
+    if (stationItems.selectedStationList) {
+      const temp = stationItems.selectedStationList.find(
+        (station) => station.id === selectedStation,
+      )
+      if (temp && temp.childList) {
+        setChildItems((prev) => ({
+          ...prev,
+          selectedChildList: [...temp.childList!],
+        }))
+      } else {
+        setChildItems((prev) => ({
+          ...prev,
+          selectedChildList: [],
+        }))
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStation])
   /**
    * stationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
    */
   useEffect(() => {
-    console.log('Loading Changed')
     if (!isRouteDetailLoading && !isRouteDetailPending) {
       if (!isStationListLoading) {
         setStationItems((prev) => ({
@@ -136,10 +164,34 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
           selectedStationList: [...routeDetail.stationList],
         })
       }
+      setChildItems(() => {
+        const tempChildList: ChildInfo[] = []
+        childList.forEach((child: ChildInfo) => {
+          let isSame = false
+          routeDetail.stationList.forEach((station: Station) => {
+            if (
+              station.childList!.some(
+                (stationChild) =>
+                  stationChild.academyChildId === child.academyChildId,
+              )
+            ) {
+              console.log(child)
+              isSame = true
+              return
+            }
+          })
+          if (!isSame) tempChildList.push(child)
+        })
+        return {
+          childList: [...tempChildList],
+          selectedChildList: [],
+        }
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRouteDetailLoading, isStationListLoading, selectedRouteId])
 
+  // 초기 ChildList 구현
   useEffect(() => {
     if (!isChildListLoading) {
       setChildItems({
@@ -147,17 +199,27 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
         selectedChildList: [],
       })
     }
-  }, [isChildListLoading])
+  }, [childList, isChildListLoading])
 
   useEffect(() => {
-    console.log('selectedStationListChanged')
     drawRoute(stationItems['selectedStationList'], markerList, setMarkerList)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stationItems['selectedStationList']])
 
   useEffect(() => {
-    console.log('init')
+    console.log(childItems['selectedChildList'])
+
+    stationItems.selectedStationList?.forEach((station: Station) => {
+      if (station.id === selectedStation) {
+        station.childList = [...childItems['selectedChildList']]
+        console.log(station.childList)
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [childItems['selectedChildList']])
+
+  useEffect(() => {
     initMap(mapDiv)
     initPolyLine()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -197,6 +259,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
           isLoading={isStationListLoading}
           isPending={isRouteDetailPending}
           onClick={handleStationItemClick}
+          onHover={handleStationItemHover}
         />
         <SortableContainer
           subject="선택된 정류장"
@@ -217,10 +280,12 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       </DndContext>
       <div className=" flex-row justify-center  self-center">
         <div className="m-1 mb-3">
-          <Button onClick={() => {}}>수정</Button>
+          <Button color="px-3 bg-lightgreen " onClick={handleModifyClick}>
+            수정
+          </Button>
         </div>
         <div className="m-1 mt-3">
-          <Button color="bg-yellow" onClick={() => {}}>
+          <Button color="px-3 bg-yellow" onClick={handleCancelClick}>
             취소
           </Button>
         </div>
