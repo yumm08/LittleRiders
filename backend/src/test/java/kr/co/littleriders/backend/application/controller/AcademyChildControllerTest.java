@@ -104,7 +104,7 @@ class AcademyChildControllerTest {
 			academyChildList.add(AcademyChildResponse.from(academyChild1));
 
 			mockMvc.perform(
-					get("/admin/child")
+					get("/academy/child")
 				)
 				.andExpect(status().isOk())
 				.andExpect(content().json(objectMapper.writeValueAsString(academyChildList)))
@@ -152,7 +152,7 @@ class AcademyChildControllerTest {
 
 			AcademyChildUpdateRequest academyChildUpdateRequest = new AcademyChildUpdateRequest("leave");
 			mockMvc.perform(
-					put("/admin/child/" + academyChild.getId())
+					put("/academy/child/" + academyChild.getId())
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(academyChildUpdateRequest))
 				)
@@ -197,7 +197,7 @@ class AcademyChildControllerTest {
 			pendingList.add(PendingListResponse.from(pending2));
 
 			mockMvc.perform(
-					get("/admin/child/pending")
+					get("/academy/child/pending")
 				)
 				.andExpect(status().isOk())
 				.andExpect(content().json(objectMapper.writeValueAsString(pendingList)))
@@ -239,7 +239,7 @@ class AcademyChildControllerTest {
 			pendingIdList.add(3L);
 
 			mockMvc.perform(
-					post("/admin/child/pending")
+					post("/academy/child/pending")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(pendingIdList))
 				)
@@ -295,7 +295,7 @@ class AcademyChildControllerTest {
 			pendingIdList.add(3L);
 
 			mockMvc.perform(
-					delete("/admin/child/pending")
+					delete("/academy/child/pending")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(pendingIdList))
 				)
@@ -308,6 +308,37 @@ class AcademyChildControllerTest {
 				"Not all pendings are in DENY status");
 
 
+		}
+	}
+
+	@Nested
+	@DisplayName("원생 상세 조회 기능 테스트")
+	class getAcademyChildDetail {
+
+		@Test
+		@DisplayName("성공")
+		void whenSuccess() throws Exception {
+
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+			academyService.save(academy);
+			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			familyService.save(family);
+			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			childService.save(child);
+
+			// academyFamily
+			AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
+			academyFamilyService.save(academyFamily);
+
+			// academyChild
+			AcademyChild academyChild = AcademyChild.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
+			academyChildService.save(academyChild);
+
+			mockMvc.perform(
+					get("/academy/child/" + academyChild.getId())
+				)
+				.andExpect(status().isOk())
+				.andDo(print());
 		}
 	}
 }
