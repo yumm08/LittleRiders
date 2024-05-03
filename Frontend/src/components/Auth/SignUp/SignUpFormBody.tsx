@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { getValidate } from '@apis/auth'
 
-import { showErrorAlert } from '@utils/alertUtils'
+import { showErrorAlert, showSuccessAlert } from '@utils/alertUtils'
 
 import { VALIDATE_REGEX } from '@constants'
 import { SignUpInfo } from '@types'
@@ -57,13 +57,18 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
       setTryValidate(true)
 
       const refetchResult = await refetch()
+
       if (refetchResult.isError) {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === HttpStatusCode.Conflict) {
-            showErrorAlert({ text: '이미 등록된 이메일입니다 ' })
+            showErrorAlert({ text: '이미 등록된 이메일입니다' })
             return
           }
         }
+      }
+
+      if (refetchResult.isSuccess) {
+        showSuccessAlert({ text: '인증코드를 발송했습니다' })
       }
 
       setTimer(180)
