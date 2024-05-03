@@ -14,10 +14,13 @@ export interface DriveDetailInfoByHistory {
 }
 
 export interface Shuttle {
-  id: number
+  shuttleId: number
   name: string
   type: string
   licenseNumber: string
+  imagePath?: string
+  terminalNumber?: string
+  status?: string
 }
 
 export interface Driver {

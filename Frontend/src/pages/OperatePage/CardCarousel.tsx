@@ -11,10 +11,10 @@ interface Props {
 
 export default function CardCarousel({ show, children }: Props) {
   const settings = {
-    infinite: true,
     speed: 500,
     slidesToShow: show,
-    slidesToScroll: 2,
+    rows: 1,
+    slidesToScroll: 1,
     prevArrow: <FaCircleChevronLeft color={ColorPalette['lightgreen']} />,
     nextArrow: <FaCircleChevronRight color={ColorPalette['lightgreen']} />,
   }

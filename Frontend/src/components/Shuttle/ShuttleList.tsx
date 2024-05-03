@@ -24,7 +24,7 @@ export default function ShuttleList({ show }: Props) {
       <CardListContainer type="차량" openModal={openAddShuttleModal}>
         <CardCarousel show={show}>
           {shuttleList?.map((data) => {
-            return <ShuttleCard key={data.id} data={data} />
+            return <ShuttleCard key={data.shuttleId} data={data} />
           })}
         </CardCarousel>
       </CardListContainer>

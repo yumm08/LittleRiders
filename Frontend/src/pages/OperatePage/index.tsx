@@ -12,9 +12,9 @@ export default function OperatePage() {
       <Spacing style="h-5" />
       <DeviceList show={5} />
       <Spacing style="h-5" />
-      <ShuttleList show={5} />
+      <ShuttleList show={3} />
       <Spacing style="h-5" />
-      <TeacherList show={7} />
+      <TeacherList show={1} />
       <Spacing style="h-5" />
       <DriverList show={7} />
       <Spacing style="h-5" />
