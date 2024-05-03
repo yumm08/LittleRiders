@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.controller;
 
+import kr.co.littleriders.backend.application.dto.request.AcademyChildUpdateRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
@@ -38,13 +39,13 @@ public class AcademyChildController {
         return ResponseEntity.ok().body(academyChildDetailResponse);
     }
 
-    @PutMapping
-    public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy
-                                                , @RequestParam(value = "academyChildId") Long academyChildId
-                                                , @RequestBody String status) {
+    @PutMapping("/{academyChildId}")
+    public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy,
+                                                @PathVariable(value = "academyChildId") Long academyChildId,
+                                                @RequestBody AcademyChildUpdateRequest academyChildUpdateRequest) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, status);
+        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, academyChildUpdateRequest.getStatus());
 
         return ResponseEntity.ok().body(updateChildId);
     }
