@@ -7,9 +7,11 @@ import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class DriverRegistRequest {

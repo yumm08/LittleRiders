@@ -9,8 +9,9 @@ import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherRegistRequest {

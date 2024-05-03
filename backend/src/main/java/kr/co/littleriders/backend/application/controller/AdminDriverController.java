@@ -1,11 +1,13 @@
 package kr.co.littleriders.backend.application.controller;
 
+import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.application.facade.AdminDriverFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,7 @@ public class AdminDriverController {
 
 	@PostMapping
 	public ResponseEntity<Long> addDriver(@Auth AuthAcademy authAcademy,
-										  @ModelAttribute DriverRegistRequest driverRegistRequest) {
+										  @ModelAttribute @Valid DriverRegistRequest driverRegistRequest) {
 
 		Long academyId = authAcademy.getId();
 
