@@ -26,4 +26,7 @@ spring:
       host: ${REDIS_URL}
       port: ${REDIS_PORT}
 
+  resource:
+    directory: /app/data
+
 
