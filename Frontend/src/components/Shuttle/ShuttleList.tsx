@@ -3,25 +3,28 @@ import { useState } from 'react'
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
 
+import { useFetchShuttleList } from '@hooks/shuttle/useFetchShuttleList'
+
 import AddShuttleModal from './AddShuttleModal'
 import ShuttleCard from './ShuttleCard'
 
 interface Props {
   show: number
 }
-const DUMMY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export default function ShuttleList({ show }: Props) {
   const [modalState, setModalState] = useState(false)
   const openAddShuttleModal = () => {
     setModalState(!modalState)
   }
+  const { shuttleList, isLoading } = useFetchShuttleList()
+  if (isLoading) return <div>isLoading...</div>
   return (
     <>
       <CardListContainer type="차량" openModal={openAddShuttleModal}>
         <CardCarousel show={show}>
-          {DUMMY.map((id) => {
-            return <ShuttleCard id={id} />
+          {shuttleList?.map((data) => {
+            return <ShuttleCard key={data.id} data={data} />
           })}
         </CardCarousel>
       </CardListContainer>

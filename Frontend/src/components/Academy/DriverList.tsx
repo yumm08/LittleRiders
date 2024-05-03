@@ -28,6 +28,7 @@ export default function DriverList({ show }: Props) {
           {driverList?.map((data) => {
             return (
               <DriverCard
+                key={data.name}
                 name={data.name}
                 phoneNumber={data.phoneNumber}
                 image={data.image}
