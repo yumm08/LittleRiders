@@ -1,5 +1,3 @@
-import { modalStore } from '@stores/modalStore'
-
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postNewShuttle } from '@apis/shuttle'
@@ -12,24 +10,22 @@ interface Shuttle {
 }
 export const useAddNewShuttle = () => {
   const queryClient = useQueryClient()
-  const modalSwitch = modalStore((state) => state.modalSwitch)
 
   const { mutate: addNewShuttle, ...rest } = useMutation({
-    mutationFn: async ({ licenseNumber, type, name, image }: Shuttle) => {
+    mutationFn: ({ licenseNumber, type, name, image }: Shuttle) => {
       const formData = new FormData()
       formData.append('licenseNumber', licenseNumber)
       formData.append('type', type)
       formData.append('name', name)
       if (image) formData.append('image', image)
-      return await postNewShuttle(formData)
+      return postNewShuttle(formData)
     },
 
     onSuccess: async () => {
-      alert('가입 성공!')
-      modalSwitch()
-      await queryClient.invalidateQueries({ queryKey: ['getShuttleList'] })
+      alert('얘가실행')
+      queryClient.invalidateQueries({ queryKey: ['getShuttleList'] })
     },
-    onError: async () => {
+    onError: () => {
       alert('실패')
     },
   })
