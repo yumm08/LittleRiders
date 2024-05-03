@@ -31,4 +31,16 @@ public class Route {
     @OneToMany(mappedBy = "route")
     private List<RouteStation> routeStationList; // 정류장 목록
 
+    private Route(final Academy academy, String name) {
+        this.academy = academy;
+        this.name = name;
+    }
+
+    public static Route of(final Academy academy, String name) {
+        return new Route(
+                academy,
+                name
+        );
+    }
+
 }
