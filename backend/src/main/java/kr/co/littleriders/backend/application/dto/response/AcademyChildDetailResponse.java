@@ -64,7 +64,7 @@ public class AcademyChildDetailResponse {
 											academyChild.getAcademyFamily().getFamily().getPhoneNumber());
 	}
 
-	public static AcademyChildDetailResponse to(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChild academyChild) {
+	public static AcademyChildDetailResponse of(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChild academyChild) {
 		String address = (familyHistory != null) ? familyHistory.getAddress() : academyChild.getAcademyFamily().getFamily().getAddress();
 		String familyName = (familyHistory != null) ? familyHistory.getName() : academyChild.getAcademyFamily().getFamily().getName();
 		String phoneNumber = (familyHistory != null) ? familyHistory.getPhoneNumber() : academyChild.getAcademyFamily().getFamily().getPhoneNumber();

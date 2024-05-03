@@ -68,11 +68,11 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
             childDetail = AcademyChildDetailResponse.from(academyChild);
         } else if (academyChild.isFamilyAvail()) {
             ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
-            childDetail = AcademyChildDetailResponse.to(childHistory, null, academyChild);
+            childDetail = AcademyChildDetailResponse.of(childHistory, null, academyChild);
         } else {
             ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
             FamilyHistory familyHistory = familyHistoryService.findByCreatedAt(academyChild.getAcademyFamily());
-            childDetail = AcademyChildDetailResponse.to(childHistory, familyHistory, academyChild);
+            childDetail = AcademyChildDetailResponse.of(childHistory, familyHistory, academyChild);
         }
 
         return childDetail;
