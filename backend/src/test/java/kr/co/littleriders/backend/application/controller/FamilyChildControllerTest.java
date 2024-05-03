@@ -21,8 +21,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
+import kr.co.littleriders.backend.application.dto.response.AcademyList;
+import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
 import kr.co.littleriders.backend.application.facade.FamilyChildFacade;
+import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
+import kr.co.littleriders.backend.domain.academy.AcademyService;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyFamilyStatus;
+import kr.co.littleriders.backend.domain.academy.entity.CardType;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.family.FamilyService;
@@ -35,6 +46,15 @@ class FamilyChildControllerTest {
 
 	@Autowired
 	private FamilyChildFacade familyChildFacade;
+
+	@Autowired
+	private AcademyFamilyService academyFamilyService;
+
+	@Autowired
+	private AcademyChildService academyChildService;
+
+	@Autowired
+	private AcademyService academyService;
 
 	@Autowired
 	private ChildService childService;
@@ -100,6 +120,63 @@ class FamilyChildControllerTest {
 				)
 				.andExpect(status().isOk())
 				.andExpect(content().json(objectMapper.writeValueAsString(childList)))
+				.andDo(print());
+
+		}
+	}
+
+	@Nested
+	@DisplayName("자녀 상세 조회 기능 테스트")
+	class getChildDetail {
+
+		@Test
+		@DisplayName("성공")
+		void whenSuccess() throws Exception {
+			// academy 생성
+			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111", 3, 2);
+			academyService.save(academy);
+
+			// academy 생성
+			Academy academy1 = Academy.of("test1@com", "password", "테스트학원1", "테스트시 테스트동", "010-1111", 3, 2);
+			academyService.save(academy1);
+
+			// family 생성
+			Family family = Family.of("test2@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			familyService.save(family);
+
+			// child 생성
+			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			childService.save(child);
+
+			// academyFamily 생성
+			AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
+			academyFamilyService.save(academyFamily);
+
+			// academyChild 생성
+			AcademyChild academyChild = AcademyChild.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
+			academyChildService.save(academyChild);
+
+			// academyFamily 생성
+			AcademyFamily academyFamily1 = AcademyFamily.of(family, academy1, AcademyFamilyStatus.AVAIL);
+			academyFamilyService.save(academyFamily1);
+
+			// academyChild 생성
+			AcademyChild academyChild1 = AcademyChild.of(child, academy1, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
+			academyChildService.save(academyChild1);
+
+			List<AcademyList> academyList = new ArrayList<>();
+			AcademyList academyResponse = AcademyList.from(academy);
+			AcademyList academyResponse1 = AcademyList.from(academy1);
+			academyList.add(academyResponse);
+			academyList.add(academyResponse1);
+
+			ChildDetailResponse childDetailResponse = ChildDetailResponse.of(child, null, academyList);
+
+			mockMvc.perform(
+					get("/family/child/" + child.getId())
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().json(objectMapper.writeValueAsString(childDetailResponse)))
 				.andDo(print());
 
 		}
