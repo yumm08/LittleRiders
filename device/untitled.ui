@@ -17,9 +17,9 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>70</y>
-      <width>391</width>
+      <x>430</x>
+      <y>90</y>
+      <width>321</width>
       <height>161</height>
      </rect>
     </property>
@@ -111,6 +111,17 @@
      <string>나가기</string>
     </property>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>40</y>
+      <width>381</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="mapLayout"/>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -150,7 +161,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>383</x>
-     <y>220</y>
+     <y>195</y>
     </hint>
     <hint type="destinationlabel">
      <x>430</x>
