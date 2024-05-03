@@ -99,5 +99,23 @@ public class ShuttleFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("운행 시작")
+    class startDrive {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Route route = Route.of(academy, "등원A");
+            routeService.save(route);
+            Driver driver = Driver.of("이름", "010-1111-1111", academy, DriverStatus.WORK);
+            driverService.save(driver);
+            Teacher teacher = Teacher.of("이름", "010-2222-2222", academy, TeacherStatus.WORK);
+            teacherService.save(teacher);
+            ShuttleStartRequest shuttleStartRequest = new ShuttleStartRequest(route.getId(), driver.getId(), teacher.getId());
+            shuttleFacade.startDrive(authTerminal, shuttleStartRequest);
+        }
+    }
+
 
 }
