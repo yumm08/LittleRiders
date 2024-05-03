@@ -3,7 +3,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
-import kr.co.littleriders.backend.application.facade.AdminChildFacade;
+import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AdminChildFacadeImpl implements AdminChildFacade {
+public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
     private final PendingService pendingService;
     private final AcademyService academyService;

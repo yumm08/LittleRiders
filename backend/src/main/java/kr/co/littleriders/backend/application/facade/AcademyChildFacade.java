@@ -6,7 +6,7 @@ import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 
 import java.util.List;
 
-public interface AdminChildFacade {
+public interface AcademyChildFacade {
 
     List<PendingListResponse> readPendingList(Long academyId);
 
