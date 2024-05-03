@@ -1,4 +1,10 @@
+from sqlalchemy import create_engine, Column, Integer, Float,TIMESTAMP,String
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
 
+import uuid
+
+Base = declarative_base()
 
 class RMCPosition:
     def __init__(self,msg):
@@ -30,4 +36,47 @@ class RMCPosition:
 
     def __repr__(self):
         return(f"latitude={self.latitude},longitude={self.longitude},speed={self.speed}")
+
+
+class Position(Base):
+    __tablename__ = 'position'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    latitude = Column(Float)
+    longitude = Column(Float)
+    time = Column(TIMESTAMP)
+
+
+
+class TerminalNumber(Base):
+    __tablename__ = "terminal_info"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    terminalNumber = Column(String)
+
+    def __repr__(self):
+        return f"<TerminalNumber id={self.id}, terminalNumber={self.terminalNumber} >"
+    
+    def getTerminalNumber(self):
+        return self.terminalNumber
+
+
+
+class ModelHelper:
+
+    def __init__(self):
+        engine = create_engine('sqlite:///terminal.db', echo=True)
+        Base.metadata.create_all(engine)
+        Session = sessionmaker(bind=engine)
+        
+        self.session = Session()
+
+        termianlNumber = self.session.get(TerminalNumber,1)
+        random_uuid = uuid.uuid4()
+        if not termianlNumber:
+            self.session.add(TerminalNumber(id=1, terminalNumber=str(random_uuid)))
+            self.session.commit()
+
+    
+    def getSession(self):
+        return self.session
+    
 
