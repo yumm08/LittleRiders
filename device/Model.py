@@ -7,16 +7,15 @@ import uuid
 Base = declarative_base()
 
 class RMCPosition:
-    def __init__(self,msg):
-        latitude = float(msg.lat)
-        longitude = float(msg.lon)
+    def __init__(self,latitude,longitude,spd_over_grnd):
+
         latitude_head = latitude //100
         longitude_head = longitude //100
         latitude_tail = (latitude%100) /60
         longitude_tail = (longitude%100)/60
         self.latitude = round(latitude_head + latitude_tail,5)
         self.longitude = round(longitude_head + longitude_tail,5)
-        self.speed = int(float(msg.spd_over_grnd))
+        self.speed = int(spd_over_grnd*1.852)
 
     def getLatitude(self):
         return self.latitude
