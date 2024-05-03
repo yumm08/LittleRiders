@@ -37,13 +37,14 @@ public enum FamilyFixture {
         return Family.of(email,password,name,address,phoneNumber);
     }
 
-    public FamilySignUpRequest familySignUpRequest(){
+    public FamilySignUpRequest tofamilySignUpRequest(){
         return new FamilySignUpRequest(email,password,name,address,phoneNumber);
     }
 
     public SignInRequest toSignInRequest(){
         return new SignInRequest(email,password);
     }
+
 
 
 }
