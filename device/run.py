@@ -34,7 +34,7 @@ class MainWindow(QMainWindow, form_class):
         self.observer = Observer(lambda x:self.courseInfoUpdateByObserver(x))
         self.exitButton.clicked.connect(lambda x: os.exit())
         self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("http://127.0.0.1:5500/device/device.html"))
+        self.webview.setUrl(QUrl("https://device.littleriders.co.kr"))
         self.mapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
 
@@ -78,7 +78,6 @@ win = MainWindow()
 
 observer = win.observer
 
-SensorMockingGenerator()
 import time
 def threadingFunction(observer):
     sensorGenerator = SensorMockingGenerator()
