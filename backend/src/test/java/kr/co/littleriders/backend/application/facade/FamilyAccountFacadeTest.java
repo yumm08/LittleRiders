@@ -105,7 +105,7 @@ class FamilyAccountFacadeTest {
             );
             familyAccountFacade.signUp(familySignUpRequest,uuid);
 
-            SignInRequest signInRequest = SignInRequest.of(email,password);
+            SignInRequest signInRequest = new SignInRequest(email,password);
             JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
 
             log.info("AccessToken = [{}]",jwtToken.getAccessToken());
