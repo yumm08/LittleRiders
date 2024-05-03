@@ -6,6 +6,7 @@ import PendingListTable from '@components/Child/PendingChild/PendingListTable'
 import PendingListTableBody from '@components/Child/PendingChild/PendingListTableBody'
 import PendingListTableHeader from '@components/Child/PendingChild/PendingListTableHeader'
 import Divider from '@components/Shared/Divider'
+import NoContentText from '@components/Shared/NoContentText'
 import Spacing from '@components/Shared/Spacing'
 
 import {
@@ -30,7 +31,9 @@ export default function PendingList() {
     return <div>Loading...</div>
   }
 
-  const isAllChecked = pendingChildList.length === checkChildIdList.length
+  const isAllChecked =
+    pendingChildList.length !== 0 &&
+    pendingChildList.length === checkChildIdList.length
   const checkCount = checkChildIdList.length
 
   const handleChildCheck = (id: number, isChecked: boolean) => {
@@ -44,9 +47,7 @@ export default function PendingList() {
   const handleAllCheck = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setCheckChildIdList(
-        pendingChildList.map(
-          (child: PendingChildInfo) => child.academyChildAllowPendingId,
-        ),
+        pendingChildList.map((child: PendingChildInfo) => child.pendingId),
       )
     } else {
       setCheckChildIdList([])
@@ -99,10 +100,9 @@ export default function PendingList() {
     })
   }
 
-  const handleOneChildApprove = async (academyChildAllowPendingId: number) => {
+  const handleOneChildApprove = async (pendingId: number) => {
     const childName = pendingChildList.find(
-      (child: PendingChildInfo) =>
-        child.academyChildAllowPendingId === academyChildAllowPendingId,
+      (child: PendingChildInfo) => child.pendingId === pendingId,
     )?.childName
 
     const result = await showQuestionAlert({
@@ -113,7 +113,7 @@ export default function PendingList() {
       return
     }
 
-    approveChild([academyChildAllowPendingId], {
+    approveChild([pendingId], {
       onSuccess: (response) => {
         const status = response.status
 
@@ -122,9 +122,7 @@ export default function PendingList() {
             text: `${childName}님의 가입을 승인하였습니다.`,
           }).then(() =>
             setCheckChildIdList(
-              checkChildIdList.filter(
-                (id) => id !== academyChildAllowPendingId,
-              ),
+              checkChildIdList.filter((id) => id !== pendingId),
             ),
           )
         }
@@ -133,10 +131,9 @@ export default function PendingList() {
     })
   }
 
-  const handleOneChildReject = async (academyChildAllowPendingId: number) => {
+  const handleOneChildReject = async (pendingId: number) => {
     const childName = pendingChildList.find(
-      (child: PendingChildInfo) =>
-        child.academyChildAllowPendingId === academyChildAllowPendingId,
+      (child: PendingChildInfo) => child.pendingId === pendingId,
     )?.childName
 
     const result = await showQuestionAlert({
@@ -147,7 +144,7 @@ export default function PendingList() {
       return
     }
 
-    rejectChild([academyChildAllowPendingId], {
+    rejectChild([pendingId], {
       onSuccess: (response) => {
         const status = response.status
 
@@ -156,9 +153,7 @@ export default function PendingList() {
             text: `${childName}님의 가입을 거절하였습니다.`,
           }).then(() =>
             setCheckChildIdList(
-              checkChildIdList.filter(
-                (id) => id !== academyChildAllowPendingId,
-              ),
+              checkChildIdList.filter((id) => id !== pendingId),
             ),
           )
         }
@@ -183,7 +178,6 @@ export default function PendingList() {
           isAllChecked={isAllChecked}
           onAllCheck={handleAllCheck}
         />
-
         <PendingListTableBody
           pendingChildList={pendingChildList}
           onChildCheck={handleChildCheck}
@@ -192,6 +186,10 @@ export default function PendingList() {
           onReject={handleOneChildReject}
         />
       </PendingListTable>
+
+      {pendingChildList.length === 0 && (
+        <NoContentText text="가입 요청한 원생이 없습니다" />
+      )}
     </>
   )
 }
