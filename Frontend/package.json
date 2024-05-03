@@ -61,5 +61,8 @@
     "workerDirectory": [
       "public"
     ]
+  },
+  "overrides": {
+    "rollup": "4.15.0"
   }
 }
