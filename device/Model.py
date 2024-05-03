@@ -57,26 +57,40 @@ class TerminalNumber(Base):
     
     def getTerminalNumber(self):
         return self.terminalNumber
+    
+    def setTerminalNumber(self,terminalNumber):
+        self.terminalNumber = terminalNumber
 
 
 
 class ModelHelper:
 
+    _instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super().__new__(cls, *args, **kwargs)
+        return cls._instance
+
     def __init__(self):
         engine = create_engine('sqlite:///terminal.db', echo=True)
         Base.metadata.create_all(engine)
         Session = sessionmaker(bind=engine)
-        
         self.session = Session()
-
         termianlNumber = self.session.get(TerminalNumber,1)
         random_uuid = uuid.uuid4()
         if not termianlNumber:
             self.session.add(TerminalNumber(id=1, terminalNumber=str(random_uuid)))
             self.session.commit()
 
-    
+
+    def save(self,Object):
+        self.session.add(Object)
+        self.session.commit()
+
     def getSession(self):
         return self.session
+    
+
     
 
