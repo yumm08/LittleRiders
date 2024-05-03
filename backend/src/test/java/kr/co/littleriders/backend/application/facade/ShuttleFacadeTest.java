@@ -117,5 +117,26 @@ public class ShuttleFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("원생 승하차")
+    class recordChildRiding {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Family family = Family.of("a123@gmail.com", "1234", "이름", "주소", "010-2222-2222");
+            familyService.save(family);
+            Child child = Child.of("아이", LocalDate.parse("2000-01-01"), Gender.MALE, family);
+            childService.save(child);
+            AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
+            academyFamilyService.save(academyFamily);
+            AcademyChild academyChild = AcademyChild.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BARCODE);
+            academyChildService.save(academyChild);
+
+            ShuttleChildRideRequest shuttleChildRideRequest = new ShuttleChildRideRequest(academyChild.getCardNumber(), 23.4, 22.2);
+            shuttleFacade.recordChildRiding(authTerminal, shuttleChildRideRequest);
+        }
+    }
+
 
 }
