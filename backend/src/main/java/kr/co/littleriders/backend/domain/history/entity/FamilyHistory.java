@@ -3,15 +3,15 @@ package kr.co.littleriders.backend.domain.history.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 
-@Entity
+@Entity @Getter
 @Table(name = "family_history")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

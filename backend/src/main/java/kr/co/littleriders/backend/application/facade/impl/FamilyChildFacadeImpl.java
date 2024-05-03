@@ -45,6 +45,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 			// TODO-이윤지-이미지 저장
 			child.setImagePath(imagePath);
 		}
+		// TODO-이윤지-ChildHistory에도 저장하는 기능 추가
 
 		return childService.save(child);
 	}

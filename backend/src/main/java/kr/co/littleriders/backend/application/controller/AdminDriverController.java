@@ -25,7 +25,7 @@ public class AdminDriverController {
 
 	@PostMapping
 	public ResponseEntity<Long> addDriver(@Auth AuthAcademy authAcademy,
-										  @RequestBody @Valid DriverRegistRequest driverRegistRequest) {
+										  @ModelAttribute @Valid DriverRegistRequest driverRegistRequest) {
 
 		Long academyId = authAcademy.getId();
 

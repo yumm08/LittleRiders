@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class FamilyChildController {
 
 	@PostMapping
 	public ResponseEntity<Long> addChild(@Auth AuthFamily authFamily,
-										@RequestBody @Valid ChildRegistRequest childRegistRequest) {
+										@ModelAttribute @Valid ChildRegistRequest childRegistRequest) {
 
 		Long familyId = authFamily.getId();
 		Long childId = familyChildFacade.insertChild(childRegistRequest, familyId);

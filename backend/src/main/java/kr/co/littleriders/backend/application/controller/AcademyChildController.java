@@ -1,8 +1,10 @@
 package kr.co.littleriders.backend.application.controller;
 
+import kr.co.littleriders.backend.application.dto.request.AcademyChildUpdateRequest;
+import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
-import kr.co.littleriders.backend.application.facade.AdminChildFacade;
+import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
@@ -14,26 +16,36 @@ import java.util.List;
 @RestController
 @RequestMapping("/academy/child")
 @RequiredArgsConstructor
-public class AdminChildController {
+public class AcademyChildController {
 
-    private final AdminChildFacade adminChildFacade;
+    private final AcademyChildFacade academyChildFacade;
 
     @GetMapping
     public ResponseEntity<List<AcademyChildResponse>> getAcademyChildList(@Auth AuthAcademy authAcademy) {
 
         Long academyId = authAcademy.getId();
-        List<AcademyChildResponse> academyChildList = adminChildFacade.readAcademyChildList(academyId);
+        List<AcademyChildResponse> academyChildList = academyChildFacade.readAcademyChildList(academyId);
 
         return ResponseEntity.ok().body(academyChildList);
     }
 
-    @PutMapping
-    public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy
-                                                , @RequestParam(value = "academyChildId") Long academyChildId
-                                                , @RequestBody String status) {
+    @GetMapping("/{academyChildId}")
+    public ResponseEntity<AcademyChildDetailResponse> getAcademyChildDetail(@Auth AuthAcademy authAcademy,
+                                                                            @PathVariable(value = "academyChildId") Long academyChildId) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = adminChildFacade.updateAcademyChild(academyId, academyChildId, status);
+        AcademyChildDetailResponse academyChildDetailResponse = academyChildFacade.readAcademyChildDetail(academyId, academyChildId);
+
+        return ResponseEntity.ok().body(academyChildDetailResponse);
+    }
+
+    @PutMapping("/{academyChildId}")
+    public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy,
+                                                @PathVariable(value = "academyChildId") Long academyChildId,
+                                                @RequestBody AcademyChildUpdateRequest academyChildUpdateRequest) {
+
+        Long academyId = authAcademy.getId();
+        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, academyChildUpdateRequest.getStatus());
 
         return ResponseEntity.ok().body(updateChildId);
     }
@@ -43,7 +55,7 @@ public class AdminChildController {
     public ResponseEntity<List<PendingListResponse>> getPendingList(@Auth AuthAcademy authAcademy) {
 
         Long academyId = authAcademy.getId();
-        List<PendingListResponse> pendingList = adminChildFacade.readPendingList(academyId);
+        List<PendingListResponse> pendingList = academyChildFacade.readPendingList(academyId);
 
         return ResponseEntity.ok().body(pendingList);
     }
@@ -53,7 +65,7 @@ public class AdminChildController {
                                                 , @RequestBody List<Long> pendingList) {
 
         Long academyId = authAcademy.getId();
-        adminChildFacade.insertAcademyChildList(academyId, pendingList);
+        academyChildFacade.insertAcademyChildList(academyId, pendingList);
 
         return ResponseEntity.ok().build();
     }
@@ -63,7 +75,7 @@ public class AdminChildController {
                                                 , @RequestBody List<Long> pendingList) {
 
         Long academyId = authAcademy.getId();
-        adminChildFacade.deletePendingList(academyId, pendingList);
+        academyChildFacade.deletePendingList(academyId, pendingList);
 
         return ResponseEntity.ok().build();
     }
