@@ -75,4 +75,12 @@ public class AcademyChild {
     public boolean equalsAcademy(Academy academy) {
         return this.academy.equals(academy);
     }
+
+	public boolean isAttending() {
+        return this.status.equals(AcademyChildStatus.ATTENDING);
+	}
+
+    public boolean isFamilyAvail() {
+        return this.getAcademyFamily().getStatus().equals(AcademyFamilyStatus.AVAIL);
+    }
 }

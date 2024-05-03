@@ -10,6 +10,10 @@ import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
+import kr.co.littleriders.backend.domain.history.ChildHistoryService;
+import kr.co.littleriders.backend.domain.history.FamilyHistoryService;
+import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
+import kr.co.littleriders.backend.domain.history.entity.FamilyHistory;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
@@ -31,6 +35,8 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     private final AcademyService academyService;
     private final AcademyFamilyService academyFamilyService;
     private final AcademyChildService academyChildService;
+    private final ChildHistoryService childHistoryService;
+    private final FamilyHistoryService familyHistoryService;
 
     @Override
     public List<AcademyChildResponse> readAcademyChildList(Long academyId) {
@@ -52,14 +58,24 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     public AcademyChildDetailResponse readAcademyChildDetail(Long academyId, Long academyChildId) {
 
         Academy academy = academyService.findById(academyId);
-        // academyChild 가져오기
+        AcademyChild academyChild = academyChildService.findById(academyChildId);
+        if (!academyChild.equalsAcademy(academy)) {
+            throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
+        }
 
-        // status에 따른 접근 테이블 분리
+        AcademyChildDetailResponse childDetail;
+        if (academyChild.isAttending()) {
+            childDetail = AcademyChildDetailResponse.from(academyChild);
+        } else if (academyChild.isFamilyAvail()) {
+            ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
+            childDetail = AcademyChildDetailResponse.to(childHistory, null, academyChild);
+        } else {
+            ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
+            FamilyHistory familyHistory = familyHistoryService.findByCreatedAt(academyChild.getAcademyFamily());
+            childDetail = AcademyChildDetailResponse.to(childHistory, familyHistory, academyChild);
+        }
 
-        // AcademyChildDetailResponse 생성
-
-
-        return null;
+        return childDetail;
     }
 
     @Override
@@ -73,11 +89,9 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         }
 
         // TODO-이윤지-attending->graduate/leave 만 가능하도록 제약
-        // 원생 정보 update 후 저장
         academyChild.updateStatus(AcademyChildStatus.valueOf(status.toUpperCase()));
         academyChildService.save(academyChild);
 
-        // 원생 보호자 정보 update 후 저장 => 학원에 남아있는 자녀 있.없 확인
         AcademyFamily academyFamily = academyChild.getAcademyFamily();
         if (!academyChildService.existsByAcademyFamilyAndAttending(academyFamily)) {
             academyFamily.updateStatus(AcademyFamilyStatus.NOT_AVAIL);
@@ -129,10 +143,9 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         }
 
         pending.updatePendingStatus(PendingStatus.ALLOW);
-        pendingService.save(pending); // pending status ALLOW 변경
+        pendingService.save(pending);
 
         AcademyFamily academyFamily;
-        // academyFamily 존재하는 지 확인 후 없으면 만들어서 반환
         if(academyFamilyService.existsByFamilyAndAcademy(pending.getChild().getFamily(), academy)) {
             academyFamily = AcademyFamily.of(pending.getChild().getFamily(), academy, AcademyFamilyStatus.AVAIL);
             academyFamilyService.save(academyFamily);
@@ -145,7 +158,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
                                                     , pending.getAcademy()
                                                      , academyFamily
                                                     , AcademyChildStatus.ATTENDING, CardType.BEACON);
-        academyChildService.save(academyChild); //academyChild 저장
+        academyChildService.save(academyChild);
     }
 
     @Transactional
@@ -156,6 +169,6 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         }
 
         pending.updatePendingStatus(PendingStatus.DENY);
-        pendingService.save(pending); // pending status DENY 변경
+        pendingService.save(pending);
     }
 }
