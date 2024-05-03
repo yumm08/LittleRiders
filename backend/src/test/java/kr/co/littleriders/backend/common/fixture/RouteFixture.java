@@ -6,27 +6,52 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 @AllArgsConstructor
+@Getter
 public enum RouteFixture {
 
 
 
-    A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z;
+    A("A 코스"),
+    B("B 코스"),
+    C("C 코스"),
+    D("D 코스"),
+    E("E 코스"),
+    F("F 코스"),
+    G("G 코스"),
+    H("H 코스"),
+    I("I 코스"),
+    J("J 코스"),
+    K("K 코스"),
+    L("L 코스"),
+    M("M 코스"),
+    N("N 코스"),
+    O("O 코스"),
+    P("P 코스"),
+    Q("Q 코스"),
+    R("R 코스"),
+    S("S 코스"),
+    T("T 코스"),
+    U("U 코스"),
+    V("V 코스"),
+    W("W 코스"),
+    X("X 코스"),
+    Y("Y 코스"),
+    Z("Z 코스");
+
+   private String name;
 
     public Route toRoute(Academy academy){
-        return Route.of(academy, this.name() +"코스");
+        return Route.of(academy, name  );
     }
 
-    public String getName(){
-        return this.name() +"코스";
-    }
 
     public RouteRequest toRouteRequest(){
-        return new RouteRequest(this.name()+"코스");
+        return new RouteRequest(name);
     }
 
 
