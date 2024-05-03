@@ -138,5 +138,15 @@ public class ShuttleFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("위도 경도 업로드")
+    class uploadLocation {
 
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            ShuttleLocationRequest shuttleLocationRequest = new ShuttleLocationRequest(33.3, 45.2, 75);
+            shuttleFacade.uploadLocation(authTerminal, shuttleLocationRequest);
+        }
+    }
 }
