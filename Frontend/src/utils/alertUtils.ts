@@ -24,3 +24,14 @@ export const showSuccessAlert = (optionList: SweetAlertOptions) => {
     ...optionList,
   })
 }
+
+export const showErrorAlert = (optionList: SweetAlertOptions) => {
+  const defaultOptionList: SweetAlertOptions = {
+    icon: 'error',
+  }
+
+  return Swal.fire({
+    ...defaultOptionList,
+    ...optionList,
+  })
+}
