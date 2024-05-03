@@ -1,10 +1,10 @@
 import { Gender } from '@types'
 
 export type PendingChildInfo = {
-  academyChildAllowPendingId: number
+  pendingId: number
   address: string
   childBirthDate: string
   childName: string
-  familyPhoneNumber: string
-  gender: Gender
+  phoneNumber: string
+  childGender: Gender
 }

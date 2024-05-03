@@ -6,8 +6,8 @@ interface Props {
   pendingChildList: PendingChildInfo[]
   onChildCheck: (id: number, isChecked: boolean) => void
   checkChildIdList: number[]
-  onApprove: (academyChildAllowPendingId: number) => void
-  onReject: (academyChildAllowPendingId: number) => void
+  onApprove: (pendingId: number) => void
+  onReject: (pendingId: number) => void
 }
 
 export default function PendingListTableBody({
@@ -21,12 +21,10 @@ export default function PendingListTableBody({
     <tbody>
       {pendingChildList.map((pendingChildInfo) => (
         <PendingListItem
-          key={pendingChildInfo.academyChildAllowPendingId}
+          key={pendingChildInfo.pendingId}
           pendingChildInfo={pendingChildInfo}
           onChildCheck={onChildCheck}
-          isChecked={checkChildIdList.includes(
-            pendingChildInfo.academyChildAllowPendingId,
-          )}
+          isChecked={checkChildIdList.includes(pendingChildInfo.pendingId)}
           onApprove={onApprove}
           onReject={onReject}
         />
