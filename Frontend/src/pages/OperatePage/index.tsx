@@ -12,7 +12,6 @@ export default function OperatePage() {
       <Spacing style="h-5" />
       <DeviceList show={5} />
       <Spacing style="h-5" />
-      <Spacing style="h-[60px]" />
       <ShuttleList show={5} />
       <Spacing style="h-5" />
       <TeacherList show={7} />

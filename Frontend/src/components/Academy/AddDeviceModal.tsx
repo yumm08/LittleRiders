@@ -14,7 +14,6 @@ type Props = {
 }
 
 export default function AddDeviceModal({ modalSwitch, modalTitle }: Props) {
-  //TODO name, phoneNumber, image
   const { state: serialNumber, onChange: handleChangeSerialNumber } = useInput({
     data: '',
   })

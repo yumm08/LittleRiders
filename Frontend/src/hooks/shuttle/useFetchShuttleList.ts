@@ -6,7 +6,7 @@ import { Shuttle } from '@types'
 
 export const useFetchShuttleList = () => {
   const { data: shuttleList, ...rest } = useQuery({
-    queryKey: ['getDriverList'],
+    queryKey: ['getShuttleList'],
     queryFn: getShuttleList,
     select: (data) => {
       const shuttleList: Shuttle[] = data.data
