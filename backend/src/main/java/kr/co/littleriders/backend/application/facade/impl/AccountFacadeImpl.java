@@ -15,12 +15,20 @@ import kr.co.littleriders.backend.domain.terminal.error.code.ShuttleTerminalAtta
 import kr.co.littleriders.backend.domain.terminal.error.exception.ShuttleTerminalAttachException;
 import kr.co.littleriders.backend.domain.token.RefreshTokenService;
 import kr.co.littleriders.backend.domain.token.entity.RefreshToken;
+import kr.co.littleriders.backend.domain.verification.VerificationService;
+import kr.co.littleriders.backend.domain.verification.entity.Verification;
+import kr.co.littleriders.backend.domain.verification.entity.VerificationType;
+import kr.co.littleriders.backend.domain.verification.error.code.VerificationErrorCode;
+import kr.co.littleriders.backend.domain.verification.error.exception.VerificationException;
+import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
+import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import kr.co.littleriders.backend.global.entity.MemberType;
 import kr.co.littleriders.backend.global.error.code.AuthErrorCode;
 import kr.co.littleriders.backend.global.error.exception.AuthException;
 import kr.co.littleriders.backend.global.jwt.JwtMemberInfo;
 import kr.co.littleriders.backend.global.jwt.JwtProvider;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
+import kr.co.littleriders.backend.global.mail.MailHelper;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +48,10 @@ class AccountFacadeImpl implements AccountFacade {
     private final PasswordUtil passwordUtil;
 
     private final TerminalService terminalService;
+
+    private final VerificationService verificationService;
+
+    private final MailHelper mailHelper;
 
     @Override
     public JwtToken tokenReIssue(final String token) {
@@ -118,5 +130,52 @@ class AccountFacadeImpl implements AccountFacade {
         return jwtToken;
     }
 
+    @Override
+    public void sendChangePasswordEmail(String email) {
+        if(familyService.existsByEmail(email) && academyService.notExistsByEmail(email)){
+            throw AuthException.from(AuthErrorCode.USER_NOT_FOUND);
+        }
+        VerificationType verificationType = familyService.existsByEmail(email) ? VerificationType.FAMILY_CHANGE_PASSWORD : VerificationType.ACADEMY_CHANGE_PASSWORD;
+        Verification verification = Verification.of(email, verificationType);
+        verificationService.save(verification);
+        String code = verification.getCode();
+        mailHelper.sendChangePasswordVerificationEmail(email, code);
 
+    }
+
+    @Override
+    public JwtToken signInByEmailAndVerificationCode(String email, String code) {
+        Verification verification = verificationService.findByEmail(email);
+        VerificationType verificationType = verification.getType();
+        if (verificationType != VerificationType.ACADEMY_CHANGE_PASSWORD && verificationType != VerificationType.FAMILY_CHANGE_PASSWORD){
+            throw VerificationException.from(VerificationErrorCode.NOT_FOUND);
+        }
+        MemberType memberType = verificationType == VerificationType.ACADEMY_CHANGE_PASSWORD ? MemberType.ACADEMY : MemberType.FAMILY;
+        long id = 0;
+        if(memberType == MemberType.ACADEMY){
+            id = academyService.findByEmail(email).getId();
+        }
+        id = familyService.findByEmail(email).getId();
+        JwtToken jwtToken = jwtProvider.createToken(id, memberType);
+        RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
+        verificationService.delete(verification);
+        refreshTokenService.save(refreshToken);
+        return jwtToken;
+    }
+
+    @Override
+    public void changePassword(AuthFamily authFamily, String password) {
+        Family family = familyService.findById(authFamily.getId());
+        String encrypted = passwordUtil.encrypt(password);
+        family.setPassword(encrypted);
+        familyService.save(family);
+    }
+
+    @Override
+    public void changePassword(AuthAcademy authAcademy, String password) {
+        Academy academy = academyService.findById(authAcademy.getId());
+        String encrypted = passwordUtil.encrypt(password);
+        academy.setPassword(encrypted);
+        academyService.save(academy);
+    }
 }

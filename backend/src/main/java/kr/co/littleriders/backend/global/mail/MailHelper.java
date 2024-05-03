@@ -18,8 +18,12 @@ public class MailHelper {
         this.FROM = FROM;
     }
 
-    public void sendVerificationEmail(String email, String code) {
-        sendEmail(email, "리틀라이더즈 인증 코드 입니다.", code);
+    public void sendSignUpVerificationEmail(String email, String code) {
+        sendEmail(email, "리틀라이더즈 회원가입 인증 코드 입니다.", code);
+    }
+
+    public void sendChangePasswordVerificationEmail(String email, String code) {
+        sendEmail(email, "리틀라이더즈 비밀번호 변경 인증 코드 입니다.", code);
     }
 
     private void sendEmail(String email, String title, String content) {
