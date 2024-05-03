@@ -24,7 +24,7 @@ public class AdminShuttleController {
 
 	@PostMapping
 	public ResponseEntity<Long> addShuttle(@Auth AuthAcademy authAcademy,
-										   @RequestBody @Valid ShuttleRegistRequest shuttleRegistRequest) {
+										   @ModelAttribute @Valid ShuttleRegistRequest shuttleRegistRequest) {
 
 		Long academyId = authAcademy.getId();
 

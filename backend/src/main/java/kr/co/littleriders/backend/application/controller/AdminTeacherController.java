@@ -22,7 +22,7 @@ public class AdminTeacherController {
 
 	@PostMapping
 	public ResponseEntity<Long> addTeacher(@Auth AuthAcademy authAcademy,
-										   @RequestBody @Valid TeacherRegistRequest teacherRegistRequest) {
+										   @ModelAttribute @Valid TeacherRegistRequest teacherRegistRequest) {
 
 		Long academyId = authAcademy.getId();
 
