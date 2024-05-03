@@ -1,6 +1,6 @@
 import axiosInstance from '@utils/httpCommons'
 
-const BASE_URL = 'admin'
+const BASE_URL = 'academy'
 
 /**
  * 원생 대기 목록을 불러오는 API 요청 함수
