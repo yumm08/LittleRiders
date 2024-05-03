@@ -37,6 +37,7 @@ public class ShuttleLocationHistory {
     }
 
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class LocationInfo {
         private double latitude;
 
