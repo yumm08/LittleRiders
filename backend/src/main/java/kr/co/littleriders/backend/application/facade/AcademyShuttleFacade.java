@@ -5,7 +5,7 @@ import kr.co.littleriders.backend.application.dto.response.AcademyShuttleRespons
 
 import java.util.List;
 
-public interface AdminShuttleFacade {
+public interface AcademyShuttleFacade {
 
 	Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Long academyId);
 

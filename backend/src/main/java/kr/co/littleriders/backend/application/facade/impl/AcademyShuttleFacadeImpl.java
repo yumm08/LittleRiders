@@ -10,18 +10,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.ShuttleRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminShuttleFacade;
+import kr.co.littleriders.backend.application.facade.AcademyShuttleFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
-import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-class AdminShuttleFacadeImpl implements AdminShuttleFacade {
+class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 
 	private final ShuttleService shuttleService;
 	private final AcademyService academyService;

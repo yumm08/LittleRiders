@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminTeacherFacade;
+import kr.co.littleriders.backend.application.facade.AcademyTeacherFacade;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -16,9 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/academy/teacher")
 @RequiredArgsConstructor
-public class AdminTeacherController {
+public class AcademyTeacherController {
 
-	private final AdminTeacherFacade adminTeacherFacade;
+	private final AcademyTeacherFacade academyTeacherFacade;
 
 	@PostMapping
 	public ResponseEntity<Long> addTeacher(@Auth AuthAcademy authAcademy,
@@ -26,7 +26,7 @@ public class AdminTeacherController {
 
 		Long academyId = authAcademy.getId();
 
-		Long teacherId = adminTeacherFacade.insertTeacher(teacherRegistRequest, academyId);
+		Long teacherId = academyTeacherFacade.insertTeacher(teacherRegistRequest, academyId);
 
 		return ResponseEntity.ok().body(teacherId);
 	}
@@ -36,7 +36,7 @@ public class AdminTeacherController {
 
 		Long academyId = authAcademy.getId();
 
-		List<AcademyTeacherResponse> teacherList = adminTeacherFacade.readTeacherList(academyId);
+		List<AcademyTeacherResponse> teacherList = academyTeacherFacade.readTeacherList(academyId);
 
 		return ResponseEntity.ok().body(teacherList);
 	}

@@ -3,7 +3,7 @@ package kr.co.littleriders.backend.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
-import kr.co.littleriders.backend.application.facade.AdminDriverFacade;
+import kr.co.littleriders.backend.application.facade.AcademyDriverFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.DriverService;
@@ -29,10 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AdminDriverControllerTest {
+class AcademyDriverControllerTest {
 
 	@Autowired
-	private AdminDriverFacade adminDriverFacade;
+	private AcademyDriverFacade academyDriverFacade;
 
 	@Autowired
 	private AcademyService academyService;

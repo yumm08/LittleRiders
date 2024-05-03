@@ -1,6 +1,5 @@
 package kr.co.littleriders.backend.application.controller;
 
-import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleResponse;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
@@ -9,8 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.ShuttleRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminShuttleFacade;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.application.facade.AcademyShuttleFacade;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -18,9 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/academy/shuttle")
 @RequiredArgsConstructor
-public class AdminShuttleController {
+public class AcademyShuttleController {
 
-	private final AdminShuttleFacade adminShuttleFacade;
+	private final AcademyShuttleFacade academyShuttleFacade;
 
 	@PostMapping
 	public ResponseEntity<Long> addShuttle(@Auth AuthAcademy authAcademy,
@@ -28,7 +26,7 @@ public class AdminShuttleController {
 
 		Long academyId = authAcademy.getId();
 
-		Long shuttleId = adminShuttleFacade.insertShuttle(shuttleRegistRequest, academyId);
+		Long shuttleId = academyShuttleFacade.insertShuttle(shuttleRegistRequest, academyId);
 
 		return ResponseEntity.ok().body(shuttleId);
 	}
@@ -38,7 +36,7 @@ public class AdminShuttleController {
 
 		Long academyId = authAcademy.getId();
 
-		List<AcademyShuttleResponse> shuttleList = adminShuttleFacade.readShuttleList(academyId);
+		List<AcademyShuttleResponse> shuttleList = academyShuttleFacade.readShuttleList(academyId);
 
 		return ResponseEntity.ok().body(shuttleList);
 	}

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminDriverFacade;
+import kr.co.littleriders.backend.application.facade.AcademyDriverFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.DriverService;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-class AdminDriverFacadeImpl implements AdminDriverFacade {
+class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 
 	private final DriverService driverService;
 	private final AcademyService academyService;

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminTeacherFacade;
+import kr.co.littleriders.backend.application.facade.AcademyTeacherFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-class AdminTeacherFacadeImpl implements AdminTeacherFacade {
+class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 
 	private final TeacherService teacherService;
 	private final AcademyService academyService;

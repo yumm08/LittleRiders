@@ -5,7 +5,7 @@ import kr.co.littleriders.backend.application.dto.response.AcademyTeacherRespons
 
 import java.util.List;
 
-public interface AdminTeacherFacade {
+public interface AcademyTeacherFacade {
 
 	Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Long academyId);
 
