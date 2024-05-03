@@ -177,7 +177,6 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
             ) {
               console.log(child)
               isSame = true
-              return
             }
           })
           if (!isSame) tempChildList.push(child)
