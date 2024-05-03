@@ -13,7 +13,6 @@ import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
 import kr.co.littleriders.backend.application.facade.FamilyChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
-import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
@@ -29,9 +28,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 
 	private final ChildService childService;
 	private final FamilyService familyService;
-	private final AcademyService academyService;
 	private final AcademyChildService academyChildService;
-	private final String rootPath = "/image/child";
 
 	@Override
 	public Long insertChild(ChildRegistRequest childRegistRequest, Long familyId) {

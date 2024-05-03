@@ -2,7 +2,6 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleResponse;
@@ -16,6 +15,7 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
+import kr.co.littleriders.backend.global.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,7 +24,8 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 
 	private final ShuttleService shuttleService;
 	private final AcademyService academyService;
-	private final String rootPath = "/image/shuttle";
+
+	private final ImageUtil imageUtil;
 
 
 	@Override
@@ -35,8 +36,7 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 
 		MultipartFile image = shuttleRegistRequest.getImage();
 		if(image !=null){
-			String imagePath = UUID.randomUUID().toString();
-			// 이미지 저장
+			String imagePath = imageUtil.saveImage(image);
 			shuttle.setImagePath(imagePath);
 		}
 
