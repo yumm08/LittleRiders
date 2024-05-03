@@ -1,6 +1,6 @@
 import ChildListHeader from '@pages/ChildPage/ChildList/ChildListHeader'
 
-import ChildCardList from '@components/Child/ChildCardList'
+import ChildCardList from '@components/Child/Child/ChildCardList'
 
 import { useFetchChildList } from '@hooks/child'
 

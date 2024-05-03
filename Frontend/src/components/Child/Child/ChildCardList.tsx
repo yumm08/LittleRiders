@@ -1,4 +1,4 @@
-import ChildCard from '@components/Child/ChildCard'
+import ChildCard from '@components/Child/Child/ChildCard'
 
 import { ChildInfo } from '@types'
 

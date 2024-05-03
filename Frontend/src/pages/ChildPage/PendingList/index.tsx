@@ -1,10 +1,10 @@
 import { ChangeEvent, useState } from 'react'
 
 import PendingListHeader from '@pages/ChildPage/PendingList/PendingListHeader'
-import PendingListTable from '@pages/ChildPage/PendingList/PendingListTable'
-import PendingListTableBody from '@pages/ChildPage/PendingList/PendingListTableBody'
-import PendingListTableHeader from '@pages/ChildPage/PendingList/PendingListTableHeader'
 
+import PendingListTable from '@components/Child/PendingChild/PendingListTable'
+import PendingListTableBody from '@components/Child/PendingChild/PendingListTableBody'
+import PendingListTableHeader from '@components/Child/PendingChild/PendingListTableHeader'
 import Divider from '@components/Shared/Divider'
 import Spacing from '@components/Shared/Spacing'
 

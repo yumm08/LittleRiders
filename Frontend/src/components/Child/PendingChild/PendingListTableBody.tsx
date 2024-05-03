@@ -1,4 +1,4 @@
-import PendingListItem from '@pages/ChildPage/PendingList/PendingListItem'
+import PendingListItem from '@components/Child/PendingChild/PendingListItem'
 
 import { PendingChildInfo } from '@types'
 
