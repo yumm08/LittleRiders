@@ -31,11 +31,11 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    if (error.response.status === HttpStatusCode.Unauthorized) {
+    if (error.response.status === HttpStatusCode.BadRequest) {
       originalRequest._retry = true
 
       try {
-        const { headers } = await axiosInstance.get('/api/account/re-issue')
+        const { headers } = await axiosInstance.get('/account/re-issue')
 
         sessionStorage.setItem('accessToken', headers.authorization)
 
