@@ -34,13 +34,13 @@ public class ImageUtil {
 		byte[] bytes = new byte[0];
 		try {
 			bytes = file.getBytes();
-			Path path = Paths.get(BASE_PATH + "/" + generatedName);
+			Path path = Paths.get(BASE_PATH, generatedName);
 			Files.write(path, bytes);
+
+			return path.toString();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
-		return BASE_PATH + "/" + generatedName;
 	}
 
 	private String getExtension(String extension) {
@@ -48,7 +48,7 @@ public class ImageUtil {
 			case "jpeg":
 			case "jpg":
 			case "png":
-				return extension;
+				return "." + extension;
 			default:
 				throw ImageException.from(ImageErrorCode.ILLEGAL_EXTENSION);
 		}
