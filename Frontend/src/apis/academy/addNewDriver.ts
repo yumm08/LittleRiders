@@ -1,9 +1,9 @@
 import axiosInstance from '@utils/httpCommons'
 
-const BASE_URL = 'academy'
+import API from '@constants/api'
 
 export const postNewDriver = async (formData: FormData) => {
-  await axiosInstance.post(`${BASE_URL}/driver`, formData, {
+  await axiosInstance.post(`${API.BASE_URL}/${API.POST_DRIVER}`, formData, {
     method: 'post',
     data: formData,
   })

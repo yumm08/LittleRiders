@@ -1,9 +1,9 @@
 import axiosInstance from '@utils/httpCommons'
 
-const BASE_URL = 'academy'
+import API from '@constants/api'
 
 export const postNewShuttle = async (formData: FormData) => {
-  await axiosInstance.post(`${BASE_URL}/shuttle`, formData, {
+  await axiosInstance.post(`${API.BASE_URL}/${API.POST_SHUTTLE}`, formData, {
     method: 'post',
     data: formData,
   })

@@ -1,9 +1,11 @@
 import axiosInstance from '@utils/httpCommons'
 
-const BASE_URL = 'academy'
+import API from '@constants/api'
 
 export const getDriverList = async () => {
-  const response = await axiosInstance.get(`${BASE_URL}/driver`)
+  const response = await axiosInstance.get(
+    `${API.BASE_URL}/${API.GET_DRIVER_LIST}`,
+  )
 
   return response
 }
