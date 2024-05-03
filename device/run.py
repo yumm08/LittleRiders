@@ -33,25 +33,34 @@ class MainWindow(QMainWindow, form_class):
         self.setupUi(self)
         self.observer = Observer(lambda x:self.courseInfoUpdateByObserver(x))
         self.exitButton.clicked.connect(lambda x: os.exit())
-        web = QWebEngineView()
-        web.setUrl(QUrl("https://www.google.com"))
-        print(type(self.mapLayout))
-        self.mapLayout.addWidget(web)
+        self.webview = QWebEngineView()
+        self.webview.setUrl(QUrl("http://127.0.0.1:5500/device/device.html"))
+        self.mapLayout.addWidget(self.webview)
+        self.webview.loadFinished.connect(self.on_load_finished)
 
+        self.mapLoad = False
+
+    def on_load_finished(self, success):
+        if success:
+            self.mapLoad = True
+            self.webview.page().runJavaScript('console.log("helloworld")')
 
     def terminalInfoButtonEvent(self):
         terminalNumber = terminalRepository.findById(1)
-        print(terminalNumber)
-        #self.uuidText.setText(terminalNumber.getTerminalNumber())
     def courseInfoButtonEvent(self):
         self.latitudeText.setText("위도값이에요")
         self.longitudeText.setText("경도값이에요")
         self.speedText.setText("속도값이에요")
 
     def courseInfoUpdateByObserver(self,position):
-        self.latitudeText.setText(f"{position.getLatitude()}")
-        self.longitudeText.setText(f"{position.getLongitude()}")
-        self.speedText.setText(f"{position.getSpeed()}")
+        latitude = position.getLatitude()
+        longitude = position.getLongitude()
+        speed = position.getSpeed()
+        if(self.mapLoad):
+            self.webview.page().runJavaScript(f'change({latitude},{longitude})')
+        self.latitudeText.setText(f"{latitude}")
+        self.longitudeText.setText(f"{longitude}")
+        self.speedText.setText(f"{speed}")
 
         pass
         #routeList = apiFetcher.getRouteList()
