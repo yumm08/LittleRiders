@@ -1,3 +1,4 @@
+import DeviceList from '@components/Academy/DeviceList'
 import DriverList from '@components/Academy/DriverList'
 import TeacherList from '@components/Academy/TeacherList'
 import Spacing from '@components/Shared/Spacing'
@@ -8,6 +9,9 @@ import Page from '@layouts/Page'
 export default function OperatePage() {
   return (
     <Page>
+      <Spacing style="h-5" />
+      <DeviceList show={5} />
+      <Spacing style="h-5" />
       <Spacing style="h-[60px]" />
       <ShuttleList show={5} />
       <Spacing style="h-5" />

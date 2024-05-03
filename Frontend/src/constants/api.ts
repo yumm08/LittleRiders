@@ -6,6 +6,7 @@ const API = {
   POST_SHUTTLE: 'shuttle',
   POST_TEACHER: 'teacher',
   POST_DRIVER: 'driver',
+  POST_DEVICE: 'device',
 }
 
 export default API
