@@ -7,11 +7,13 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @AllArgsConstructor
+@Getter
 public enum FamilyFixture {
 
 
@@ -30,17 +32,17 @@ public enum FamilyFixture {
     private String phoneNumber;
     private static final PasswordUtil passwordUtil = new PasswordUtil();
 
-    Family toFamily(){
+    public Family toFamily(){
         String password = passwordUtil.encrypt(this.password);
         return Family.of(email,password,name,address,phoneNumber);
     }
 
-    FamilySignUpRequest familySignUpRequest(){
+    public FamilySignUpRequest familySignUpRequest(){
         return new FamilySignUpRequest(email,password,name,address,phoneNumber);
     }
 
-    SignInRequest toSignInRequest(){
-        return SignInRequest.of(email,password);
+    public SignInRequest toSignInRequest(){
+        return new SignInRequest(email,password);
     }
 
 
