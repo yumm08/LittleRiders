@@ -1,8 +1,18 @@
 package kr.co.littleriders.backend.global.utils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import kr.co.littleriders.backend.global.error.code.ImageErrorCode;
+import kr.co.littleriders.backend.global.error.exception.ImageException;
 
 @Component
 
@@ -13,17 +23,36 @@ public class ImageUtil {
 		BASE_PATH = basePath;
 	}
 
-	public String saveImage(MultipartFile multipartFile){
-		// valid 확장자 검사
+	public String saveImage(MultipartFile file)  {
+
+		// 확장자 valid 검사
+		String originName = file.getOriginalFilename(); //원본 이미지 이름
+		String ext = getExtension(StringUtils.getFilenameExtension(originName)); //확장자
+		String generatedName = UUID.randomUUID() + ext;
 
 		//multipartFile -> 받아서 rename 해주고
-		String generatedName = null;
+		byte[] bytes = new byte[0];
+		try {
+			bytes = file.getBytes();
+			Path path = Paths.get(BASE_PATH + "/" + generatedName);
+			Files.write(path, bytes);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
 		return BASE_PATH + "/" + generatedName;
 	}
 
-	//image valid check 의 담당을 해야될거같다고 생각해
-	//.png, .jpg 이런거 정도만?
+	private String getExtension(String extension) {
+		switch (extension.toLowerCase()) {
+			case "jpeg":
+			case "jpg":
+			case "png":
+				return extension;
+			default:
+				throw ImageException.from(ImageErrorCode.ILLEGAL_EXTENSION);
+		}
+	}
 
 
 }
