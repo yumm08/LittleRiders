@@ -24,16 +24,18 @@ class _SensorReceiver(_SensorInterFace):
             self.serialPort = serial.Serial("/dev/serial0", 9600, timeout=0.5)
     
     def getPosition(self):
-        data = self.serialPort.readline()
-        data = data.decode("utf8")
-        if(data.find("RMC") > 0):
-            msg = pynmea2.parse(data)
-            latitude = float(msg.lat)
-            longitude = float(msg.lon)
-            speed = float(msg.spd_over_grnd)
-            return RMCPosition(latitude,longitude,speed)
-
-        raise Exception("error")
+        while True:
+            try:
+                data = self.serialPort.readline()
+                data = data.decode("utf8")
+                if(data.find("RMC") > 0):
+                    msg = pynmea2.parse(data)
+                    latitude = float(msg.lat)
+                    longitude = float(msg.lon)
+                    speed = float(msg.spd_over_grnd)
+                    return RMCPosition(latitude,longitude,speed)
+            except:
+                pass
 
     
 
