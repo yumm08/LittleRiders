@@ -9,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "station_route",
 uniqueConstraints = {
@@ -39,6 +42,9 @@ public class RouteStation {
 
     @Column(name = "visit_order" , nullable = false)
     private Integer visitOrder; // 방문 순서
+
+    @OneToMany(mappedBy = "boardRouteStation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChildBoardDropInfo> childBoardInfoList;
 
     private RouteStation(Route route, Academy academy, Station station, int visitOrder) {
         this.route = route;
