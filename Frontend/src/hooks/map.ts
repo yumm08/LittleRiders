@@ -1,6 +1,6 @@
-import { RefObject, useState } from 'react'
+import { RefObject, SetStateAction, useState } from 'react'
 
-import { BASE_LAT, BASE_LNG } from '@constants/map'
+import { BASE_LAT, BASE_LNG } from '@constants'
 import { Station } from '@types'
 
 const DEFAULT_OPTION = {
@@ -12,7 +12,7 @@ const DEFAULT_OPTION = {
 }
 
 export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
-  const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
+  // const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [polyline, setPolyline] = useState<naver.maps.Polyline>()
   //const [circleList, setCircleList] = useState<naver.maps.Circle[]>([])
 
@@ -25,6 +25,7 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     mapDiv: RefObject<HTMLDivElement>,
     options = DEFAULT_OPTION,
   ) => {
+    console.log('initMap')
     if (mapRef.current) return
     mapRef.current = new naver.maps.Map(mapDiv.current!, options)
   }
@@ -33,12 +34,13 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
    * 초기 Polyline Overlay 생성
    */
   const initPolyLine = () => {
+    console.log('initPolyline')
     setPolyline(
       new naver.maps.Polyline({
         map: mapRef.current!,
         path: [],
         strokeWeight: 3,
-        strokeColor: '#555555',
+        strokeColor: '#007F73',
         strokeOpacity: 0.8,
       }),
     )
@@ -49,20 +51,23 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
    * @param marker 대상이 되는 Marker
    */
   const addInfoWindow = async (marker: naver.maps.Marker, content: string) => {
+    console.log('addInfoWindow')
     const infoWindow = new naver.maps.InfoWindow({
       content: content,
       maxWidth: 140,
       backgroundColor: '#EEEEEE',
       borderColor: '#111111',
-      borderWidth: 5,
-      anchorSize: new naver.maps.Size(30, 30),
+      borderWidth: 1,
+      anchorSize: new naver.maps.Size(5, 5),
       anchorSkew: true,
       anchorColor: '#EEEEEE',
-      pixelOffset: new naver.maps.Point(20, -20),
+      pixelOffset: new naver.maps.Point(10, -5),
     })
-    naver.maps.Event.addListener(marker, 'mouseon', () => {
+    naver.maps.Event.addListener(marker, 'mouseover', () => {
       console.log('mouseon')
-      if (mapRef.current) infoWindow.open(mapRef.current, marker)
+      if (mapRef.current) {
+        infoWindow.open(mapRef.current, marker)
+      }
     })
 
     naver.maps.Event.addListener(marker, 'mouseout', () => {
@@ -71,10 +76,17 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     })
   }
 
-  const deleteMarkers = () => {
+  const deleteMarkers = (
+    markerList: naver.maps.Marker[],
+    setMarkerList: {
+      (value: SetStateAction<naver.maps.Marker[]>): void
+      (arg0: never[]): void
+    },
+  ) => {
+    console.log('deleteMarkers')
+    console.log(markerList)
     for (let k = 0; k < markerList.length; k++) {
       markerList[k].setMap(null)
-      // console.log(markerList)
     }
     setMarkerList([])
   }
@@ -82,61 +94,47 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
   /**
    * Route에 따른 정류장과 어린이집 마커 추가
    */
-  const drawRouteMarkers = (newPathList: naver.maps.LatLng[]) => {
-    deleteMarkers()
+  const drawRouteMarkers = async (
+    setMarkerList: {
+      (value: SetStateAction<naver.maps.Marker[]>): void
+    },
+    newPathList: naver.maps.LatLng[],
+    markerImg?: string,
+    size?: naver.maps.Size,
+    anchor?: naver.maps.Point,
+    origin?: naver.maps.Point,
+    infoWindowContent?: string,
+  ) => {
+    // 그릴 마커 리스트
+    const tmpMarkerList: naver.maps.Marker[] = []
 
-    setMarkerList([
-      new naver.maps.Marker({
-        position: newPathList[0],
-        map: mapRef.current!,
-        icon: {
-          content:
-            '<img src="/src/assets/image/academy.svg" style="width:30px; height:30px"/>',
-          anchor: new naver.maps.Point(16, 16),
-          origin: new naver.maps.Point(29, 50),
-        },
-      }),
-    ])
-
-    const academyInfoWindowContent = [
-      '<div class="iw_inner">',
-      '  <h3>어린이집</h3>',
-      '</div>',
-    ].join('')
-
-    addInfoWindow(markerList[0], academyInfoWindowContent)
-    console.log(newPathList)
-    for (let k = 1; k < newPathList.length - 1; k++) {
-      const stationInfoWindowContent = [
-        '<div class="iw_inner">',
-        ` <h3>정류장 ${k}</h3>`,
-        '</div>',
-      ].join('')
-      setMarkerList((prev) => [
-        ...prev,
+    for (let k = 0; k < newPathList.length; k++) {
+      tmpMarkerList.push(
         new naver.maps.Marker({
           position: newPathList[k],
           map: mapRef.current!,
           icon: {
             content: [
-              '<img src="/src/assets/image/bus-stop.svg" style="width:30px; height:30px"/>',
+              `<img src="/src/assets/image/${markerImg}" style="width:30px; height:30px"/>`,
             ].join(''),
-            size: new naver.maps.Size(50, 52),
-            anchor: new naver.maps.Point(15, 30),
-            origin: new naver.maps.Point(29, 50),
+            size,
+            anchor,
+            origin,
           },
         }),
-      ])
-      // console.log(mapRef)
-      // console.log(markerList)
-      addInfoWindow(markerList[k], stationInfoWindowContent)
+      )
+      if (infoWindowContent) {
+        addInfoWindow(tmpMarkerList[k], infoWindowContent)
+      }
     }
+    setMarkerList((prev: naver.maps.Marker[]) => [...prev, ...tmpMarkerList])
   }
 
   /**
    * draw polylines to represent the route
    */
   const drawPolyLines = (newPathList: naver.maps.LatLng[]) => {
+    console.log('drawPolyLines')
     if (polyline) polyline.setPath(newPathList)
   }
 
@@ -145,11 +143,20 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
    * draw whole rotue to the map
    * @param stationRoute station 배열 정보
    */
-  const drawRoute = (stationRoute: Station[]) => {
+  const drawRoute = (
+    stationRoute: Station[],
+    markerList: naver.maps.Marker[],
+    setMarkerList: {
+      (value: SetStateAction<naver.maps.Marker[]>): void
+      (arg0: never[]): void
+    },
+  ) => {
+    // 기존 마커 삭제
+    deleteMarkers(markerList, setMarkerList)
     const newPathList = []
+
     // TODO 이부분에 args 로 받은 학원 좌표 추가
     newPathList.push(new naver.maps.LatLng(BASE_LAT, BASE_LNG))
-
     for (let k = 0; k < stationRoute.length; k++) {
       newPathList.push(
         new naver.maps.LatLng(
@@ -161,15 +168,39 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     // TODO 여기도 마찬가지로 학원 좌표 추가
     newPathList.push(new naver.maps.LatLng(BASE_LAT, BASE_LNG))
 
-    drawRouteMarkers(newPathList)
+    drawRouteMarkers(
+      setMarkerList,
+      [newPathList[0]],
+      'academy.svg',
+      new naver.maps.Size(30, 30),
+      new naver.maps.Point(16, 16),
+      new naver.maps.Point(29, 50),
+      ['<div class="iw_inner px-2">', '  <h3>어린이집</h3>', '</div>'].join(''),
+    )
+
+    if (newPathList.length > 2) {
+      drawRouteMarkers(
+        setMarkerList,
+        [...newPathList.slice(1, newPathList.length - 1)],
+        'bus-stop.svg',
+        new naver.maps.Size(50, 52),
+        new naver.maps.Point(15, 30),
+        new naver.maps.Point(29, 50),
+        ['<div class="iw_inner px-2">', '  <h3>정류장</h3>', '</div>'].join(''),
+      )
+    }
+
     drawPolyLines(newPathList)
   }
 
   // const drawCircleList = () => {}
 
+  const moveMap = (latLng: naver.maps.LatLng) => {
+    mapRef.current?.setCenter(latLng)
+  }
+
   return {
     map: mapRef,
-    markerList,
     polyline,
     initMap,
     initPolyLine,
@@ -178,5 +209,6 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     drawPolyLines,
     drawRoute,
     drawRouteMarkers,
+    moveMap,
   }
 }
