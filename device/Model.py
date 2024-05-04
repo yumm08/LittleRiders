@@ -8,7 +8,6 @@ Base = declarative_base()
 
 class RMCPosition:
     def __init__(self,latitude,longitude,spd_over_grnd):
-
         latitude_head = latitude //100
         longitude_head = longitude //100
         latitude_tail = (latitude%100) /60
@@ -42,6 +41,7 @@ class Position(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     latitude = Column(Float)
     longitude = Column(Float)
+    speed = Column(Integer)
     time = Column(TIMESTAMP)
 
 
