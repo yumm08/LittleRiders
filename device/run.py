@@ -9,6 +9,8 @@ from Repository import *
 from SensorHelper import SensorHelper
 import sys
 
+from datetime import datetime
+
 form_class = uic.loadUiType("untitled.ui")[0]
 modelHelper = ModelHelper()
 terminalRepository =TerminalRepository(modelHelper=modelHelper)
@@ -18,8 +20,6 @@ apiFetcher = APIFetcher(terminalNumber)
 
 
 class PositionObserverInterface():
-    def __init__(self,function):
-        self.function = function
     def notify(self,*args,**kwargs):
         pass
 
@@ -46,7 +46,8 @@ class PositionThread(QThread,PositionProvider):
             try:
                 position = sensorReceiver.getPosition()
                 self.notifyAll(position=position)
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
     def stop(self):
@@ -99,13 +100,31 @@ class MainWindow(QMainWindow, form_class,PositionObserverInterface):
 
 
 
+class PositionSaver(PositionObserverInterface):
+    def __init__(self):
+        modelHelper = ModelHelper()
+        self.positionRepository = PositionRepository(modelHelper=modelHelper)
 
-app = QApplication(sys.argv)
-win = MainWindow()
+    def notify(self,*args,**kwargs):
+        position = kwargs.get("position",None)
+        if(not position):
+            return
+        latitude = position.getLatitude()
+        longitude = position.getLongitude()
+        speed = position.getSpeed()
+        entity = Position(latitude=latitude,longitude=longitude,speed=speed,time=datetime.now())
+        print("entity",entity)
+        self.positionRepository.save(entity)
 
-
-postionThread = PositionThread()
-postionThread.start()
-postionThread.register(win)
-win.show()
-app.exec()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    win = MainWindow()
+    
+    positionSaver = PositionSaver()
+    postionThread = PositionThread()
+    postionThread.start()
+    postionThread.register(win)
+    postionThread.register(positionSaver)
+    
+    win.show()
+    app.exec()
