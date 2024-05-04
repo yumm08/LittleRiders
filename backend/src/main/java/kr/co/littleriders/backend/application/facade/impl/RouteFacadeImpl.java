@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.dto.request.RouteRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationRequest;
+import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import kr.co.littleriders.backend.application.facade.RouteFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
@@ -130,5 +131,17 @@ class RouteFacadeImpl implements RouteFacade {
                 .map(RouteResponse::from)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public RouteDetailResponse getRoute(long academyId, Long routeId) {
+        Route route = routeService.findById(routeId);
+
+        if(!Objects.equals(academyId, route.getAcademy().getId())) {
+            throw RouteException.from(RouteErrorCode.FORBIDDEN);
+        }
+
+        return RouteDetailResponse.from(route);
+    }
+
 
 }

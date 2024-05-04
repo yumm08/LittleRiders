@@ -51,4 +51,11 @@ public class RouteController {
         return ResponseEntity.ok().body(routeFacade.getAllRoute(academyId));
     }
 
+    // 노선 상세 조회
+    @GetMapping("/{route_id}")
+    public ResponseEntity<RouteDetailResponse> getRoute(@Auth AuthAcademy authAcademy, @PathVariable(name = "route_id") long routeId) {
+        long academyId = authAcademy.getId();
+        return ResponseEntity.ok().body(routeFacade.getRoute(academyId, routeId));
+    }
+
 }
