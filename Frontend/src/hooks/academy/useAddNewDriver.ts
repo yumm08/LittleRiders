@@ -1,3 +1,5 @@
+import { modalStore } from '@stores/modalStore'
+
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postNewDriver } from '@apis/academy'
@@ -5,6 +7,7 @@ import { postNewDriver } from '@apis/academy'
 import { DriverInfo } from '@types'
 
 export const useAddNewDriver = () => {
+  const changeModalState = modalStore((state) => state.changeModalState)
   const queryClient = useQueryClient()
   const { mutate: addNewDriver, ...rest } = useMutation({
     mutationFn: ({ name, phoneNumber, image }: DriverInfo) => {
@@ -17,6 +20,7 @@ export const useAddNewDriver = () => {
 
     onSuccess: async () => {
       alert('기사 추가 완료')
+      changeModalState('addDriverModal')
       await queryClient.invalidateQueries({ queryKey: ['getDriverList'] })
     },
   })

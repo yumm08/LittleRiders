@@ -1,7 +1,7 @@
-import { useState } from 'react'
-
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
+
+import { modalStore } from '@stores/modalStore'
 
 import { useFetchShuttleList } from '@hooks/shuttle/useFetchShuttleList'
 
@@ -13,9 +13,12 @@ interface Props {
 }
 
 export default function ShuttleList({ show }: Props) {
-  const [modalState, setModalState] = useState(false)
+  const addShuttleModalState = modalStore(
+    (state) => state.modalController.addShuttleModal,
+  )
+  const changeModalState = modalStore((state) => state.changeModalState)
   const openAddShuttleModal = () => {
-    setModalState(!modalState)
+    changeModalState('addShuttleModal')
   }
   const { shuttleList, isLoading } = useFetchShuttleList()
   if (isLoading) return <div>isLoading...</div>
@@ -28,7 +31,7 @@ export default function ShuttleList({ show }: Props) {
           })}
         </CardCarousel>
       </CardListContainer>
-      {modalState && (
+      {addShuttleModalState && (
         <AddShuttleModal
           modalTitle="차량 등록"
           modalSwitch={openAddShuttleModal}

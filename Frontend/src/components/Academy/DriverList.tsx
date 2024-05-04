@@ -1,7 +1,7 @@
-import { useState } from 'react'
-
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
+
+import { modalStore } from '@stores/modalStore'
 
 import { useFetchDriverList } from '@hooks/academy/useFetchDriverList'
 
@@ -13,9 +13,12 @@ type Props = {
 }
 
 export default function DriverList({ show }: Props) {
-  const [modalState, setModalState] = useState(false)
+  const addDriverModalState = modalStore(
+    (state) => state.modalController.addDriverModal,
+  )
+  const changeModalState = modalStore((state) => state.changeModalState)
   const openAddDriverModal = () => {
-    setModalState(!modalState)
+    changeModalState('addDriverModal')
   }
   const { driverList, isLoading } = useFetchDriverList()
 
@@ -37,7 +40,7 @@ export default function DriverList({ show }: Props) {
           })}
         </CardCarousel>
       </CardListContainer>
-      {modalState && (
+      {addDriverModalState && (
         <AddDriverModal
           modalTitle="기사 등록"
           modalSwitch={openAddDriverModal}
