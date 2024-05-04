@@ -47,7 +47,6 @@ class PositionThread(QThread,PositionProvider):
                 position = sensorReceiver.getPosition()
                 self.notifyAll(position=position)
             except Exception as e:
-                print(e)
                 pass
 
     def stop(self):
@@ -113,7 +112,6 @@ class PositionSaver(PositionObserverInterface):
         longitude = position.getLongitude()
         speed = position.getSpeed()
         entity = Position(latitude=latitude,longitude=longitude,speed=speed,time=datetime.now())
-        print("entity",entity)
         self.positionRepository.save(entity)
 
 if __name__ == "__main__":
