@@ -13,7 +13,7 @@ export default function CardCarousel({ show, children }: Props) {
   const settings = {
     speed: 500,
     slidesToShow: show,
-    rows: 1,
+    infinite: false,
     slidesToScroll: 1,
     prevArrow: <FaCircleChevronLeft color={ColorPalette['lightgreen']} />,
     nextArrow: <FaCircleChevronRight color={ColorPalette['lightgreen']} />,

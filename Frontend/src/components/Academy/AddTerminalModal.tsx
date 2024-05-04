@@ -13,7 +13,7 @@ type Props = {
   modalTitle: string
 }
 
-export default function AddDeviceModal({ modalSwitch, modalTitle }: Props) {
+export default function AddTerminalModal({ modalSwitch, modalTitle }: Props) {
   const { state: serialNumber, onChange: handleChangeSerialNumber } = useInput({
     data: '',
   })
