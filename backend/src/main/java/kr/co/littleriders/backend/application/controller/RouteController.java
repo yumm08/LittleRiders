@@ -3,6 +3,8 @@ package kr.co.littleriders.backend.application.controller;
 import kr.co.littleriders.backend.application.dto.request.RouteRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationRequest;
+import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
+import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import kr.co.littleriders.backend.application.facade.RouteFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
@@ -42,6 +44,11 @@ public class RouteController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
+    // 노선 목록 조회
+    @GetMapping
+    public ResponseEntity<List<RouteResponse>> getRouteList(@Auth AuthAcademy authAcademy) {
+        long academyId = authAcademy.getId();
+        return ResponseEntity.ok().body(routeFacade.getAllRoute(academyId));
+    }
 
 }
