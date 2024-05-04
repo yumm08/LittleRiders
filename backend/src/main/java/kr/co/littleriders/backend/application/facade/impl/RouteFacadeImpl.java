@@ -51,6 +51,7 @@ class RouteFacadeImpl implements RouteFacade {
         routeService.save(route);
     }
 
+    @Transactional
     @Override
     public void addRouteStation(long academyId, long routeId, List<RouteStationRequest> requestList) {
         Academy academy = academyService.findById(academyId);
