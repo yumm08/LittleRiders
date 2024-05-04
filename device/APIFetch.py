@@ -11,7 +11,6 @@ class APIFetcher:
         if not hasattr(cls, "_init"):             # Foo 클래스 객체에 _init 속성이 없다면
             self.terminalNumber = terminalNumber
             #requests.post(f"{self.BASE_URL}")
-            print("init call apiFetcher")
             cls._init = True
 
 
