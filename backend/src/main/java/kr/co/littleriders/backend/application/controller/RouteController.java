@@ -7,10 +7,7 @@ import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/academy/route")
@@ -20,9 +17,11 @@ public class RouteController {
 
     // 경로 등록
     @PostMapping
-    public ResponseEntity<Void> createRoute(@Auth AuthAcademy authAcademy, @RequestBody RouteRequest createRequest) {
-        routeFacade.createRoute(authAcademy, createRequest);
+    public ResponseEntity<Void> createRoute(@Auth AuthAcademy authAcademy, @RequestBody RouteRequest routeRequest) {
+        routeFacade.createRoute(authAcademy, routeRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+
 
 }
