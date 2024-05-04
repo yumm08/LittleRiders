@@ -56,7 +56,7 @@ const router = createBrowserRouter([
                 element: <OperatePage />,
               },
               {
-                path: 'drive-history/:id',
+                path: 'drive-history/:shuttleId',
                 element: <DriveHistoryPage />,
               },
             ],

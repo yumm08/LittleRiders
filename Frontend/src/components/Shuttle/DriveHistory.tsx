@@ -1,15 +1,24 @@
-
-
 interface Props {
-    id : number
-    onClick:(id:number)=>void
+  time: string
+  onClick: (id: number) => void
+  id: number
+  dateId: number
 }
-export default function DriveHistory({id,onClick}:Props) {
+export default function DriveHistory({ time, onClick, id, dateId }: Props) {
+  let className =
+    'flex h-12 w-full cursor-pointer items-center justify-center border-x-2 border-b-2 font-semibold'
+  if (dateId === id)
+    className =
+      'flex h-12 w-full cursor-pointer items-center justify-center border-x-2 border-b-2 font-semibold text-lightgreen'
   return (
-    <li className="w-full h-12 border-b-2 flex justify-center items-center border-x-2 font-semibold">
-        <button onClick={()=>{
-            onClick(id)
-        }}>240417 운행일지</button>
+    <li className={className}>
+      <button
+        onClick={() => {
+          onClick(id)
+        }}
+      >
+        {time}
+      </button>
     </li>
   )
 }

@@ -4,8 +4,8 @@ type UserInfo = SignUpInfo
 
 const userList: UserInfo[] = [
   {
-    email: 'test@test.test',
-    password: '1',
+    email: 'admin@test.com',
+    password: '1234',
     name: '관리자',
     address: '임시주소',
     phoneNumber: '010-1234-1234',

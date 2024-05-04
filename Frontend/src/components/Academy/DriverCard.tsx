@@ -1,7 +1,11 @@
-import { Driver } from '@types'
+import { DriverCardType } from '@types'
 import { MdCancel } from 'react-icons/md'
 
-export default function DriverCard({ name, phoneNumber, image }: Driver) {
+export default function DriverCard({
+  name,
+  phoneNumber,
+  image,
+}: DriverCardType) {
   return (
     <div className="relative w-[150px] flex-col items-center justify-center">
       <MdCancel

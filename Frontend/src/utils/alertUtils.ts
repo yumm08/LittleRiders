@@ -17,6 +17,19 @@ export const showQuestionAlert = (optionList: SweetAlertOptions) => {
 export const showSuccessAlert = (optionList: SweetAlertOptions) => {
   const defaultOptionList: SweetAlertOptions = {
     icon: 'success',
+    allowOutsideClick: false,
+  }
+
+  return Swal.fire({
+    ...defaultOptionList,
+    ...optionList,
+  })
+}
+
+export const showErrorAlert = (optionList: SweetAlertOptions) => {
+  const defaultOptionList: SweetAlertOptions = {
+    icon: 'error',
+    allowOutsideClick: false,
   }
 
   return Swal.fire({

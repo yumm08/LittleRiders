@@ -3,7 +3,7 @@ import SignUpFormFooter from '@components/Auth/SignUp/SignUpFormFooter'
 import SignUpFormHeader from '@components/Auth/SignUp/SignUpFormHeader'
 import Spacing from '@components/Shared/Spacing'
 
-import { useSignUp } from '@hooks/auth'
+import { useSignUp, useValidate } from '@hooks/auth'
 
 import { SignUpInfo } from '@types'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -12,6 +12,7 @@ export default function SignUpForm() {
   const methodList = useForm<SignUpInfo>({ mode: 'onBlur' })
 
   const { signUp } = useSignUp()
+  const { validate, isSuccess: validateSuccess } = useValidate()
 
   const onSubmit: SubmitHandler<SignUpInfo> = (signUpInfo: SignUpInfo) => {
     signUp(signUpInfo)
@@ -26,10 +27,10 @@ export default function SignUpForm() {
         <SignUpFormHeader />
 
         <Spacing style="h-12" />
-        <SignUpFormBody />
+        <SignUpFormBody validate={validate} validateSuccess={validateSuccess} />
 
         <Spacing style="h-12" />
-        <SignUpFormFooter />
+        <SignUpFormFooter validateSuccess={validateSuccess} />
       </form>
     </FormProvider>
   )

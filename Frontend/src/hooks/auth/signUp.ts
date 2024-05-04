@@ -12,22 +12,26 @@ export const useSignUp = () => {
 
   const { mutate: signUp, ...rest } = useMutation({
     mutationFn: (signUpInfo: SignUpInfo) => postSignUp(signUpInfo),
-    onSuccess: async (response) => {
-      const { status } = response
+    onSuccess: async () => {
+      const result = await Swal.fire({
+        text: '회원가입에 성공했습니다.',
+        icon: 'success',
+      })
 
-      if (status === HttpStatusCode.Ok) {
-        const result = await Swal.fire({
-          text: '회원가입에 성공했습니다.',
-          icon: 'success',
-        })
-
-        if (result.isConfirmed) {
-          navigate('/signin')
-        }
+      if (result.isConfirmed) {
+        navigate('/signin')
       }
     },
-    // TODO: 이미 가입된 회원 등 에러처리 필요
-    onError: () => {},
+    onError: async () => {
+      if (HttpStatusCode.Conflict) {
+        await Swal.fire({
+          text: '이미 존재하는 이메일입니다',
+          icon: 'error',
+        })
+
+        return
+      }
+    },
   })
 
   return { signUp, ...rest }
@@ -38,10 +42,16 @@ export const useValidate = () => {
     mutationFn: ({ email, code }: { email: string; code: string }) =>
       postValidate(email, code),
     onSuccess: () => {
-      alert('인증에 성공하였습니다')
+      Swal.fire({
+        text: '인증에 성공하였습니다',
+        icon: 'success',
+      })
     },
     onError: () => {
-      alert('인증에 실패하였습니다')
+      Swal.fire({
+        text: '인증에 실패하였습니다',
+        icon: 'error',
+      })
     },
   })
 
