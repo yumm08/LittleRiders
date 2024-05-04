@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.controller;
 
 import kr.co.littleriders.backend.application.dto.request.RouteRequest;
+import kr.co.littleriders.backend.application.dto.request.RouteStationAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationRequest;
 import kr.co.littleriders.backend.application.facade.RouteFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
@@ -32,5 +33,15 @@ public class RouteController {
         routeFacade.addRouteStation(academyId, routeId, requestList);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    // 노선별 정류장에 원생 추가
+    @PostMapping("/{route_id}/child")
+    public ResponseEntity<Void> addAcademyChildToRouteStation(@Auth AuthAcademy authAcademy, @PathVariable("route_id") long routeId, @RequestBody List<RouteStationAcademyChildRequest> requestList) {
+        long academyId = authAcademy.getId();
+        routeFacade.addAcademyChildToRouteStation(academyId, routeId, requestList);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
 
 }

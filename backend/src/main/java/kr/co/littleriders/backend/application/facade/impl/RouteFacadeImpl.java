@@ -4,23 +4,25 @@ import kr.co.littleriders.backend.application.dto.request.RouteRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationRequest;
 import kr.co.littleriders.backend.application.facade.RouteFacade;
+import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.routeinfo.RouteStationService;
+import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
 import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,7 @@ class RouteFacadeImpl implements RouteFacade {
     private final AcademyService academyService;
     private final StationService stationService;
     private final RouteStationService routeStationService;
+    private final AcademyChildService academyChildService;
 
     @Override
     public void createRoute(AuthAcademy authAcademy, RouteRequest routeRequest) {
@@ -91,6 +94,29 @@ class RouteFacadeImpl implements RouteFacade {
             existingStationMap.values().forEach(route::removeRouteStation);
 
             routeService.save(route);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void addAcademyChildToRouteStation(long academyId, long routeId, List<RouteStationAcademyChildRequest> requestList) {
+        Academy academy = academyService.findById(academyId);
+
+        for (RouteStationAcademyChildRequest request : requestList) {
+            RouteStation routeStation = routeStationService.findByRouteIdAndStationId(routeId, request.getStationId());
+
+            // 기존의 모든 ChildBoardDropInfo 삭제
+            List<ChildBoardDropInfo> existingInfoList = new ArrayList<>(routeStation.getChildBoardInfoList());
+            existingInfoList.forEach(routeStation::removeChildBoardDropInfo);
+
+            // request에서 받은 원생 승하차 정보를 저장
+            for (Long academyChildId : request.getAcademyChildIdList()) {
+                AcademyChild academyChild = academyChildService.findById(academyChildId);
+                ChildBoardDropInfo newInfo = request.toChildBoardDropInfo(academyChild, academy, routeStation);
+                routeStation.addChildBoardDropInfo(newInfo);
+            }
+
+            routeStationService.save(routeStation);
         }
     }
 

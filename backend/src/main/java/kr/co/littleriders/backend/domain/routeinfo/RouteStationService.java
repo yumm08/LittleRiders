@@ -18,4 +18,6 @@ public interface RouteStationService {
 
     void saveAll(List<RouteStation> routeStationList);
 
+    RouteStation findByRouteIdAndStationId(Long routeId, Long stationId);
+
 }

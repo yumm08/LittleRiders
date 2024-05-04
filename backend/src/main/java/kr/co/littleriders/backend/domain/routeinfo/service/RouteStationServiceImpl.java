@@ -42,4 +42,9 @@ class RouteStationServiceImpl implements RouteStationService {
         routeStationRepository.saveAll(routeStationList);
     }
 
+    @Override
+    public RouteStation findByRouteIdAndStationId(Long routeId, Long stationId) {
+        return routeStationRepository.findByRouteIdAndStationId(routeId, stationId);
+    }
+
 }

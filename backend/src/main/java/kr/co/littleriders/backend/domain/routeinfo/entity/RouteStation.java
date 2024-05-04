@@ -62,6 +62,17 @@ public class RouteStation {
         );
     }
 
+    public void addChildBoardDropInfo(ChildBoardDropInfo childBoardDropInfo) {
+        if(this.childBoardInfoList == null) {
+            this.childBoardInfoList = new ArrayList<>();
+        }
+        this.childBoardInfoList.add(childBoardDropInfo);
+    }
+
+    public void removeChildBoardDropInfo(ChildBoardDropInfo childBoardDropInfo) {
+        this.childBoardInfoList.remove(childBoardDropInfo);
+    }
+
     public void updateVisitOrder(int newOrder) {
         this.visitOrder = newOrder;
     }
