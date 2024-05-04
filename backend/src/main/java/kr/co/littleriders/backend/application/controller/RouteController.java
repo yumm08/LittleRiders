@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.controller;
 
 import kr.co.littleriders.backend.application.dto.request.RouteRequest;
+import kr.co.littleriders.backend.application.dto.request.RouteStationRequest;
 import kr.co.littleriders.backend.application.facade.RouteFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/academy/route")
@@ -22,6 +25,12 @@ public class RouteController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
+    // 노선별 정류장 추가
+    @PostMapping("/{route_id}/")
+    public ResponseEntity<Void> addRouteStation(@Auth AuthAcademy authAcademy, @PathVariable("route_id") long routeId, @RequestBody List<RouteStationRequest> requestList) {
+        long academyId = authAcademy.getId();
+        routeFacade.addRouteStation(academyId, routeId, requestList);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
 }

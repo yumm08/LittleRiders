@@ -7,6 +7,8 @@ import kr.co.littleriders.backend.domain.routeinfo.error.exception.RouteStationE
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 class RouteStationServiceImpl implements RouteStationService {
@@ -33,6 +35,11 @@ class RouteStationServiceImpl implements RouteStationService {
     @Override
     public long save(RouteStation routeStation) {
         return routeStationRepository.save(routeStation).getId();
+    }
+
+    @Override
+    public void saveAll(List<RouteStation> routeStationList) {
+        routeStationRepository.saveAll(routeStationList);
     }
 
 }

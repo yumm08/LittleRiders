@@ -43,4 +43,15 @@ public class Route {
                 name
         );
     }
+
+    public void addRouteStation(RouteStation routeStation) {
+        if (this.routeStationList == null) {
+            this.routeStationList = new ArrayList<>();
+        }
+        this.routeStationList.add(routeStation);
+    }
+
+    public void removeRouteStation(RouteStation station) {
+        this.routeStationList.remove(station);
+    }
 }

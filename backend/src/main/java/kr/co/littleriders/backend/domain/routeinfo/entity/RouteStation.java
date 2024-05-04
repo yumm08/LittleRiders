@@ -40,6 +40,26 @@ public class RouteStation {
     @Column(name = "visit_order" , nullable = false)
     private Integer visitOrder; // 방문 순서
 
+    private RouteStation(Route route, Academy academy, Station station, int visitOrder) {
+        this.route = route;
+        this.academy = academy;
+        this.station = station;
+        this.visitOrder = visitOrder;
+    }
+
+    public static RouteStation of(Route route, Academy academy, Station station, int visitOrder) {
+        return new RouteStation(
+                route,
+                academy,
+                station,
+                visitOrder
+        );
+    }
+
+    public void updateVisitOrder(int newOrder) {
+        this.visitOrder = newOrder;
+    }
+
 //    @OneToMany(mappedBy = "boardRouteStation")
 //    private List<ChildBoardDropInfo> childBoardInfoList;
 //
