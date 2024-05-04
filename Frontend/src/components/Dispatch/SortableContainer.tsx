@@ -1,4 +1,4 @@
-import SortableItem from '@components/Dispatch/SortableItem'
+import { SortableItem } from '@components/Dispatch/SortableItem'
 
 import { UniqueIdentifier, useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -8,6 +8,7 @@ interface Props {
   id: string
   items: Station[] | ChildInfo[] | undefined
   subject: string
+  isDisabled?: boolean
   isLoading: boolean
   isPending?: boolean
   selectedStation?: number
@@ -25,12 +26,14 @@ export default function SortableContainer({
   id,
   items,
   subject,
+  isDisabled = false,
   isLoading,
   isPending = true,
   onClick,
   selectedStation,
 }: Props) {
-  const { setNodeRef } = useDroppable({ id })
+  const { setNodeRef } = useDroppable({ disabled: isDisabled, id })
+
   if (isLoading || isPending || !items) {
     return (
       <div className="m-5 h-5/6 flex-row p-1">
@@ -75,6 +78,7 @@ export default function SortableContainer({
                 key={item.id}
                 id={item.id}
                 selectedStation={selectedStation}
+                childList={item.childList}
                 name={item.name}
                 type={id}
                 index={index}

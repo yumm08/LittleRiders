@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 
 import SortableContainer from '@components/Dispatch/SortableContainer'
-import SortableItem from '@components/Dispatch/SortableItem'
+import { SortableItem } from '@components/Dispatch/SortableItem'
 import Button from '@components/Shared/Button'
 
 import { useFetchChildList } from '@hooks/child'
@@ -59,6 +59,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   const [selectedStationMarker, setSelectedStationMarker] = useState<
     naver.maps.Marker[]
   >([])
+  const [childDragDisabled, setChildDragDisabled] = useState<boolean>(false)
   const {
     routeDetail,
     isLoading: isRouteDetailLoading,
@@ -128,11 +129,13 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
         (station) => station.id === selectedStation,
       )
       if (temp && temp.childList) {
+        setChildDragDisabled(false)
         setChildItems((prev) => ({
           ...prev,
           selectedChildList: [...temp.childList!],
         }))
       } else {
+        setChildDragDisabled(true)
         setChildItems((prev) => ({
           ...prev,
           selectedChildList: [],
@@ -175,7 +178,6 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
                   stationChild.academyChildId === child.academyChildId,
               )
             ) {
-              console.log(child)
               isSame = true
             }
           })
@@ -207,12 +209,9 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   }, [stationItems['selectedStationList']])
 
   useEffect(() => {
-    console.log(childItems['selectedChildList'])
-
     stationItems.selectedStationList?.forEach((station: Station) => {
       if (station.id === selectedStation) {
         station.childList = [...childItems['selectedChildList']]
-        console.log(station.childList)
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -312,6 +311,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
           subject="모든 어린이"
           id="childList"
           items={childItems['childList']}
+          isDisabled={childDragDisabled}
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
         />
@@ -319,6 +319,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
           subject="하차할 어린이"
           id="selectedChildList"
           items={childItems['selectedChildList']}
+          isDisabled={childDragDisabled}
           isLoading={isRouteDetailLoading}
           isPending={isRouteDetailPending}
         />
