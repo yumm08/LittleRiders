@@ -22,7 +22,7 @@ class ShuttleLocationHistoryServiceImpl implements ShuttleLocationHistoryService
 
     @Override
     public boolean existsByShuttleId(long shuttleId) {
-        return shuttleLocationHistoryRepository.existsById(shuttleId);
+        return shuttleLocationHistoryRepository.existsByShuttleId(shuttleId);
     }
 
     @Override
