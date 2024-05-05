@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.application.facade.AdminDriverFacade;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.DriverFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.DriverService;
@@ -53,10 +55,10 @@ class AdminDriverControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",33.12,55.12);
+			Academy academy = AcademyFixture.BOXING.toAcademy();
 			academyService.save(academy);
-			DriverRegistRequest regist = new DriverRegistRequest("테스트", "010", null);
-			Driver driver = regist.toEntity(academy);
+			DriverRegistRequest regist = DriverFixture.CHOO.toDriverRegistRequest();
+//			Driver driver = regist.toEntity(academy);
 			// Long driverId = driverService.save(driver);
 
 			mockMvc.perform(
@@ -72,9 +74,10 @@ class AdminDriverControllerTest {
 		@Test
 		@DisplayName("실패")
 		void whenFailed() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",33.12,53.12);
+
+			Academy academy = AcademyFixture.BOXING.toAcademy();
 			// academyService.save(academy);
-			DriverRegistRequest regist = new DriverRegistRequest("테스트", "010", null);
+			DriverRegistRequest regist = DriverFixture.CHOO.toDriverRegistRequest();
 			Driver driver = regist.toEntity(academy);
 			// Long driverId = driverService.save(driver);
 
@@ -97,18 +100,19 @@ class AdminDriverControllerTest {
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
 
+			Academy academy = AcademyFixture.BOXING.toAcademy();
+
 			// 학원 생성
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111", 3, 4);
 			academyService.save(academy);
 
+			Driver driver = DriverFixture.CHOO.toDriver(academy,DriverStatus.WORK);
 			// 기사 생성
-			Driver driver = Driver.of("기사", "010-1111-1110", academy, DriverStatus.WORK);
 			driverService.save(driver);
 
-			Driver driver1 = Driver.of("기사1", "010-1111-1111", academy, DriverStatus.RESIGN);
+			Driver driver1 = DriverFixture.CHUN.toDriver(academy,DriverStatus.RESIGN);
 			driverService.save(driver1);
 
-			Driver driver2 = Driver.of("기사2", "010-1111-1112", academy, DriverStatus.WORK);
+			Driver driver2 = DriverFixture.GANG.toDriver(academy, DriverStatus.WORK);
 			driverService.save(driver2);
 
 
