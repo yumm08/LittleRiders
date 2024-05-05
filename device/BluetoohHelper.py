@@ -46,7 +46,7 @@ class BluetoothHelper():
             minor = ibeacon.minor
             name = device.name
             if(name == "lrck"):
-                self.beaconList[uuid] = {
+                self.beaconList[str(uuid)] = {
                     "major" : major,
                     "minor" : minor,
                     "name" : name
@@ -59,7 +59,7 @@ class BluetoothHelper():
         if(self.scanner == None):
             self.scanner = BleakScanner(self._deviceFound)
         await self.scanner.start()
-        await asyncio.sleep(3.0)
+        await asyncio.sleep(5.0)
         await self.scanner.stop()
         return self.beaconList
 
