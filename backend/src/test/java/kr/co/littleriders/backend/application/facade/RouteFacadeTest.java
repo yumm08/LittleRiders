@@ -4,6 +4,7 @@ import kr.co.littleriders.backend.application.dto.request.RouteRequest;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.RouteService;
+import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,9 @@ public class RouteFacadeTest {
 
     @Autowired
     private AcademyService academyService;
+
+    @Autowired
+    private RouteService routeService;
 
     private Academy academy;
     private AuthAcademy authAcademy;
@@ -42,4 +46,21 @@ public class RouteFacadeTest {
             routeFacade.createRoute(authAcademy, routeRequest);
         }
     }
+
+    @Nested
+    @DisplayName("노선 수정 테스트")
+    class updateRouteTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+
+            RouteRequest routeRequest = new RouteRequest("하원B", "drop");
+
+            Route route = Route.of(academy, "등원B", "board");
+            long routeId = routeService.save(route);
+
+            routeFacade.updateRoute(academy.getId(), routeId, routeRequest);
+        }
+    }
+
 }
