@@ -93,6 +93,18 @@ public class StationFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("정류장 삭제 테스트")
+    class deleteStationTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Station station = Station.of(academy, "등원B", 46.2, 35.3);
+            long stationId = stationService.save(station);
+
+            stationFacade.deleteStation(academy.getId(), stationId);
+        }
+    }
 
 //    @Nested
 //    @DisplayName("정류장 목록 조회 테스트")
