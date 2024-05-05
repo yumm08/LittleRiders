@@ -27,6 +27,7 @@ import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryS
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
 import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherException;
+import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,8 +51,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final ShuttleChildRideService shuttleChildRideService;
 
     @Override
-    public List<ShuttleRouteResponse> getRouteList() {
-        Long shuttleId = 1L;
+    public List<ShuttleRouteResponse> getRouteList(AuthTerminal authTerminal) {
+        long shuttleId = authTerminal.getShuttleId();
         Shuttle shuttle = shuttleService.findById(shuttleId);
         Academy academy = shuttle.getAcademy();
 
@@ -63,9 +64,9 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
-    public void startDrive(ShuttleStartRequest startRequest) {
+    public void startDrive(AuthTerminal authTerminal, ShuttleStartRequest startRequest) {
 
-        Long shuttleId = 1L;
+        long shuttleId = authTerminal.getShuttleId();
 
         if (routeService.notExistsById(startRequest.getRouteId())) {
             throw RouteException.from(RouteErrorCode.NOT_FOUND);
@@ -91,18 +92,18 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
-    public void endDrive() {
+    public void endDrive(AuthTerminal authTerminal) {
 
-        Long shuttleId = 1L;
+        long shuttleId = authTerminal.getShuttleId();
 
         // TODO: mongoDB에 저장
         // TODO: redis에서 shuttleId 에 해당하는 데이터 삭제
     }
 
     @Override
-    public ShuttleChildRideResponse recordChildRiding(ShuttleChildRideRequest rideRequest) {
+    public ShuttleChildRideResponse recordChildRiding(AuthTerminal authTerminal, ShuttleChildRideRequest rideRequest) {
 
-        Long shuttleId = 1L;
+        long shuttleId = authTerminal.getShuttleId();
 
         // TODO: 탈퇴한 회원에 대한 valid check 추가
 
@@ -116,9 +117,9 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
-    public void uploadLocation(ShuttleLocationRequest locationRequest) {
+    public void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest) {
 
-        Long shuttleId = 1L;
+        long shuttleId = authTerminal.getShuttleId();
 
         ShuttleLocation location = locationRequest.toShuttleLocation(shuttleId);
         shuttleLocationService.save(location);
