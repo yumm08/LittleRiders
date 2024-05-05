@@ -84,9 +84,9 @@ public class StationFacadeTest {
         @DisplayName("성공")
         void whenSuccess() throws Exception {
 
-            StationRequest stationRequest = new StationRequest("하원B", 56.4, 76.3);
+            StationRequest stationRequest = new StationRequest("역삼역", 56.4, 76.3);
 
-            Station station = Station.of(academy, "등원B", 46.2, 35.3);
+            Station station = Station.of(academy, "강남역", 46.2, 35.3);
             long stationId = stationService.save(station);
 
             stationFacade.updateStation(academy.getId(), stationId, stationRequest);
@@ -99,7 +99,7 @@ public class StationFacadeTest {
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
-            Station station = Station.of(academy, "등원B", 46.2, 35.3);
+            Station station = Station.of(academy, "역삼역", 46.2, 35.3);
             long stationId = stationService.save(station);
 
             stationFacade.deleteStation(academy.getId(), stationId);
