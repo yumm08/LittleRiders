@@ -44,7 +44,7 @@ public class RouteStation {
     private Integer visitOrder; // 방문 순서
 
     @OneToMany(mappedBy = "boardRouteStation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChildBoardDropInfo> childBoardInfoList;
+    private List<ChildBoardDropInfo> childBoardInfoList = new ArrayList<>();
 
     private RouteStation(Route route, Academy academy, Station station, int visitOrder) {
         this.route = route;
@@ -63,9 +63,6 @@ public class RouteStation {
     }
 
     public void addChildBoardDropInfo(ChildBoardDropInfo childBoardDropInfo) {
-        if(this.childBoardInfoList == null) {
-            this.childBoardInfoList = new ArrayList<>();
-        }
         this.childBoardInfoList.add(childBoardDropInfo);
     }
 
