@@ -5,6 +5,7 @@ import kr.co.littleriders.backend.application.dto.response.AcademyTeacherRespons
 import org.springframework.core.io.Resource;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AcademyTeacherFacade {
 
@@ -12,5 +13,5 @@ public interface AcademyTeacherFacade {
 
 	List<AcademyTeacherResponse> readTeacherList(Long academyId);
 
-    Resource readTeacherImage(Long academyId, Long teacherId);
+	Map<String, Object> readTeacherImage(Long academyId, Long teacherId);
 }

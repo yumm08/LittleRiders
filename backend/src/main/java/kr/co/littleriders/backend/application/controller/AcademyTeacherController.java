@@ -4,6 +4,8 @@ import kr.co.littleriders.backend.application.dto.response.AcademyTeacherRespons
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import kr.co.littleriders.backend.application.facade.AcademyTeacherFacade;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/academy/teacher")
@@ -22,11 +25,10 @@ public class AcademyTeacherController {
 	private final AcademyTeacherFacade academyTeacherFacade;
 
 	@PostMapping
-//	public ResponseEntity<Long> addTeacher(@Auth AuthAcademy authAcademy,
-	public ResponseEntity<Long> addTeacher(
+	public ResponseEntity<Long> addTeacher(@Auth AuthAcademy authAcademy,
 										   @ModelAttribute @Valid TeacherRegistRequest teacherRegistRequest) {
 
-		Long academyId = 1L;
+		Long academyId = authAcademy.getId();
 
 		Long teacherId = academyTeacherFacade.insertTeacher(teacherRegistRequest, academyId);
 
@@ -49,8 +51,18 @@ public class AcademyTeacherController {
 
 		Long academyId = authAcademy.getId();
 
-		Resource resource = academyTeacherFacade.readTeacherImage(academyId, teacherId);
+		Map<String, Object> image = academyTeacherFacade.readTeacherImage(academyId, teacherId);
 
-		return ResponseEntity.ok().body(resource);
+		Resource imageResource = (Resource) image.get("resource");
+		MediaType mediaType = (MediaType) image.get("mediaType");
+
+		HttpHeaders headers = new HttpHeaders();
+		if (mediaType != null) {
+			headers.setContentType(mediaType);
+		} else {
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
+
+		return ResponseEntity.ok().headers(headers).body(imageResource);
 	}
 }

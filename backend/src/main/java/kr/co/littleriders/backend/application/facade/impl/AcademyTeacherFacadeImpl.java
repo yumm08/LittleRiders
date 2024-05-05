@@ -2,7 +2,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
@@ -58,7 +58,7 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 	}
 
 	@Override
-	public Resource readTeacherImage(Long academyId, Long teacherId) {
+	public Map<String, Object> readTeacherImage(Long academyId, Long teacherId) {
 
 		Academy academy = academyService.findById(academyId);
 		Teacher teacher = teacherService.findById(teacherId);
@@ -67,8 +67,8 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 		}
 
 		String imagePath = teacher.getImagePath();
-		Resource resource = imageUtil.getImage(imagePath);
+		Map<String, Object> result = imageUtil.getImage(imagePath);
 
-		return resource;
+		return result;
 	}
 }
