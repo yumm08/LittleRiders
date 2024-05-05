@@ -21,13 +21,15 @@ public class StationController {
     // 정류장 등록
     @PostMapping
     public ResponseEntity<Void> createStation(@Auth AuthAcademy authAcademy, @RequestBody StationRequest createRequest) {
-        stationFacade.createStation(authAcademy, createRequest);
+        long academyId = authAcademy.getId();
+        stationFacade.createStation(academyId, createRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 정류장 목록 조회
     @GetMapping
     public ResponseEntity<List<StationResponse>> searchStationByName(@Auth AuthAcademy authAcademy, @RequestParam(required = false, defaultValue = "") String name) {
-        return ResponseEntity.ok().body(stationFacade.searchByName(name, authAcademy));
+        long academyId = authAcademy.getId();
+        return ResponseEntity.ok().body(stationFacade.searchByName(name, academyId));
     }
 }

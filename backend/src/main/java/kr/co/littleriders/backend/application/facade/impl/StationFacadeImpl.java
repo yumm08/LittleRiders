@@ -9,7 +9,6 @@ import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
 import kr.co.littleriders.backend.domain.station.error.exception.StationException;
-import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +25,7 @@ class StationFacadeImpl implements StationFacade {
 
     @Transactional
     @Override
-    public void createStation(AuthAcademy authAcademy, StationRequest stationRequest) {
-        Long academyId = authAcademy.getId();
+    public void createStation(long academyId, StationRequest stationRequest) {
         Academy academy = academyService.findById(academyId);
 
         String name = stationRequest.getName();
@@ -39,8 +37,7 @@ class StationFacadeImpl implements StationFacade {
     }
 
     @Override
-    public List<StationResponse> searchByName(String name, AuthAcademy authAcademy) {
-        Long academyId = authAcademy.getId();
+    public List<StationResponse> searchByName(String name, long academyId) {
         List<Station> stationList = stationService.findAllByAcademyIdAndName(academyId, name);
         return stationList.stream()
                 .map(StationResponse::from)

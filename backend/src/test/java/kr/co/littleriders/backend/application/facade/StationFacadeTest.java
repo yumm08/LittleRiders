@@ -51,7 +51,7 @@ public class StationFacadeTest {
             StationRequest stationCreateRequest = new StationRequest("역삼역", 53.2, 55.6);
 
             // when
-            stationFacade.createStation(authAcademy, stationCreateRequest);
+            stationFacade.createStation(academy.getId(), stationCreateRequest);
 
             // then
             List<Station> stationList = stationService.findAllByAcademyIdAndName(authAcademy.getId(), "역삼역");
@@ -66,12 +66,12 @@ public class StationFacadeTest {
 
             // given
             StationRequest stationCreateRequest1 = new StationRequest("역삼역", 53.2, 55.6);
-            stationFacade.createStation(authAcademy, stationCreateRequest1);
+            stationFacade.createStation(academy.getId(), stationCreateRequest1);
 
             StationRequest stationCreateRequest2 = new StationRequest("역삼역", 22, 33);
 
             // when, then
-            assertThatThrownBy(() -> stationFacade.createStation(authAcademy, stationCreateRequest2))
+            assertThatThrownBy(() -> stationFacade.createStation(academy.getId(), stationCreateRequest2))
                     .isInstanceOf(StationException.class)
                     .hasMessageContaining(StationErrorCode.DUPLICATE_NAME.getMessage());
         }
