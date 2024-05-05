@@ -6,6 +6,7 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
+import kr.co.littleriders.backend.application.facade.SseFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
@@ -25,6 +26,8 @@ import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
+import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
@@ -55,6 +58,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final ShuttleLocationHistoryService shuttleLocationHistoryService;
     private final ShuttleDriveService shuttleDriveService;
     private final ShuttleChildRideService shuttleChildRideService;
+    private final SseFacade sseFacade;
+
 
     private final ShuttleDriveHistoryService shuttleDriveHistoryService;
 
@@ -187,6 +192,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         }
 
         shuttleLocationHistoryService.save(locationHistory);
+        sseFacade.broadcastShuttleLocation(shuttleId,locationRequest);
+
     }
 
 }
