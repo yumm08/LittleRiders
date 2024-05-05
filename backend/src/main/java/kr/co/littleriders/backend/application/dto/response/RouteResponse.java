@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 public class RouteResponse {
     private long id;
     private String name;
+    private String type;
 
     public static RouteResponse from(Route route) {
         long id = route.getId();
         String name = route.getName();
+        String type = route.getType();
 
-        return new RouteResponse(id, name);
+        return new RouteResponse(id, name, type);
     }
 }

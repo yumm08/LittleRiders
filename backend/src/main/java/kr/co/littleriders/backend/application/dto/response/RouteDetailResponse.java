@@ -16,12 +16,14 @@ import java.util.stream.Collectors;
 public class RouteDetailResponse {
     private Long id;
     private String name;
+    private String type;
     private List<StationInfo> stationList;
 
     public static RouteDetailResponse from(Route route) {
         RouteDetailResponse response = new RouteDetailResponse();
         response.id = route.getId();
         response.name = route.getName();
+        response.type = route.getType();
         response.stationList = route.getRouteStationList().stream()
                 .sorted(Comparator.comparingInt(RouteStation::getVisitOrder))
                 .map(routeStation -> new StationInfo(

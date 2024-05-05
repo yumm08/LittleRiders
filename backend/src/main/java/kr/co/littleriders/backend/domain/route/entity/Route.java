@@ -23,24 +23,29 @@ public class Route {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "academy_id",nullable = false)
+    @JoinColumn(name = "academy_id", nullable = false)
     private Academy academy; // 학원
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name; // 경로명
+
+    @Column(name = "type", nullable = false)
+    private String type; // 경로 타입 - 등원(board). 하원(drop)
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RouteStation> routeStationList; // 정류장 목록
 
-    private Route(final Academy academy, String name) {
+    private Route(final Academy academy, String name, String type) {
         this.academy = academy;
         this.name = name;
+        this.type = type;
     }
 
-    public static Route of(final Academy academy, String name) {
+    public static Route of(final Academy academy, String name, String type) {
         return new Route(
                 academy,
-                name
+                name,
+                type
         );
     }
 
