@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.AcademyChildUpdateRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.ChildFixture;
+import kr.co.littleriders.backend.common.fixture.FamilyFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -15,7 +18,6 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
-import kr.co.littleriders.backend.global.entity.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,18 +73,19 @@ class AcademyChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+
+			Academy academy = AcademyFixture.BASEBALL.toAcademy();
 			academyService.save(academy);
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
-			Family family1 = Family.of("test2@com", "password", "테스트부모2", "테스트시 테스트동", "010-1113");
+			Family family1 = FamilyFixture.HONG.toFamily();
 			familyService.save(family1);
 
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.CHOI_FEMALE.toChild(family);
 			childService.save(child);
-			Child child1 = Child.of("테스트아이1", LocalDate.of(2024, 4,27), Gender.MALE, family);
+			Child child1 = ChildFixture.PARK_MALE.toChild(family);
 			childService.save(child1);
-			Child child2 = Child.of("테스트아이2", LocalDate.of(2024, 4,17), Gender.MALE, family1);
+			Child child2 = ChildFixture.CHOI_MALE.toChild(family1);
 			childService.save(child2);
 
 			AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
@@ -119,18 +121,18 @@ class AcademyChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+			Academy academy = AcademyFixture.BASEBALL.toAcademy();
 			academyService.save(academy);
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
-			Family family1 = Family.of("test2@com", "password", "테스트부모2", "테스트시 테스트동", "010-1113");
+			Family family1 = FamilyFixture.HONG.toFamily();
 			familyService.save(family1);
 
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.CHOI_FEMALE.toChild(family);
 			childService.save(child);
-			Child child1 = Child.of("테스트아이1", LocalDate.of(2024, 4,27), Gender.MALE, family);
+			Child child1 = ChildFixture.PARK_MALE.toChild(family);
 			childService.save(child1);
-			Child child2 = Child.of("테스트아이2", LocalDate.of(2024, 4,17), Gender.MALE, family1);
+			Child child2 = ChildFixture.CHOI_MALE.toChild(family1);
 			childService.save(child2);
 
 			AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
@@ -170,18 +172,18 @@ class AcademyChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+			Academy academy = AcademyFixture.BASEBALL.toAcademy();
 			academyService.save(academy);
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
-			Family family1 = Family.of("test2@com", "password", "테스트부모2", "테스트시 테스트동", "010-1113");
+			Family family1 = FamilyFixture.HONG.toFamily();
 			familyService.save(family1);
 
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.CHOI_FEMALE.toChild(family);
 			childService.save(child);
-			Child child1 = Child.of("테스트아이1", LocalDate.of(2024, 4,27), Gender.MALE, family);
+			Child child1 = ChildFixture.PARK_MALE.toChild(family);
 			childService.save(child1);
-			Child child2 = Child.of("테스트아이2", LocalDate.of(2024, 4,17), Gender.MALE, family1);
+			Child child2 = ChildFixture.CHOI_MALE.toChild(family1);
 			childService.save(child2);
 
 			Pending pending = Pending.of(academy, child, PendingStatus.PENDING);
@@ -212,18 +214,18 @@ class AcademyChildControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+			Academy academy = AcademyFixture.BASEBALL.toAcademy();
 			academyService.save(academy);
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
-			Family family1 = Family.of("test2@com", "password", "테스트부모2", "테스트시 테스트동", "010-1113");
+			Family family1 = FamilyFixture.HONG.toFamily();
 			familyService.save(family1);
 
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.CHOI_FEMALE.toChild(family);
 			childService.save(child);
-			Child child1 = Child.of("테스트아이1", LocalDate.of(2024, 4,27), Gender.MALE, family);
+			Child child1 = ChildFixture.PARK_MALE.toChild(family);
 			childService.save(child1);
-			Child child2 = Child.of("테스트아이2", LocalDate.of(2024, 4,17), Gender.MALE, family1);
+			Child child2 = ChildFixture.CHOI_MALE.toChild(family1);
 			childService.save(child2);
 
 			Pending pending1 = Pending.of(academy, child, PendingStatus.PENDING);
@@ -268,18 +270,18 @@ class AcademyChildControllerTest {
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
 
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+			Academy academy = AcademyFixture.BASEBALL.toAcademy();
 			academyService.save(academy);
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
-			Family family1 = Family.of("test2@com", "password", "테스트부모2", "테스트시 테스트동", "010-1113");
+			Family family1 = FamilyFixture.HONG.toFamily();
 			familyService.save(family1);
 
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.CHOI_FEMALE.toChild(family);
 			childService.save(child);
-			Child child1 = Child.of("테스트아이1", LocalDate.of(2024, 4,27), Gender.MALE, family);
+			Child child1 = ChildFixture.PARK_MALE.toChild(family);
 			childService.save(child1);
-			Child child2 = Child.of("테스트아이2", LocalDate.of(2024, 4,17), Gender.MALE, family1);
+			Child child2 = ChildFixture.CHOI_MALE.toChild(family1);
 			childService.save(child2);
 
 			Pending pending1 = Pending.of(academy, child, PendingStatus.PENDING);
@@ -290,9 +292,9 @@ class AcademyChildControllerTest {
 			pendingService.save(pending3);
 
 			List<Long> pendingIdList = new ArrayList<>();
-			pendingIdList.add(1L);
-			pendingIdList.add(2L);
-			pendingIdList.add(3L);
+			pendingIdList.add(pending1.getId());
+			pendingIdList.add(pending2.getId());
+			pendingIdList.add(pending3.getId());
 
 			mockMvc.perform(
 					delete("/academy/child/pending")
@@ -319,11 +321,12 @@ class AcademyChildControllerTest {
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
 
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+
+			Academy academy = AcademyFixture.SOCCER.toAcademy();
 			academyService.save(academy);
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.KIM_MALE.toChild(family);
 			childService.save(child);
 
 			// academyFamily

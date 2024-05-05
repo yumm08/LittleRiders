@@ -1,6 +1,5 @@
 package kr.co.littleriders.backend.application.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
@@ -104,7 +103,7 @@ class FamilyAccountControllerTest {
                     jwtToken
             );
 
-            SignInRequest signInRequest = SignInRequest.of("apple", "1234");
+            SignInRequest signInRequest = new SignInRequest("apple", "1234");
 
 
             mockMvc.perform(

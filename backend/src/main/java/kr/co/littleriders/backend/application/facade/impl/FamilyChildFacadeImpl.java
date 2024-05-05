@@ -1,12 +1,5 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyList;
 import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
@@ -22,6 +15,12 @@ import kr.co.littleriders.backend.domain.child.error.exception.ChildException;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +45,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 			child.setImagePath(imagePath);
 		}
 		// TODO-이윤지-ChildHistory에도 저장하는 기능 추가
+		// TODO-김도현-책임에 대해 한번 더 고민해보기
 
 		return childService.save(child);
 	}
