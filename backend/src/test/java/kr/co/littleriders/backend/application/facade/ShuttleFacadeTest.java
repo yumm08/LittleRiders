@@ -106,7 +106,7 @@ public class ShuttleFacadeTest {
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
-            Route route = Route.of(academy, "등원A");
+            Route route = Route.of(academy, "등원A", "board");
             routeService.save(route);
             Driver driver = Driver.of("이름", "010-1111-1111", academy, DriverStatus.WORK);
             driverService.save(driver);
