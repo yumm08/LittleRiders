@@ -34,7 +34,7 @@ public class StationController {
     }
 
     // 정류장 수정
-    @PostMapping("/{station_id}")
+    @PutMapping("/{station_id}")
     public ResponseEntity<Void> updateStation(@Auth AuthAcademy authAcademy, @PathVariable("station_id") long stationId, @RequestBody StationRequest stationRequest) {
         long academyId = authAcademy.getId();
         stationFacade.updateStation(academyId, stationId, stationRequest);
