@@ -1,8 +1,11 @@
 package kr.co.littleriders.backend.application.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,11 +32,10 @@ public class FamilyChildController {
 	private final FamilyChildFacade familyChildFacade;
 
 	@PostMapping
-//	public ResponseEntity<Long> addChild(@Auth AuthFamily authFamily,
-	public ResponseEntity<Long> addChild(
+	public ResponseEntity<Long> addChild(@Auth AuthFamily authFamily,
 										@ModelAttribute @Valid ChildRegistRequest childRegistRequest) {
 
-		Long familyId = 1L;
+		Long familyId = authFamily.getId();
 		Long childId = familyChildFacade.insertChild(childRegistRequest, familyId);
 
 		return ResponseEntity.ok().body(childId);
@@ -64,8 +66,18 @@ public class FamilyChildController {
 
 		Long familyId = authFamily.getId();
 
-		Resource resource = familyChildFacade.readChildImage(familyId, childId);
+		Map<String, Object> image = familyChildFacade.readChildImage(familyId, childId);
 
-		return ResponseEntity.ok().body(resource);
+		Resource imageResource = (Resource) image.get("resource");
+		MediaType mediaType = (MediaType) image.get("mediaType");
+
+		HttpHeaders headers = new HttpHeaders();
+		if (mediaType != null) {
+			headers.setContentType(mediaType);
+		} else {
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
+
+		return ResponseEntity.ok().headers(headers).body(imageResource);
 	}
 }

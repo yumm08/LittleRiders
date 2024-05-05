@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.facade;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
@@ -15,5 +16,5 @@ public interface FamilyChildFacade {
 
 	ChildDetailResponse readChildDetail(Long familyId, Long childId);
 
-    Resource readChildImage(Long familyId, Long childId);
+	Map<String, Object> readChildImage(Long familyId, Long childId);
 }

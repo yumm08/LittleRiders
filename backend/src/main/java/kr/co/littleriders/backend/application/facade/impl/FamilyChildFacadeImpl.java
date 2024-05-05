@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.domain.history.ChildHistoryService;
@@ -47,10 +48,11 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 			child.setImagePath(imagePath);
 		}
 
+		Long childId = childService.save(child);
 		ChildHistory childHistory = ChildHistory.from(child);
 		childHistoryService.save(childHistory);
 
-		return childService.save(child);
+		return childId;
 	}
 
 	@Override
@@ -91,7 +93,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 	}
 
 	@Override
-	public Resource readChildImage(Long familyId, Long childId) {
+	public Map<String, Object> readChildImage(Long familyId, Long childId) {
 
 		Family family = familyService.findById(familyId);
 		Child child = childService.findById(childId);
@@ -100,8 +102,8 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 		}
 
 		String imagePath = child.getImagePath();
-		Resource resource = imageUtil.getImage(imagePath);
+		Map<String, Object> result = imageUtil.getImage(imagePath);
 
-		return resource;
+		return result;
 	}
 }
