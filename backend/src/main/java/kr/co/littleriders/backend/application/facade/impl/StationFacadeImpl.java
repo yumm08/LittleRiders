@@ -1,6 +1,6 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
-import kr.co.littleriders.backend.application.dto.request.StationCreateRequest;
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.application.dto.response.StationResponse;
 import kr.co.littleriders.backend.application.facade.StationFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -26,15 +26,15 @@ class StationFacadeImpl implements StationFacade {
 
     @Transactional
     @Override
-    public void createStation(AuthAcademy authAcademy, StationCreateRequest createRequest) {
+    public void createStation(AuthAcademy authAcademy, StationRequest stationRequest) {
         Long academyId = authAcademy.getId();
         Academy academy = academyService.findById(academyId);
 
-        String name = createRequest.getName();
+        String name = stationRequest.getName();
         if (stationService.existsByAcademyIdAndName(academyId, name)) {
             throw StationException.from(StationErrorCode.DUPLICATE_NAME);
         }
-        Station station = createRequest.toStation(academy);
+        Station station = stationRequest.toStation(academy);
         stationService.save(station);
     }
 

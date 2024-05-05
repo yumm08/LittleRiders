@@ -1,6 +1,6 @@
 package kr.co.littleriders.backend.application.facade;
 
-import kr.co.littleriders.backend.application.dto.request.StationCreateRequest;
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.station.StationService;
@@ -48,7 +48,7 @@ public class StationFacadeTest {
         @DisplayName("성공")
         void whenSuccess() throws Exception {
             // given
-            StationCreateRequest stationCreateRequest = new StationCreateRequest("역삼역", 53.2, 55.6);
+            StationRequest stationCreateRequest = new StationRequest("역삼역", 53.2, 55.6);
 
             // when
             stationFacade.createStation(authAcademy, stationCreateRequest);
@@ -65,10 +65,10 @@ public class StationFacadeTest {
             // 이미 존재하는 정류장 이름으로 등록 시 예외 발생
 
             // given
-            StationCreateRequest stationCreateRequest1 = new StationCreateRequest("역삼역", 53.2, 55.6);
+            StationRequest stationCreateRequest1 = new StationRequest("역삼역", 53.2, 55.6);
             stationFacade.createStation(authAcademy, stationCreateRequest1);
 
-            StationCreateRequest stationCreateRequest2 = new StationCreateRequest("역삼역", 22, 33);
+            StationRequest stationCreateRequest2 = new StationRequest("역삼역", 22, 33);
 
             // when, then
             assertThatThrownBy(() -> stationFacade.createStation(authAcademy, stationCreateRequest2))

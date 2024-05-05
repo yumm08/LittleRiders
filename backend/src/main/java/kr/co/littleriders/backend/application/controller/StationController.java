@@ -1,6 +1,6 @@
 package kr.co.littleriders.backend.application.controller;
 
-import kr.co.littleriders.backend.application.dto.request.StationCreateRequest;
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.application.dto.response.StationResponse;
 import kr.co.littleriders.backend.application.facade.StationFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
@@ -20,7 +20,7 @@ public class StationController {
 
     // 정류장 등록
     @PostMapping
-    public ResponseEntity<Void> createStation(@Auth AuthAcademy authAcademy, @RequestBody StationCreateRequest createRequest) {
+    public ResponseEntity<Void> createStation(@Auth AuthAcademy authAcademy, @RequestBody StationRequest createRequest) {
         stationFacade.createStation(authAcademy, createRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
