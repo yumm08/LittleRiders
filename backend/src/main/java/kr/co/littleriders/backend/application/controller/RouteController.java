@@ -29,7 +29,7 @@ public class RouteController {
     }
 
     // 노선별 정류장 추가
-    @PostMapping("/{route_id}/")
+    @PostMapping("/{route_id}")
     public ResponseEntity<Void> addRouteStation(@Auth AuthAcademy authAcademy, @PathVariable("route_id") long routeId, @RequestBody List<RouteStationRequest> requestList) {
         long academyId = authAcademy.getId();
         routeFacade.addRouteStation(academyId, routeId, requestList);
