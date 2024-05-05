@@ -77,6 +77,23 @@ public class StationFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("정류장 수정 테스트")
+    class updateStationTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+
+            StationRequest stationRequest = new StationRequest("하원B", 56.4, 76.3);
+
+            Station station = Station.of(academy, "등원B", 46.2, 35.3);
+            long stationId = stationService.save(station);
+
+            stationFacade.updateStation(academy.getId(), stationId, stationRequest);
+        }
+    }
+
+
 //    @Nested
 //    @DisplayName("정류장 목록 조회 테스트")
 //    class searchByNameTest {
