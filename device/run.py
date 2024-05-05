@@ -89,6 +89,7 @@ class PositionSaver(ObserverInterface):
         latitude = position.getLatitude()
         longitude = position.getLongitude()
         speed = position.getSpeed()
+        apiFetcher.uploadPosition(position)
         entity = Position(latitude=latitude,longitude=longitude,speed=speed,time=datetime.now())
         self.positionRepository.save(entity)
 

@@ -44,12 +44,15 @@ class APIFetcher:
         
         return response.json()
         
-
-    def uploadPosition(self,posistion) -> None:
-        print(posistion)
-
-    def uploadPosition(self,posistion : RMCPosition) -> None:
-        print(posistion)
+    def uploadPosition(self,position :RMCPosition) -> None:
+        url = f"{self.BASE_URL}/shuttle/location"
+        data = position.toJson()
+        
+        response = requests.post(url,headers=self.headers,json=data)
+        print(response.status_code)
+        if(response.status_code != 201):
+            self._reIssue()
+            return self.uploadPosition(position=position)
 
 if __name__ == "__main__":
     apiFetcher = APIFetcher("")
