@@ -1,6 +1,6 @@
 package kr.co.littleriders.backend.application.facade;
 
-import kr.co.littleriders.backend.application.dto.request.StationCreateRequest;
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.common.fixture.StationFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -53,7 +53,7 @@ public class StationFacadeTest {
             // given
 
             StationFixture stationFixture = StationFixture.YEOK_SAM;
-            StationCreateRequest stationCreateRequest = stationFixture.toStationCreateRequest();
+            StationRequest stationCreateRequest = stationFixture.toStationRequest();
 
             // when
             stationFacade.createStation(academy.getId(), stationCreateRequest);
@@ -70,13 +70,13 @@ public class StationFacadeTest {
             //given
 
             StationFixture stationFixture = StationFixture.YEOK_SAM;
-            StationCreateRequest stationCreateRequest = stationFixture.toStationCreateRequest();
+            StationRequest stationCreateRequest = stationFixture.toStationRequest();
 
             Academy computerAcademy = AcademyFixture.COMPUTER.toAcademy();
             academyService.save(computerAcademy);
             AuthAcademy authComputerAcademy = AuthAcademy.from(computerAcademy);
 
-            stationFacade.createStation(authComputerAcademy, stationCreateRequest);
+            stationFacade.createStation(authComputerAcademy.getId(), stationCreateRequest);
 
             Academy baseballAcademy = AcademyFixture.BASEBALL.toAcademy();
             academyService.save(baseballAcademy);
@@ -84,7 +84,7 @@ public class StationFacadeTest {
 
             assertDoesNotThrow(
                     () -> {
-                        stationFacade.createStation(authBaseballAcademy, stationCreateRequest);
+                        stationFacade.createStation(authBaseballAcademy.getId(), stationCreateRequest);
                     }
             );
 
@@ -99,10 +99,10 @@ public class StationFacadeTest {
             // given
             StationFixture stationFixture = StationFixture.YEOK_SAM;
 
-            StationCreateRequest stationCreateRequest1 = stationFixture.toStationCreateRequest();
-            stationFacade.createStation(authAcademy, stationCreateRequest1);
+            StationRequest stationCreateRequest1 = stationFixture.toStationRequest();
+            stationFacade.createStation(authAcademy.getId(), stationCreateRequest1);
 
-            StationCreateRequest stationCreateRequest2 = stationFixture.toStationCreateRequest();
+            StationRequest stationCreateRequest2 = stationFixture.toStationRequest();
 
             // when, then
             assertThatThrownBy(() -> stationFacade.createStation(academy.getId(), stationCreateRequest2))

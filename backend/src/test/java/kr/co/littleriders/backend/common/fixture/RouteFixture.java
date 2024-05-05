@@ -45,13 +45,13 @@ public enum RouteFixture {
 
    private String name;
 
-    public Route toRoute(Academy academy){
-        return Route.of(academy, name  );
+    public Route toRoute(Academy academy,String type){
+        return Route.of(academy, name ,type );
     }
 
 
-    public RouteRequest toRouteRequest(){
-        return new RouteRequest(name);
+    public RouteRequest toRouteRequest(String type){
+        return new RouteRequest(name,type);
     }
 
 

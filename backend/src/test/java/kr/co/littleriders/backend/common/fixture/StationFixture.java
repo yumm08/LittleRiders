@@ -1,7 +1,7 @@
 package kr.co.littleriders.backend.common.fixture;
 
 
-import kr.co.littleriders.backend.application.dto.request.StationCreateRequest;
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import lombok.AccessLevel;
@@ -36,8 +36,8 @@ public enum StationFixture {
         return Station.of(academy, name, latitude, longitude);
     }
 
-    public StationCreateRequest toStationCreateRequest(){
-        return  new StationCreateRequest(name,latitude,longitude);
+    public StationRequest toStationRequest(){
+        return  new StationRequest(name,latitude,longitude);
     }
 
 }

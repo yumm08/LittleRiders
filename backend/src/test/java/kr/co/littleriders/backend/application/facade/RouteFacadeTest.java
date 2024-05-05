@@ -9,8 +9,6 @@ import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
-import kr.co.littleriders.backend.domain.route.RouteService;
-import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +48,7 @@ public class RouteFacadeTest {
         @DisplayName("성공")
         void whenSuccess() throws Exception {
             //RouteRequest routeRequest = new RouteRequest("등원A", "board");
-            RouteRequest routeRequest = RouteFixture.F.toRouteRequest();
+            RouteRequest routeRequest = RouteFixture.F.toRouteRequest("board");
             academyService.save(academy);
             assertDoesNotThrow(() -> {
                 routeFacade.createRoute(authAcademy, routeRequest);
@@ -63,9 +61,9 @@ public class RouteFacadeTest {
 
             //given
             RouteFixture routeFixture = RouteFixture.R;
-            RouteRequest routeRequest = routeFixture.toRouteRequest();
+            RouteRequest routeRequest = routeFixture.toRouteRequest("board");
             academyService.save(academy);
-            Route route = routeFixture.toRoute(academy);
+            Route route = routeFixture.toRoute(academy,"board");
             routeService.save(route);
 
 
