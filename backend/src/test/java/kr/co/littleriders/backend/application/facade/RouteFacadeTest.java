@@ -182,4 +182,16 @@ public class RouteFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("노선 목록 조회 테스트")
+    class getAllRoute {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            long academyId = academy.getId();
+            routeFacade.getAllRoute(academyId);
+        }
+    }
+
 }
