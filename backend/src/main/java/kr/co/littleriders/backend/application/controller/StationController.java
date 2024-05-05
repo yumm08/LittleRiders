@@ -35,7 +35,7 @@ public class StationController {
 
     // 정류장 수정
     @PostMapping("/{station_id}")
-    public ResponseEntity<List<StationResponse>> updateStation(@Auth AuthAcademy authAcademy, @PathVariable("station_id") long stationId, @RequestBody StationRequest stationRequest) {
+    public ResponseEntity<Void> updateStation(@Auth AuthAcademy authAcademy, @PathVariable("station_id") long stationId, @RequestBody StationRequest stationRequest) {
         long academyId = authAcademy.getId();
         stationFacade.updateStation(academyId, stationId, stationRequest);
         return ResponseEntity.ok().build();
@@ -43,7 +43,7 @@ public class StationController {
 
     // 정류장 삭제
     @DeleteMapping("/{station_id}")
-    public ResponseEntity<List<StationResponse>> deleteStation(@Auth AuthAcademy authAcademy, @PathVariable("station_id") long stationId) {
+    public ResponseEntity<Void> deleteStation(@Auth AuthAcademy authAcademy, @PathVariable("station_id") long stationId) {
         long academyId = authAcademy.getId();
         stationFacade.deleteStation(academyId, stationId);
         return ResponseEntity.ok().build();
