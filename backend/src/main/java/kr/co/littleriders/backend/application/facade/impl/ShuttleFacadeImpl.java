@@ -101,7 +101,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     @Override
     public void endDrive(long shuttleId) {
 
-        //TODO : ifnotexists then throw error 추가
+        //TODO - 김도현 - ifnotexists then throw error 추가
 
 
         //실시간 위도 경도 정보
@@ -147,6 +147,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         //TODO - 김도현: 어린이 삭제 필요
 
+        //TODO - 김도현 : 운행종료 노티 모두 던지기
 
     }
 
