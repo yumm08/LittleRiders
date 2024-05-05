@@ -72,7 +72,7 @@ class ModelHelper:
         return cls._instance
 
     def __init__(self):
-        engine = create_engine('sqlite:///terminal.db', echo=True)
+        engine = create_engine('sqlite:///terminal.db', echo=False)
         Base.metadata.create_all(engine)
         Session = sessionmaker(bind=engine)
         self.session = Session()
