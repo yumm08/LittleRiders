@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.facade;
 
+import kr.co.littleriders.backend.global.auth.dto.AuthDTO;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 
 public interface AccountFacade {
@@ -11,4 +12,11 @@ public interface AccountFacade {
     JwtToken signIn(String email,String password);
 
     JwtToken signInByTerminalNumber(String terminalNumber);
+
+    void sendChangePasswordEmail(String email);
+
+    JwtToken signInByEmailAndVerificationCode(String email, String code);
+
+    void changePassword(AuthDTO authDTO, String password);
+
 }

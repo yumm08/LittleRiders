@@ -13,6 +13,7 @@ import kr.co.littleriders.backend.global.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class Academy implements Member {
     private String email; // 이메일
 
 
+    @Setter
     @Column(name = "password", nullable = false)
     private String password; // 비밀번호
 

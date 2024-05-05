@@ -79,7 +79,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         MemberType memberType = jwtMemberInfo.getMemberType();
 
         //유효하지 않은 멤버 타입인 경우
-        if (parameterMemberType != memberType) {
+        if (parameterMemberType != memberType && !parameterType.equals(AuthDTO.class)) {
             throw AuthException.from(AuthErrorCode.JWT_NOT_SUPPORT);
         }
 

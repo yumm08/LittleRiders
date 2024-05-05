@@ -7,6 +7,8 @@ public interface VerificationService {
 
     Verification findFamilySignUpByEmailAndCode(String email, String code);
 
+    Verification findByEmail(String email);
+
     void save(Verification verification);
 
     void extendsTimeByEmail(String email);

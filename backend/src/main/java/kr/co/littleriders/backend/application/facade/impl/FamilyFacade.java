@@ -60,7 +60,7 @@ class FamilyFacade implements FamilyAccountFacade {
         Verification verification = Verification.of(email, VerificationType.FAMILY_SIGN_UP);
         verificationService.save(verification);
         String code = verification.getCode();
-        mailHelper.sendVerificationEmail(email, code);
+        mailHelper.sendSignUpVerificationEmail(email, code);
 
         return code;
 
@@ -74,7 +74,7 @@ class FamilyFacade implements FamilyAccountFacade {
         Verification verification = Verification.of(email, VerificationType.FAMILY_CHANGE_PASSWORD);
         verificationService.save(verification);
         String code = verification.getCode();
-        mailHelper.sendVerificationEmail(email, code);
+        mailHelper.sendSignUpVerificationEmail(email, code);
     }
 
     @Override
