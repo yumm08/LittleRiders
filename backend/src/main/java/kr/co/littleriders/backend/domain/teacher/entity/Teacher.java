@@ -62,4 +62,8 @@ public class Teacher {
     private static String generateCode() {
         return UUID.randomUUID().toString();
     }
+
+    public boolean equalsAcademy(Academy academy) {
+        return this.academy.equals(academy);
+    }
 }

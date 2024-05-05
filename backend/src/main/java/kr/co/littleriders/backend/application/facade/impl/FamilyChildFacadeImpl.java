@@ -1,10 +1,12 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import kr.co.littleriders.backend.domain.history.ChildHistoryService;
+import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +32,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 	private final ChildService childService;
 	private final FamilyService familyService;
 	private final AcademyChildService academyChildService;
+	private final ChildHistoryService childHistoryService;
 	private final ImageUtil imageUtil;
 
 	@Override
@@ -39,11 +42,13 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 		Child child = childRegistRequest.toEntity(family);
 
 		MultipartFile image = childRegistRequest.getImage();
-		if(image !=null){
+		if(image != null){
 			String imagePath = imageUtil.saveImage(image);
 			child.setImagePath(imagePath);
 		}
-		// TODO-이윤지-ChildHistory에도 저장하는 기능 추가
+
+		ChildHistory childHistory = ChildHistory.from(child);
+		childHistoryService.save(childHistory);
 
 		return childService.save(child);
 	}
@@ -83,5 +88,20 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 		ChildDetailResponse childDetail = ChildDetailResponse.of(child, status, academyList);
 
 		return childDetail;
+	}
+
+	@Override
+	public Resource readChildImage(Long familyId, Long childId) {
+
+		Family family = familyService.findById(familyId);
+		Child child = childService.findById(childId);
+		if (!child.equalsFamily(family)) {
+			throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
+		}
+
+		String imagePath = child.getImagePath();
+		Resource resource = imageUtil.getImage(imagePath);
+
+		return resource;
 	}
 }

@@ -63,5 +63,7 @@ public class Driver {
         return UUID.randomUUID().toString();
     }
 
-
+    public boolean equalsAcademy(Academy academy) {
+        return this.academy.equals(academy);
+    }
 }

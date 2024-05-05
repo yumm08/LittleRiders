@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.controller;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +23,11 @@ public class AcademyDriverController {
 	private final AcademyDriverFacade academyDriverFacade;
 
 	@PostMapping
-	public ResponseEntity<Long> addDriver(@Auth AuthAcademy authAcademy,
+//	public ResponseEntity<Long> addDriver(@Auth AuthAcademy authAcademy,
+	public ResponseEntity<Long> addDriver(
 										  @ModelAttribute @Valid DriverRegistRequest driverRegistRequest) {
 
-		Long academyId = authAcademy.getId();
+		Long academyId = 1L;
 
 		Long driverId = academyDriverFacade.insertDriver(driverRegistRequest, academyId);
 
@@ -40,5 +42,16 @@ public class AcademyDriverController {
 		List<AcademyDriverResponse> driverList = academyDriverFacade.readDriverList(academyId);
 
 		return ResponseEntity.ok().body(driverList);
+	}
+
+	@GetMapping("/{driverId}/image")
+	public ResponseEntity<Resource> getDriverImage(@Auth AuthAcademy authAcademy,
+												   @PathVariable(value = "driverId") Long driverId) {
+
+		Long academyId = authAcademy.getId();
+
+		Resource resource = academyDriverFacade.readDriverImage(academyId, driverId);
+
+		return ResponseEntity.ok().body(resource);
 	}
 }

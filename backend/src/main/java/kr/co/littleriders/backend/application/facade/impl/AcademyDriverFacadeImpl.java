@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
+import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
+import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +37,7 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 		Driver driver = driverRegistRequest.toEntity(academy);
 
 		MultipartFile image = driverRegistRequest.getImage();
-		if(image !=null){
+		if(image != null){
 			String imagePath = imageUtil.saveImage(image);
 			driver.setImagePath(imagePath);
 		}
@@ -53,5 +56,20 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 															  .collect(Collectors.toList());
 
 		return driverList;
+	}
+
+	@Override
+	public Resource readDriverImage(Long academyId, Long driverId) {
+
+		Academy academy = academyService.findById(academyId);
+		Driver driver = driverService.findById(driverId);
+		if (!driver.equalsAcademy(academy)) {
+			throw DriverException.from(DriverErrorCode.ILLEGAL_ACCESS);
+		}
+
+		String imagePath = driver.getImagePath();
+		Resource resource = imageUtil.getImage(imagePath);
+
+		return resource;
 	}
 }

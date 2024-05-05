@@ -5,6 +5,7 @@ import java.util.List;
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
+import org.springframework.core.io.Resource;
 
 public interface FamilyChildFacade {
 
@@ -13,4 +14,6 @@ public interface FamilyChildFacade {
 	List<ChildListResponse> readChildList(Long familyId);
 
 	ChildDetailResponse readChildDetail(Long familyId, Long childId);
+
+    Resource readChildImage(Long familyId, Long childId);
 }

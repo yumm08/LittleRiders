@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleResponse;
+import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +36,7 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 		Shuttle shuttle = shuttleRegistRequest.toEntity(academy);
 
 		MultipartFile image = shuttleRegistRequest.getImage();
-		if(image !=null){
+		if(image != null){
 			String imagePath = imageUtil.saveImage(image);
 			shuttle.setImagePath(imagePath);
 		}
@@ -55,5 +58,20 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 
 
 		return shuttleList;
+	}
+
+	@Override
+	public Resource readShuttleImage(Long academyId, Long shuttleId) {
+
+		Academy academy = academyService.findById(academyId);
+		Shuttle shuttle = shuttleService.findById(shuttleId);
+		if (!shuttle.equalsAcademy(academy)) {
+			throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
+		}
+
+		String imagePath = shuttle.getImagePath();
+		Resource resource = imageUtil.getImage(imagePath);
+
+		return resource;
 	}
 }

@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
 import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
+import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
+import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherException;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +37,7 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 		Teacher teacher = teacherRegistRequest.toEntity(academy);
 
 		MultipartFile image = teacherRegistRequest.getImage();
-		if(image !=null){
+		if(image != null){
 			String imagePath = imageUtil.saveImage(image);
 			teacher.setImagePath(imagePath);
 		}
@@ -52,5 +55,20 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 													.collect(Collectors.toList());
 
 		return teacherList;
+	}
+
+	@Override
+	public Resource readTeacherImage(Long academyId, Long teacherId) {
+
+		Academy academy = academyService.findById(academyId);
+		Teacher teacher = teacherService.findById(teacherId);
+		if (!teacher.equalsAcademy(academy)) {
+			throw TeacherException.from(TeacherErrorCode.ILLEGAL_ACCESS);
+		}
+
+		String imagePath = teacher.getImagePath();
+		Resource resource = imageUtil.getImage(imagePath);
+
+		return resource;
 	}
 }

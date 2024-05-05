@@ -11,6 +11,7 @@ public enum ShuttleErrorCode implements LittleRidersErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "002", "해당 경로에 접근할 권한이 없습니다.");
 
 
+
     ShuttleErrorCode(HttpStatus status, String code, String message) {
         this.status = status;
         this.code = "SHUTTLE_" + code;

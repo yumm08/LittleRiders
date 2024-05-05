@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.history.service;
 
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +17,10 @@ class ChildHistoryServiceImpl implements ChildHistoryService {
     @Override
     public ChildHistory findByCreatedAt(AcademyChild academyChild) {
         return childHistoryRepository.findByCreatedAt(academyChild.getChild(), academyChild.getUpdatedAt());
+    }
+
+    @Override
+    public void save(ChildHistory childHistory) {
+        childHistoryRepository.save(childHistory);
     }
 }
