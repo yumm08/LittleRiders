@@ -13,4 +13,5 @@ public interface StationFacade {
 
     void updateStation(long academyId, long stationId, StationRequest stationRequest);
 
+    void deleteStation(long academyId, long stationId);
 }

@@ -21,4 +21,6 @@ public interface StationService {
     List<Station> findAllByAcademyIdAndName(long academyId, String name);
 
     void updateStation(Station station, StationRequest stationRequest);
+
+    void deleteStation(Station station);
 }

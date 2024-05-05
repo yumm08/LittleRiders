@@ -41,4 +41,11 @@ public class StationController {
         return ResponseEntity.ok().build();
     }
 
+    // 정류장 삭제
+    @DeleteMapping("/{station_id}")
+    public ResponseEntity<List<StationResponse>> deleteStation(@Auth AuthAcademy authAcademy, @PathVariable("station_id") long stationId) {
+        long academyId = authAcademy.getId();
+        stationFacade.deleteStation(academyId, stationId);
+        return ResponseEntity.ok().build();
+    }
 }

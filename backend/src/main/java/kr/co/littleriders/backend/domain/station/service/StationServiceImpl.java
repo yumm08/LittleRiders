@@ -52,4 +52,9 @@ class StationServiceImpl implements StationService {
         station.update(stationRequest);
     }
 
+    @Override
+    public void deleteStation(Station station) {
+        stationRepository.delete(station);
+    }
+
 }

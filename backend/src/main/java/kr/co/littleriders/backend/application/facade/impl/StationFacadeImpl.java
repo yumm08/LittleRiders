@@ -54,4 +54,14 @@ class StationFacadeImpl implements StationFacade {
         stationService.updateStation(station, stationRequest);
     }
 
+    @Override
+    public void deleteStation(long academyId, long stationId) {
+        Station station = stationService.findById(stationId);
+
+        if(station.getAcademy().getId() != academyId) {
+            throw StationException.from(StationErrorCode.FORBIDDEN);
+        }
+        stationService.deleteStation(station);
+    }
+
 }
