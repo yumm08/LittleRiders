@@ -1,6 +1,8 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 import kr.co.littleriders.backend.application.dto.request.AcademyTerminalRegisterRequest;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.TerminalFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.terminal.TerminalService;
@@ -42,19 +44,12 @@ class AcademyTerminalFacadeImplTest {
 
             //given
 
-            Academy academy = Academy.of(
-                    "apple",
-                    "1234",
-                    "dummy",
-                    "apple",
-                    "010",
-                    33,
-                    44
-            );
-
+            Academy academy = AcademyFixture.BOXING.toAcademy();
             academyService.save(academy);
-            String createTerminalNumber = "apple";
-            AcademyTerminalRegisterRequest academyTerminalRegisterRequest = new AcademyTerminalRegisterRequest(createTerminalNumber);
+
+
+            TerminalFixture terminalFixture = TerminalFixture.T;
+            AcademyTerminalRegisterRequest academyTerminalRegisterRequest = terminalFixture.toAcademyTerminalRegisterRequest();
             given(terminalService.existsByTerminalNumber(any(String.class))).willReturn(false);
 
             assertDoesNotThrow(() -> {
@@ -67,19 +62,12 @@ class AcademyTerminalFacadeImplTest {
         @DisplayName("실패 이미 다른데서 등록된 경우")
         void whenFailTerminalAlreadyExists() {
 
-            Academy academy = Academy.of(
-                    "apple",
-                    "1234",
-                    "dummy",
-                    "apple",
-                    "010",
-                    33
-                    ,44
-            );
+            Academy academy = AcademyFixture.BOXING.toAcademy();
 
             academyService.save(academy);
-            String createTerminalNumber = "apple";
-            AcademyTerminalRegisterRequest academyTerminalRegisterRequest = new AcademyTerminalRegisterRequest(createTerminalNumber);
+
+            TerminalFixture terminalFixture = TerminalFixture.T;
+            AcademyTerminalRegisterRequest academyTerminalRegisterRequest = terminalFixture.toAcademyTerminalRegisterRequest();
             given(terminalService.existsByTerminalNumber(any(String.class))).willReturn(true);
 
             assertThrows(TerminalException.class,

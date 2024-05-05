@@ -87,7 +87,7 @@ class AccountControllerTest {
             );
             log.info("family = [{}]",objectMapper.writeValueAsString(family));
             familyService.save(family);
-            SignInRequest signInRequest = SignInRequest.of(email, password);
+            SignInRequest signInRequest = new SignInRequest(email, password);
             MvcResult signInResult = mockMvc.perform(
                             post("/family/account/sign-in")
                                     .contentType(MediaType.APPLICATION_JSON)
@@ -144,7 +144,7 @@ class AccountControllerTest {
             );
             log.info("family = [{}]",objectMapper.writeValueAsString(family));
             familyService.save(family);
-            SignInRequest signInRequest = SignInRequest.of(email, password);
+            SignInRequest signInRequest = new SignInRequest(email, password);
             MvcResult signInResult = mockMvc.perform(
                             post("/family/account/sign-in")
                                     .contentType(MediaType.APPLICATION_JSON)
@@ -195,7 +195,7 @@ class AccountControllerTest {
             );
             log.info("family = [{}]",objectMapper.writeValueAsString(family));
             familyService.save(family);
-            SignInRequest signInRequest = SignInRequest.of(email, password);
+            SignInRequest signInRequest = new SignInRequest(email, password);
             MvcResult signInResult = mockMvc.perform(
                             post("/family/account/sign-in")
                                     .contentType(MediaType.APPLICATION_JSON)
@@ -250,7 +250,7 @@ class AccountControllerTest {
             );
             log.info("family = [{}]",objectMapper.writeValueAsString(family));
             familyService.save(family);
-            SignInRequest signInRequest = SignInRequest.of(email, password);
+            SignInRequest signInRequest = new SignInRequest(email, password);
             MvcResult signInResult = mockMvc.perform(
                             post("/family/account/sign-in")
                                     .contentType(MediaType.APPLICATION_JSON)

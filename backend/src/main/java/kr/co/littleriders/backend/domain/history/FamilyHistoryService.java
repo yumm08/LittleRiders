@@ -5,4 +5,6 @@ import kr.co.littleriders.backend.domain.history.entity.FamilyHistory;
 
 public interface FamilyHistoryService {
 	FamilyHistory findByCreatedAt(AcademyFamily academyFamily);
+
+	long save(FamilyHistory familyHistory);
 }

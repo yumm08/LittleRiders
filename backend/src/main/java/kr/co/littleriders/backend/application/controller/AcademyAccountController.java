@@ -27,7 +27,7 @@ public class AcademyAccountController {
     private final AcademyAccountFacade academyAccountFacade;
 
     @GetMapping("/sign-up/validate")
-    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam String email) {
+    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam(name = "email") String email) {
         academyAccountFacade.sendSignUpEmail(email);
         return ResponseEntity.ok().build();
     }

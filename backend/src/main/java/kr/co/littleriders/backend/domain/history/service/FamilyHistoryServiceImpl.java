@@ -17,4 +17,9 @@ class FamilyHistoryServiceImpl implements FamilyHistoryService {
 	public FamilyHistory findByCreatedAt(AcademyFamily academyFamily) {
 		return familyHistoryRepository.findByFamilyAndCreatedAtBeforeOrderByCreatedAtDesc(academyFamily.getFamily(), academyFamily.getUpdatedAt());
 	}
+
+	@Override
+	public long save(FamilyHistory familyHistory) {
+		return familyHistoryRepository.save(familyHistory).getId();
+	}
 }

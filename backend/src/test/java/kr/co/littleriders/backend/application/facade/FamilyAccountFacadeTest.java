@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.application.facade;
 
 import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
+import kr.co.littleriders.backend.common.fixture.FamilyFixture;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -91,21 +92,16 @@ class FamilyAccountFacadeTest {
         @DisplayName("성공")
         void whenSuccess() throws InterruptedException {
 
-            String email = "test@example.com";
-            String password = "123456";
+            FamilyFixture familyFixture = FamilyFixture.KIM;
+            String email = familyFixture.getEmail();
+            String password = familyFixture.getPassword();
             String mailReceived = familyAccountFacade.sendSignUpEmail(email);
 
             String uuid = familyAccountFacade.getSignUpToken(email, mailReceived);
-            FamilySignUpRequest familySignUpRequest = new FamilySignUpRequest(
-                    email,
-                    password,
-                    "테스트",
-                    "집주소",
-                    "01012345678"
-            );
+            FamilySignUpRequest familySignUpRequest = familyFixture.tofamilySignUpRequest();
             familyAccountFacade.signUp(familySignUpRequest,uuid);
 
-            SignInRequest signInRequest = SignInRequest.of(email,password);
+            SignInRequest signInRequest = new SignInRequest(email,password);
             JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
 
             log.info("AccessToken = [{}]",jwtToken.getAccessToken());
