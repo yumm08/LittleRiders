@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 import kr.co.littleriders.backend.global.error.code.ImageErrorCode;
 import kr.co.littleriders.backend.global.error.exception.ImageException;
@@ -57,15 +60,39 @@ public class ImageUtil {
 		}
 	}
 
-    public Resource getImage(String imagePath) {
+	private MediaType getMediaType(String imagePath) {
+
+		String extension = null;
+		int dotIndex = imagePath.lastIndexOf('.');
+		if (dotIndex > 0 && dotIndex < imagePath.length() - 1) {
+			extension = imagePath.substring(dotIndex + 1);
+		}
+
+		switch (extension.toLowerCase()) {
+			case "jpeg":
+			case "jpg":
+				return MediaType.IMAGE_JPEG;
+			case "png":
+				return MediaType.IMAGE_PNG;
+			default:
+				throw ImageException.from(ImageErrorCode.ILLEGAL_EXTENSION);
+		}
+	}
+
+	public Map<String, Object> getImage(String imagePath) {
+		Map<String, Object> result = new HashMap<>();
 		Path imageFilePath = Paths.get(imagePath);
 
 		try {
 			Resource imageResource = new UrlResource(imageFilePath.toUri());
+			MediaType mediaType = getMediaType(imagePath);
 
-			return imageResource;
+			result.put("resource", imageResource);
+			result.put("mediaType", mediaType);
 		} catch (MalformedURLException urlException) {
 			throw ImageException.from(ImageErrorCode.NOT_FOUND);
 		}
+
+		return result;
     }
 }
