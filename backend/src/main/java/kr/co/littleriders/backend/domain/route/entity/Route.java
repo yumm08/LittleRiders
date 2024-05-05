@@ -50,5 +50,9 @@ public class Route {
     }
 
 
+    public void update(RouteRequest routeRequest) {
+        this.name = routeRequest.getName();
+        this.type = routeRequest.getType();
+    }
 
 }
