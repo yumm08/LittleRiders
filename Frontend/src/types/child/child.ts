@@ -5,8 +5,13 @@ const CHILD_STATUS = {
   LEAVE: 'LEAVE',
   ATTENDING: 'ATTENDING',
 } as const
+const CARD_TYPE = {
+  BARCODE: 'BARCODE',
+  BEACON: 'BEACON',
+} as const
 
 export type ChildStatus = (typeof CHILD_STATUS)[keyof typeof CHILD_STATUS]
+export type CardType = (typeof CARD_TYPE)[keyof typeof CARD_TYPE]
 
 export type ChildInfo = {
   academyChildId: number
@@ -15,4 +20,12 @@ export type ChildInfo = {
   gender: Gender
   imagePath: string
   childStatus: ChildStatus
+}
+
+export type ChildDetailInfo = ChildInfo & {
+  address: string
+  cardType: CardType
+  cardNumber: string
+  familyName: string
+  familyPhoneNumber: string
 }
