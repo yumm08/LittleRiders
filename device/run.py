@@ -2,14 +2,17 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import QUrl,QThread, pyqtSignal
+from PyQt5.QtCore import QObject, QUrl,QThread, pyqtSignal
 from Model import *
 from APIFetch import APIFetcher
 from Repository import *
 from SensorHelper import SensorHelper
+from BluetoohHelper import BluetoothHelper
 import sys
+import asyncio
 
 from datetime import datetime
+
 
 form_class = uic.loadUiType("untitled.ui")[0]
 modelHelper = ModelHelper()
@@ -19,17 +22,17 @@ terminalNumber = terminalRepository.findById(1).getTerminalNumber()
 apiFetcher = APIFetcher(terminalNumber)
 
 
-class PositionObserverInterface():
+class ObserverInterface():
     def notify(self,*args,**kwargs):
         pass
 
 
-class PositionProvider:
+class Provider:
 
     def __init__(self):
         self.__observers = []
 
-    def register(self,observer:PositionObserverInterface):
+    def register(self,observer:ObserverInterface):
         self.__observers.append(observer)
 
     def notifyAll(self,*args,**kwargs):
@@ -38,7 +41,7 @@ class PositionProvider:
 
 
 
-class PositionThread(QThread,PositionProvider):
+class PositionThread(QThread,Provider):
     positionUploadEvent = pyqtSignal(RMCPosition)
     def run(self):
         sensorReceiver = SensorHelper().getSensorReceiver()
@@ -53,9 +56,25 @@ class PositionThread(QThread,PositionProvider):
         self.terminate()
 
 
+class BluetoothThread(QThread,Provider):
+    def __init__(self):
+        super().__init__()
+        self.bluetoothHelper = BluetoothHelper()
 
-    
-class MainWindow(QMainWindow, form_class,PositionObserverInterface):
+    def run(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self.async_run())
+
+    async def async_run(self):
+        while True:
+            beaconUUIDList = await self.bluetoothHelper.getBeaconUUIDList()
+            self.notifyAll(beaconUUIDList=beaconUUIDList)
+ 
+
+
+        
+class MainWindow(QMainWindow, form_class,ObserverInterface):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -99,7 +118,7 @@ class MainWindow(QMainWindow, form_class,PositionObserverInterface):
 
 
 
-class PositionSaver(PositionObserverInterface):
+class PositionSaver(ObserverInterface):
     def __init__(self):
         modelHelper = ModelHelper()
         self.positionRepository = PositionRepository(modelHelper=modelHelper)
@@ -114,6 +133,9 @@ class PositionSaver(PositionObserverInterface):
         entity = Position(latitude=latitude,longitude=longitude,speed=speed,time=datetime.now())
         self.positionRepository.save(entity)
 
+
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = MainWindow()
@@ -123,6 +145,10 @@ if __name__ == "__main__":
     postionThread.start()
     postionThread.register(win)
     postionThread.register(positionSaver)
+
+    bluetoothThread = BluetoothThread()
+    bluetoothThread.start()
+
     
     win.show()
     app.exec()
