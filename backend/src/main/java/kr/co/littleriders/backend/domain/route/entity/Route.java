@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.route.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.application.dto.request.RouteRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
 import lombok.AccessLevel;
@@ -28,19 +29,30 @@ public class Route {
     @Column(name = "name",nullable = false)
     private String name; // 경로명
 
+    @Column(name = "type",nullable = false)
+    private String type; // 경로 타입
+
     @OneToMany(mappedBy = "route")
     private List<RouteStation> routeStationList; // 정류장 목록
 
-    private Route(final Academy academy, String name) {
+    private Route(final Academy academy, String name, String type) {
         this.academy = academy;
         this.name = name;
+        this.type = type;
     }
 
-    public static Route of(final Academy academy, String name) {
+    public static Route of(final Academy academy, String name, String type) {
         return new Route(
                 academy,
-                name
+                name,
+                type
         );
+    }
+
+
+    public void update(RouteRequest routeRequest) {
+        this.name = routeRequest.getName();
+        this.type = routeRequest.getType();
     }
 
 }

@@ -9,6 +9,8 @@ import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
+import kr.co.littleriders.backend.domain.route.RouteService;
+import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,12 +43,13 @@ public class RouteFacadeTest {
     }
 
     @Nested
-    @DisplayName("경로 등록 테스트")
-    class createRoute {
+    @DisplayName("노선 등록 테스트")
+    class createRouteTest {
 
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
+            //RouteRequest routeRequest = new RouteRequest("등원A", "board");
             RouteRequest routeRequest = RouteFixture.F.toRouteRequest();
             academyService.save(academy);
             assertDoesNotThrow(() -> {
@@ -70,6 +73,35 @@ public class RouteFacadeTest {
                 routeFacade.createRoute(authAcademy, routeRequest);
             });
             assertEquals(exception.getErrorCode(), RouteErrorCode.DUPLICATE_NAME);
+        }
+    }
+
+    @Nested
+    @DisplayName("노선 수정 테스트")
+    class updateRouteTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+
+            RouteRequest routeRequest = new RouteRequest("하원B", "drop");
+
+            Route route = Route.of(academy, "등원B", "board");
+            long routeId = routeService.save(route);
+
+            routeFacade.updateRoute(academy.getId(), routeId, routeRequest);
+        }
+    }
+
+    @Nested
+    @DisplayName("노선 삭제 테스트")
+    class deleteRouteTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Route route = Route.of(academy, "등원B", "board");
+            long routeId = routeService.save(route);
+
+            routeFacade.deleteRoute(academy.getId(), routeId);
         }
     }
 

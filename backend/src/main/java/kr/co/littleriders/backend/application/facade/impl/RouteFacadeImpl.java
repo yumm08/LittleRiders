@@ -34,4 +34,24 @@ class RouteFacadeImpl implements RouteFacade {
         routeService.save(route);
     }
 
+    @Override
+    public void updateRoute(long academyId, long routeId, RouteRequest routeRequest) {
+        Route route = routeService.findById(routeId);
+
+        if(route.getAcademy().getId() != academyId) {
+            throw RouteException.from(RouteErrorCode.FORBIDDEN);
+        }
+        routeService.updateRoute(route, routeRequest);
+    }
+
+    @Override
+    public void deleteRoute(long academyId, long routeId) {
+        Route route = routeService.findById(routeId);
+
+        if(route.getAcademy().getId() != academyId) {
+            throw RouteException.from(RouteErrorCode.FORBIDDEN);
+        }
+        routeService.deleteRoute(route);
+    }
+
 }
