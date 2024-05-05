@@ -38,7 +38,7 @@ public class RouteFacadeTest {
         void whenSuccess() throws Exception {
             RouteRequest routeRequest = new RouteRequest("등원A");
             academyService.save(academy);
-            routeFacade.createRoute(authAcademy, routeRequest);
+            routeFacade.createRoute(academy.getId(), routeRequest);
         }
     }
 

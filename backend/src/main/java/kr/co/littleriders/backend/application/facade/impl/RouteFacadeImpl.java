@@ -19,7 +19,6 @@ import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
 import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
-import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +38,7 @@ class RouteFacadeImpl implements RouteFacade {
     private final AcademyChildService academyChildService;
 
     @Override
-    public void createRoute(AuthAcademy authAcademy, RouteRequest routeRequest) {
-        long academyId = authAcademy.getId();
+    public void createRoute(long academyId, RouteRequest routeRequest) {
         Academy academy = academyService.findById(academyId);
 
         String name = routeRequest.getName();

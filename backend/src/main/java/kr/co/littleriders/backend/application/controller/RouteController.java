@@ -24,7 +24,8 @@ public class RouteController {
     // 경로 등록
     @PostMapping
     public ResponseEntity<Void> createRoute(@Auth AuthAcademy authAcademy, @RequestBody RouteRequest routeRequest) {
-        routeFacade.createRoute(authAcademy, routeRequest);
+        long academyId = authAcademy.getId();
+        routeFacade.createRoute(academyId, routeRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
