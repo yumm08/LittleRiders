@@ -194,4 +194,20 @@ public class RouteFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("노선 상세 조회 테스트")
+    class getRoute {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            long academyId = academy.getId();
+
+            Route route = Route.of(academy, "등원A", "board");
+            long routeId = routeService.save(route);
+
+            routeFacade.getRoute(academyId, routeId);
+        }
+    }
+
 }
