@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.domain.station.service;
 
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 import kr.co.littleriders.backend.domain.station.error.code.StationErrorCode;
@@ -44,6 +45,16 @@ class StationServiceImpl implements StationService {
     @Override
     public List<Station> findAllByAcademyIdAndName(long academyId, String name) {
         return stationRepository.findAllByAcademyIdAndNameContaining(academyId, name);
+    }
+
+    @Override
+    public void updateStation(Station station, StationRequest stationRequest) {
+        station.update(stationRequest);
+    }
+
+    @Override
+    public void deleteStation(Station station) {
+        stationRepository.delete(station);
     }
 
 }

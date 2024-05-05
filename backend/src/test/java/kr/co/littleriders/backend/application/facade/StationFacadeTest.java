@@ -56,7 +56,7 @@ public class StationFacadeTest {
             StationCreateRequest stationCreateRequest = stationFixture.toStationCreateRequest();
 
             // when
-            stationFacade.createStation(authAcademy, stationCreateRequest);
+            stationFacade.createStation(academy.getId(), stationCreateRequest);
 
             // then
             List<Station> stationList = stationService.findAllByAcademyIdAndName(authAcademy.getId(), stationFixture.getName());
@@ -105,9 +105,38 @@ public class StationFacadeTest {
             StationCreateRequest stationCreateRequest2 = stationFixture.toStationCreateRequest();
 
             // when, then
-            assertThatThrownBy(() -> stationFacade.createStation(authAcademy, stationCreateRequest2))
+            assertThatThrownBy(() -> stationFacade.createStation(academy.getId(), stationCreateRequest2))
                     .isInstanceOf(StationException.class)
                     .hasMessageContaining(StationErrorCode.DUPLICATE_NAME.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("정류장 수정 테스트")
+    class updateStationTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+
+            StationRequest stationRequest = new StationRequest("역삼역", 56.4, 76.3);
+
+            Station station = Station.of(academy, "강남역", 46.2, 35.3);
+            long stationId = stationService.save(station);
+
+            stationFacade.updateStation(academy.getId(), stationId, stationRequest);
+        }
+    }
+
+    @Nested
+    @DisplayName("정류장 삭제 테스트")
+    class deleteStationTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Station station = Station.of(academy, "역삼역", 46.2, 35.3);
+            long stationId = stationService.save(station);
+
+            stationFacade.deleteStation(academy.getId(), stationId);
         }
     }
 

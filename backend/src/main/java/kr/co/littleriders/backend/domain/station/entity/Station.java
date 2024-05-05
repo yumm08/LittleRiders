@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.station.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,5 +50,11 @@ public class Station {
                 latitude,
                 longitude
         );
+    }
+
+    public void update(StationRequest stationRequest) {
+        this.name = stationRequest.getName();
+        this.latitude = stationRequest.getLatitude();
+        this.longitude = stationRequest.getLongitude();
     }
 }
