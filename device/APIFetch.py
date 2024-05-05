@@ -10,24 +10,49 @@ class APIFetcher:
         cls = type(self)
         if not hasattr(cls, "_init"):             # Foo 클래스 객체에 _init 속성이 없다면
             self.terminalNumber = terminalNumber
-            #requests.post(f"{self.BASE_URL}")
+            self.BASE_URL = "https://littleriders.co.kr/api"
+            self.signIn()
             cls._init = True
+
+    def signIn(self):
+        
+        url = f"{self.BASE_URL}/shuttle/account/sign-in"
+        response = requests.post(url=url,json={"terminalNumber":self.terminalNumber})
+        if(response.status_code != 200):
+            raise Exception()
+        self.headers = {"Authorization" : response.headers["Authorization"]}
+        self.cookies = {'refresh-token': response.cookies["refresh-token"]}
+
+        
+    
+    def _reIssue(self):
+        url = f"{self.BASE_URL}/account/re-issue"
+        response = requests.get(url=url,cookies=self.cookies)
+        if(response.status_code != 200):
+            raise Exception()
+        self.headers = {"Authorization" : response.headers["Authorization"]}
+        self.cookies = {'refresh-token': response.cookies["refresh-token"]}
 
 
     def getRouteList(self) -> dict:
+        url = f"{self.BASE_URL}/shuttle/route"
         
-        return [
-            {"id": 1, "name": "탕수육 코스"},
-            {"id": 2, "name": "탕후루 코스"},
-            {"id": 3, "name": "햄버거 오마카세"},
-            {"id": 4, "name": "소고기 오마카세"}
-        ]
+        response = requests.get(url,headers=self.headers)
+        if(response.status_code == 400):
+            self._reIssue()
+            return self.getRouteList()
+        
+        return response.json()
+        
+
+    def uploadPosition(self,posistion) -> None:
+        print(posistion)
 
     def uploadPosition(self,posistion : RMCPosition) -> None:
         print(posistion)
 
 if __name__ == "__main__":
-
-    apitFetcher = APIFetcher()
+    apiFetcher = APIFetcher("")
+    print(apiFetcher.getRouteList())
 
 
