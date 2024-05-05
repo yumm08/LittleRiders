@@ -1,4 +1,4 @@
-import { ChildInfo, PendingChildInfo } from '@types'
+import { ChildInfo, ChildStatus, PendingChildInfo } from '@types'
 
 export const childList: ChildInfo[] = [
   {
@@ -149,43 +149,59 @@ export const childList: ChildInfo[] = [
 
 export const pendingChildList: PendingChildInfo[] = [
   {
-    academyChildAllowPendingId: 1,
+    pendingId: 1,
     childName: '김민준1',
     childBirthDate: '1999-08-05',
-    gender: 'FEMALE',
+    childGender: 'FEMALE',
     address: '서울특별시 강동구 올림픽로-가',
-    familyPhoneNumber: '010-3111-4111',
+    phoneNumber: '010-3111-4111',
   },
   {
-    academyChildAllowPendingId: 2,
+    pendingId: 2,
     childName: '김민준2',
     childBirthDate: '1999-08-05',
-    gender: 'MALE',
+    childGender: 'MALE',
     address: '서울특별시 강동구 올림픽로-나',
-    familyPhoneNumber: '010-3111-4112',
+    phoneNumber: '010-3111-4112',
   },
   {
-    academyChildAllowPendingId: 3,
+    pendingId: 3,
     childName: '김민준3',
     childBirthDate: '1999-08-05',
-    gender: 'FEMALE',
+    childGender: 'FEMALE',
     address: '서울특별시 강동구 올림픽로-다',
-    familyPhoneNumber: '010-3111-4113',
+    phoneNumber: '010-3111-4113',
   },
   {
-    academyChildAllowPendingId: 4,
+    pendingId: 4,
     childName: '김민준4',
     childBirthDate: '1999-08-05',
-    gender: 'MALE',
+    childGender: 'MALE',
     address: '서울특별시 강동구 올림픽로-라',
-    familyPhoneNumber: '010-3111-4114',
+    phoneNumber: '010-3111-4114',
   },
   {
-    academyChildAllowPendingId: 5,
+    pendingId: 5,
     childName: '김민준5',
     childBirthDate: '1999-08-05',
-    gender: 'FEMALE',
+    childGender: 'FEMALE',
     address: '서울특별시 강동구 올림픽로-마',
-    familyPhoneNumber: '010-3111-4119',
+    phoneNumber: '010-3111-4119',
   },
 ]
+
+export const getChild = (academyChildId: number) => {
+  return childList.find((child) => child.academyChildId === academyChildId)
+}
+
+export const updateChild = (
+  academyChildId: number,
+  childStatus: ChildStatus,
+) => {
+  for (let i = 0; i < childList.length; i++) {
+    if (childList[i].academyChildId === academyChildId) {
+      childList[i].childStatus = childStatus
+      return
+    }
+  }
+}
