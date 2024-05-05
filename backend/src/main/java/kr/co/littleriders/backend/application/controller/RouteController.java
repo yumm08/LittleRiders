@@ -31,4 +31,12 @@ public class RouteController {
         return ResponseEntity.ok().build();
     }
 
+    // 노선 삭제
+    @DeleteMapping("/{route_id}")
+    public ResponseEntity<Void> deleteStation(@Auth AuthAcademy authAcademy, @PathVariable("route_id") long routeId) {
+        long academyId = authAcademy.getId();
+        routeFacade.deleteRoute(academyId, routeId);
+        return ResponseEntity.ok().build();
+    }
+
 }

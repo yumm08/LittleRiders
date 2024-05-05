@@ -8,4 +8,5 @@ public interface RouteFacade {
 
     void updateRoute(long academyId, long routeId, RouteRequest routeRequest);
 
+    void deleteRoute(long academyId, long routeId);
 }

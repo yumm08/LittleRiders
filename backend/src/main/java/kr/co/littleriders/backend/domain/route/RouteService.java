@@ -21,4 +21,5 @@ public interface RouteService {
 
     void updateRoute(Route route, RouteRequest routeRequest);
 
+    void deleteRoute(Route route);
 }

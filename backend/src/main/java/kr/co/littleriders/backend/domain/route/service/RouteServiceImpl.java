@@ -53,5 +53,10 @@ class RouteServiceImpl implements RouteService {
         route.update(routeRequest);
     }
 
+    @Override
+    public void deleteRoute(Route route) {
+        routeRepository.delete(route);
+    }
+
 
 }
