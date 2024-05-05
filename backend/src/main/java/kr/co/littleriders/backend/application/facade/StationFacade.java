@@ -7,8 +7,7 @@ import java.util.List;
 
 public interface StationFacade {
 
-    void createStation(long academyId, StationRequest createRequest);
+    void createStation(long academyId, StationRequest stationRequest);
 
     List<StationResponse> searchByName(String name, long academyId);
-
 }

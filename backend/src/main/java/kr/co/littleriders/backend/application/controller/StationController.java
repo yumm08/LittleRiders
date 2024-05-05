@@ -20,9 +20,9 @@ public class StationController {
 
     // 정류장 등록
     @PostMapping
-    public ResponseEntity<Void> createStation(@Auth AuthAcademy authAcademy, @RequestBody StationRequest createRequest) {
+    public ResponseEntity<Void> createStation(@Auth AuthAcademy authAcademy, @RequestBody StationRequest stationRequest) {
         long academyId = authAcademy.getId();
-        stationFacade.createStation(academyId, createRequest);
+        stationFacade.createStation(academyId, stationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
