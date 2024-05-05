@@ -21,7 +21,7 @@ import java.util.List;
 public class RouteController {
     private final RouteFacade routeFacade;
 
-    // 경로 등록
+    // 노선 등록
     @PostMapping
     public ResponseEntity<Void> createRoute(@Auth AuthAcademy authAcademy, @RequestBody RouteRequest routeRequest) {
         long academyId = authAcademy.getId();
