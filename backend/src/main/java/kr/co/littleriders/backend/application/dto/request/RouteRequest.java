@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class RouteRequest {
     private String name;
+    private String type;
 
     public Route toRoute(Academy academy) {
-        return Route.of(academy, this.name);
+        return Route.of(academy, this.name, this.type);
     }
 }
 
