@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import kr.co.littleriders.backend.global.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 	private final ChildService childService;
 	private final FamilyService familyService;
 	private final AcademyChildService academyChildService;
+	private final ImageUtil imageUtil;
 
 	@Override
 	public Long insertChild(ChildRegistRequest childRegistRequest, Long familyId) {
@@ -38,8 +40,7 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 
 		MultipartFile image = childRegistRequest.getImage();
 		if(image !=null){
-			String imagePath = UUID.randomUUID().toString();
-			// TODO-이윤지-이미지 저장
+			String imagePath = imageUtil.saveImage(image);
 			child.setImagePath(imagePath);
 		}
 		// TODO-이윤지-ChildHistory에도 저장하는 기능 추가

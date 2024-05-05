@@ -24,9 +24,7 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 
 	private final ShuttleService shuttleService;
 	private final AcademyService academyService;
-
 	private final ImageUtil imageUtil;
-
 
 	@Override
 	public Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Long academyId) {

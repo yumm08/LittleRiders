@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
+import kr.co.littleriders.backend.global.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 
 	private final DriverService driverService;
 	private final AcademyService academyService;
-	private final String rootPath = "/image/driver";
+	private final ImageUtil imageUtil;
 
 	@Override
 	public Long insertDriver(DriverRegistRequest driverRegistRequest, Long academyId) {
@@ -34,8 +35,7 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 
 		MultipartFile image = driverRegistRequest.getImage();
 		if(image !=null){
-			String imagePath = UUID.randomUUID().toString();
-			// 이미지 저장
+			String imagePath = imageUtil.saveImage(image);
 			driver.setImagePath(imagePath);
 		}
 

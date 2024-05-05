@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
 import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
+import kr.co.littleriders.backend.global.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 
 	private final TeacherService teacherService;
 	private final AcademyService academyService;
-	private final String rootPath = "/image/teacher";
+	private final ImageUtil imageUtil;
 
 	@Override
 	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Long academyId) {
@@ -34,11 +35,9 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 
 		MultipartFile image = teacherRegistRequest.getImage();
 		if(image !=null){
-			String imagePath = UUID.randomUUID().toString();
-			// 이미지 저장
+			String imagePath = imageUtil.saveImage(image);
 			teacher.setImagePath(imagePath);
 		}
-
 		return teacherService.save(teacher);
 	}
 
