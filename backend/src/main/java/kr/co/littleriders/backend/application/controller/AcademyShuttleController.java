@@ -4,6 +4,8 @@ import kr.co.littleriders.backend.application.dto.response.AcademyShuttleRespons
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import kr.co.littleriders.backend.application.facade.AcademyShuttleFacade;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/academy/shuttle")
@@ -22,12 +25,10 @@ public class AcademyShuttleController {
 	private final AcademyShuttleFacade academyShuttleFacade;
 
 	@PostMapping
-//	public ResponseEntity<Long> addShuttle(@Auth AuthAcademy authAcademy,
-
-	public ResponseEntity<Long> addShuttle(
+	public ResponseEntity<Long> addShuttle(@Auth AuthAcademy authAcademy,
 										   @ModelAttribute @Valid ShuttleRegistRequest shuttleRegistRequest) {
 
-		Long academyId = 1L;
+		Long academyId = authAcademy.getId();
 
 		Long shuttleId = academyShuttleFacade.insertShuttle(shuttleRegistRequest, academyId);
 
@@ -50,9 +51,19 @@ public class AcademyShuttleController {
 
 		Long academyId = authAcademy.getId();
 
-		Resource resource = academyShuttleFacade.readShuttleImage(academyId, shuttleId);
+		Map<String, Object> image = academyShuttleFacade.readShuttleImage(academyId, shuttleId);
 
-		return ResponseEntity.ok().body(resource);
+		Resource imageResource = (Resource) image.get("resource");
+		MediaType mediaType = (MediaType) image.get("mediaType");
+
+		HttpHeaders headers = new HttpHeaders();
+		if (mediaType != null) {
+			headers.setContentType(mediaType);
+		} else {
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
+
+		return ResponseEntity.ok().headers(headers).body(imageResource);
 	}
 
 }

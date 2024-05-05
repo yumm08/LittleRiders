@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleResponse;
@@ -61,7 +62,7 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 	}
 
 	@Override
-	public Resource readShuttleImage(Long academyId, Long shuttleId) {
+	public Map<String, Object> readShuttleImage(Long academyId, Long shuttleId) {
 
 		Academy academy = academyService.findById(academyId);
 		Shuttle shuttle = shuttleService.findById(shuttleId);
@@ -70,8 +71,8 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 		}
 
 		String imagePath = shuttle.getImagePath();
-		Resource resource = imageUtil.getImage(imagePath);
+		Map<String, Object> result = imageUtil.getImage(imagePath);
 
-		return resource;
+		return result;
 	}
 }

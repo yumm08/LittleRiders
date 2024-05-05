@@ -5,6 +5,7 @@ import kr.co.littleriders.backend.application.dto.response.AcademyShuttleRespons
 import org.springframework.core.io.Resource;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AcademyShuttleFacade {
 
@@ -12,5 +13,5 @@ public interface AcademyShuttleFacade {
 
 	List<AcademyShuttleResponse> readShuttleList(Long academyId);
 
-    Resource readShuttleImage(Long academyId, Long shuttleId);
+	Map<String, Object> readShuttleImage(Long academyId, Long shuttleId);
 }
