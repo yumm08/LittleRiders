@@ -23,10 +23,9 @@ public class RouteController {
 
     // 노선 등록
     @PostMapping
-    public ResponseEntity<Void> createRoute(@Auth AuthAcademy authAcademy, @RequestBody RouteRequest routeRequest) {
+    public ResponseEntity<Long> createRoute(@Auth AuthAcademy authAcademy, @RequestBody RouteRequest routeRequest) {
         long academyId = authAcademy.getId();
-        routeFacade.createRoute(academyId, routeRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(routeFacade.createRoute(academyId, routeRequest));
     }
 
     // 노선별 정류장 추가

@@ -38,7 +38,7 @@ class RouteFacadeImpl implements RouteFacade {
     private final AcademyChildService academyChildService;
 
     @Override
-    public void createRoute(long academyId, RouteRequest routeRequest) {
+    public long createRoute(long academyId, RouteRequest routeRequest) {
         Academy academy = academyService.findById(academyId);
 
         String name = routeRequest.getName();
@@ -48,7 +48,7 @@ class RouteFacadeImpl implements RouteFacade {
 
         Route route = routeRequest.toRoute(academy);
 
-        routeService.save(route);
+        return routeService.save(route);
     }
 
     @Transactional
@@ -131,7 +131,7 @@ class RouteFacadeImpl implements RouteFacade {
     }
 
     @Override
-    public RouteDetailResponse getRoute(long academyId, Long routeId) {
+    public RouteDetailResponse getRoute(long academyId, long routeId) {
         Route route = routeService.findById(routeId);
 
         if(!Objects.equals(academyId, route.getAcademy().getId())) {

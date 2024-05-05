@@ -9,7 +9,7 @@ import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import java.util.List;
 
 public interface RouteFacade {
-    void createRoute(long academyId, RouteRequest routeRequest);
+    long createRoute(long academyId, RouteRequest routeRequest);
 
     void addRouteStation(long academyId, long routeId, List<RouteStationRequest> requestList);
 
@@ -17,6 +17,6 @@ public interface RouteFacade {
 
     List<RouteResponse> getAllRoute(long academyId);
 
-    RouteDetailResponse getRoute(long academyId, Long RouteId);
+    RouteDetailResponse getRoute(long academyId, long RouteId);
 
 }
