@@ -1,16 +1,14 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.annotation.Resource;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,7 +57,7 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 	}
 
 	@Override
-	public Resource readDriverImage(Long academyId, Long driverId) {
+	public Map<String, Object> readDriverImage(Long academyId, Long driverId) {
 
 		Academy academy = academyService.findById(academyId);
 		Driver driver = driverService.findById(driverId);
@@ -68,8 +66,8 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 		}
 
 		String imagePath = driver.getImagePath();
-		Resource resource = imageUtil.getImage(imagePath);
+		Map<String, Object> result = imageUtil.getImage(imagePath);
 
-		return resource;
+		return result;
 	}
 }

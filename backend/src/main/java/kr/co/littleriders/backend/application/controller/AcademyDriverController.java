@@ -4,6 +4,8 @@ import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import kr.co.littleriders.backend.application.facade.AcademyDriverFacade;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/academy/driver")
@@ -23,11 +26,10 @@ public class AcademyDriverController {
 	private final AcademyDriverFacade academyDriverFacade;
 
 	@PostMapping
-//	public ResponseEntity<Long> addDriver(@Auth AuthAcademy authAcademy,
-	public ResponseEntity<Long> addDriver(
+	public ResponseEntity<Long> addDriver(@Auth AuthAcademy authAcademy,
 										  @ModelAttribute @Valid DriverRegistRequest driverRegistRequest) {
 
-		Long academyId = 1L;
+		Long academyId = authAcademy.getId();
 
 		Long driverId = academyDriverFacade.insertDriver(driverRegistRequest, academyId);
 
@@ -50,8 +52,18 @@ public class AcademyDriverController {
 
 		Long academyId = authAcademy.getId();
 
-		Resource resource = academyDriverFacade.readDriverImage(academyId, driverId);
+		Map<String, Object> image = academyDriverFacade.readDriverImage(academyId, driverId);
 
-		return ResponseEntity.ok().body(resource);
+		Resource imageResource = (Resource) image.get("resource");
+		MediaType mediaType = (MediaType) image.get("mediaType");
+
+		HttpHeaders headers = new HttpHeaders();
+		if (mediaType != null) {
+			headers.setContentType(mediaType);
+		} else {
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
+
+		return ResponseEntity.ok().headers(headers).body(imageResource);
 	}
 }
