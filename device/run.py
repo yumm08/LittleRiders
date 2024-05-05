@@ -2,7 +2,9 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import QObject, QUrl,QThread, pyqtSignal
+from PyQt5.QtCore import  QUrl,QThread, pyqtSignal
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtGui import QFont
 from Model import *
 from APIFetch import APIFetcher
 from Repository import *
@@ -15,6 +17,8 @@ from datetime import datetime
 
 
 form_class = uic.loadUiType("untitled.ui")[0]
+formRounteInfoClass = uic.loadUiType("untitled2.ui")[0]
+
 modelHelper = ModelHelper()
 terminalRepository =TerminalRepository(modelHelper=modelHelper)
 positionRepository = PositionRepository(modelHelper=modelHelper)
@@ -73,7 +77,22 @@ class BluetoothThread(QThread,Provider):
  
 
 
-        
+class PositionSaver(ObserverInterface):
+    def __init__(self):
+        modelHelper = ModelHelper()
+        self.positionRepository = PositionRepository(modelHelper=modelHelper)
+
+    def notify(self,*args,**kwargs):
+        position = kwargs.get("position",None)
+        if(not position):
+            return
+        latitude = position.getLatitude()
+        longitude = position.getLongitude()
+        speed = position.getSpeed()
+        entity = Position(latitude=latitude,longitude=longitude,speed=speed,time=datetime.now())
+        self.positionRepository.save(entity)
+
+
 class MainWindow(QMainWindow, form_class,ObserverInterface):
     def __init__(self):
         super().__init__()
@@ -92,11 +111,13 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
             self.webview.page().runJavaScript('console.log("helloworld")')
 
     def terminalInfoButtonEvent(self):
-        terminalNumber = terminalRepository.findById(1)
+        pass
     def courseInfoButtonEvent(self):
-        self.latitudeText.setText("위도값이에요")
-        self.longitudeText.setText("경도값이에요")
-        self.speedText.setText("속도값이에요")
+        print(apiFetcher.getRouteList())
+        self.hide()
+        self.second = RouteInfoWindow()
+        self.second.exec()
+        self.show()
 
 
         #routeList = apiFetcher.getRouteList()
@@ -117,23 +138,37 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.speedText.setText(f"{speed}")
 
 
+class RouteInfoListWidget(QListWidgetItem):
+    def __init__(self,data=None,parent=None):
+        super().__init__("",parent)
+    
+        self.id = data["id"]
+        self.name = data["name"]
+        self.setText(self.name)
+        self.setFont(QFont("Arial",23))
+        # su.__init__(parent)
 
-class PositionSaver(ObserverInterface):
+    def getId(self):
+        return self.id
+
+class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
+
     def __init__(self):
-        modelHelper = ModelHelper()
-        self.positionRepository = PositionRepository(modelHelper=modelHelper)
+        super(RouteInfoWindow,self).__init__()
+        self.setupUi(self)
 
-    def notify(self,*args,**kwargs):
-        position = kwargs.get("position",None)
-        if(not position):
-            return
-        latitude = position.getLatitude()
-        longitude = position.getLongitude()
-        speed = position.getSpeed()
-        entity = Position(latitude=latitude,longitude=longitude,speed=speed,time=datetime.now())
-        self.positionRepository.save(entity)
+        self.routeList = apiFetcher.getRouteList()
+        for i in self.routeList:
+            print(i)
+            self.addItem(i)
+        self.show()
 
+    def addItem(self,data):
+        item = RouteInfoListWidget(data=data)
+        self.courseListWidget.addItem(item)
 
+    def clickItem(self,items):
+        print(items)
 
 
 if __name__ == "__main__":
