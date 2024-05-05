@@ -32,4 +32,13 @@ public class StationController {
         long academyId = authAcademy.getId();
         return ResponseEntity.ok().body(stationFacade.searchByName(name, academyId));
     }
+
+    // 정류장 수정
+    @PostMapping("/{station_id}")
+    public ResponseEntity<List<StationResponse>> updateStation(@Auth AuthAcademy authAcademy, @PathVariable("station_id") long stationId, @RequestBody StationRequest stationRequest) {
+        long academyId = authAcademy.getId();
+        stationFacade.updateStation(academyId, stationId, stationRequest);
+        return ResponseEntity.ok().build();
+    }
+
 }

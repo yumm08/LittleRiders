@@ -44,4 +44,14 @@ class StationFacadeImpl implements StationFacade {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void updateStation(long academyId, long stationId, StationRequest stationRequest) {
+        Station station = stationService.findById(stationId);
+
+        if(station.getAcademy().getId() != academyId) {
+            throw StationException.from(StationErrorCode.FORBIDDEN);
+        }
+        stationService.updateStation(station, stationRequest);
+    }
+
 }
