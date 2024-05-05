@@ -63,4 +63,17 @@ public class RouteFacadeTest {
         }
     }
 
+    @Nested
+    @DisplayName("노선 삭제 테스트")
+    class deleteRouteTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Route route = Route.of(academy, "등원B", "board");
+            long routeId = routeService.save(route);
+
+            routeFacade.deleteRoute(academy.getId(), routeId);
+        }
+    }
+
 }
