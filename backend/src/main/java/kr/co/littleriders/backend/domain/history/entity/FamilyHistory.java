@@ -38,4 +38,20 @@ public class FamilyHistory {
 	@CreatedDate
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt; // 생성일자
+
+
+	//TODO - 김도현 - 이거 항상 컨스트럭터를 호출할땐 항상 같은값만 가져와야 하니까 이렇게 두는게 나을듯 다른 방법이 있을거같긴함.
+	private FamilyHistory(Family family){
+		String name = family.getName();
+		String address = family.getAddress();
+		String phoneNumber = family.getPhoneNumber();
+		this.family = family;
+		this.name = name;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+	}
+
+	public static FamilyHistory from(Family family){
+		return new FamilyHistory(family);
+	}
 }
