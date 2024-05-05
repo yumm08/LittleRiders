@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 interface RouteStationRepository extends JpaRepository<RouteStation,Long> {
+    RouteStation findByRouteIdAndStationId(Long routeId, Long stationId);
 }
