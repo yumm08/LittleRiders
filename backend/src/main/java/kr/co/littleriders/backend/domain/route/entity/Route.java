@@ -33,7 +33,7 @@ public class Route {
     private String type; // 경로 타입 - 등원(board). 하원(drop)
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RouteStation> routeStationList; // 정류장 목록
+    private List<RouteStation> routeStationList = new ArrayList<>(); // 정류장 목록
 
     private Route(final Academy academy, String name, String type) {
         this.academy = academy;
@@ -50,9 +50,6 @@ public class Route {
     }
 
     public void addRouteStation(RouteStation routeStation) {
-        if (this.routeStationList == null) {
-            this.routeStationList = new ArrayList<>();
-        }
         this.routeStationList.add(routeStation);
     }
 
