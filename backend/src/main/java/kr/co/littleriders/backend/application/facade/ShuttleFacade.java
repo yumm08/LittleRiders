@@ -14,7 +14,7 @@ public interface ShuttleFacade {
 
     void startDrive(AuthTerminal authTerminal, ShuttleStartRequest startRequest);
 
-    void endDrive(AuthTerminal authTerminal);
+    void endDrive(long shuttleId);
 
     ShuttleChildRideResponse recordChildRiding(AuthTerminal authTerminal, ShuttleChildRideRequest rideRequest);
 

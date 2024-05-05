@@ -31,6 +31,7 @@ public class ShuttleChildRide {
     }
 
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class RideInfo {
         private long academyChildId;
 

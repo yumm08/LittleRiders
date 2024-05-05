@@ -36,7 +36,7 @@ public class ShuttleController {
     // 운행 종료
     @PostMapping("/end")
     public ResponseEntity<Void> endDrive(@Auth AuthTerminal authTerminal) {
-        shuttleFacade.endDrive(authTerminal);
+        shuttleFacade.endDrive(authTerminal.getShuttleId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -3,6 +3,10 @@ package kr.co.littleriders.backend.application.facade;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.DriverFixture;
+import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
+import kr.co.littleriders.backend.common.fixture.TeacherFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -16,9 +20,16 @@ import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
-import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
+import kr.co.littleriders.backend.domain.shuttle.entity.*;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleChildRideException;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleDriveException;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationException;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationHistoryException;
+import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
@@ -35,6 +46,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @SpringBootTest
@@ -76,6 +89,19 @@ public class ShuttleFacadeTest {
     private Academy academy;
 
     private AuthTerminal authTerminal;
+
+    @Autowired
+    ShuttleLocationHistoryService shuttleLocationHistoryService;
+
+    @Autowired
+    ShuttleDriveService shuttleDriveService;
+
+    @Autowired
+    ShuttleChildRideService shuttleChildRideService;
+
+    @Autowired
+    ShuttleLocationService shuttleLocationService;
+
 
     @BeforeEach
     void setUP() {
@@ -148,5 +174,66 @@ public class ShuttleFacadeTest {
             ShuttleLocationRequest shuttleLocationRequest = new ShuttleLocationRequest(33.3, 45.2, 75);
             shuttleFacade.uploadLocation(authTerminal, shuttleLocationRequest);
         }
+    }
+
+    @Nested
+    @DisplayName("endDrive 테스트")
+    class endDrive{
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess(){
+            //given
+            Academy academy = AcademyFixture.BOXING.toAcademy();
+            academyService.save(academy);
+
+            Shuttle shuttle = ShuttleFixture.HO_11.toShuttle(academy,ShuttleStatus.USE);
+            shuttleService.save(shuttle);
+
+            Driver driver = DriverFixture.YOON.toDriver(academy,DriverStatus.WORK);
+            driverService.save(driver);
+
+            Teacher teacher = TeacherFixture.NAM.toTeacher(academy,TeacherStatus.WORK);
+
+            teacherService.save(teacher);
+
+
+            long shuttleId = shuttle.getId();
+            long teacherId = teacher.getId();
+            long driverId = driver.getId();
+
+            double latitude = 34.123;
+            double longitude = 126.123;
+            int speed = 14;
+            ShuttleLocationHistory shuttleLocationHistory = ShuttleLocationHistory.of(shuttleId,latitude,longitude,speed);
+            ShuttleDrive shuttleDrive = ShuttleDrive.of(shuttleId,1,driverId,teacherId);
+            ShuttleChildRide shuttleChildRide = ShuttleChildRide.of(shuttleId,1,latitude,longitude);
+            ShuttleLocation shuttleLocation = ShuttleLocation.of(shuttleId,latitude,longitude,speed);
+
+            shuttleLocationService.save(shuttleLocation);
+            shuttleLocationHistoryService.save(shuttleLocationHistory);
+            shuttleDriveService.save(shuttleDrive);
+            shuttleChildRideService.save(shuttleChildRide);
+
+            //when
+            shuttleFacade.endDrive(shuttleId);
+            //then
+
+            assertThrows(ShuttleLocationException.class,
+                    () -> shuttleLocationService.findByShuttleId(shuttleId));
+
+            assertThrows(ShuttleLocationHistoryException.class,
+                    () -> shuttleLocationHistoryService.findByShuttleId(shuttleId));
+
+            assertThrows(ShuttleDriveException.class,
+                    () -> shuttleDriveService.findByShuttleId(shuttleId));
+
+            assertThrows(ShuttleChildRideException.class,
+                    () -> shuttleChildRideService.findByShuttleId(shuttleId));
+
+
+
+        }
+
     }
 }
