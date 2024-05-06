@@ -20,4 +20,6 @@ interface AcademyChildRepository extends JpaRepository<AcademyChild, Long>, Acad
 	List<AcademyChild> findByChild(Child child);
 
 	AcademyChild findByChildAndAcademy(Child child, Academy academy);
+
+	boolean existsByChildAndAcademy(Child child, Academy academy);
 }

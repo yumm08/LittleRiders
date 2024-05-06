@@ -46,6 +46,11 @@ class AcademyChildServiceImpl implements AcademyChildService {
     }
 
     @Override
+    public boolean existsByChildAndAcademy(Child child, Academy academy) {
+        return academyChildRepository.existsByChildAndAcademy(child, academy);
+    }
+
+    @Override
     public boolean existsById(long id) {
         return academyChildRepository.existsById(id);
     }
