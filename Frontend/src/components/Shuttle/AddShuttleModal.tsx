@@ -6,7 +6,7 @@ import Modal from '@components/Shared/Modal'
 import Spacing from '@components/Shared/Spacing'
 import TextField from '@components/Shared/TextField'
 
-import { useAddNewShuttle } from '@hooks/shuttle/addNewShuttle'
+import { useAddNewShuttle } from '@hooks/shuttle/useAddNewShuttle'
 import useFileUpload from '@hooks/useFileUpload'
 import useInput from '@hooks/useInput'
 
