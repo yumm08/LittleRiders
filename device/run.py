@@ -4,7 +4,7 @@ from PyQt5 import uic
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import  QUrl,QThread, pyqtSignal
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont,QPixmap
 from Model import *
 from APIFetch import APIFetcher
 from Repository import *
@@ -12,12 +12,17 @@ from SensorHelper import SensorHelper
 from BluetoohHelper import BluetoothHelper
 import sys
 import asyncio
-
 from datetime import datetime
 from BuzzerHelper import BuzzerHelper
+from PyQt5.QtCore import Qt,QEvent
+
+import urllib.request
+
 
 form_class = uic.loadUiType("untitled.ui")[0]
 formRounteInfoClass = uic.loadUiType("untitled2.ui")[0]
+
+formScanBarcodeClass = uic.loadUiType("untitled3.ui")[0]
 modelHelper = ModelHelper()
 buzzerHelper = BuzzerHelper()
 terminalRepository =TerminalRepository(modelHelper=modelHelper)
@@ -120,23 +125,24 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
             
 
     def startDriveButtonEvent(self):
-        canDrive = False
-        #여기서 api fetching 진행후 반환
+
+        self.hide()
+        self.second = BarcodeScanView()
+        self.second.exec()
+
+        # buzzerHelper.beep()
+        # self.hide()
+        # self.second = ChoiceRouteview()
+        # self.second.exec()
+        self.show()
         
-        if not canDrive:
-            buzzerHelper.beep()
-            buzzerHelper.beep()
-            QMessageBox.about(self,'운행이 불가능합니다.','기사님과 선탑자가 탑승하지 않았어요.')
-        
-        pass
+
     def courseInfoButtonEvent(self):
         buzzerHelper.beep()
         self.hide()
         self.second = RouteInfoWindow()
         self.second.exec()
         self.show()
-
-
         #routeList = apiFetcher.getRouteList()
         #self.uuidText.setText(json.dumps(routeList,ensure_ascii=False,indent=4))
 
@@ -185,7 +191,9 @@ class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
         self.webview.setUrl(QUrl("https://device.littleriders.co.kr/route"))
         self.stationMapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
+        self.titleName.setText("등록된 코스 목록")
         self.mapLoad = False
+        self.nextButton.setVisible(False)
         self.show()
     
 
@@ -199,6 +207,9 @@ class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
         stationList = items.getStationList()
         self.webview.page().runJavaScript(f"reChangePostion({stationList})")
 
+    def doubleClickItem(self,items):
+        pass
+
     def closeWindow(self):
         buzzerHelper.beep()
         self.close()
@@ -208,6 +219,150 @@ class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
             self.mapLoad = True
             if(len(self.routeList) >0):
                 self.webview.page().runJavaScript(f'reChangePostion({self.routeList[0]["stationList"]})')
+
+    def nextButtonEvent(self):
+        print("hihi")
+
+
+class ChoiceRouteview(QDialog,QWidget,formRounteInfoClass):
+
+    def __init__(self):
+        super(ChoiceRouteview,self).__init__()
+        self.setupUi(self)
+
+        self.routeList = apiFetcher.getRouteList()
+        for i in self.routeList:
+            self.addItem(i)
+        
+        self.exitButton.clicked.connect(self.closeWindow)
+        self.webview = QWebEngineView()
+        self.webview.setUrl(QUrl("https://device.littleriders.co.kr/route"))
+        self.stationMapLayout.addWidget(self.webview)
+        self.webview.loadFinished.connect(self.on_load_finished)
+        self.titleName.setText("코스를 선택하세요")
+        self.mapLoad = False
+        self.clicked = None
+        self.show()
+    
+
+    def addItem(self,data):
+        item = RouteInfoListWidget(data=data)
+        self.courseListWidget.addItem(item)
+
+    def clickItem(self,items):
+        buzzerHelper.beep()
+        #stationList = apiFetcher.getStationListByRouteId(items.getId())
+        stationList = items.getStationList()
+        self.webview.page().runJavaScript(f"reChangePostion({stationList})")
+        self.clicked = items
+
+    def closeWindow(self):
+        buzzerHelper.beep()
+        self.close()
+
+    def on_load_finished(self, success):
+        if success:
+            self.mapLoad = True
+            if(len(self.routeList) >0):
+                self.webview.page().runJavaScript(f'reChangePostion({self.routeList[0]["stationList"]})')
+
+    def nextButtonEvent(self):
+        if(not self.clicked):
+            buzzerHelper.beep()
+            buzzerHelper.beep()
+            QMessageBox.about(self,'운행 오류!','코스를 선택해주세요!')
+            return
+        
+
+
+
+
+
+
+class BarcodeScanView(QDialog,QWidget,formScanBarcodeClass):
+
+    def __init__(self):
+        super(BarcodeScanView,self).__init__()
+        self.setupUi(self)
+        self.exitButton.clicked.connect(self.closeWindow)
+        self.driverImagePixmap = QPixmap("scan.png").scaled(180, 180, Qt.KeepAspectRatio)
+        # self.driverImagePixmap.loadFromData(apiFetcher.getImage())
+        self.teacherImagePixmap = QPixmap("scan.png").scaled(180, 180, Qt.KeepAspectRatio)
+        self.driverImageLabel.setPixmap(self.driverImagePixmap)
+        self.teacherImageLabel.setPixmap(self.teacherImagePixmap)
+        self.teacherInfo = None
+        self.driverInfo = None
+        self.barcode = ""
+        self.show()
+
+    def keyPressEvent(self, e):
+        if(e.key()==Qt.Key_Return):
+            print(self.barcode)
+            if(self.barcode.startswith("DRIVER")):
+                self.renderDriverByUuid(self.barcode.lstrip("DRIVER_"))
+            elif(self.barcode.startswith("TEACHER")):
+                self.renderTeacherByUuid(self.barcode.lstrip("TEACHER_"))
+            else:
+                buzzerHelper.beep()
+                buzzerHelper.beep()
+            self.barcode = ""
+            return
+        try:
+            self.barcode += chr(e.key())  
+        except:
+            pass
+
+    
+
+        #print(chr(e.key()),end="")
+
+    def renderDriverByUuid(self,uuid):
+        self.driverInfo = apiFetcher.getDriverInfo(uuid)
+        image = apiFetcher.getImage()
+        self.driverImagePixmap.loadFromData(image)
+        self.driverNameLabel.setText(self.driverInfo["name"])
+        self.driverPhoneLabel.setText(self.driverInfo["phoneNumber"])
+        self.driverImageLabel.setPixmap(self.driverImagePixmap)
+
+    def renderTeacherByUuid(self,uuid):
+        self.teacherInfo = apiFetcher.getTeacherInfo(uuid)
+        image = apiFetcher.getImage()
+        self.teacherImagePixmap.loadFromData(image)
+        self.teacherNameLabel.setText(self.teacherInfo["name"])
+        self.teacherPhoneLabel.setText(self.teacherInfo["phoneNumber"])
+        self.teacherImageLabel.setPixmap(self.teacherImagePixmap)
+
+    
+    def nextButtonEvent(self):
+        if(self.driverInfo == None and self.teacherInfo == None):
+            buzzerHelper.beep()
+            buzzerHelper.beep()
+            QMessageBox.critical(self,'운행 오류','기사님과 선생님 QR을 스캔해주세요.')
+            return
+        if(self.driverInfo == None):
+            buzzerHelper.beep()
+            buzzerHelper.beep()
+            QMessageBox.critical(self,'운행 오류','기사님 QR을 스캔해주세요.')
+            return
+
+        if(self.teacherInfo == None):
+            buzzerHelper.beep()
+            buzzerHelper.beep()
+            QMessageBox.critical(self,'운행 오류','선생님 QR을 스캔해주세요.')
+            return
+
+
+
+    def closeWindow(self):
+        buzzerHelper.beep()
+        self.close()
+        
+        # self.driverImageLabel.setPixmap(self.driverImagePixmap)
+
+        # self.d
+    
+
+
 
 
 if __name__ == "__main__":
@@ -222,6 +377,7 @@ if __name__ == "__main__":
 
     bluetoothThread = BluetoothThread()
     bluetoothThread.start()
+
 
     
     win.show()
