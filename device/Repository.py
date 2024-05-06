@@ -37,6 +37,10 @@ class PositionRepository:
 
     def findById(self,id):
         return self.session.get(Position,id)
+    
+    def findLastPosition(self):
+        return self.session.query(Position).order_by(Position.id.desc()).first()
+
         
     def findAll(self):
         return self.session.all(Position)
