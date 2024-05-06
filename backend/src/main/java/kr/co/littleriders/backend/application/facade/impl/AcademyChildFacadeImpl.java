@@ -111,8 +111,15 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
-        // TODO-이윤지-attending->graduate/leave 만 가능하도록 제약
-        academyChild.updateStatus(AcademyChildStatus.valueOf(status.toUpperCase()));
+        if (!academyChild.getStatus().equals(AcademyChildStatus.ATTENDING)) {
+            throw AcademyChildException.from(AcademyChildErrorCode.FORBIDDEN);
+        }
+
+        AcademyChildStatus updateStatus = AcademyChildStatus.valueOf(status.toUpperCase());
+        if (updateStatus.equals(AcademyChildStatus.ATTENDING)) {
+            throw AcademyChildException.from(AcademyChildErrorCode.FORBIDDEN);
+        }
+        academyChild.updateStatus(updateStatus);
         academyChildService.save(academyChild);
 
         AcademyFamily academyFamily = academyChild.getAcademyFamily();
@@ -169,18 +176,26 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         pendingService.save(pending);
 
         AcademyFamily academyFamily;
-        if(academyFamilyService.existsByFamilyAndAcademy(pending.getChild().getFamily(), academy)) {
+        if(!academyFamilyService.existsByFamilyAndAcademy(pending.getChild().getFamily(), academy)) {
             academyFamily = AcademyFamily.of(pending.getChild().getFamily(), academy, AcademyFamilyStatus.AVAIL);
-            academyFamilyService.save(academyFamily);
         } else {
             academyFamily = academyFamilyService.findByFamilyAndAcademy(pending.getChild().getFamily(), academy);
+            academyFamily.updateStatus(AcademyFamilyStatus.AVAIL);
+        }
+        academyFamilyService.save(academyFamily);
+
+        AcademyChild academyChild;
+        if(!academyChildService.existsByChildAndAcademy(pending.getChild(), academy)) {
+            academyChild = AcademyChild.of(pending.getChild(),
+                                            pending.getAcademy(),
+                                            academyFamily,
+                                            AcademyChildStatus.ATTENDING,
+                                            CardType.BEACON);
+        } else {
+            academyChild = academyChildService.findByChildAndAcademy(pending.getChild(), academy);
+            academyChild.updateStatus(AcademyChildStatus.ATTENDING);
         }
 
-        // TODO-이윤지-전에 다녔던 학생인지 확인 후 insert 필수
-        AcademyChild academyChild = AcademyChild.of(pending.getChild()
-                                                    , pending.getAcademy()
-                                                     , academyFamily
-                                                    , AcademyChildStatus.ATTENDING, CardType.BEACON);
         academyChildService.save(academyChild);
     }
 
