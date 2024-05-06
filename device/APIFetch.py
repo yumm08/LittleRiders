@@ -1,5 +1,6 @@
 import requests
 from Model import RMCPosition
+import random
 class APIFetcher:
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "_instance"):         # Foo 클래스 객체에 _instance 속성이 없다면
@@ -34,9 +35,63 @@ class APIFetcher:
         self.cookies = {'refresh-token': response.cookies["refresh-token"]}
 
 
-    def getRouteList(self) -> dict:
-        url = f"{self.BASE_URL}/shuttle/route"
+    def getStationListByRouteId(self,id) -> list:
+        print("call here")
+
+        url = f"{self.BASE_URL}/shuttle/route/{id}"
+
         
+        itemList= [ {"id":1,"name":"강남역","latitude": 37.4979084,"longitude":127.0276954 },
+            {"id":2,"name":"언주역","latitude": 37.5071434,"longitude":127.0340362 },
+            {"id":3,"name":"역삼역","latitude": 37.5006407,"longitude":127.0370402  },
+            {"id":4,"name":"선릉역","latitude": 37.5044794,"longitude":127.0489385  },
+            {"id":5,"name":"신논현역", "latitude":37.5044369, "longitude":127.0246162},
+            {"id":6,"name":"논현역", "latitude":37.5109732, "longitude":127.0214405  },
+            {"id":7,"name":"학동역", "latitude":37.5142071, "longitude":127.0316544  },
+            {"id":8,"name":"반포역", "latitude":37.5079604, "longitude":127.0116558  },
+            {"id":9,"name":"교대역 1번출구", "latitude":37.4940609,"longitude": 127.0156148 },
+            {"id":10,"name":"교대역 9번출구", "latitude":37.4932948,"longitude": 127.013147 }
+            ]
+        
+        result = random.sample(itemList,random.randint(1,len(itemList)))
+        for index,i in enumerate(result):
+            i["visitOrder"]=index+1
+        
+    
+        return result
+    
+    def _getRandomStation(self) -> list:
+        stationList = [ {"id":1,"name":"강남역","latitude": 37.4979084,"longitude":127.0276954 },
+            {"id":2,"name":"언주역","latitude": 37.5071434,"longitude":127.0340362 },
+            {"id":3,"name":"역삼역","latitude": 37.5006407,"longitude":127.0370402  },
+            {"id":4,"name":"선릉역","latitude": 37.5044794,"longitude":127.0489385  },
+            {"id":5,"name":"신논현역", "latitude":37.5044369, "longitude":127.0246162},
+            {"id":6,"name":"논현역", "latitude":37.5109732, "longitude":127.0214405  },
+            {"id":7,"name":"학동역", "latitude":37.5142071, "longitude":127.0316544  },
+            {"id":8,"name":"반포역", "latitude":37.5079604, "longitude":127.0116558  },
+            {"id":9,"name":"교대역 1번출구", "latitude":37.4940609,"longitude": 127.0156148 },
+            {"id":10,"name":"교대역 9번출구", "latitude":37.4932948,"longitude": 127.013147 }
+            ]
+        choiced = list(random.sample(stationList,random.randint(1,len(stationList))))
+
+        return [{'visitOrder': index+1, **i} for index, i in enumerate(choiced)]
+
+
+
+
+    def getRouteList(self) -> list:
+    
+        url = f"{self.BASE_URL}/shuttle/route"
+
+        
+
+        return [
+                {"id":1,"name":"등원A","stationList": self._getRandomStation()},
+                {"id":2,"name":"등원B","stationList":self._getRandomStation()}
+                
+            ]
+        
+
         response = requests.get(url,headers=self.headers)
         if(response.status_code == 400):
             self._reIssue()
