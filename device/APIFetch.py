@@ -126,6 +126,32 @@ class APIFetcher:
         if(response.status_code != 201):
             self._reIssue()
             return self.uploadPosition(position=position)
+        
+    def getImage(self):
+        image = requests.get("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Python_and_Qt.svg/160px-Python_and_Qt.svg.png",stream=True)
+        return image.raw.data
+    
+    def getDriverInfo(self,uuid):
+
+        return {
+            "id" : 1,
+            "name" : "김수한무",
+            "phoneNumber" : "010-1234-5678"
+        }
+    
+    def getTeacherInfo(self,uuid):
+
+        return {
+            "id" : 1,
+            "name" : "박사장",
+            "phoneNumber" : "010-5555-5678"
+        }
+
+        #return requests.get(f"{self.BASE_URL}/shuttle/tag/driver?uuid={uuid}").json()
+        #if(response.status_code == 404):
+        #    self._reIssue()
+        #    return self.uploadPosition(position=position)
+
 
 if __name__ == "__main__":
     apiFetcher = APIFetcher("")
