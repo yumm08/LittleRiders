@@ -10,6 +10,7 @@ import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
+import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.history.ChildHistoryService;
 import kr.co.littleriders.backend.domain.history.FamilyHistoryService;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
@@ -19,12 +20,14 @@ import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
 import kr.co.littleriders.backend.domain.pending.error.code.PendingErrorCode;
 import kr.co.littleriders.backend.domain.pending.error.exception.PendingException;
+import kr.co.littleriders.backend.global.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +40,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     private final AcademyChildService academyChildService;
     private final ChildHistoryService childHistoryService;
     private final FamilyHistoryService familyHistoryService;
+    private final ImageUtil imageUtil;
 
     @Override
     public List<AcademyChildResponse> readAcademyChildList(Long academyId) {
@@ -44,12 +48,17 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         Academy academy = academyService.findById(academyId);
 
         List<AcademyChildResponse> academyChildList = academyChildService.findByAcademy(academy)
-                                                                         .stream()
-                                                                         .sorted(Comparator.comparing(child -> {
-                                                                             return child.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
-                                                                         }))
-                                                                         .map(AcademyChildResponse::from)
-                                                                         .collect(Collectors.toList());
+                                                     .stream()
+                                                     .sorted(Comparator.comparing(child -> {
+                                                         return child.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
+                                                     }))
+                                                     .map(academyChild -> {
+                                                         ChildHistory childHistory = childHistoryService.findByAcademyChild(academyChild);
+                                                         AcademyChildResponse childResponse = AcademyChildResponse.of(academyChild, childHistory);
+
+                                                         return childResponse;
+                                                     })
+                                                     .collect(Collectors.toList());
 
         return academyChildList;
     }
@@ -64,18 +73,32 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         }
 
         AcademyChildDetailResponse childDetail;
-        if (academyChild.isAttending()) {
-            childDetail = AcademyChildDetailResponse.from(academyChild);
-        } else if (academyChild.isFamilyAvail()) {
-            ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
+        ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
+        if (academyChild.isFamilyAvail()) {
             childDetail = AcademyChildDetailResponse.of(childHistory, null, academyChild);
         } else {
-            ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
             FamilyHistory familyHistory = familyHistoryService.findByCreatedAt(academyChild.getAcademyFamily());
             childDetail = AcademyChildDetailResponse.of(childHistory, familyHistory, academyChild);
         }
 
         return childDetail;
+    }
+
+    @Override
+    public Map<String, Object> readAcademyChildImage(Long academyId, Long childHistoryId) {
+
+        Academy academy = academyService.findById(academyId);
+        ChildHistory childHistory = childHistoryService.findById(childHistoryId);
+        Child child = childHistory.getChild();
+        AcademyChild academyChild = academyChildService.findByChildAndAcademy(child, academy);
+        if (childHistory.isBeforeUpdatedAt(academyChild)) {
+            throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
+        }
+
+        String imagePath = childHistory.getImagePath();
+        Map<String, Object> result = imageUtil.getImage(imagePath);
+
+        return result;
     }
 
     @Override
@@ -85,7 +108,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
         AcademyChild academyChild = academyChildService.findById(academyChildId);
         if (!academyChild.equalsAcademy(academy)) {
-            throw AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND); // TODO-이윤지-에러 메시지 변경
+            throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
         // TODO-이윤지-attending->graduate/leave 만 가능하도록 제약

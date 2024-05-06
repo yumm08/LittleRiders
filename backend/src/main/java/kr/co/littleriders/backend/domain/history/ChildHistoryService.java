@@ -7,5 +7,9 @@ public interface ChildHistoryService {
 
     ChildHistory findByCreatedAt(AcademyChild academyChild);
 
+    ChildHistory findByAcademyChild(AcademyChild academyChild);
+
     void save(ChildHistory childHistory);
+
+    ChildHistory findById(Long childHistoryId);
 }

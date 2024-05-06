@@ -23,6 +23,14 @@ class ChildHistoryCustomRepositoryImpl implements ChildHistoryCustomRepository {
                 .where(childHistory.child.eq(child),
                         childHistory.createdAt.before(updatedAt))
                 .orderBy(childHistory.createdAt.desc())
-                .fetchOne();
+                .fetchFirst();
+    }
+
+    @Override
+    public ChildHistory findLatestByChild(Child child) {
+        return jpaQueryFactory.selectFrom(childHistory)
+                .where(childHistory.child.eq(child))
+                .orderBy(childHistory.createdAt.desc())
+                .fetchFirst();
     }
 }

@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.history.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.global.entity.Gender;
 import lombok.AccessLevel;
@@ -53,5 +54,12 @@ public class ChildHistory {
 
     public static ChildHistory from(Child child) {
         return new ChildHistory(child);
+    }
+
+    public boolean isBeforeUpdatedAt(AcademyChild academyChild) {
+        if (academyChild.getUpdatedAt() == null) {
+            return true;
+        }
+        return this.createdAt.isBefore(academyChild.getUpdatedAt());
     }
 }

@@ -5,6 +5,7 @@ import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AcademyChildFacade {
 
@@ -19,4 +20,6 @@ public interface AcademyChildFacade {
     Long updateAcademyChild(Long academyId, Long academyChildId, String status);
 
     AcademyChildDetailResponse readAcademyChildDetail(Long academyId, Long academyChildId);
+
+    Map<String, Object> readAcademyChildImage(Long academyId, Long childHistoryId);
 }

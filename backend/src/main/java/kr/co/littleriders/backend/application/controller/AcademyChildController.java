@@ -8,10 +8,14 @@ import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/academy/child")
@@ -37,6 +41,27 @@ public class AcademyChildController {
         AcademyChildDetailResponse academyChildDetailResponse = academyChildFacade.readAcademyChildDetail(academyId, academyChildId);
 
         return ResponseEntity.ok().body(academyChildDetailResponse);
+    }
+
+    @GetMapping("/{childHistoryId}/image")
+    public ResponseEntity<Resource> getAcademyChildImage(@Auth AuthAcademy authAcademy,
+                                                         @PathVariable(value = "childHistoryId") Long childHistoryId) {
+
+        Long academyId = authAcademy.getId();
+
+        Map<String, Object> image = academyChildFacade.readAcademyChildImage(academyId, childHistoryId);
+
+        Resource imageResource = (Resource) image.get("resource");
+        MediaType mediaType = (MediaType) image.get("mediaType");
+
+        HttpHeaders headers = new HttpHeaders();
+        if (mediaType != null) {
+            headers.setContentType(mediaType);
+        } else {
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        }
+
+        return ResponseEntity.ok().headers(headers).body(imageResource);
     }
 
     @PutMapping("/{academyChildId}")
