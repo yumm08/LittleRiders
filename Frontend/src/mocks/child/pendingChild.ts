@@ -8,7 +8,7 @@ type DeletePendingChildRequestBody = {
   academyChildAllowPendingList: number[]
 }
 
-const BASE_URL = '/api/admin/child'
+const BASE_URL = '/api/academy/child'
 
 export const handlers = [
   http.get(`${BASE_URL}/pending`, () => {
