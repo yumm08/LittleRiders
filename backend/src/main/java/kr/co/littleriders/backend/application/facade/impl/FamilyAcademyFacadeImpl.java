@@ -62,6 +62,7 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
         }
 
         // TODO-이윤지-이전에 신청한 내역이 있는지 확인 후 생성
+        // 신청한 내역이 아직 pending 상태일 경우 에러 메시지 -> 이미 신청되었습니다.
         Pending pending = Pending.of(academy, child, PendingStatus.PENDING);
         return pendingService.save(pending);
     }
