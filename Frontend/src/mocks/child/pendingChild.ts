@@ -8,7 +8,7 @@ type DeletePendingChildRequestBody = {
   academyChildAllowPendingList: number[]
 }
 
-const BASE_URL = '/api/admin/child'
+const BASE_URL = '/api/academy/child'
 
 export const handlers = [
   http.get(`${BASE_URL}/pending`, () => {
@@ -21,7 +21,7 @@ export const handlers = [
 
       for (const id of academyChildAllowPendingList) {
         const index = pendingChildList.findIndex(
-          (child) => child.academyChildAllowPendingId === id,
+          (child) => child.pendingId === id,
         )
         if (index !== -1) {
           pendingChildList.splice(index, 1)
@@ -38,7 +38,7 @@ export const handlers = [
 
       for (const id of academyChildAllowPendingList) {
         const index = pendingChildList.findIndex(
-          (child) => child.academyChildAllowPendingId === id,
+          (child) => child.pendingId === id,
         )
         if (index !== -1) {
           pendingChildList.splice(index, 1)

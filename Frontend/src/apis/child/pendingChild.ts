@@ -14,14 +14,13 @@ export const getPendingChildList = async () => {
 /**
  * 원생 승인 요청을 승인하는 API 요청 함수
  *
- * @param academyChildAllowPendingList 요청을 보낼 대기중인 원생 ID 리스트
+ * @param pendingIdList 요청을 보낼 대기중인 원생 ID 리스트
  */
-export const postPendingChildList = async (
-  academyChildAllowPendingList: number[],
-) => {
-  const response = await axiosInstance.post(`${BASE_URL}/child/pending`, {
-    academyChildAllowPendingList,
-  })
+export const postPendingChildList = async (pendingIdList: number[]) => {
+  const response = await axiosInstance.post(
+    `${BASE_URL}/child/pending`,
+    pendingIdList,
+  )
 
   return response
 }
@@ -29,13 +28,11 @@ export const postPendingChildList = async (
 /**
  * 원생 승인 요청을 거절하는 API 요청 함수
  *
- * @param academyChildAllowPendingList 요청을 보낼 대기중인 원생 ID 리스트
+ * @param pendingIdList 요청을 보낼 대기중인 원생 ID 리스트
  */
-export const deletePendingChildList = async (
-  academyChildAllowPendingList: number[],
-) => {
+export const deletePendingChildList = async (pendingIdList: number[]) => {
   const response = await axiosInstance.delete(`${BASE_URL}/child/pending`, {
-    data: { academyChildAllowPendingList },
+    data: pendingIdList,
   })
 
   return response
