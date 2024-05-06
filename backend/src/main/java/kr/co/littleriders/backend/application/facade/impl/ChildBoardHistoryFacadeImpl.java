@@ -37,7 +37,6 @@ class ChildBoardHistoryFacadeImpl implements ChildBoardHistoryFacade {
 	@Override
 	public ChildBoardHistoryResponse readChildBoardHistory(Long familyId, Long childId, Pageable pageable) {
 
-		//TODO - 이윤지 - permission check 하는 코드로 변경
 		Family family = familyService.findById(familyId);
 		Child child = childService.findById(childId);
 		if (!child.equalsFamily(family)) {
@@ -60,11 +59,8 @@ class ChildBoardHistoryFacadeImpl implements ChildBoardHistoryFacade {
 
 		Family family = familyService.findById(familyId);
 
-		// detail 조회
 		BoardDropHistory boardDropHistory = boardDropHistoryService.findById(historyId);
 
-		// family 접근 권한 확인
-		//TODO - 이윤지 - 추후 에러 수정 예정
 		if (!boardDropHistory.equalsFamily(family)) {
 			throw BoardDropHistoryException.from(BoardDropHistoryErrorCode.ILLEGAL_ACCESS);
 		}
