@@ -103,19 +103,34 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.webview.setUrl(QUrl("https://device.littleriders.co.kr"))
         self.mapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
-        self.serialNumberText.setText(f"시리얼 : {terminalNumber}")
+        self.serialNumberText.setText(f"{terminalNumber}")
         self.mapLoad = False
 
 
     def on_load_finished(self, success):
         if success:
             self.mapLoad = True
-            self.webview.page().runJavaScript('console.log("helloworld")')
+            position = positionRepository.findLastPosition()
+            if(not position):
+                self.webview.page().runJavaScript(f'console.log("hello world")')
+
+                return
+            self.webview.page().runJavaScript(f'change({position.latitude},{position.longitude})')
+
+            
 
     def startDriveButtonEvent(self):
-        buzzerHelper.beep()
+        canDrive = False
+        #여기서 api fetching 진행후 반환
+        
+        if not canDrive:
+            buzzerHelper.beep()
+            buzzerHelper.beep()
+            QMessageBox.about(self,'운행이 불가능합니다.','기사님과 선탑자가 탑승하지 않았어요.')
+        
         pass
     def courseInfoButtonEvent(self):
+        buzzerHelper.beep()
         self.hide()
         self.second = RouteInfoWindow()
         self.second.exec()
@@ -165,7 +180,7 @@ class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
         for i in self.routeList:
             self.addItem(i)
         
-        self.exitButton.clicked.connect(self.close)
+        self.exitButton.clicked.connect(self.closeWindow)
         self.webview = QWebEngineView()
         self.webview.setUrl(QUrl("https://device.littleriders.co.kr/route"))
         self.stationMapLayout.addWidget(self.webview)
@@ -179,10 +194,14 @@ class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
         self.courseListWidget.addItem(item)
 
     def clickItem(self,items):
-
+        buzzerHelper.beep()
         #stationList = apiFetcher.getStationListByRouteId(items.getId())
         stationList = items.getStationList()
         self.webview.page().runJavaScript(f"reChangePostion({stationList})")
+
+    def closeWindow(self):
+        buzzerHelper.beep()
+        self.close()
 
     def on_load_finished(self, success):
         if success:
