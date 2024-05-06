@@ -2,7 +2,7 @@ import axiosInstance from '@utils/httpCommons'
 
 import { Route } from '@types'
 
-const BASE_URL = 'route'
+const BASE_URL = 'academy/route'
 
 /**
  * get Route List Axios Call
