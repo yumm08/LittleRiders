@@ -14,17 +14,17 @@ import sys
 import asyncio
 
 from datetime import datetime
-
+from BuzzerHelper import BuzzerHelper
 
 form_class = uic.loadUiType("untitled.ui")[0]
 formRounteInfoClass = uic.loadUiType("untitled2.ui")[0]
-
 modelHelper = ModelHelper()
+buzzerHelper = BuzzerHelper()
 terminalRepository =TerminalRepository(modelHelper=modelHelper)
 positionRepository = PositionRepository(modelHelper=modelHelper)
 terminalNumber = terminalRepository.findById(1).getTerminalNumber()
 apiFetcher = APIFetcher(terminalNumber)
-
+print(terminalNumber)
 
 class ObserverInterface():
     def notify(self,*args,**kwargs):
@@ -103,6 +103,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.webview.setUrl(QUrl("https://device.littleriders.co.kr"))
         self.mapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
+        self.serialNumberText.setText(f"시리얼 : {terminalNumber}")
         self.mapLoad = False
 
 
@@ -111,10 +112,10 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
             self.mapLoad = True
             self.webview.page().runJavaScript('console.log("helloworld")')
 
-    def terminalInfoButtonEvent(self):
+    def startDriveButtonEvent(self):
+        buzzerHelper.beep()
         pass
     def courseInfoButtonEvent(self):
-        print(apiFetcher.getRouteList())
         self.hide()
         self.second = RouteInfoWindow()
         self.second.exec()
@@ -134,9 +135,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         speed = position.getSpeed()
         if(self.mapLoad):
             self.webview.page().runJavaScript(f'change({latitude},{longitude})')
-        self.latitudeText.setText(f"{latitude}")
-        self.longitudeText.setText(f"{longitude}")
-        self.speedText.setText(f"{speed}")
+    
 
 
 class RouteInfoListWidget(QListWidgetItem):
@@ -145,12 +144,16 @@ class RouteInfoListWidget(QListWidgetItem):
     
         self.id = data["id"]
         self.name = data["name"]
+        self.stationList = data["stationList"]
         self.setText(self.name)
         self.setFont(QFont("Arial",23))
         # su.__init__(parent)
 
     def getId(self):
         return self.id
+    
+    def getStationList(self):
+        return self.stationList
 
 class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
 
@@ -160,16 +163,32 @@ class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
 
         self.routeList = apiFetcher.getRouteList()
         for i in self.routeList:
-            print(i)
             self.addItem(i)
+        
+        self.exitButton.clicked.connect(self.close)
+        self.webview = QWebEngineView()
+        self.webview.setUrl(QUrl("https://device.littleriders.co.kr/route"))
+        self.stationMapLayout.addWidget(self.webview)
+        self.webview.loadFinished.connect(self.on_load_finished)
+        self.mapLoad = False
         self.show()
+    
 
     def addItem(self,data):
         item = RouteInfoListWidget(data=data)
         self.courseListWidget.addItem(item)
 
     def clickItem(self,items):
-        print(items)
+
+        #stationList = apiFetcher.getStationListByRouteId(items.getId())
+        stationList = items.getStationList()
+        self.webview.page().runJavaScript(f"reChangePostion({stationList})")
+
+    def on_load_finished(self, success):
+        if success:
+            self.mapLoad = True
+            if(len(self.routeList) >0):
+                self.webview.page().runJavaScript(f'reChangePostion({self.routeList[0]["stationList"]})')
 
 
 if __name__ == "__main__":
@@ -180,7 +199,7 @@ if __name__ == "__main__":
     postionThread = PositionThread()
     postionThread.start()
     postionThread.register(win)
-    postionThread.register(positionSaver)
+    #postionThread.register(positionSaver)
 
     bluetoothThread = BluetoothThread()
     bluetoothThread.start()
