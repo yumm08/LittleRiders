@@ -1,7 +1,7 @@
-import { useState } from 'react'
-
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
+
+import { modalStore } from '@stores/modalStore'
 
 import { useFetchTeacherList } from '@hooks/academy/useFetchTeacherList'
 
@@ -13,9 +13,12 @@ type Props = {
 }
 
 export default function TeacherList({ show }: Props) {
-  const [modalState, setModalState] = useState(false)
+  const addTeacherModalState = modalStore(
+    (state) => state.modalController.addTeacherModal,
+  )
+  const changeModalState = modalStore((state) => state.changeModalState)
   const openAddTeacherModal = () => {
-    setModalState(!modalState)
+    changeModalState('addTeacherModal')
   }
   const { teacherList, isLoading } = useFetchTeacherList()
   if (isLoading) return <div>Loading...</div>
@@ -34,7 +37,7 @@ export default function TeacherList({ show }: Props) {
           })}
         </CardCarousel>
       </CardListContainer>
-      {modalState && (
+      {addTeacherModalState && (
         <AddTeacherModal
           modalTitle="직원 등록"
           modalSwitch={openAddTeacherModal}

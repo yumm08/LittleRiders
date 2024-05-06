@@ -2,7 +2,7 @@ import { DUMMY_DRIVER_LIST } from './dummy'
 
 import { HttpResponse, http } from 'msw'
 
-const BASE_URL = '/api/admin'
+const BASE_URL = '/api/academy'
 
 export const handlers = [
   http.post(BASE_URL + '/driver', () => {
