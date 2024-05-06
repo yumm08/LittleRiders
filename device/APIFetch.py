@@ -87,7 +87,25 @@ class APIFetcher:
 
         return [
                 {"id":1,"name":"등원A","stationList": self._getRandomStation()},
-                {"id":2,"name":"등원B","stationList":self._getRandomStation()}
+                {"id":2,"name":"등원B","stationList":self._getRandomStation()},
+                {"id":3,"name":"등원C","stationList":self._getRandomStation()},
+                {"id":4,"name":"등원D","stationList":self._getRandomStation()},
+                {"id":5,"name":"등원E","stationList":self._getRandomStation()},
+                {"id":6,"name":"등원F","stationList":self._getRandomStation()},
+                {"id":7,"name":"등원G","stationList":self._getRandomStation()},
+                {"id":8,"name":"등원H","stationList":self._getRandomStation()},
+                {"id":9,"name":"등원I","stationList":self._getRandomStation()},
+                {"id":10,"name":"등원J","stationList":self._getRandomStation()},
+                {"id":11,"name":"등원K","stationList":self._getRandomStation()},
+                {"id":12,"name":"등원!","stationList":self._getRandomStation()},
+                {"id":13,"name":"등원2","stationList":self._getRandomStation()},
+                {"id":14,"name":"등원3","stationList":self._getRandomStation()},
+                {"id":15,"name":"등원4","stationList":self._getRandomStation()},
+                {"id":16,"name":"등원5","stationList":self._getRandomStation()},
+                {"id":17,"name":"등원6","stationList":self._getRandomStation()},
+                {"id":18,"name":"등원7","stationList":self._getRandomStation()},
+                {"id":19,"name":"등원8","stationList":self._getRandomStation()},
+                {"id":20,"name":"등원9","stationList":self._getRandomStation()}
                 
             ]
         
