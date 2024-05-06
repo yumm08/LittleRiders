@@ -68,7 +68,7 @@ export function SortableItem({
 
   useEffect(() => {
     setChildCount(childList?.length)
-  }, [childList])
+  }, [childList?.length])
 
   useEffect(() => {
     setIsClicked(selectedStation === Number(id.toString()))

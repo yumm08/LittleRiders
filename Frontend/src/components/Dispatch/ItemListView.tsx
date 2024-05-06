@@ -5,7 +5,7 @@ import { SortableItem } from '@components/Dispatch/SortableItem'
 import Button from '@components/Shared/Button'
 
 import { useFetchChildList } from '@hooks/child'
-import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
+import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch/dispatch'
 import '@hooks/map'
 import { MapHook } from '@hooks/map'
 
@@ -169,24 +169,27 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       }
       setChildItems(() => {
         const tempChildList: ChildInfo[] = []
-        childList.forEach((child: ChildInfo) => {
-          let isSame = false
-          routeDetail.stationList.forEach((station: Station) => {
-            if (
-              station.childList!.some(
-                (stationChild) =>
-                  stationChild.academyChildId === child.academyChildId,
-              )
-            ) {
-              isSame = true
-            }
+        if (childList) {
+          childList.forEach((child: ChildInfo) => {
+            let isSame = false
+            routeDetail.stationList.forEach((station: Station) => {
+              if (
+                station.childList!.some(
+                  (stationChild) =>
+                    stationChild.academyChildId === child.academyChildId,
+                )
+              ) {
+                isSame = true
+              }
+            })
+            if (!isSame) tempChildList.push(child)
           })
-          if (!isSame) tempChildList.push(child)
-        })
-        return {
-          childList: [...tempChildList],
-          selectedChildList: [],
+          return {
+            childList: [...tempChildList],
+            selectedChildList: [],
+          }
         }
+        return { childList: [], selectedChildList: [] }
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
