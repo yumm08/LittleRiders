@@ -285,6 +285,7 @@ class BarcodeScanView(QDialog,QWidget,formScanBarcodeClass):
         super(BarcodeScanView,self).__init__()
         self.setupUi(self)
         self.exitButton.clicked.connect(self.closeWindow)
+    
         self.driverImagePixmap = QPixmap("scan.png").scaled(180, 180, Qt.KeepAspectRatio)
         # self.driverImagePixmap.loadFromData(apiFetcher.getImage())
         self.teacherImagePixmap = QPixmap("scan.png").scaled(180, 180, Qt.KeepAspectRatio)
@@ -293,11 +294,15 @@ class BarcodeScanView(QDialog,QWidget,formScanBarcodeClass):
         self.teacherInfo = None
         self.driverInfo = None
         self.barcode = ""
+
+        self.endScanButton.setFocus(True)
+
         self.show()
 
     def keyPressEvent(self, e):
+        self.endScanButton.setFocus(True)
+        
         if(e.key()==Qt.Key_Return):
-            print(self.barcode)
             if(self.barcode.startswith("DRIVER")):
                 self.renderDriverByUuid(self.barcode.lstrip("DRIVER_"))
             elif(self.barcode.startswith("TEACHER")):
@@ -312,25 +317,34 @@ class BarcodeScanView(QDialog,QWidget,formScanBarcodeClass):
         except:
             pass
 
+    def endScanButtonEvent(self):
+        if(self.barcode.startswith("DRIVER")):
+            self.renderDriverByUuid(self.barcode.lstrip("DRIVER_"))
+        elif(self.barcode.startswith("TEACHER")):
+            self.renderTeacherByUuid(self.barcode.lstrip("TEACHER_"))
+        else:
+            buzzerHelper.beep()
+            buzzerHelper.beep()
+        self.barcode = ""
     
 
         #print(chr(e.key()),end="")
 
     def renderDriverByUuid(self,uuid):
         self.driverInfo = apiFetcher.getDriverInfo(uuid)
-        image = apiFetcher.getImage()
-        self.driverImagePixmap.loadFromData(image)
+        #image = apiFetcher.getImage()
+        #self.driverImagePixmap.loadFromData(image)
         self.driverNameLabel.setText(self.driverInfo["name"])
         self.driverPhoneLabel.setText(self.driverInfo["phoneNumber"])
-        self.driverImageLabel.setPixmap(self.driverImagePixmap)
+        #self.driverImageLabel.setPixmap(self.driverImagePixmap)
 
     def renderTeacherByUuid(self,uuid):
         self.teacherInfo = apiFetcher.getTeacherInfo(uuid)
-        image = apiFetcher.getImage()
-        self.teacherImagePixmap.loadFromData(image)
+        #image = apiFetcher.getImage()
+        #self.teacherImagePixmap.loadFromData(image)
         self.teacherNameLabel.setText(self.teacherInfo["name"])
         self.teacherPhoneLabel.setText(self.teacherInfo["phoneNumber"])
-        self.teacherImageLabel.setPixmap(self.teacherImagePixmap)
+        #self.teacherImageLabel.setPixmap(self.teacherImagePixmap)
 
     
     def nextButtonEvent(self):
@@ -350,16 +364,14 @@ class BarcodeScanView(QDialog,QWidget,formScanBarcodeClass):
             buzzerHelper.beep()
             QMessageBox.critical(self,'운행 오류','선생님 QR을 스캔해주세요.')
             return
+        buzzerHelper.beep()
+        QMessageBox.critical(self,'운행을 시작했습니다!','운행시작!!')
 
 
 
     def closeWindow(self):
         buzzerHelper.beep()
         self.close()
-        
-        # self.driverImageLabel.setPixmap(self.driverImagePixmap)
-
-        # self.d
     
 
 

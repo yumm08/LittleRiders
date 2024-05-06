@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>400</height>
+    <height>402</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -251,7 +251,57 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QPushButton" name="endScanButton">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>350</y>
+     <width>1</width>
+     <height>1</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>nextButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>nextButtonEvent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>695</x>
+     <y>33</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>753</x>
+     <y>168</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>endScanButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>endScanButtonEvent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>361</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>402</x>
+     <y>213</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>nextButtonEvent()</slot>
+  <slot>endScanButtonEvent()</slot>
+ </slots>
 </ui>
