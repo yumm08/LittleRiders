@@ -22,8 +22,8 @@ export const useFetchRealTimeShuttleInfo = (shuttleId: number) => {
 
   useEffect(() => {
     // SSE URL
-    const eventSourceUrl =
-      'https://littleriders.co.kr/api/family/shuttle/1/location'
+    // const eventSourceUrl = `/api/family/shuttle/${shuttleId}/location`
+    const eventSourceUrl = `/api/family/shuttle/1/location`
 
     // Create Event Source
     const eventSource = new EventSource(eventSourceUrl, {
@@ -37,11 +37,11 @@ export const useFetchRealTimeShuttleInfo = (shuttleId: number) => {
     }
 
     // Add Receiving Message Event Handler
-    eventSource.addEventListener('message', handleMessage)
+    eventSource.addEventListener('location', handleMessage)
 
     // Close Event Source When Unmount Component
     return () => {
-      eventSource.removeEventListener('message', handleMessage)
+      eventSource.removeEventListener('location', handleMessage)
       eventSource.close()
     }
   }, [queryClient, shuttleId])

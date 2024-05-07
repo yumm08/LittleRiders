@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import COLOR_PALETTE from '@style/ColorPalette'
 
@@ -35,15 +35,16 @@ const getDirection = (prevPosition: Position, curPosition: Position) => {
 }
 
 export const useSetRealTimeMap = () => {
-  const [realTimeMap, setRealTimeMap] = useState<naver.maps.Map>(null!)
+  const [realTimeMap, setRealTimeMap] = useState<naver.maps.Map | null>(null!)
   const [realTimeMarker, setRealTimeMarker] = useState<naver.maps.Marker>()
-  const [polyline, setPolyline] = useState<naver.maps.Polyline>()
+  const [, setPolyline] = useState<naver.maps.Polyline>()
 
-  // 맵 초기화
-  useEffect(() => {
+  // 맵 초기화 하는 함수
+  const initRealTimeMap = () => {
     const map = new naver.maps.Map('realtime-map', DEFAULT_OPTIONS)
+
     setRealTimeMap(map)
-  }, [])
+  }
 
   // 현재 위치에 기반해서 마커를 찍는 함수
   const drawRealTimeMarker = (position: Position) => {
@@ -68,7 +69,7 @@ export const useSetRealTimeMap = () => {
         position: location,
         map: realTimeMap,
         icon: {
-          content: `<div style="transform:translate(-15px, -15px);"><img src="/src/assets/image/bus.svg" style="width:30px; height:30px;" /></div>`,
+          content: `<div id="marker" style="transform:translate(-25px, -25px);width:50px;height:50px"><img src="/src/assets/image/bus.svg" style="width:50px; height:50px;" /></div>`,
         },
       })
 
@@ -92,22 +93,25 @@ export const useSetRealTimeMap = () => {
     const newPolyLine = new naver.maps.Polyline({
       path: path,
       strokeColor: COLOR_PALETTE.darkgreen,
-      strokeWeight: 2,
+      strokeWeight: 10,
       strokeOpacity: 0.7,
+      strokeLineCap: 'round',
     })
 
     if (realTimeMarker) {
       const rotateDegree = getDirection(prevPosition, curPosition) + 90
-      const content = `<div style="transform:translate(-15px, -15px);"><img src="/src/assets/image/bus.svg" style="width:30px; height:30px; transform:rotate(${rotateDegree}deg);" /></div>`
+      // const content = `<div id="marker" style="transform:translate(-15px, -15px);width:30px;height:30px"><img src="/src/assets/image/bus.svg" style="width:30px; height:30px; transform:rotate(${rotateDegree}deg);" /></div>`
+      const content = `<div id="marker" style="transform:translate(-25px, -25px);width:50px;height:50px"><img src="/src/assets/image/bus.svg" style="width:50px; height:50px; transform:rotate(${rotateDegree}deg);" /></div>`
       realTimeMarker.setIcon({
         content: content,
       })
     }
+    // drawRealTimeMarker(curPosition)
 
     newPolyLine.setMap(realTimeMap)
 
     setPolyline(newPolyLine)
   }
 
-  return { realTimeMap, drawRealTimeMarker, drawPolyLine }
+  return { realTimeMap, drawRealTimeMarker, drawPolyLine, initRealTimeMap }
 }

@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
+
+import { useQuery } from '@tanstack/react-query'
 
 import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
 import { useFetchRealTimeShuttleInfo } from '@hooks/shuttle'
@@ -16,45 +18,61 @@ interface Props {
   onSelect: (shuttle: AcademyShuttle) => void
 }
 
+type Position = {
+  latitude: number
+  longitude: number
+}
+
+type RealTimeShuttleInfo = {
+  latitude: number
+  longitude: number
+  speed: number
+}
+
 export default function RealTimeMap({
   shuttleList,
   selectedShuttle,
   onSelect,
 }: Props) {
   const { shuttleId } = selectedShuttle
+  const curPosition = useRef<Position>(null!)
+  const { initRealTimeMap, drawRealTimeMarker, drawPolyLine } =
+    useSetRealTimeMap()
 
   // shuttleId로 실시간 셔틀 위치 SSE 요청
   useFetchRealTimeShuttleInfo(shuttleId)
 
-  const { drawRealTimeMarker, drawPolyLine } = useSetRealTimeMap()
-
-  // 임시 초기 위치
-  const [position, setPosition] = useState({
-    latitude: 37.566295,
-    longitude: 126.977945,
+  // React Query를 사용하여 쿼리 데이터 가져오기
+  const { data: realTimeShuttleInfo } = useQuery<RealTimeShuttleInfo>({
+    queryKey: ['realTimeShuttleInfo', shuttleId],
   })
 
-  // 상,하,좌,우 이동 버튼 (임시)
-  const handleMove = (dir: number) => {
-    const dr = [1, -1, 0, 0]
-    const dc = [0, 0, -1, 1]
+  useEffect(() => {
+    initRealTimeMap()
+  }, [shuttleId])
 
-    setPosition((prev) => {
-      const newPosition = {
-        latitude: prev.latitude + dr[dir] / 10000,
-        longitude: prev.longitude + dc[dir] / 10000,
+  useEffect(() => {
+    if (realTimeShuttleInfo) {
+      console.log(realTimeShuttleInfo)
+      const { latitude, longitude } = realTimeShuttleInfo
+      const position = { latitude, longitude }
+
+      drawRealTimeMarker(position)
+    }
+  }, [realTimeShuttleInfo])
+
+  useEffect(() => {
+    if (realTimeShuttleInfo) {
+      const { latitude, longitude } = realTimeShuttleInfo
+      const position = { latitude, longitude }
+
+      if (curPosition.current) {
+        drawPolyLine(curPosition.current, position)
       }
 
-      drawPolyLine(prev, newPosition)
-
-      return newPosition
-    })
-  }
-
-  // 현재 position에 따라서 마커를 새로 그림
-  useEffect(() => {
-    drawRealTimeMarker(position)
-  }, [drawRealTimeMarker, position])
+      curPosition.current = position
+    }
+  }, [realTimeShuttleInfo])
 
   return (
     <div id="realtime-map" className="relative h-full w-5/6">
@@ -68,10 +86,6 @@ export default function RealTimeMap({
             <span className="font-bold">{shuttle.name}</span>
           </button>
         ))}
-        <button onClick={() => handleMove(0)}>위로 이동</button>
-        <button onClick={() => handleMove(1)}>아래로 이동</button>
-        <button onClick={() => handleMove(2)}>왼쪽으로 이동</button>
-        <button onClick={() => handleMove(3)}>오른쪽으로 이동</button>
       </div>
     </div>
   )

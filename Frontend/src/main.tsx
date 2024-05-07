@@ -1,5 +1,3 @@
-import React from 'react'
-
 import './index.css'
 
 import router from '@routes/router'
@@ -18,8 +16,6 @@ async function enableMocking() {
 
 enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>,
+    <RouterProvider router={router} />,
   )
 })
