@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.domain.academy.service;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
@@ -38,6 +39,11 @@ class AcademyChildServiceImpl implements AcademyChildService {
     @Override
     public List<AcademyChild> findByChild(Child child) {
         return academyChildRepository.findByChild(child);
+    }
+
+    @Override
+    public List<AcademyChild> findByChildInAndAcademyAndStatus(List<Child> childList, Academy academy, AcademyChildStatus status) {
+        return academyChildRepository.findByChildInAndAcademyAndStatus(childList,academy,status);
     }
 
     @Override

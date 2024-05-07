@@ -2,6 +2,7 @@ package kr.co.littleriders.backend.domain.academy;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 
@@ -23,4 +24,6 @@ public interface AcademyChildService {
 	List<AcademyChild> findByAcademy(Academy academy);
 
 	List<AcademyChild> findByChild(Child child);
+
+    List<AcademyChild> findByChildInAndAcademyAndStatus(List<Child> childList, Academy academy, AcademyChildStatus status);
 }

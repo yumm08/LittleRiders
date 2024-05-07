@@ -1,42 +1,47 @@
 package kr.co.littleriders.backend.global.permission;
 
-
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
-import kr.co.littleriders.backend.domain.child.ChildService;
-import kr.co.littleriders.backend.domain.family.FamilyService;
+import kr.co.littleriders.backend.domain.academy.entity.Academy;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.child.entity.Child;
+import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.family.entity.Family;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
+import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
+import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 
-@Component
-@RequiredArgsConstructor
-public class PermissionHelper {
+public interface PermissionHelper {
 
-    private final FamilyService familyService;
-    private final ChildService childService;
-    private final ShuttleService shuttleService;
-    private final AcademyChildService academyChildService;
+    boolean check(Family family, Shuttle shuttle);
 
-    public boolean check(Family family, Shuttle shuttle){
-        /*
-            가족 -> 아이
-            셔틀 -> 학원
-            아이 -> 학원 출석 목록
-         */
-//        List<Child> childList = family.getChildList();
-//        Academy academy = shuttle.getAcademy();
-//        for (Child c : childList){
-//            if(academyChildService.existsByAcademyAndChild(academy,c)){
-//                AcademyChild academyChild = academyChildService.findByAcademyAndChild(academy,c);
-//                return academyChild.isAttending(); //다니고 있으면 참임
-//            }
-//        }
-//        return false;
-        return  false;
-    }
+    boolean check(Family family, Academy academy);
+
+    boolean check(Family family, Child child);
+
+    boolean check(Family family, Driver driver);
+
+    boolean check(Family family, Teacher teacher);
+
+    boolean check(Teacher teacher, Family family);
+
+    boolean check(Academy academy, Shuttle shuttle);
+
+    boolean check(Academy academy, ShuttleLocation shuttleLocation);
+
+    boolean check(Academy academy, Teacher teacher);
+
+    boolean check(Academy academy, Driver driver);
+
+    boolean check(Shuttle shuttle, Teacher teacher);
+
+    boolean check(Shuttle shuttle, Driver driver);
+
+    boolean check(Shuttle shuttle, Academy academy);
+
+    boolean check(Shuttle shuttle, AcademyChild academyChild);
 
 
+    boolean check(Shuttle shuttle, Route route);
 
+    boolean check(Route route, Shuttle shuttle);
 }
