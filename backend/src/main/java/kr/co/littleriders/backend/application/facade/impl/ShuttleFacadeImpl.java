@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
@@ -21,12 +22,10 @@ import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
-import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
-import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
+import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
@@ -195,5 +194,20 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         sseFacade.broadcastShuttleLocation(shuttleId,locationRequest);
 
     }
+
+    @Override
+    public DriverInfoResponse getDriverInfoByCardNumber(AuthTerminal authTerminal, String cardNumber) {
+
+        //TODO - 김도현 - Permission check
+
+        Driver driver = driverService.findByCardNumber(cardNumber);
+//        Shuttle shuttle = shuttleService.findById(authTerminal.getShuttleId());
+        //permissionHelper.check(shuttle,driver);
+
+        return DriverInfoResponse.from(driver);
+
+
+    }
+
 
 }

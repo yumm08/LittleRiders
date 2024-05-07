@@ -20,6 +20,12 @@ import java.util.List;
 public class ShuttleController {
     private final ShuttleFacade shuttleFacade;
 
+    @GetMapping("/tag/driver/{cardNumber}")
+    public ResponseEntity<?> getDriverInfoByQrCode(@Auth AuthTerminal authTerminal, @PathVariable(name = "cardNumber") String cardNumber){
+        shuttleFacade.getDriverInfoByCardNumber(authTerminal,cardNumber);
+        return ResponseEntity.ok().build();
+    }
+
     // 운행 가능 노선 목록 조회
     @GetMapping("/route")
     public ResponseEntity<List<ShuttleRouteResponse>> getRouteList(@Auth AuthTerminal authTerminal) {
