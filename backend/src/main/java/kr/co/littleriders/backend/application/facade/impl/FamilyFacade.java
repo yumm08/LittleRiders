@@ -9,6 +9,8 @@ import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.family.error.code.FamilyErrorCode;
 import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
+import kr.co.littleriders.backend.domain.history.FamilyHistoryService;
+import kr.co.littleriders.backend.domain.history.entity.FamilyHistory;
 import kr.co.littleriders.backend.domain.token.RefreshTokenService;
 import kr.co.littleriders.backend.domain.token.SignUpTokenService;
 import kr.co.littleriders.backend.domain.token.entity.RefreshToken;
@@ -48,6 +50,8 @@ class FamilyFacade implements FamilyAccountFacade {
 
     private final JwtProvider jwtProvider;
 
+    private final FamilyHistoryService familyHistoryService;
+
     @Override
     public String sendSignUpEmail(final String email) {
         if (familyService.existsByEmail(email) || academyService.existsByEmail(email)) {
@@ -56,7 +60,7 @@ class FamilyFacade implements FamilyAccountFacade {
         Verification verification = Verification.of(email, VerificationType.FAMILY_SIGN_UP);
         verificationService.save(verification);
         String code = verification.getCode();
-        mailHelper.sendVerificationEmail(email, code);
+        mailHelper.sendSignUpVerificationEmail(email, code);
 
         return code;
 
@@ -70,7 +74,7 @@ class FamilyFacade implements FamilyAccountFacade {
         Verification verification = Verification.of(email, VerificationType.FAMILY_CHANGE_PASSWORD);
         verificationService.save(verification);
         String code = verification.getCode();
-        mailHelper.sendVerificationEmail(email, code);
+        mailHelper.sendSignUpVerificationEmail(email, code);
     }
 
     @Override
@@ -93,6 +97,8 @@ class FamilyFacade implements FamilyAccountFacade {
             throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);
         }
         familyService.save(family);
+        FamilyHistory familyHistory = FamilyHistory.from(family);
+        familyHistoryService.save(familyHistory);
     }
 
     @Override

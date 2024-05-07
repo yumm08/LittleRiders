@@ -1,6 +1,8 @@
 package kr.co.littleriders.backend.application.facade;
 
-import kr.co.littleriders.backend.application.dto.request.StationCreateRequest;
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.StationFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.station.StationService;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Slf4j
 @SpringBootTest
@@ -36,7 +39,7 @@ public class StationFacadeTest {
 
     @BeforeEach
     void setUp() {
-        academy = Academy.of("test@gmail", "1234", "test학원", "test주소", "010-1111-1111",33.12,11.23);
+        academy = AcademyFixture.BOXING.toAcademy();
         academyService.save(academy);
         authAcademy = AuthAcademy.from(academy);
     }
@@ -48,32 +51,92 @@ public class StationFacadeTest {
         @DisplayName("성공")
         void whenSuccess() throws Exception {
             // given
-            StationCreateRequest stationCreateRequest = new StationCreateRequest("역삼역", 53.2, 55.6);
+
+            StationFixture stationFixture = StationFixture.YEOK_SAM;
+            StationRequest stationCreateRequest = stationFixture.toStationRequest();
 
             // when
-            stationFacade.createStation(authAcademy, stationCreateRequest);
+            stationFacade.createStation(academy.getId(), stationCreateRequest);
 
             // then
-            List<Station> stationList = stationService.findAllByAcademyIdAndName(authAcademy.getId(), "역삼역");
+            List<Station> stationList = stationService.findAllByAcademyIdAndName(authAcademy.getId(), stationFixture.getName());
             assertThat(stationList).hasSize(1);
-            assertThat(stationList.get(0).getName()).isEqualTo("역삼역");
+            assertThat(stationList.get(0).getName()).isEqualTo(stationFixture.getName());
         }
 
         @Test
-        @DisplayName("정류장 이름 중복 테스트")
-        void whenFail() {
+        @DisplayName("성공, 다른 학원이 중복된 정류장 이름을 가질떄")
+        void whenSuccessDuplicateStationNameButAcademyNotSame() {
+            //given
+
+            StationFixture stationFixture = StationFixture.YEOK_SAM;
+            StationRequest stationCreateRequest = stationFixture.toStationRequest();
+
+            Academy computerAcademy = AcademyFixture.COMPUTER.toAcademy();
+            academyService.save(computerAcademy);
+            AuthAcademy authComputerAcademy = AuthAcademy.from(computerAcademy);
+
+            stationFacade.createStation(authComputerAcademy.getId(), stationCreateRequest);
+
+            Academy baseballAcademy = AcademyFixture.BASEBALL.toAcademy();
+            academyService.save(baseballAcademy);
+            AuthAcademy authBaseballAcademy = AuthAcademy.from(baseballAcademy);
+
+            assertDoesNotThrow(
+                    () -> {
+                        stationFacade.createStation(authBaseballAcademy.getId(), stationCreateRequest);
+                    }
+            );
+
+
+        }
+
+        @Test
+        @DisplayName("실패, 정류장 이름 중복")
+        void whenFailDuplicateStationName() {
             // 이미 존재하는 정류장 이름으로 등록 시 예외 발생
 
             // given
-            StationCreateRequest stationCreateRequest1 = new StationCreateRequest("역삼역", 53.2, 55.6);
-            stationFacade.createStation(authAcademy, stationCreateRequest1);
+            StationFixture stationFixture = StationFixture.YEOK_SAM;
 
-            StationCreateRequest stationCreateRequest2 = new StationCreateRequest("역삼역", 22, 33);
+            StationRequest stationCreateRequest1 = stationFixture.toStationRequest();
+            stationFacade.createStation(authAcademy.getId(), stationCreateRequest1);
+
+            StationRequest stationCreateRequest2 = stationFixture.toStationRequest();
 
             // when, then
-            assertThatThrownBy(() -> stationFacade.createStation(authAcademy, stationCreateRequest2))
+            assertThatThrownBy(() -> stationFacade.createStation(academy.getId(), stationCreateRequest2))
                     .isInstanceOf(StationException.class)
                     .hasMessageContaining(StationErrorCode.DUPLICATE_NAME.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("정류장 수정 테스트")
+    class updateStationTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+
+            StationRequest stationRequest = new StationRequest("역삼역", 56.4, 76.3);
+
+            Station station = Station.of(academy, "강남역", 46.2, 35.3);
+            long stationId = stationService.save(station);
+
+            stationFacade.updateStation(academy.getId(), stationId, stationRequest);
+        }
+    }
+
+    @Nested
+    @DisplayName("정류장 삭제 테스트")
+    class deleteStationTest {
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Station station = Station.of(academy, "역삼역", 46.2, 35.3);
+            long stationId = stationService.save(station);
+
+            stationFacade.deleteStation(academy.getId(), stationId);
         }
     }
 

@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.domain.station;
 
+import kr.co.littleriders.backend.application.dto.request.StationRequest;
 import kr.co.littleriders.backend.domain.station.entity.Station;
 
 import java.util.List;
@@ -18,4 +19,8 @@ public interface StationService {
     long save(Station station);
 
     List<Station> findAllByAcademyIdAndName(long academyId, String name);
+
+    void updateStation(Station station, StationRequest stationRequest);
+
+    void deleteStation(Station station);
 }

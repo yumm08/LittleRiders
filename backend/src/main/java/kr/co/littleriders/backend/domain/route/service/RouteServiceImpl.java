@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.domain.route.service;
 
+import kr.co.littleriders.backend.application.dto.request.RouteRequest;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
@@ -45,6 +46,16 @@ class RouteServiceImpl implements RouteService {
     @Override
     public List<Route> findAllByAcademy(Academy academy) {
         return routeRepository.findAllByAcademy(academy);
+    }
+
+    @Override
+    public void updateRoute(Route route, RouteRequest routeRequest) {
+        route.update(routeRequest);
+    }
+
+    @Override
+    public void deleteRoute(Route route) {
+        routeRepository.delete(route);
     }
 
 

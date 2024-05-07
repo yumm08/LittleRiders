@@ -37,6 +37,13 @@ class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
+    public Verification findByEmail(String email) {
+        return verificationRepository.findByEmail(email).orElseThrow(
+                () -> VerificationException.from(VerificationErrorCode.NOT_FOUND)
+        );
+    }
+
+    @Override
     public void save(Verification verification) {
         verificationRepository.save(verification);
     }

@@ -3,6 +3,8 @@ package kr.co.littleriders.backend.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.TeacherFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
@@ -48,9 +50,11 @@ class AcademyTeacherControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+
+			Academy academy = AcademyFixture.BOXING.toAcademy();
 			academyService.save(academy);
-			TeacherRegistRequest regist = new TeacherRegistRequest("테스트", "010", null);
+
+			TeacherRegistRequest regist = TeacherFixture.HA.toTeacherRegisterRequest();
 			Teacher teacher = regist.toEntity(academy);
 			Long teacherId = teacherService.save(teacher);
 
@@ -74,18 +78,19 @@ class AcademyTeacherControllerTest {
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
 
+
+			Academy academy = AcademyFixture.BOXING.toAcademy();
 			// 학원 생성
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
 			academyService.save(academy);
 
+			Teacher teacher = TeacherFixture.HA.toTeacher(academy,TeacherStatus.WORK);
 			// 선탑자 생성
-			Teacher teacher = Teacher.of("선탑자", "010-1111-1111", academy, TeacherStatus.WORK);
 			teacherService.save(teacher);
 
-			Teacher teacher1 = Teacher.of("선탑자1", "010-1111-1112", academy, TeacherStatus.RESIGN);
+			Teacher teacher1 = TeacherFixture.HONG.toTeacher(academy,TeacherStatus.RESIGN);
 			teacherService.save(teacher1);
 
-			Teacher teacher2 = Teacher.of("선탑자2", "010-1111-1113", academy, TeacherStatus.WORK);
+			Teacher teacher2 = TeacherFixture.NAM_GOONG.toTeacher(academy,TeacherStatus.WORK);
 			teacherService.save(teacher2);
 
 			List<AcademyTeacherResponse> teacherList = new ArrayList<AcademyTeacherResponse>();

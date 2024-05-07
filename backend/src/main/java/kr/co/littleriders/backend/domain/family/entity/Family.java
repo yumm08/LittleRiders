@@ -6,6 +6,7 @@ import kr.co.littleriders.backend.global.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Family implements Member {
     private String email; // 이메일
 
 
+    @Setter
     @Column(name = "password", nullable = false)
     private String password; // 비밀번호
 
@@ -41,7 +43,7 @@ public class Family implements Member {
     private String phoneNumber; // 연락처
 
     @OneToMany(mappedBy = "family")
-    private List<Child> child; // 자녀 목록
+    private List<Child> childList; // 자녀 목록
 
     private Family(String email, String password, String name,String address, String phoneNumber) {
         this.email = email;

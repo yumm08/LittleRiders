@@ -6,4 +6,7 @@ public interface ShuttleDriveService {
 
     void save(ShuttleDrive shuttleDrive);
 
+    ShuttleDrive findByShuttleId(long shuttleId);
+
+    void delete(ShuttleDrive shuttleDrive);
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
 import kr.co.littleriders.backend.application.dto.request.FamilyAcademyRegistRequest;
 import kr.co.littleriders.backend.application.facade.FamilyAcademyFacade;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.child.ChildService;
@@ -61,11 +62,11 @@ class FamilyAcademyControllerTest {
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+            Academy academy = AcademyFixture.BOXING.toAcademy();
 			academyService.save(academy);
-            Academy academy1 = Academy.of("test1@com", "password", "테스트학원1", "테스트시 테스트동", "010-1112",3,4);
+            Academy academy1 = AcademyFixture.BASEBALL.toAcademy();
             academyService.save(academy1);
-            Academy academy2 = Academy.of("test2@com", "password", "테스트학원2", "테스트시 테스트동", "010-1113",3,4);
+            Academy academy2 = AcademyFixture.SOCCER.toAcademy();
             academyService.save(academy2);
 
             mockMvc.perform(

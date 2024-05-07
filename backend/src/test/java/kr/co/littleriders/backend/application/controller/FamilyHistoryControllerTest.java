@@ -1,39 +1,16 @@
 package kr.co.littleriders.backend.application.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Slice;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kr.co.littleriders.backend.application.dto.response.ChildBoardHistory;
 import kr.co.littleriders.backend.application.dto.response.ChildBoardHistoryResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildDetailHistoryResponse;
-import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.ChildFixture;
+import kr.co.littleriders.backend.common.fixture.FamilyFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyFamilyStatus;
-import kr.co.littleriders.backend.domain.academy.entity.CardType;
+import kr.co.littleriders.backend.domain.academy.entity.*;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.family.FamilyService;
@@ -41,7 +18,21 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.history.BoardDropHistoryService;
 import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
 import kr.co.littleriders.backend.domain.history.entity.BoardDropHistoryStatus;
-import kr.co.littleriders.backend.global.entity.Gender;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -80,16 +71,16 @@ class FamilyHistoryControllerTest {
 		void whenSuccess() throws Exception {
 
 			// academy 생성
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111", 3, 2);
+			Academy academy = AcademyFixture.BOXING.toAcademy();
 			academyService.save(academy);
 
 			// family 생성
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
 			Long familyId = family.getId();
 
 			// child 생성
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.KIM_MALE.toChild(family);
 			childService.save(child);
 
 			// academyFamily 생성
@@ -150,16 +141,16 @@ class FamilyHistoryControllerTest {
 
 
 			// academy 생성
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111", 3, 2);
+			Academy academy = AcademyFixture.BOXING.toAcademy();
 			academyService.save(academy);
 
 			// family 생성
-			Family family = Family.of("test1@com", "password", "테스트부모1", "테스트시 테스트동", "010-1112");
+			Family family = FamilyFixture.KIM.toFamily();
 			familyService.save(family);
 			Long familyId = family.getId();
 
 			// child 생성
-			Child child = Child.of("테스트아이", LocalDate.of(2024, 4,26), Gender.MALE, family);
+			Child child = ChildFixture.KIM_MALE.toChild(family);
 			childService.save(child);
 
 			// academyFamily 생성

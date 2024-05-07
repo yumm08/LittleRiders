@@ -3,6 +3,9 @@ package kr.co.littleriders.backend.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.ShuttleRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleResponse;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
+import kr.co.littleriders.backend.common.fixture.TerminalFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
@@ -60,9 +63,10 @@ class AcademyShuttleControllerTest {
 		@Test
 		@DisplayName("성공")
 		void whenSuccess() throws Exception {
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111",3,4);
+
+			Academy academy = AcademyFixture.BOXING.toAcademy();
 			academyService.save(academy);
-			ShuttleRegistRequest regist = new ShuttleRegistRequest("테스트번호License", "차종류", "1호차테스트", null);
+			ShuttleRegistRequest regist = ShuttleFixture.HO_01.toShuttleRegistRequest();
 			Shuttle shuttle = regist.toEntity(academy);
 			Long driverId = shuttleService.save(shuttle);
 
@@ -87,27 +91,31 @@ class AcademyShuttleControllerTest {
 		void whenSuccess() throws Exception {
 
 			// 학원 생성
-			Academy academy = Academy.of("test@com", "password", "테스트학원", "테스트시 테스트동", "010-1111", 3, 4);
+			Academy academy = AcademyFixture.SOCCER.toAcademy();
 			academyService.save(academy);
 
-			// 기사 생성
-			Shuttle shuttle = Shuttle.of("TESTLICENSE", "1호차", "차량", academy, ShuttleStatus.USE);
+
+			Shuttle shuttle = ShuttleFixture.HO_02.toShuttle(academy,ShuttleStatus.USE);
 			shuttleService.save(shuttle);
-			Terminal terminal = Terminal.of(academy, "terminalNumber");
+
+			Terminal terminal = TerminalFixture.A.toTerminal(academy);
 			terminalService.save(terminal);
 			ShuttleTerminalAttach shuttleTerminalAttach = ShuttleTerminalAttach.of(shuttle, terminal);
 			shuttleTerminalAttachService.save(shuttleTerminalAttach);
 
-			Shuttle shuttle1 = Shuttle.of("TESTLICENSE1", "2호차", "차량", academy, ShuttleStatus.REPAIRING);
+			Shuttle shuttle1 = ShuttleFixture.HO_19.toShuttle(academy,ShuttleStatus.REPAIRING);
 			shuttleService.save(shuttle1);
-			Terminal terminal1 = Terminal.of(academy, "terminalNumber1");
+
+			Terminal terminal1 = TerminalFixture.B.toTerminal(academy);
 			terminalService.save(terminal1);
 			ShuttleTerminalAttach shuttleTerminalAttach1 = ShuttleTerminalAttach.of(shuttle1, terminal1);
 			shuttleTerminalAttachService.save(shuttleTerminalAttach1);
 
-			Shuttle shuttle2 = Shuttle.of("TESTLICENSE2", "3호차", "차량", academy, ShuttleStatus.USE);
+
+			Shuttle shuttle2 = ShuttleFixture.HO_21.toShuttle(academy,ShuttleStatus.USE);
 			shuttleService.save(shuttle2);
-			Terminal terminal2 = Terminal.of(academy, "terminalNumber2");
+
+			Terminal terminal2 = TerminalFixture.C.toTerminal(academy);
 			terminalService.save(terminal2);
 			ShuttleTerminalAttach shuttleTerminalAttach2 = ShuttleTerminalAttach.of(shuttle2, terminal2);
 			shuttleTerminalAttachService.save(shuttleTerminalAttach2);

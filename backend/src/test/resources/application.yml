@@ -38,7 +38,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://user:password@mongo.littleriders:7017/mydatabase?authSource=admin
+      uri: mongodb://user:password@littleriders.co.kr:7017/mydatabase?authSource=admin
 
     redis:
       host: littleriders.co.kr

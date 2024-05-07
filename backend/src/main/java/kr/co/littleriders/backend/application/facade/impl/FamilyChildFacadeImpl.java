@@ -17,6 +17,7 @@ import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
 import kr.co.littleriders.backend.application.facade.FamilyChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
@@ -25,6 +26,12 @@ import kr.co.littleriders.backend.domain.child.error.exception.ChildException;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class StationCreateRequest {
+public class StationRequest {
     private String name;
     private double latitude;
     private double longitude;
