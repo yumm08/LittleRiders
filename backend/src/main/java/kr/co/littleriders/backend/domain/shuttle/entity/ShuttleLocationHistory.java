@@ -18,7 +18,7 @@ public class ShuttleLocationHistory {
     @Id
     private long shuttleId;
 
-    private List<LocationInfo> locationInfoList;
+    private List<LocationInfo> locationInfoList = new ArrayList<>();
 
     private ShuttleLocationHistory(final long shuttleId, List<LocationInfo> locationInfoList) {
         this.shuttleId = shuttleId;
