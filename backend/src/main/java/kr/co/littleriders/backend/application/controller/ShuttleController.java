@@ -3,7 +3,7 @@ package kr.co.littleriders.backend.application.controller;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
-import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
+import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
@@ -22,7 +22,7 @@ public class ShuttleController {
 
     // 운행 가능 노선 목록 조회
     @GetMapping("/route")
-    public ResponseEntity<List<ShuttleRouteResponse>> getRouteList(@Auth AuthTerminal authTerminal) {
+    public ResponseEntity<List<RouteResponse>> getRouteList(@Auth AuthTerminal authTerminal) {
         return ResponseEntity.ok().body(shuttleFacade.getRouteList(authTerminal));
     }
 

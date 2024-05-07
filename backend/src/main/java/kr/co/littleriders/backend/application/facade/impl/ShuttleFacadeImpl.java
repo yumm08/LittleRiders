@@ -3,8 +3,8 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
-import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.application.facade.SseFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
@@ -26,8 +26,6 @@ import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
-import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
@@ -64,7 +62,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final ShuttleDriveHistoryService shuttleDriveHistoryService;
 
     @Override
-    public List<ShuttleRouteResponse> getRouteList(AuthTerminal authTerminal) {
+    public List<RouteResponse> getRouteList(AuthTerminal authTerminal) {
         long shuttleId = authTerminal.getShuttleId();
         Shuttle shuttle = shuttleService.findById(shuttleId);
         Academy academy = shuttle.getAcademy();
@@ -72,7 +70,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         List<Route> routeList = routeService.findAllByAcademy(academy);
 
         return routeList.stream()
-                .map(ShuttleRouteResponse::from)
+                .map(RouteResponse::from)
                 .collect(Collectors.toList());
     }
 
