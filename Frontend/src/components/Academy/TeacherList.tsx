@@ -1,40 +1,53 @@
-import { useState } from 'react'
-
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
+
+import { modalStore } from '@stores/modalStore'
 
 import { useFetchTeacherList } from '@hooks/academy/useFetchTeacherList'
 
 import AddTeacherModal from './AddTeacherModal'
 import TeacherCard from './TeacherCard'
 
+import { Skeleton } from '@shadcn/ui/skeleton'
+import { TeacherCardType } from '@types'
+
 type Props = {
   show: number
 }
 
 export default function TeacherList({ show }: Props) {
-  const [modalState, setModalState] = useState(false)
+  const addTeacherModalState = modalStore(
+    (state) => state.modalController.addTeacherModal,
+  )
+  const changeModalState = modalStore((state) => state.changeModalState)
   const openAddTeacherModal = () => {
-    setModalState(!modalState)
+    changeModalState('addTeacherModal')
   }
   const { teacherList, isLoading } = useFetchTeacherList()
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <CardListContainer type="직원" openModal={openAddTeacherModal}>
+        <Skeleton className="h-[150px] w-full rounded-full" />
+      </CardListContainer>
+    )
   return (
     <>
       <CardListContainer type="직원" openModal={openAddTeacherModal}>
-        <CardCarousel show={show}>
-          {teacherList?.map((data) => {
-            return (
-              <TeacherCard
-                name={data.name}
-                phoneNumber={data.phoneNumber}
-                image={data.image}
-              />
-            )
-          })}
-        </CardCarousel>
+        {teacherList?.length !== 0 ? (
+          <CardCarousel
+            show={Math.min(show, (teacherList as TeacherCardType[]).length)}
+          >
+            {teacherList?.map((data) => {
+              return <TeacherCard key={data.id} data={data} />
+            })}
+          </CardCarousel>
+        ) : (
+          <div className="text-gray flex h-[150px] w-full items-center justify-center text-2xl font-bold text-darkgray">
+            등록된 선생님이 없습니다.
+          </div>
+        )}
       </CardListContainer>
-      {modalState && (
+      {addTeacherModalState && (
         <AddTeacherModal
           modalTitle="직원 등록"
           modalSwitch={openAddTeacherModal}

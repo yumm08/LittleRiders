@@ -44,6 +44,8 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(refreshError)
       }
     }
+
+    return Promise.reject(error)
   },
 )
 

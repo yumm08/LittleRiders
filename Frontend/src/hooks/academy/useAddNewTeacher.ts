@@ -1,3 +1,5 @@
+import { modalStore } from '@stores/modalStore'
+
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postNewTeacher } from '@apis/academy/addNewTeacher'
@@ -5,6 +7,7 @@ import { postNewTeacher } from '@apis/academy/addNewTeacher'
 import { TeacherInfo } from '@types'
 
 export const useAddNewTeacher = () => {
+  const changeModalState = modalStore((state) => state.changeModalState)
   const queryClient = useQueryClient()
   const { mutate: addNewTeacher, ...rest } = useMutation({
     mutationFn: ({ name, phoneNumber, image }: TeacherInfo) => {
@@ -16,6 +19,7 @@ export const useAddNewTeacher = () => {
     },
 
     onSuccess: async () => {
+      changeModalState('addTeacherModal')
       await queryClient.invalidateQueries({ queryKey: ['getTeacherList'] })
     },
   })
