@@ -35,4 +35,19 @@ class PendingServiceImpl implements PendingService {
 
         return pendingRepository.searchById(pendingIdList);
     }
+
+    @Override
+    public boolean existsByAcademyAndChild(Academy academy, Child child) {
+        return pendingRepository.existsByAcademyAndChild(academy, child);
+    }
+
+    @Override
+    public Pending findByAcadmeyAndChild(Academy academy, Child child) {
+        return pendingRepository.findByAcademyAndChild(academy, child);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        pendingRepository.deleteById(id);
+    }
 }

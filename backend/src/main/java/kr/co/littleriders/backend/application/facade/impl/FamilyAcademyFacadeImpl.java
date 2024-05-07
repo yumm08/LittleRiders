@@ -17,6 +17,8 @@ import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.pending.PendingService;
 import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.pending.entity.PendingStatus;
+import kr.co.littleriders.backend.domain.pending.error.code.PendingErrorCode;
+import kr.co.littleriders.backend.domain.pending.error.exception.PendingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -61,8 +63,17 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
             throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
         }
 
-        // TODO-이윤지-이전에 신청한 내역이 있는지 확인 후 생성
-        // 신청한 내역이 아직 pending 상태일 경우 에러 메시지 -> 이미 신청되었습니다.
+        if (pendingService.existsByAcademyAndChild(academy, child)) {
+            Pending prevPending = pendingService.findByAcadmeyAndChild(academy, child);
+            if (prevPending.equalsStatus(PendingStatus.PENDING)) {
+                throw PendingException.from(PendingErrorCode.ALREADY_PENDING);
+            } else if (prevPending.equalsStatus(PendingStatus.ALLOW)) {
+                throw PendingException.from(PendingErrorCode.PENDING_ALREADY_ALLOWED);
+            } else if (prevPending.equalsStatus(PendingStatus.DENY)) {
+                pendingService.deleteById(prevPending.getId());
+            }
+        }
+
         Pending pending = Pending.of(academy, child, PendingStatus.PENDING);
         return pendingService.save(pending);
     }

@@ -15,4 +15,10 @@ public interface PendingService {
     List<Pending> searchByAcademy(Academy academy);
 
     List<Pending> searchById(List<Long> pendingList);
+
+	boolean existsByAcademyAndChild(Academy academy, Child child);
+
+	Pending findByAcadmeyAndChild(Academy academy, Child child);
+
+	void deleteById(Long id);
 }
