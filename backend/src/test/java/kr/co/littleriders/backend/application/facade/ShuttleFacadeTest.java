@@ -4,6 +4,7 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideReques
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
+import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
 import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.common.fixture.DriverFixture;
 import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
@@ -144,6 +145,34 @@ public class ShuttleFacadeTest {
         }
     }
 
+
+    @Nested
+    @DisplayName("선생님 정보 QR 조회")
+    class getTeacherInfoByCardNumber{
+
+        @Test
+        @DisplayName("성공")
+        void  whenSuccess(){
+
+            //given
+            Teacher teacher = TeacherFixture.NAM.toTeacher(academy,TeacherStatus.WORK);
+            teacherService.save(teacher);
+            String cardNumber = teacher.getCardNumber();
+
+
+            //when
+            TeacherInfoResponse teacherInfoResponse = shuttleFacade.getTeacherInfoByCardNumber(authTerminal,cardNumber);
+
+
+
+            //then
+            assertEquals(teacherInfoResponse.getId(), teacher.getId());
+            assertEquals(teacherInfoResponse.getName(),teacher.getName());
+            assertEquals(teacherInfoResponse.getImage(),teacher.getImagePath());
+            assertEquals(teacherInfoResponse.getPhoneNumber(),teacher.getPhoneNumber());
+
+        }
+    }
     @Nested
     @DisplayName("운행 가능 노선 목록 조회")
     class getRouteList {
