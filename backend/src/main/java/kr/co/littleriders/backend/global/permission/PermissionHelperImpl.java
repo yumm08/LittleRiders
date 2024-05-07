@@ -23,7 +23,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class PermissionHelperImpl implements PermissionHelper {
+class PermissionHelperImpl implements PermissionHelper {
 
 
     private final ShuttleService shuttleService;
