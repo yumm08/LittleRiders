@@ -5,6 +5,8 @@ import { modalStore } from '@stores/modalStore'
 
 import AddTerminalModal from './AddTerminalModal'
 
+import Terminal from '@assets/Mock/Terminal.jpg'
+
 type Props = {
   show: number
 }
@@ -22,11 +24,13 @@ export default function TerminalList({ show }: Props) {
     <>
       <CardListContainer type="단말기" openModal={openAddTerminalModal}>
         <CardCarousel show={show}>
-          <div>단말기1</div>
-          {/* <div>단말기2</div>
-          <div>단말기3</div>
-          <div>단말기4</div> */}
-          {/* <div>단말기1</div> */}
+          <div>
+            <img
+              className="h-[150px] w-[150px] rounded-md border-2 border-slate-300 "
+              src={Terminal}
+            ></img>
+            <strong>1호차 단말기</strong>
+          </div>
         </CardCarousel>
       </CardListContainer>
       {addTerminalModalState && (

@@ -4,7 +4,9 @@ export interface DriverInfo {
   image: File | null
 }
 export interface DriverCardType {
+  id: number
   name: string
   phoneNumber: string
-  image: string
+  imagePath: string
+  status: string
 }
