@@ -39,8 +39,6 @@ class FamilyAcademyFacadeImpl implements FamilyAcademyFacade {
     @Override
     public AcademyListResponse readAcademyList(String name, Pageable pageable) {
 
-        //TODO - 김도현 - 이윤지 정상수행 안됨 수정 필요
-
         Slice<Academy> academyPage = academyService.findByName(name, pageable);
 
         List<AcademyList> academyList = academyPage.getContent()
