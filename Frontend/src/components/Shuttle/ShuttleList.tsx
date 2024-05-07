@@ -1,31 +1,54 @@
-import { useState } from 'react'
-
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
+
+import { modalStore } from '@stores/modalStore'
+
+import { useFetchShuttleList } from '@hooks/shuttle/useFetchShuttleList'
 
 import AddShuttleModal from './AddShuttleModal'
 import ShuttleCard from './ShuttleCard'
 
+import { Skeleton } from '@shadcn/ui/skeleton'
+import { Shuttle } from '@types'
+
 interface Props {
   show: number
 }
-const DUMMY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export default function ShuttleList({ show }: Props) {
-  const [modalState, setModalState] = useState(false)
+  const addShuttleModalState = modalStore(
+    (state) => state.modalController.addShuttleModal,
+  )
+  const changeModalState = modalStore((state) => state.changeModalState)
   const openAddShuttleModal = () => {
-    setModalState(!modalState)
+    changeModalState('addShuttleModal')
   }
+  const { shuttleList, isLoading } = useFetchShuttleList()
+
+  if (isLoading)
+    return (
+      <CardListContainer type="차량" openModal={openAddShuttleModal}>
+        <Skeleton className="h-[150px] w-full rounded-full" />
+      </CardListContainer>
+    )
   return (
     <>
       <CardListContainer type="차량" openModal={openAddShuttleModal}>
-        <CardCarousel show={show}>
-          {DUMMY.map((id) => {
-            return <ShuttleCard id={id} />
-          })}
-        </CardCarousel>
+        {shuttleList?.length !== 0 ? (
+          <CardCarousel
+            show={Math.min(show, (shuttleList as Shuttle[]).length)}
+          >
+            {shuttleList?.map((data) => {
+              return <ShuttleCard key={data.shuttleId} data={data} />
+            })}
+          </CardCarousel>
+        ) : (
+          <div className="text-gray flex h-[150px] w-full items-center justify-center text-2xl font-bold text-darkgray">
+            등록된 차량이 없습니다.
+          </div>
+        )}
       </CardListContainer>
-      {modalState && (
+      {addShuttleModalState && (
         <AddShuttleModal
           modalTitle="차량 등록"
           modalSwitch={openAddShuttleModal}

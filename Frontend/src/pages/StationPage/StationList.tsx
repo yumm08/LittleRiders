@@ -1,28 +1,35 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useState } from 'react'
 
+import StationListItem from '@pages/StationPage/StationListItem'
+
+import Button from '@components/Shared/Button'
 import Divider from '@components/Shared/Divider'
 import Title from '@components/Shared/Title'
 
-import { useGetStationList } from '@hooks/dispatch'
+import { useGetStationList } from '@hooks/dispatch/dispatch'
 import { MapHook } from '@hooks/map'
 
-import StationListItem from './StationListItem'
-
+import { BASE_LAT, BASE_LNG } from '@constants'
 import { Station } from '@types'
 
 interface Props {
   mapDiv: RefObject<HTMLDivElement>
+  mapRef: RefObject<naver.maps.Map>
+  handleAddButton: () => void
 }
 
-export default function StationList({ mapDiv }: Props) {
+export default function StationList({
+  mapDiv,
+  mapRef,
+  handleAddButton,
+}: Props) {
   const [stationMarkerList, setStationMarkerList] = useState<
     naver.maps.Marker[]
   >([])
 
   const [selectedMarker, setSelectedMarker] = useState<naver.maps.Marker[]>([])
   const [selectedStation, setSelectedStation] = useState<number>(-1)
-  const mapRef = useRef<naver.maps.Map>(null)
-  const { initMap, deleteMarkers, drawRouteMarkers } = MapHook(mapRef)
+  const { initMap, deleteMarkers, drawRouteMarkers, moveMap } = MapHook(mapRef)
   const { stationList, isLoading } = useGetStationList()
 
   const handleClick = (id: number) => {
@@ -35,11 +42,21 @@ export default function StationList({ mapDiv }: Props) {
         latLng = new naver.maps.LatLng(station.latitude!, station.longitude!)
       }
     })
-    if (latLng) drawRouteMarkers(setSelectedMarker, latLng)
+    if (latLng) {
+      drawRouteMarkers(setSelectedMarker, latLng)
+      moveMap(latLng)
+    }
   }
 
   useEffect(() => {
-    initMap(mapDiv)
+    initMap(mapDiv, {
+      center: new naver.maps.LatLng(BASE_LAT, BASE_LNG),
+      zoom: 15,
+      minZoom: 7,
+      zoomControl: true,
+      disableKineticPan: true,
+      disableDoubleClickZoom: true,
+    })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -73,10 +90,18 @@ export default function StationList({ mapDiv }: Props) {
   }
 
   return (
-    <div className="m-6 h-full w-1/3 gap-1 ">
-      <Title text={'정류장 목록'} />
+    <div className="m-6 h-[90%] w-1/3 gap-1 ">
+      <div className="flex justify-between">
+        <Title text={'정류장 목록'} />
+        <Button
+          color="rounded transition ease-in-out hover:bg-gray-100 bg-white active:bg-gray-300"
+          onClick={handleAddButton}
+        >
+          + 정류장 추가
+        </Button>
+      </div>
       <Divider />
-      <div className="overflow-y-scroll ">
+      <div className="h-full overflow-y-scroll ">
         {stationList ? (
           stationList.map((station: Station) => (
             <StationListItem

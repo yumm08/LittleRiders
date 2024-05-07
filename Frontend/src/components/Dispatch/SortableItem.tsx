@@ -35,11 +35,6 @@ export function SortableItem({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id })
 
-  if (childList) {
-    console.log(id)
-    console.log(childList)
-  }
-
   const sortIcon = (type: string | undefined) => {
     if (!type) {
       return (
@@ -84,7 +79,6 @@ export function SortableItem({
       onClick={() => {
         if (onClick) {
           onClick(Number(id.toString()))
-          console.log('clicked!')
         }
       }}
       onMouseOver={() => {

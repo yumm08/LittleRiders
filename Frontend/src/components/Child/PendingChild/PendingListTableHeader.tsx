@@ -1,8 +1,6 @@
-import { ChangeEvent } from 'react'
-
 interface Props {
   isAllChecked: boolean
-  onAllCheck: (e: ChangeEvent<HTMLInputElement>) => void
+  onAllCheck: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function PendingListTableHeader({

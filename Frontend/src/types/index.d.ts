@@ -5,10 +5,11 @@ const GENDER = {
 
 export type Gender = (typeof GENDER)[keyof typeof GENDER]
 
+export * from '@types/academy/device'
 export * from '@types/academy/driveHistory'
 export * from '@types/academy/driver'
 export * from '@types/academy/teacher'
 export * from '@types/auth'
 export * from '@types/child'
-export * from '@types/dispatch'
+export * from '@types/dispatch/dispatch'
 export * from '@types/shuttle'

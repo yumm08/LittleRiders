@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { useDeleteStation } from '@hooks/dispatch'
+
 import { Station } from '@types'
 import { FaPencilAlt, FaTrashAlt } from 'react-icons/fa'
 
@@ -15,6 +17,10 @@ export default function StationListItem({
   handleClick,
 }: Props) {
   const [isClicked, setIsClicked] = useState<boolean>(false)
+  const { removeStation } = useDeleteStation()
+  const handleDeleteClick = () => {
+    removeStation(station.id)
+  }
 
   useEffect(() => {
     setIsClicked(selectedStation === station.id)
@@ -28,10 +34,12 @@ export default function StationListItem({
       >
         <img src="/src/assets/image/bus-stop-icon.svg" width={40} />
         <div className="flex w-full items-center justify-between">
-          <p className="mx-2 items-center text-lg font-bold">{station.name}</p>
+          <p className="text-md mx-2 w-2/3 items-center truncate">
+            {station.name}
+          </p>
           <div className="flex justify-evenly gap-3">
             <FaPencilAlt />
-            <FaTrashAlt />
+            <FaTrashAlt onClick={handleDeleteClick} />
           </div>
         </div>
       </div>

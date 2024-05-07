@@ -13,7 +13,7 @@ const STATUS_STYLE = {
 
 export default function ChildStatusLabel({ childStatus }: Props) {
   const defaultClassName =
-    'flex h-full w-1/2 items-center justify-center rounded-md border py-1'
+    'flex w-1/2 items-center justify-center rounded-md border py-1'
   const statusClassName = STATUS_STYLE[childStatus]
   const status = CHILD_STATUS[childStatus]
 

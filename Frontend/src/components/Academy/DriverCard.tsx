@@ -1,11 +1,16 @@
+import { SyntheticEvent } from 'react'
+
+import Logo from '@assets/Mock/Logo.jpg'
 import { DriverCardType } from '@types'
 import { MdCancel } from 'react-icons/md'
 
-export default function DriverCard({
-  name,
-  phoneNumber,
-  image,
-}: DriverCardType) {
+interface Props {
+  data: DriverCardType
+}
+export default function DriverCard({ data }: Props) {
+  const addDefaultImage = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = Logo
+  }
   return (
     <div className="relative w-[150px] flex-col items-center justify-center">
       <MdCancel
@@ -15,13 +20,14 @@ export default function DriverCard({
       <div>
         <img
           className="h-[150px] w-full rounded-md border-2 border-slate-300 "
-          src={image}
+          src={data.imagePath}
+          onError={addDefaultImage}
         ></img>
       </div>
       <div className="flex items-center justify-between pt-1">
         <div className="flex flex-col">
-          <strong className="text-xm">{name}</strong>
-          <span className="text-xs text-darkgray">{phoneNumber}</span>
+          <strong className="text-xm">{data.name}</strong>
+          <span className="text-xs text-darkgray">{data.phoneNumber}</span>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import ChildListHeader from '@pages/ChildPage/ChildList/ChildListHeader'
 
-import ChildCardList from '@components/Child/ChildCardList'
+import ChildCardList from '@components/Child/Child/ChildCardList'
+import NoContentText from '@components/Shared/NoContentText'
 
 import { useFetchChildList } from '@hooks/child'
 
@@ -16,6 +17,9 @@ export default function ChildList() {
     <>
       <ChildListHeader />
 
+      {childList.length === 0 && (
+        <NoContentText text="등록된 원생이 없습니다" />
+      )}
       <ChildCardList childList={childList} />
     </>
   )
