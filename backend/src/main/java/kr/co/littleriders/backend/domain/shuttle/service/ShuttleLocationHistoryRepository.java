@@ -13,5 +13,5 @@ interface ShuttleLocationHistoryRepository extends CrudRepository<ShuttleLocatio
 
     Optional<ShuttleLocationHistory> findByShuttleId(long shuttleId);
 
-    boolean existsByShuttleId(long shuttleId);
+    boolean existsById(long id);
 }
