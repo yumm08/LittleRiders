@@ -22,7 +22,7 @@ public class ContentController {
 	private final ContentFacade contentFacade;
 
 	@GetMapping("/{uuid}")
-	public ResponseEntity<Resource> getImage(@PathVariable String uuid) {
+	public ResponseEntity<Resource> getImage(@PathVariable(value = "uuid") String uuid) {
 
 		Map<String, Object> image = contentFacade.readImage(uuid);
 
