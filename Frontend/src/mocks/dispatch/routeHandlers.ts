@@ -2,7 +2,7 @@ import { routeDetail, routeList } from '@mocks/dispatch/dummy'
 import { Route, Station } from '@types'
 import { HttpResponse, http } from 'msw'
 
-const BASE_URL = 'route'
+const BASE_URL = 'academy/route'
 
 export const routeHandlers = [
   // get route list

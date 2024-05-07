@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 
 import { ItemListView, RouteList } from '@components/Dispatch'
 
-import { useGetRouteList } from '@hooks/dispatch'
+import { useGetRouteList } from '@hooks/dispatch/dispatch'
 
 import Page from '@layouts/Page'
 

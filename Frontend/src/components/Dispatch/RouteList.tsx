@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import RouteListItem from '@components/Dispatch/RouteListItem'
 
-import { usePostRoute } from '@hooks/dispatch'
+import { usePostRoute } from '@hooks/dispatch/dispatch'
 
 import RouteListAddItem from './RouteListAddItem'
 
