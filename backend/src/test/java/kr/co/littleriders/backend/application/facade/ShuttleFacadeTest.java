@@ -126,6 +126,20 @@ public class ShuttleFacadeTest {
     }
 
     @Nested
+    @DisplayName("운행 가능 노선 상세 조회")
+    class getRoute {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Route route = Route.of(academy, "등원A", "board");
+            long routeId = routeService.save(route);
+
+            shuttleFacade.getRoute(authTerminal, routeId);
+        }
+    }
+
+    @Nested
     @DisplayName("운행 시작")
     class startDrive {
 
