@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
 
@@ -5,7 +7,7 @@ import { modalStore } from '@stores/modalStore'
 
 import AddTerminalModal from './AddTerminalModal'
 
-import Terminal from '@assets/Mock/Terminal.jpg'
+import Terminal from '@assets/Mock/Terminal.webp'
 
 type Props = {
   show: number
@@ -19,6 +21,17 @@ export default function TerminalList({ show }: Props) {
   const openAddTerminalModal = () => {
     changeModalState('addTerminalModal')
   }
+
+  useEffect(() => {
+    function preloading(imageArray: string[]) {
+      imageArray.forEach((url) => {
+        const image = new Image()
+        image.src = url
+      })
+    }
+
+    preloading([Terminal])
+  }, [])
 
   return (
     <>
