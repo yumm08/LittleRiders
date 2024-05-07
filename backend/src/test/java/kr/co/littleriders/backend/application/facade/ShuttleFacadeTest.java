@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.facade;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
 import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.common.fixture.DriverFixture;
 import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
@@ -47,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
@@ -112,6 +114,34 @@ public class ShuttleFacadeTest {
         Shuttle shuttle = Shuttle.of("license1234", "2호차", "a", academy, ShuttleStatus.USE);
         shuttleService.save(shuttle);
         authTerminal = AuthTerminal.of(terminal, shuttle);
+    }
+
+    @Nested
+    @DisplayName("기사님 정보 QR 조회")
+    class getDriverInfoByCardNumber{
+
+        @Test
+        @DisplayName("성공")
+        void  whenSuccess(){
+
+            //given
+            Driver driver = DriverFixture.YOON.toDriver(academy,DriverStatus.WORK);
+            driverService.save(driver);
+            String cardNumber = driver.getCardNumber();
+
+
+            //when
+            DriverInfoResponse driverInfoResponse = shuttleFacade.getDriverInfoByCardNumber(authTerminal,cardNumber);
+
+
+
+            //then
+            assertEquals(driverInfoResponse.getId(), driver.getId());
+            assertEquals(driverInfoResponse.getName(),driver.getName());
+            assertEquals(driverInfoResponse.getImage(),driver.getImagePath());
+            assertEquals(driverInfoResponse.getPhoneNumber(),driver.getPhoneNumber());
+
+        }
     }
 
     @Nested
