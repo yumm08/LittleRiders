@@ -29,11 +29,14 @@ public class ChildListResponse {
 	}
 
 	public static ChildListResponse from(Child child) {
-		return new ChildListResponse(child.getId()
-									, child.getName()
-									, child.getBirthDate()
-									, child.getGender().name()
-									, child.getImagePath());
+
+		// String imagePath = "/api/family/child/" + child.getId() + "/image";
+
+		return new ChildListResponse(child.getId(),
+									 child.getName(),
+									 child.getBirthDate(),
+									 child.getGender().name(),
+									 child.getImagePath());
 	}
 
 }

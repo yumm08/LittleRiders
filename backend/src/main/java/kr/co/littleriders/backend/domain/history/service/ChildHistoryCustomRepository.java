@@ -7,4 +7,6 @@ import java.time.LocalDateTime;
 
 interface ChildHistoryCustomRepository {
     ChildHistory findByCreatedAt(Child child, LocalDateTime updatedAt);
+
+    ChildHistory findLatestByChild(Child child);
 }

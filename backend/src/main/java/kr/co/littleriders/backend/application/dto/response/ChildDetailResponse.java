@@ -36,6 +36,9 @@ public class ChildDetailResponse {
 	}
 
 	public static ChildDetailResponse of(Child child, String status, List<AcademyList> academyList) {
+
+		// String imagePath = "/api/family/child/" + child.getId() + "/image";
+
 		return new ChildDetailResponse(child.getId(),
 									   child.getName(),
 									   child.getBirthDate(),

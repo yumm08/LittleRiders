@@ -57,9 +57,6 @@ class AcademyServiceImpl implements AcademyService {
     public Slice<Academy> findByName(String name, Pageable pageable) {
 
         Slice<Academy> academyList = academyRepository.findByName(name, pageable);
-        if (academyList.getContent().isEmpty()) {
-            throw AcademyException.from(AcademyErrorCode.NOT_FOUND);
-        }
 
         return academyList;
     }

@@ -50,30 +50,18 @@ public class AcademyChildDetailResponse {
 		this.familyPhoneNumber = phoneNumber;
 	}
 
-	public static AcademyChildDetailResponse from(AcademyChild academyChild) {
-		return new AcademyChildDetailResponse(academyChild.getId(),
-											academyChild.getChild().getName(),
-											academyChild.getChild().getBirthDate(),
-											academyChild.getChild().getGender().name(),
-											academyChild.getChild().getImagePath(),
-											academyChild.getAcademyFamily().getFamily().getAddress(),
-											academyChild.getStatus().name(),
-											academyChild.getCardType().name(),
-											academyChild.getCardNumber(),
-											academyChild.getAcademyFamily().getFamily().getName(),
-											academyChild.getAcademyFamily().getFamily().getPhoneNumber());
-	}
-
 	public static AcademyChildDetailResponse of(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChild academyChild) {
 		String address = (familyHistory != null) ? familyHistory.getAddress() : academyChild.getAcademyFamily().getFamily().getAddress();
 		String familyName = (familyHistory != null) ? familyHistory.getName() : academyChild.getAcademyFamily().getFamily().getName();
 		String phoneNumber = (familyHistory != null) ? familyHistory.getPhoneNumber() : academyChild.getAcademyFamily().getFamily().getPhoneNumber();
 
+		String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
+
 		return new AcademyChildDetailResponse(academyChild.getId(),
 											childHistory.getName(),
 											childHistory.getBirthDate(),
 											childHistory.getGender().name(),
-											childHistory.getImagePath(),
+											imagePath,
 											address,
 											academyChild.getStatus().name(),
 											academyChild.getCardType().name(),

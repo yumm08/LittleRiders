@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AcademyShuttleResponse {
 
-
     private Long shuttleId;
 
     private String name;
@@ -39,16 +38,18 @@ public class AcademyShuttleResponse {
 
     public static AcademyShuttleResponse from(Shuttle shuttle) {
 
-        return new AcademyShuttleResponse(shuttle.getId()
-                                        , shuttle.getName()
-                                        , shuttle.getLicenseNumber()
-                                        , shuttle.getType()
-                                        , shuttle.getImagePath()
-                                        , Optional.ofNullable(shuttle.getShuttleTerminalAttach())
+        // String imagePath = "/api/academy/shuttle/" + shuttle.getId() + "/image";
+
+        return new AcademyShuttleResponse(shuttle.getId(),
+                                          shuttle.getName(),
+                                          shuttle.getLicenseNumber(),
+                                          shuttle.getType(),
+                                          shuttle.getImagePath(),
+                                          Optional.ofNullable(shuttle.getShuttleTerminalAttach())
                                                   .map(ShuttleTerminalAttach::getTerminal)
                                                   .map(Terminal::getTerminalNumber)
-                                                  .orElse(null)
-                                        , shuttle.getStatus().name());
+                                                  .orElse(null),
+                                          shuttle.getStatus().name());
 
     }
 }

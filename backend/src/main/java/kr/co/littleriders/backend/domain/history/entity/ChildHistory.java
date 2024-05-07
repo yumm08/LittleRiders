@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.history.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.global.entity.Gender;
 import lombok.AccessLevel;
@@ -8,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,4 +44,22 @@ public class ChildHistory {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt; // 생성일자
 
+    private ChildHistory(Child child) {
+        this.child = child;
+        this.name = child.getName();
+        this.birthDate = child.getBirthDate();
+        this.gender = child.getGender();
+        this.imagePath = child.getImagePath();
+    }
+
+    public static ChildHistory from(Child child) {
+        return new ChildHistory(child);
+    }
+
+    public boolean isBeforeUpdatedAt(AcademyChild academyChild) {
+        if (academyChild.getUpdatedAt() == null) {
+            return true;
+        }
+        return this.createdAt.isBefore(academyChild.getUpdatedAt());
+    }
 }

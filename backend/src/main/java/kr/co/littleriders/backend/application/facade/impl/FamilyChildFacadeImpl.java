@@ -1,12 +1,21 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import kr.co.littleriders.backend.domain.history.ChildHistoryService;
+import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
+import kr.co.littleriders.backend.global.utils.ImageUtil;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.littleriders.backend.application.dto.request.ChildRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyList;
 import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
 import kr.co.littleriders.backend.application.facade.FamilyChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
-import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
@@ -15,12 +24,6 @@ import kr.co.littleriders.backend.domain.child.error.exception.ChildException;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +31,9 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 
 	private final ChildService childService;
 	private final FamilyService familyService;
-	private final AcademyService academyService;
 	private final AcademyChildService academyChildService;
-	private final String rootPath = "/image/child";
+	private final ChildHistoryService childHistoryService;
+	private final ImageUtil imageUtil;
 
 	@Override
 	public Long insertChild(ChildRegistRequest childRegistRequest, Long familyId) {
@@ -39,15 +42,16 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 		Child child = childRegistRequest.toEntity(family);
 
 		MultipartFile image = childRegistRequest.getImage();
-		if(image !=null){
-			String imagePath = UUID.randomUUID().toString();
-			// TODO-이윤지-이미지 저장
+		if(image != null){
+			String imagePath = imageUtil.saveImage(image);
 			child.setImagePath(imagePath);
 		}
-		// TODO-이윤지-ChildHistory에도 저장하는 기능 추가
-		// TODO-김도현-책임에 대해 한번 더 고민해보기
 
-		return childService.save(child);
+		Long childId = childService.save(child);
+		ChildHistory childHistory = ChildHistory.from(child);
+		childHistoryService.save(childHistory);
+
+		return childId;
 	}
 
 	@Override
@@ -73,7 +77,13 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 			throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
 		}
 
-		// TODO-이윤지-자녀 상태 가져오기 (승차중인지 아닌지)
+		// TODO-이윤지-자녀 상태 가져오기 (승차중인지 아닌지)-안해도됌
+		/**
+		 * 1. 자녀가 타야하는 노선 목록 가져오기
+		 * 2. redis에서 해당 노선이 운행중임을 확인 -> RUNNING
+		 * 3. 자녀가 탔으면 -> BOARDING
+		 * 4. 전부 다 아니면 -> NONE
+		 */
 		String status = null;
 
 		List<AcademyList> academyList = academyChildService.findByChild(child)
@@ -85,5 +95,20 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 		ChildDetailResponse childDetail = ChildDetailResponse.of(child, status, academyList);
 
 		return childDetail;
+	}
+
+	@Override
+	public Map<String, Object> readChildImage(Long familyId, Long childId) {
+
+		Family family = familyService.findById(familyId);
+		Child child = childService.findById(childId);
+		if (!child.equalsFamily(family)) {
+			throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
+		}
+
+		String imagePath = child.getImagePath();
+		Map<String, Object> result = imageUtil.getImage(imagePath);
+
+		return result;
 	}
 }

@@ -1,7 +1,11 @@
 package kr.co.littleriders.backend.application.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -54,5 +58,26 @@ public class FamilyChildController {
 		ChildDetailResponse childDetail = familyChildFacade.readChildDetail(familyId, childId);
 
 		return ResponseEntity.ok().body(childDetail);
+	}
+
+	@GetMapping("/{childId}/image")
+	public ResponseEntity<Resource> getChildImage(@Auth AuthFamily authFamily,
+												  @PathVariable(value = "childId") Long childId) {
+
+		Long familyId = authFamily.getId();
+
+		Map<String, Object> image = familyChildFacade.readChildImage(familyId, childId);
+
+		Resource imageResource = (Resource) image.get("resource");
+		MediaType mediaType = (MediaType) image.get("mediaType");
+
+		HttpHeaders headers = new HttpHeaders();
+		if (mediaType != null) {
+			headers.setContentType(mediaType);
+		} else {
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
+
+		return ResponseEntity.ok().headers(headers).body(imageResource);
 	}
 }

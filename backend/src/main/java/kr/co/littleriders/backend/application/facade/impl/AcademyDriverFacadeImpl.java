@@ -1,17 +1,19 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.annotation.Resource;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
+import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
+import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
+import kr.co.littleriders.backend.global.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminDriverFacade;
+import kr.co.littleriders.backend.application.facade.AcademyDriverFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.driver.DriverService;
@@ -20,11 +22,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-class AdminDriverFacadeImpl implements AdminDriverFacade {
+class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 
 	private final DriverService driverService;
 	private final AcademyService academyService;
-	private final String rootPath = "/image/driver";
+	private final ImageUtil imageUtil;
 
 	@Override
 	public Long insertDriver(DriverRegistRequest driverRegistRequest, Long academyId) {
@@ -33,9 +35,8 @@ class AdminDriverFacadeImpl implements AdminDriverFacade {
 		Driver driver = driverRegistRequest.toEntity(academy);
 
 		MultipartFile image = driverRegistRequest.getImage();
-		if(image !=null){
-			String imagePath = UUID.randomUUID().toString();
-			// 이미지 저장
+		if(image != null){
+			String imagePath = imageUtil.saveImage(image);
 			driver.setImagePath(imagePath);
 		}
 
@@ -53,5 +54,20 @@ class AdminDriverFacadeImpl implements AdminDriverFacade {
 															  .collect(Collectors.toList());
 
 		return driverList;
+	}
+
+	@Override
+	public Map<String, Object> readDriverImage(Long academyId, Long driverId) {
+
+		Academy academy = academyService.findById(academyId);
+		Driver driver = driverService.findById(driverId);
+		if (!driver.equalsAcademy(academy)) {
+			throw DriverException.from(DriverErrorCode.ILLEGAL_ACCESS);
+		}
+
+		String imagePath = driver.getImagePath();
+		Map<String, Object> result = imageUtil.getImage(imagePath);
+
+		return result;
 	}
 }

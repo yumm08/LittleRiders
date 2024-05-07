@@ -3,7 +3,7 @@ package kr.co.littleriders.backend.application.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
-import kr.co.littleriders.backend.application.facade.AdminDriverFacade;
+import kr.co.littleriders.backend.application.facade.AcademyDriverFacade;
 import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.common.fixture.DriverFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -31,10 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AdminDriverControllerTest {
-
-	@Autowired
-	private AdminDriverFacade adminDriverFacade;
+class AcademyDriverControllerTest {
 
 	@Autowired
 	private AcademyService academyService;
@@ -112,7 +109,7 @@ class AdminDriverControllerTest {
 			Driver driver1 = DriverFixture.CHUN.toDriver(academy,DriverStatus.RESIGN);
 			driverService.save(driver1);
 
-			Driver driver2 = DriverFixture.GANG.toDriver(academy, DriverStatus.WORK);
+			Driver driver2 = Driver.of("기사2", "010-1111-1112", academy, DriverStatus.WORK);
 			driverService.save(driver2);
 
 

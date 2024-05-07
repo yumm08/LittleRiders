@@ -45,4 +45,8 @@ public class Pending {
 	public void updatePendingStatus(PendingStatus status) {
 		this.status = status;
 	}
+
+	public boolean equalsStatus(PendingStatus pendingStatus) {
+		return this.status.equals(pendingStatus);
+	}
 }

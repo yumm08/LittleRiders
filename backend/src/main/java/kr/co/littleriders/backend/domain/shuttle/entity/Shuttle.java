@@ -64,4 +64,8 @@ public class Shuttle {
                         , null
                         , status);
     }
+
+    public boolean equalsAcademy(Academy academy) {
+        return this.academy.equals(academy);
+    }
 }

@@ -14,8 +14,12 @@ import java.util.Optional;
 @Repository
 interface AcademyChildRepository extends JpaRepository<AcademyChild, Long>, AcademyChildCustomRepository {
 	List<AcademyChild> findByAcademy(Academy academy);
+
     Optional<AcademyChild> findByCardNumber(String cardNumber);
 
-
 	List<AcademyChild> findByChild(Child child);
+
+	AcademyChild findByChildAndAcademy(Child child, Academy academy);
+
+	boolean existsByChildAndAcademy(Child child, Academy academy);
 }

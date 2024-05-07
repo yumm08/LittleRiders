@@ -29,10 +29,13 @@ public class AcademyTeacherResponse {
     }
 
     public static AcademyTeacherResponse from(Teacher teacher) {
-        return new AcademyTeacherResponse(teacher.getId()
-                                        , teacher.getName()
-                                        , teacher.getPhoneNumber()
-                                        , teacher.getImagePath()
-                                        , teacher.getStatus().name());
+
+        // String imagePath = "/api/academy/teacher/" + teacher.getId() + "/image";
+
+        return new AcademyTeacherResponse(teacher.getId(),
+                                          teacher.getName(),
+                                          teacher.getPhoneNumber(),
+                                          teacher.getImagePath(),
+                                          teacher.getStatus().name());
     }
 }

@@ -2,16 +2,20 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyTeacherResponse;
 import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
+import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
+import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherException;
+import kr.co.littleriders.backend.global.utils.ImageUtil;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
-import kr.co.littleriders.backend.application.facade.AdminTeacherFacade;
+import kr.co.littleriders.backend.application.facade.AcademyTeacherFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
@@ -20,11 +24,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-class AdminTeacherFacadeImpl implements AdminTeacherFacade {
+class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 
 	private final TeacherService teacherService;
 	private final AcademyService academyService;
-	private final String rootPath = "/image/teacher";
+	private final ImageUtil imageUtil;
 
 	@Override
 	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Long academyId) {
@@ -33,12 +37,10 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 		Teacher teacher = teacherRegistRequest.toEntity(academy);
 
 		MultipartFile image = teacherRegistRequest.getImage();
-		if(image !=null){
-			String imagePath = UUID.randomUUID().toString();
-			// 이미지 저장
+		if(image != null){
+			String imagePath = imageUtil.saveImage(image);
 			teacher.setImagePath(imagePath);
 		}
-
 		return teacherService.save(teacher);
 	}
 
@@ -53,5 +55,20 @@ class AdminTeacherFacadeImpl implements AdminTeacherFacade {
 													.collect(Collectors.toList());
 
 		return teacherList;
+	}
+
+	@Override
+	public Map<String, Object> readTeacherImage(Long academyId, Long teacherId) {
+
+		Academy academy = academyService.findById(academyId);
+		Teacher teacher = teacherService.findById(teacherId);
+		if (!teacher.equalsAcademy(academy)) {
+			throw TeacherException.from(TeacherErrorCode.ILLEGAL_ACCESS);
+		}
+
+		String imagePath = teacher.getImagePath();
+		Map<String, Object> result = imageUtil.getImage(imagePath);
+
+		return result;
 	}
 }
