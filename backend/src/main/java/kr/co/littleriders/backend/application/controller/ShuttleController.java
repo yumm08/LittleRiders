@@ -5,6 +5,7 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
+import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
@@ -25,6 +26,11 @@ public class ShuttleController {
     public ResponseEntity<DriverInfoResponse> getDriverInfoByQrCode(@Auth AuthTerminal authTerminal, @PathVariable(name = "cardNumber") String cardNumber){
         DriverInfoResponse driverInfoResponse = shuttleFacade.getDriverInfoByCardNumber(authTerminal,cardNumber);
         return ResponseEntity.ok().body(driverInfoResponse);
+    }
+    @GetMapping("/tag/teacher/{cardNumber}")
+    public ResponseEntity<TeacherInfoResponse> getTeacherInfoByQrCode(@Auth AuthTerminal authTerminal, @PathVariable(name = "cardNumber") String cardNumber){
+        TeacherInfoResponse teacherInfoResponse = shuttleFacade.getTeacherInfoByCardNumber(authTerminal,cardNumber);
+        return ResponseEntity.ok().body(teacherInfoResponse);
     }
 
     // 운행 가능 노선 목록 조회

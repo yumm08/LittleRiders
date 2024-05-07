@@ -6,6 +6,7 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleRouteResponse;
+import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.application.facade.SseFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
@@ -204,8 +205,25 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 //        Shuttle shuttle = shuttleService.findById(authTerminal.getShuttleId());
         //permissionHelper.check(shuttle,driver);
 
+        //TODO - 김도현 - if not Work then throw exception
+
         return DriverInfoResponse.from(driver);
 
+
+    }
+
+    @Override
+    public TeacherInfoResponse getTeacherInfoByCardNumber(AuthTerminal authTerminal, String cardNumber) {
+
+        //TODO - 김도현 - Permission check
+        Teacher teacher = teacherService.findByCardNumber(cardNumber);
+        //Shuttle shuttle = shuttleService.findById(authTerminal.getShuttleId());
+        //permissionHelper.check(shuttle,teacher);
+
+
+        return TeacherInfoResponse.from(teacher);
+
+        //TODO - 김도현 - if not Work then throw exception
 
     }
 
