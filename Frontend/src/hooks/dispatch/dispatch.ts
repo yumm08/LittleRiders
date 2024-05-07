@@ -95,7 +95,16 @@ export const usePostStation = () => {
 
 export const useModifyStation = () => {}
 
-export const useDeleteRoute = () => {}
+export const useDeleteRoute = () => {
+  const queryClient = useQueryClient()
+  const { mutate: removeStation, ...rest } = useMutation({
+    mutationFn: (routeId: number) => deleteStation(routeId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['stationList'] })
+    },
+  })
+  return { removeStation, ...rest }
+}
 
 export const useDeleteStation = () => {
   const queryClient = useQueryClient()
