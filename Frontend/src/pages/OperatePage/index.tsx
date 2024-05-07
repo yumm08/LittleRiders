@@ -10,13 +10,13 @@ export default function OperatePage() {
   return (
     <Page>
       <Spacing style="h-5" />
-      <TerminalList show={5} />
+      <TerminalList show={1} />
       <Spacing style="h-5" />
-      <ShuttleList show={3} />
+      <ShuttleList show={5} />
       <Spacing style="h-5" />
-      <TeacherList show={1} />
+      <TeacherList show={5} />
       <Spacing style="h-5" />
-      <DriverList show={7} />
+      <DriverList show={5} />
       <Spacing style="h-5" />
     </Page>
   )

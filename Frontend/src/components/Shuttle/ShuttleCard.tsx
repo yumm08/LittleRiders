@@ -1,5 +1,8 @@
+import { SyntheticEvent } from 'react'
+
 import Button from '@components/Shared/Button'
 
+import Logo from '@assets/Mock/Logo.jpg'
 import { Shuttle } from '@types'
 import { useNavigate } from 'react-router'
 
@@ -11,13 +14,17 @@ export default function ShuttleCard({ data }: Props) {
   const handleShuttleCardClick = () => {
     navigate(`/manage/drive-history/${data.shuttleId}`)
   }
+  const addDefaultImage = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = Logo
+  }
   return (
-    <div className="w-[200px] flex-col items-center justify-center">
+    <div className="w-[150px] flex-col items-center justify-center">
       <div className="relative">
         <img
-          className="w-full rounded-md border-2 border-slate-300 p-3"
+          className="w-full rounded-md border-2 border-slate-300"
           src={data.imagePath}
           alt="이미지"
+          onError={addDefaultImage}
         ></img>
         <strong className="text-xm absolute left-2 top-2">{data.name}</strong>
         {/* <strong className="absolute bottom-2 left-2 text-xs">

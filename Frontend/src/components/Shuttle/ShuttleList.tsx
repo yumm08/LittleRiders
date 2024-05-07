@@ -8,6 +8,9 @@ import { useFetchShuttleList } from '@hooks/shuttle/useFetchShuttleList'
 import AddShuttleModal from './AddShuttleModal'
 import ShuttleCard from './ShuttleCard'
 
+import { Skeleton } from '@shadcn/ui/skeleton'
+import { Shuttle } from '@types'
+
 interface Props {
   show: number
 }
@@ -21,15 +24,29 @@ export default function ShuttleList({ show }: Props) {
     changeModalState('addShuttleModal')
   }
   const { shuttleList, isLoading } = useFetchShuttleList()
-  if (isLoading) return <div>isLoading...</div>
+
+  if (isLoading)
+    return (
+      <CardListContainer type="차량" openModal={openAddShuttleModal}>
+        <Skeleton className="h-[150px] w-full rounded-full" />
+      </CardListContainer>
+    )
   return (
     <>
       <CardListContainer type="차량" openModal={openAddShuttleModal}>
-        <CardCarousel show={show}>
-          {shuttleList?.map((data) => {
-            return <ShuttleCard key={data.shuttleId} data={data} />
-          })}
-        </CardCarousel>
+        {shuttleList?.length !== 0 ? (
+          <CardCarousel
+            show={Math.min(show, (shuttleList as Shuttle[]).length)}
+          >
+            {shuttleList?.map((data) => {
+              return <ShuttleCard key={data.shuttleId} data={data} />
+            })}
+          </CardCarousel>
+        ) : (
+          <div className="text-gray flex h-[150px] w-full items-center justify-center text-2xl font-bold text-darkgray">
+            등록된 차량이 없습니다.
+          </div>
+        )}
       </CardListContainer>
       {addShuttleModalState && (
         <AddShuttleModal
