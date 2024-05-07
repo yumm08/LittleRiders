@@ -34,9 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AcademyDriverControllerTest {
 
 	@Autowired
-	private AcademyDriverFacade academyDriverFacade;
-
-	@Autowired
 	private AcademyService academyService;
 
 	@Autowired

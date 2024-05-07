@@ -95,4 +95,10 @@ public class ImageUtil {
 
 		return result;
     }
+
+	public Map<String, Object> getImageByUUID(String uuid) {
+
+		String imagePath = BASE_PATH + "/" + uuid;
+		return getImage(imagePath);
+	}
 }
