@@ -31,12 +31,12 @@ public class AcademyDriverResponse {
 
     public static AcademyDriverResponse from(Driver driver) {
 
-        String imagePath = "/api/academy/driver/" + driver.getId() + "/image";
+        // String imagePath = "/api/academy/driver/" + driver.getId() + "/image";
 
         return new AcademyDriverResponse(driver.getId()
                                         , driver.getName()
                                         , driver.getPhoneNumber()
-                                        , imagePath
+                                        , driver.getImagePath()
                                         , driver.getStatus().name());
     }
 }

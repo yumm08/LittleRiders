@@ -41,13 +41,13 @@ public class AcademyChildResponse {
 
     public static AcademyChildResponse of(AcademyChild academyChild, ChildHistory childHistory) {
 
-        String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
+        // String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
 
         return new AcademyChildResponse(academyChild.getId()
                                         , childHistory.getName()
                                         , childHistory.getBirthDate().toString()
                                         , childHistory.getGender().name()
-                                        , imagePath
+                                        , childHistory.getImagePath()
                                         , academyChild.getStatus().name());
     }
 }

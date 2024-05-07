@@ -38,18 +38,18 @@ public class AcademyShuttleResponse {
 
     public static AcademyShuttleResponse from(Shuttle shuttle) {
 
-        String imagePath = "/api/academy/shuttle/" + shuttle.getId() + "/image";
+        // String imagePath = "/api/academy/shuttle/" + shuttle.getId() + "/image";
 
-        return new AcademyShuttleResponse(shuttle.getId()
-                                        , shuttle.getName()
-                                        , shuttle.getLicenseNumber()
-                                        , shuttle.getType()
-                                        , imagePath
-                                        , Optional.ofNullable(shuttle.getShuttleTerminalAttach())
+        return new AcademyShuttleResponse(shuttle.getId(),
+                                          shuttle.getName(),
+                                          shuttle.getLicenseNumber(),
+                                          shuttle.getType(),
+                                          shuttle.getImagePath(),
+                                          Optional.ofNullable(shuttle.getShuttleTerminalAttach())
                                                   .map(ShuttleTerminalAttach::getTerminal)
                                                   .map(Terminal::getTerminalNumber)
-                                                  .orElse(null)
-                                        , shuttle.getStatus().name());
+                                                  .orElse(null),
+                                          shuttle.getStatus().name());
 
     }
 }

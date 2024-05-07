@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import kr.co.littleriders.backend.domain.history.ChildHistoryService;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +16,6 @@ import kr.co.littleriders.backend.application.dto.response.ChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.ChildListResponse;
 import kr.co.littleriders.backend.application.facade.FamilyChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
-import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
@@ -26,12 +24,6 @@ import kr.co.littleriders.backend.domain.child.error.exception.ChildException;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,7 +77,13 @@ class FamilyChildFacadeImpl implements FamilyChildFacade {
 			throw ChildException.from(ChildErrorCode.ILLEGAL_ACCESS);
 		}
 
-		// TODO-이윤지-자녀 상태 가져오기 (승차중인지 아닌지)
+		// TODO-이윤지-자녀 상태 가져오기 (승차중인지 아닌지)-안해도됌
+		/**
+		 * 1. 자녀가 타야하는 노선 목록 가져오기
+		 * 2. redis에서 해당 노선이 운행중임을 확인 -> RUNNING
+		 * 3. 자녀가 탔으면 -> BOARDING
+		 * 4. 전부 다 아니면 -> NONE
+		 */
 		String status = null;
 
 		List<AcademyList> academyList = academyChildService.findByChild(child)

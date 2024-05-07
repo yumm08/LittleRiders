@@ -30,13 +30,13 @@ public class ChildListResponse {
 
 	public static ChildListResponse from(Child child) {
 
-		String imagePath = "/api/family/child/" + child.getId() + "/image";
+		// String imagePath = "/api/family/child/" + child.getId() + "/image";
 
-		return new ChildListResponse(child.getId()
-									, child.getName()
-									, child.getBirthDate()
-									, child.getGender().name()
-									, imagePath);
+		return new ChildListResponse(child.getId(),
+									 child.getName(),
+									 child.getBirthDate(),
+									 child.getGender().name(),
+									 child.getImagePath());
 	}
 
 }

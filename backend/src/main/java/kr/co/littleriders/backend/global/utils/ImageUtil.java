@@ -43,10 +43,12 @@ public class ImageUtil {
 			Path path = Paths.get(BASE_PATH, generatedName);
 			Files.write(path, bytes);
 
-			return path.toString();
+			// return path.toString();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		return generatedName;
 	}
 
 	private String getExtension(String extension) {
