@@ -1,15 +1,12 @@
 package kr.co.littleriders.backend.domain.academy.service;
 
+import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyFamily;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
-import org.springframework.stereotype.Service;
-
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
-import kr.co.littleriders.backend.domain.child.entity.Child;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -25,30 +22,14 @@ class AcademyChildServiceImpl implements AcademyChildService {
         );
     }
 
-    @Override
-    public boolean existsByAcademyFamilyAndAttending(AcademyFamily academyFamily) {
-        return academyChildRepository.existsByAcademyFamilyAndAttending(academyFamily);
-    }
+
 
     @Override
     public List<AcademyChild> findByAcademy(Academy academy) {
         return academyChildRepository.findByAcademy(academy);
     }
 
-    @Override
-    public List<AcademyChild> findByChild(Child child) {
-        return academyChildRepository.findByChild(child);
-    }
 
-    @Override
-    public AcademyChild findByChildAndAcademy(Child child, Academy academy) {
-        return academyChildRepository.findByChildAndAcademy(child, academy);
-    }
-
-    @Override
-    public boolean existsByChildAndAcademy(Child child, Academy academy) {
-        return academyChildRepository.existsByChildAndAcademy(child, academy);
-    }
 
     @Override
     public boolean existsById(long id) {
@@ -61,8 +42,8 @@ class AcademyChildServiceImpl implements AcademyChildService {
     }
 
     @Override
-    public AcademyChild findByCardNumber(String cardNumber) {
-        return academyChildRepository.findByCardNumber(cardNumber).orElseThrow(
+    public AcademyChild findByBeaconNumber(String cardNumber) {
+        return academyChildRepository.findByBeaconNumber(cardNumber).orElseThrow(
                 () -> AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND)
         );
 
