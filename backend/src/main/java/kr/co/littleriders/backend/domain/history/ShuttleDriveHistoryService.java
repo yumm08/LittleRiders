@@ -8,10 +8,10 @@ import java.util.List;
 public interface ShuttleDriveHistoryService {
 
     ShuttleDriveHistory findById(String id);
+
     String save(ShuttleDriveHistory shuttleDriveHistory);
 
     List<ShuttleDriveHistory> findByShuttleIdAndStartAt(long shuttleId, int year, int month, int day);
-
 
     List<LocalDateTime> findDistinctYearAndMonthAndDayListByShuttleId(long shuttleId);
 }

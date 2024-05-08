@@ -1,0 +1,33 @@
+package kr.co.littleriders.backend.application.controller;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import kr.co.littleriders.backend.application.facade.HistoryFacade;
+import kr.co.littleriders.backend.global.auth.annotation.Auth;
+import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/academy/history")
+@RequiredArgsConstructor
+public class AcademyHistoryController {
+
+	private final HistoryFacade histroyFacade;
+
+	@GetMapping("/shuttle/{shuttleId}")
+	public ResponseEntity<List<LocalDateTime>> getShuttleHistory(@Auth AuthAcademy authAcademy,
+																 @PathVariable(value = "shuttleId") Long shuttleId) {
+
+		Long academyId = authAcademy.getId();
+		List<LocalDateTime> DayList = histroyFacade.getShuttleDateList(shuttleId, academyId);
+
+		return null;
+	}
+}
