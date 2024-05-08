@@ -46,7 +46,7 @@ public class AcademyHistoryController {
 		return ResponseEntity.ok().body(shuttleDailyHistoryList);
 	}
 
-	@GetMapping("/{historyId}}")
+	@GetMapping("/{historyId}")
 	public ResponseEntity<ShuttleDetailHistoryResponse> getShuttleDetailHistory(@Auth AuthAcademy authAcademy,
 																				@PathVariable(value = "historyId") String historyId) {
 
