@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShuttleChildRideRequest {
-    private String childCardNumber;
+    private String beaconNumber;
     private double latitude;
     private double longitude;
 
