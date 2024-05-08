@@ -27,7 +27,7 @@ export default function TeacherList({ show }: Props) {
   if (isLoading)
     return (
       <CardListContainer type="직원" openModal={openAddTeacherModal}>
-        <Skeleton className="h-[150px] w-full rounded-full" />
+        <Skeleton className="h-[150px] w-full rounded-md" />
       </CardListContainer>
     )
   return (

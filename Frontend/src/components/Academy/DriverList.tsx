@@ -8,6 +8,7 @@ import { useFetchDriverList } from '@hooks/academy/useFetchDriverList'
 import AddDriverModal from './AddDriverModal'
 import DriverCard from './DriverCard'
 
+import { Skeleton } from '@shadcn/ui/skeleton'
 import { DriverCardType } from '@types'
 
 type Props = {
@@ -24,7 +25,12 @@ export default function DriverList({ show }: Props) {
   }
   const { driverList, isLoading } = useFetchDriverList()
 
-  if (isLoading) return <div className="space-y-2">isLoading</div>
+  if (isLoading)
+    return (
+      <CardListContainer type="직원" openModal={openAddDriverModal}>
+        <Skeleton className="h-[150px] w-full rounded-md" />
+      </CardListContainer>
+    )
 
   return (
     <>
