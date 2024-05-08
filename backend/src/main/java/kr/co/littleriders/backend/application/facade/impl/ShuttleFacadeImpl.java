@@ -4,6 +4,7 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideReques
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.RouteResponse;
+import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.application.facade.SseFacade;
@@ -72,6 +73,20 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         return routeList.stream()
                 .map(RouteResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public RouteDetailResponse getRoute(AuthTerminal authTerminal, long routeId) {
+        Route route = routeService.findById(routeId);
+
+        Shuttle shuttle = shuttleService.findById(authTerminal.getShuttleId());
+        long academyId = shuttle.getAcademy().getId();
+
+        if(!Objects.equals(academyId, route.getAcademy().getId())) {
+            throw RouteException.from(RouteErrorCode.FORBIDDEN);
+        }
+
+        return RouteDetailResponse.from(route);
     }
 
     @Override
