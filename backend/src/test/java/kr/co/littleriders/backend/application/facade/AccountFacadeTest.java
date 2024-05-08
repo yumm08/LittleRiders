@@ -1,8 +1,8 @@
 package kr.co.littleriders.backend.application.facade;
 
-import kr.co.littleriders.backend.application.dto.request.FamilySignUpRequest;
+import kr.co.littleriders.backend.application.dto.request.AcademySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
-import kr.co.littleriders.backend.common.fixture.FamilyFixture;
+import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +19,6 @@ class AccountFacadeTest {
     AccountFacade accountFacade;
 
 
-    @Autowired
-    FamilyAccountFacade familyAccountFacade;
 
     @Nested
     @DisplayName("tokenReIssue 테스트")
@@ -32,17 +30,17 @@ class AccountFacadeTest {
 
 
 
-            FamilyFixture familyFixture  = FamilyFixture.KIM;
-            String email = familyFixture.getEmail();
-            String password = familyFixture.getPassword();
-            String mailReceived = familyAccountFacade.sendSignUpEmail(email);
+            AcademyFixture academyFixture  = AcademyFixture.BOXING;
+            String email = academyFixture.getEmail();
+            String password = academyFixture.getPassword();
+            String mailReceived = accountFacade.sendSignUpEmail(email);
 
-            String uuid = familyAccountFacade.getSignUpToken(email, mailReceived);
-            FamilySignUpRequest familySignUpRequest = familyFixture.tofamilySignUpRequest();
-            familyAccountFacade.signUp(familySignUpRequest,uuid);
+            String uuid = accountFacade.getSignUpToken(email, mailReceived);
+            AcademySignUpRequest academySignUpRequest = academyFixture.toAcademySignUpRequest();
+            accountFacade.signUp(academySignUpRequest,uuid);
 
             SignInRequest signInRequest = new SignInRequest(email,password);
-            JwtToken jwtToken = familyAccountFacade.signIn(signInRequest);
+            JwtToken jwtToken = accountFacade.signIn(signInRequest.getEmail(), signInRequest.getPassword());
             String token = jwtToken.getRefreshToken();
             JwtToken reIssuedToken = accountFacade.tokenReIssue(token);
             log.info("accessToken=[{}]",reIssuedToken.getAccessToken());
