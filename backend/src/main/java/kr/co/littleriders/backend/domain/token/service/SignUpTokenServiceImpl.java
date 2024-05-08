@@ -29,11 +29,6 @@ class SignUpTokenServiceImpl implements SignUpTokenService { //write and check ë
 
 
     @Override
-    public SignUpToken findFamilySignUpTokenByEmailAndToken(String email, String token) {
-        return findByEmailAndTokenAndType(email, token, SignUpTokenType.FAMILY);
-    }
-
-    @Override
     public void save(SignUpToken signUpToken) {
         signUpTokenRepository.save(signUpToken);
     }
