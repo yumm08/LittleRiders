@@ -1,7 +1,6 @@
 package kr.co.littleriders.backend.global.entity;
 
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
-import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import lombok.Getter;
 
@@ -12,10 +11,11 @@ import java.util.stream.Stream;
 @Getter
 public enum MemberType {
 
-    FAMILY(AuthFamily.class), ACADEMY(AuthAcademy.class), TERMINAL(AuthTerminal.class);
+    ACADEMY(AuthAcademy.class), TERMINAL(AuthTerminal.class);
 
     private final Class<?> DTOType;
-    MemberType(Class<?> DTOType){
+
+    MemberType(Class<?> DTOType) {
         this.DTOType = DTOType;
     }
 
