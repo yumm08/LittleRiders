@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import kr.co.littleriders.backend.application.dto.response.ShuttleDailyHistoryResponse;
+import kr.co.littleriders.backend.application.dto.response.ShuttleDetailHistoryResponse;
 import kr.co.littleriders.backend.application.facade.HistoryFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.history.ShuttleDriveHistoryService;
+import kr.co.littleriders.backend.domain.history.entity.ShuttleDriveHistory;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
@@ -46,6 +48,7 @@ public class HistoryFacadeImpl implements HistoryFacade {
 		if (shuttle.equalsAcademy(academy)) {
 			throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
 		}
+
 		List<ShuttleDailyHistoryResponse> shuttleDailyHistoryList = shuttleDriveHistoryService.findByShuttleIdAndStartAt(shuttleId,
 																								date.getYear(), date.getMonthValue(),
 																								date.getDayOfMonth()).stream()
@@ -53,5 +56,15 @@ public class HistoryFacadeImpl implements HistoryFacade {
 																								.toList();
 
 		return shuttleDailyHistoryList;
+	}
+
+	@Override
+	public ShuttleDetailHistoryResponse readShuttleDetailHistory(Long academyId, String historyId) {
+
+		Academy academy = academyService.findById(academyId);
+		ShuttleDriveHistory shuttleDriveHistory = shuttleDriveHistoryService.findById(historyId);
+		ShuttleDetailHistoryResponse shuttleDetailHistory = ShuttleDetailHistoryResponse.from(shuttleDriveHistory);
+
+		return shuttleDetailHistory;
 	}
 }

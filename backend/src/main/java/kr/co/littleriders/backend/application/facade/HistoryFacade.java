@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import kr.co.littleriders.backend.application.dto.response.ShuttleDailyHistoryResponse;
+import kr.co.littleriders.backend.application.dto.response.ShuttleDetailHistoryResponse;
 
 public interface HistoryFacade {
 
@@ -12,4 +13,5 @@ public interface HistoryFacade {
 
 	List<ShuttleDailyHistoryResponse> readShuttleDailyHistory(Long academyId, Long shuttleId, LocalDate date);
 
+	ShuttleDetailHistoryResponse readShuttleDetailHistory(Long academyId, String historyId);
 }
