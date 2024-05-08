@@ -73,9 +73,42 @@ public class AcademyChild {
     //TODO- HOTFIX-이윤지 -
     //TODO- HOTFIX-이수현 - null 다른값 처리 필요함
 
-    public static AcademyChild of(Academy academy, AcademyChildStatus status) {
 
-        return null;
+    private AcademyChild(String name, String address, LocalDate birthDate, Gender gender, String imagePath, String beaconNumber, String phoneNumber, AcademyChildStatus status, String memo, Academy academy) {
+        this.name = name;
+        this.address = address;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.imagePath = imagePath;
+        this.beaconNumber = beaconNumber;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+        this.memo = memo;
+        this.academy = academy;
+    }
+
+    public static AcademyChild of(Academy academy,
+                                  String name,
+                                  String address,
+                                  LocalDate birthDate,
+                                  Gender gender,
+                                  String imagePath,
+                                  String beaconNumber,
+                                  String phoneNumber,
+                                  AcademyChildStatus status,
+                                  String memo
+                                ) {
+
+        return new AcademyChild(
+                name
+                , address
+                , birthDate
+                , gender
+                , imagePath
+                , beaconNumber
+                , phoneNumber
+                , status
+                , memo, academy);
     }
 
     public void updateStatus(AcademyChildStatus status) {
