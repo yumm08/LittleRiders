@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -75,7 +76,7 @@ public class Academy implements Member {
     private List<BoardDropHistory> boardDropHistoryList; // 원생 탑승 이력 목록
 
     @OneToMany(mappedBy = "academy")
-    private List<AcademyChild> academyChildList; // 원생정보 목록
+    private List<AcademyChild> academyChildList = new ArrayList<>(); // 원생정보 목록
 
 
     private Academy(String email, String password, String name, String address, String phoneNumber, double latitude, double longitude) {
