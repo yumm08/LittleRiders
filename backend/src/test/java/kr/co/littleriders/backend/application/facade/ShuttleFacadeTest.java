@@ -126,6 +126,17 @@ public class ShuttleFacadeTest {
     }
 
     @Nested
+    @DisplayName("운행 가능 노선 목록 및 정류장 목록 조회")
+    class getRouteListWithStation {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            shuttleFacade.getRouteListWithStation(authTerminal);
+        }
+    }
+
+    @Nested
     @DisplayName("운행 가능 노선 상세 조회")
     class getRoute {
 
