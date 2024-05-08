@@ -33,7 +33,7 @@ public class HistoryFacadeImpl implements HistoryFacade {
 
 		Academy academy = academyService.findById(academyId);
 		Shuttle shuttle = shuttleService.findById(shuttleId);
-		if (shuttle.equalsAcademy(academy)) {
+		if (!shuttle.equalsAcademy(academy)) {
 			throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
 		}
 
@@ -45,7 +45,7 @@ public class HistoryFacadeImpl implements HistoryFacade {
 
 		Academy academy = academyService.findById(academyId);
 		Shuttle shuttle = shuttleService.findById(shuttleId);
-		if (shuttle.equalsAcademy(academy)) {
+		if (!shuttle.equalsAcademy(academy)) {
 			throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
 		}
 
