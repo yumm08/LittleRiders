@@ -1,12 +1,9 @@
 package kr.co.littleriders.backend.application.dto.response;
 
-import java.time.LocalDate;
-
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
-import kr.co.littleriders.backend.domain.history.entity.FamilyHistory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -50,23 +47,23 @@ public class AcademyChildDetailResponse {
 		this.familyPhoneNumber = phoneNumber;
 	}
 
-	public static AcademyChildDetailResponse of(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChild academyChild) {
-		String address = (familyHistory != null) ? familyHistory.getAddress() : academyChild.getAcademyFamily().getFamily().getAddress();
-		String familyName = (familyHistory != null) ? familyHistory.getName() : academyChild.getAcademyFamily().getFamily().getName();
-		String phoneNumber = (familyHistory != null) ? familyHistory.getPhoneNumber() : academyChild.getAcademyFamily().getFamily().getPhoneNumber();
-
-		String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
-
-		return new AcademyChildDetailResponse(academyChild.getId(),
-											childHistory.getName(),
-											childHistory.getBirthDate(),
-											childHistory.getGender().name(),
-											imagePath,
-											address,
-											academyChild.getStatus().name(),
-											academyChild.getCardType().name(),
-											academyChild.getCardNumber(),
-											familyName,
-											phoneNumber);
-	}
+//	public static AcademyChildDetailResponse of(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChild academyChild) {
+//		String address = (familyHistory != null) ? familyHistory.getAddress() : academyChild.getAcademyFamily().getFamily().getAddress();
+//		String familyName = (familyHistory != null) ? familyHistory.getName() : academyChild.getAcademyFamily().getFamily().getName();
+//		String phoneNumber = (familyHistory != null) ? familyHistory.getPhoneNumber() : academyChild.getAcademyFamily().getFamily().getPhoneNumber();
+//
+//		String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
+//
+//		return new AcademyChildDetailResponse(academyChild.getId(),
+//											childHistory.getName(),
+//											childHistory.getBirthDate(),
+//											childHistory.getGender().name(),
+//											imagePath,
+//											address,
+//											academyChild.getStatus().name(),
+//											academyChild.getCardType().name(),
+//											academyChild.getCardNumber(),
+//											familyName,
+//											phoneNumber);
+//	}
 }
