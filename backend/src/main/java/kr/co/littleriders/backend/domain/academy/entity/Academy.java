@@ -3,7 +3,6 @@ package kr.co.littleriders.backend.domain.academy.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
-import kr.co.littleriders.backend.domain.pending.entity.Pending;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.station.entity.Station;
@@ -78,11 +77,6 @@ public class Academy implements Member {
     @OneToMany(mappedBy = "academy")
     private List<AcademyChild> academyChildList; // 원생정보 목록
 
-    @OneToMany(mappedBy = "academy")
-    private List<AcademyFamily> academyFamilyList; // 보호자 정보 목록
-
-    @OneToMany(mappedBy = "academy")
-    private List<Pending> pendingList; // 원생 승인 신청 목록
 
     private Academy(String email, String password, String name, String address, String phoneNumber, double latitude, double longitude) {
         this.email = email;
