@@ -76,6 +76,19 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
+    public List<RouteDetailResponse> getRouteListWithStation(AuthTerminal authTerminal) {
+        long shuttleId = authTerminal.getShuttleId();
+        Shuttle shuttle = shuttleService.findById(shuttleId);
+        Academy academy = shuttle.getAcademy();
+
+        List<Route> routeList = routeService.findAllByAcademy(academy);
+
+        return routeList.stream()
+                .map(RouteDetailResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public RouteDetailResponse getRoute(AuthTerminal authTerminal, long routeId) {
         Route route = routeService.findById(routeId);
 

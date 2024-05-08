@@ -13,6 +13,8 @@ import java.util.List;
 public interface ShuttleFacade {
     List<RouteResponse> getRouteList(AuthTerminal authTerminal);
 
+    List<RouteDetailResponse> getRouteListWithStation(AuthTerminal authTerminal);
+
     RouteDetailResponse getRoute(AuthTerminal authTerminal, long routeId);
 
     void startDrive(AuthTerminal authTerminal, ShuttleStartRequest startRequest);

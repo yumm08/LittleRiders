@@ -27,6 +27,12 @@ public class ShuttleController {
         return ResponseEntity.ok().body(shuttleFacade.getRouteList(authTerminal));
     }
 
+    // 운행 가능 노선 목록 및 정류장 목록 조회
+    @GetMapping("/route/station")
+    public ResponseEntity<List<RouteDetailResponse>> getRouteListWithStation(@Auth AuthTerminal authTerminal) {
+        return ResponseEntity.ok().body(shuttleFacade.getRouteListWithStation(authTerminal));
+    }
+
     // 운행 가능 노선 상세 조회
     @GetMapping("/route/{route_id}")
     public ResponseEntity<RouteDetailResponse> getRoute(@Auth AuthTerminal authTerminal, @PathVariable(name = "route_id") long routeId) {
