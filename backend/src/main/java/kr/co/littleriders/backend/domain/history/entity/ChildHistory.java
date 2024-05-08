@@ -1,7 +1,7 @@
 package kr.co.littleriders.backend.domain.history.entity;
 
 import jakarta.persistence.*;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildDeprecated;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.global.entity.Gender;
 import lombok.AccessLevel;
@@ -13,7 +13,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity @Getter
+@Entity
+@Getter
 @Table(name = "child_history")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -56,10 +57,10 @@ public class ChildHistory {
         return new ChildHistory(child);
     }
 
-    public boolean isBeforeUpdatedAt(AcademyChild academyChild) {
-        if (academyChild.getUpdatedAt() == null) {
+    public boolean isBeforeUpdatedAt(AcademyChildDeprecated academyChildDeprecated) {
+        if (academyChildDeprecated.getUpdatedAt() == null) {
             return true;
         }
-        return this.createdAt.isBefore(academyChild.getUpdatedAt());
+        return this.createdAt.isBefore(academyChildDeprecated.getUpdatedAt());
     }
 }

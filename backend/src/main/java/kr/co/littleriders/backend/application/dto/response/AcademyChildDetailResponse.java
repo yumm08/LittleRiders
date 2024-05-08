@@ -1,72 +1,74 @@
 package kr.co.littleriders.backend.application.dto.response;
 
-import java.time.LocalDate;
-
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildDeprecated;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import kr.co.littleriders.backend.domain.history.entity.FamilyHistory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @NoArgsConstructor
 public class AcademyChildDetailResponse {
 
-	private Long academyChildId;
+    private Long academyChildId;
 
-	private String name;
+    private String name;
 
-	private LocalDate birthDate;
+    private LocalDate birthDate;
 
-	private String gender;
+    private String gender;
 
-	private String imagePath;
+    private String imagePath;
 
-	private String address;
+    private String address;
 
-	private String childStatus;
+    private String childStatus;
 
-	private String cardType;
+    private String cardType;
 
-	private String cardNumber;
+    private String cardNumber;
 
-	private String familyName;
+    private String familyName;
 
-	private String familyPhoneNumber;
+    private String familyPhoneNumber;
 
-	private AcademyChildDetailResponse(Long academyChildId, String name, LocalDate birthDate, String gender,
-		String imagePath, String address, String status, String cardType, String cardNumber,
-		String familyName, String phoneNumber) {
-		this.academyChildId = academyChildId;
-		this.name = name;
-		this.birthDate = birthDate;
-		this.gender = gender;
-		this.imagePath = imagePath;
-		this.address = address;
-		this.childStatus = status;
-		this.cardType = cardType;
-		this.cardNumber = cardNumber;
-		this.familyName = familyName;
-		this.familyPhoneNumber = phoneNumber;
-	}
+    private AcademyChildDetailResponse(Long academyChildId, String name, LocalDate birthDate, String gender,
+                                       String imagePath, String address, String status, String cardType, String cardNumber,
+                                       String familyName, String phoneNumber) {
+        this.academyChildId = academyChildId;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.imagePath = imagePath;
+        this.address = address;
+        this.childStatus = status;
+        this.cardType = cardType;
+        this.cardNumber = cardNumber;
+        this.familyName = familyName;
+        this.familyPhoneNumber = phoneNumber;
+    }
 
-	public static AcademyChildDetailResponse of(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChild academyChild) {
-		String address = (familyHistory != null) ? familyHistory.getAddress() : academyChild.getAcademyFamily().getFamily().getAddress();
-		String familyName = (familyHistory != null) ? familyHistory.getName() : academyChild.getAcademyFamily().getFamily().getName();
-		String phoneNumber = (familyHistory != null) ? familyHistory.getPhoneNumber() : academyChild.getAcademyFamily().getFamily().getPhoneNumber();
 
-		String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
+    @Deprecated
+    public static AcademyChildDetailResponse of(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChildDeprecated academyChildDeprecated) {
+        String address = (familyHistory != null) ? familyHistory.getAddress() : academyChildDeprecated.getAcademyFamily().getFamily().getAddress();
+        String familyName = (familyHistory != null) ? familyHistory.getName() : academyChildDeprecated.getAcademyFamily().getFamily().getName();
+        String phoneNumber = (familyHistory != null) ? familyHistory.getPhoneNumber() : academyChildDeprecated.getAcademyFamily().getFamily().getPhoneNumber();
 
-		return new AcademyChildDetailResponse(academyChild.getId(),
-											childHistory.getName(),
-											childHistory.getBirthDate(),
-											childHistory.getGender().name(),
-											imagePath,
-											address,
-											academyChild.getStatus().name(),
-											academyChild.getCardType().name(),
-											academyChild.getCardNumber(),
-											familyName,
-											phoneNumber);
-	}
+        String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
+
+        return new AcademyChildDetailResponse(academyChildDeprecated.getId(),
+                childHistory.getName(),
+                childHistory.getBirthDate(),
+                childHistory.getGender().name(),
+                imagePath,
+                address,
+                academyChildDeprecated.getStatus().name(),
+                academyChildDeprecated.getCardType().name(),
+                academyChildDeprecated.getCardNumber(),
+                familyName,
+                phoneNumber);
+    }
 }

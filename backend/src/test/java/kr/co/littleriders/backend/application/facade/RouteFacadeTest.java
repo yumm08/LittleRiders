@@ -3,28 +3,24 @@ package kr.co.littleriders.backend.application.facade;
 import kr.co.littleriders.backend.application.dto.request.RouteRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.request.RouteStationRequest;
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
-import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.common.fixture.RouteFixture;
+import kr.co.littleriders.backend.domain.academy.AcademyChildServiceDeprecated;
+import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
-
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.child.entity.Child;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
+import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
+import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.routeinfo.RouteStationService;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
 import kr.co.littleriders.backend.domain.station.StationService;
 import kr.co.littleriders.backend.domain.station.entity.Station;
-import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.route.RouteService;
-import kr.co.littleriders.backend.domain.route.entity.Route;
-import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
-import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import kr.co.littleriders.backend.global.entity.Gender;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +29,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -67,8 +63,7 @@ public class RouteFacadeTest {
     private AcademyFamilyService academyFamilyService;
 
     @Autowired
-    private AcademyChildService academyChildService;
-
+    private AcademyChildServiceDeprecated academyChildServiceDeprecated;
 
 
     private Academy academy;
@@ -105,11 +100,11 @@ public class RouteFacadeTest {
             RouteFixture routeFixture = RouteFixture.R;
             RouteRequest routeRequest = routeFixture.toRouteRequest("board");
             academyService.save(academy);
-            Route route = routeFixture.toRoute(academy,"board");
+            Route route = routeFixture.toRoute(academy, "board");
             routeService.save(route);
 
 
-            RouteException exception = assertThrows(RouteException.class,() -> { //when and then;
+            RouteException exception = assertThrows(RouteException.class, () -> { //when and then;
                 routeFacade.createRoute(authAcademy.getId(), routeRequest);
             });
             assertEquals(exception.getErrorCode(), RouteErrorCode.DUPLICATE_NAME);
@@ -178,7 +173,7 @@ public class RouteFacadeTest {
 
     @Nested
     @DisplayName("노선별 정류장에 원생 추가 테스트")
-    class addAcademyChildToRouteStation {
+    class addAcademyChildDeprecatedToRouteStation {
 
         @Test
         @DisplayName("성공")
@@ -199,8 +194,8 @@ public class RouteFacadeTest {
             childService.save(child1);
             AcademyFamily academyFamily1 = AcademyFamily.of(family1, academy, AcademyFamilyStatus.AVAIL);
             academyFamilyService.save(academyFamily1);
-            AcademyChild academyChild1 = AcademyChild.of(child1, academy, academyFamily1, AcademyChildStatus.ATTENDING, CardType.BARCODE);
-            academyChildService.save(academyChild1);
+            AcademyChildDeprecated academyChildDeprecated1 = AcademyChildDeprecated.of(child1, academy, academyFamily1, AcademyChildStatus.ATTENDING, CardType.BARCODE);
+            academyChildServiceDeprecated.save(academyChildDeprecated1);
 
             Family family2 = Family.of("222@gmail.com", "1234", "이름", "주소", "010-2222-2222");
             familyService.save(family2);
@@ -208,8 +203,8 @@ public class RouteFacadeTest {
             childService.save(child2);
             AcademyFamily academyFamily2 = AcademyFamily.of(family2, academy, AcademyFamilyStatus.AVAIL);
             academyFamilyService.save(academyFamily2);
-            AcademyChild academyChild2 = AcademyChild.of(child2, academy, academyFamily2, AcademyChildStatus.ATTENDING, CardType.BARCODE);
-            academyChildService.save(academyChild2);
+            AcademyChildDeprecated academyChildDeprecated2 = AcademyChildDeprecated.of(child2, academy, academyFamily2, AcademyChildStatus.ATTENDING, CardType.BARCODE);
+            academyChildServiceDeprecated.save(academyChildDeprecated2);
 
             Family family3 = Family.of("333@gmail.com", "1234", "이름", "주소", "010-3333-3333");
             familyService.save(family3);
@@ -217,8 +212,8 @@ public class RouteFacadeTest {
             childService.save(child3);
             AcademyFamily academyFamily3 = AcademyFamily.of(family3, academy, AcademyFamilyStatus.AVAIL);
             academyFamilyService.save(academyFamily3);
-            AcademyChild academyChild3 = AcademyChild.of(child3, academy, academyFamily3, AcademyChildStatus.ATTENDING, CardType.BARCODE);
-            academyChildService.save(academyChild3);
+            AcademyChildDeprecated academyChildDeprecated3 = AcademyChildDeprecated.of(child3, academy, academyFamily3, AcademyChildStatus.ATTENDING, CardType.BARCODE);
+            academyChildServiceDeprecated.save(academyChildDeprecated3);
 
             RouteStation routeStation1 = RouteStation.of(route, academy, station1, 1);
             routeStationService.save(routeStation1);
@@ -226,11 +221,11 @@ public class RouteFacadeTest {
             routeStationService.save(routeStation2);
 
             List<Long> academyChildIdList1 = new ArrayList<>();
-            academyChildIdList1.add(academyChild1.getId());
-            academyChildIdList1.add(academyChild2.getId());
+            academyChildIdList1.add(academyChildDeprecated1.getId());
+            academyChildIdList1.add(academyChildDeprecated2.getId());
 
             List<Long> academyChildIdList2 = new ArrayList<>();
-            academyChildIdList1.add(academyChild3.getId());
+            academyChildIdList1.add(academyChildDeprecated3.getId());
 
             List<RouteStationAcademyChildRequest> requestList = new ArrayList<>();
             RouteStationAcademyChildRequest request1 = new RouteStationAcademyChildRequest(stationId1, academyChildIdList1);

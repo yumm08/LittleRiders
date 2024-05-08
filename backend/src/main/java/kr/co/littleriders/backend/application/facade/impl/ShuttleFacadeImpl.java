@@ -3,14 +3,14 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
-import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
+import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.application.facade.SseFacade;
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyChildServiceDeprecated;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildDeprecated;
 import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
@@ -22,11 +22,11 @@ import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
@@ -51,7 +51,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final RouteService routeService;
     private final DriverService driverService;
     private final TeacherService teacherService;
-    private final AcademyChildService academyChildService;
+    private final AcademyChildServiceDeprecated academyChildServiceDeprecated;
 
     private final ShuttleLocationService shuttleLocationService;
     private final ShuttleLocationHistoryService shuttleLocationHistoryService;
@@ -82,7 +82,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         Shuttle shuttle = shuttleService.findById(authTerminal.getShuttleId());
         long academyId = shuttle.getAcademy().getId();
 
-        if(!Objects.equals(academyId, route.getAcademy().getId())) {
+        if (!Objects.equals(academyId, route.getAcademy().getId())) {
             throw RouteException.from(RouteErrorCode.FORBIDDEN);
         }
 
@@ -139,7 +139,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         Driver driver = driverService.findById(driverId);
         Teacher teacher = teacherService.findById(teacherId);
-        Shuttle shuttle  = shuttleService.findById(shuttleId);
+        Shuttle shuttle = shuttleService.findById(shuttleId);
         LocalDateTime start = shuttleDrive.getTime();
         LocalDateTime end = LocalDateTime.now();
         ShuttleDriveHistory shuttleDriveHistory = ShuttleDriveHistory.of(
@@ -168,6 +168,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
     }
 
+
+    @Deprecated
     @Override
     public ShuttleChildRideResponse recordChildRiding(AuthTerminal authTerminal, ShuttleChildRideRequest rideRequest) {
 
@@ -175,13 +177,13 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         // TODO: 탈퇴한 회원에 대한 valid check 추가
 
-        AcademyChild academyChild = academyChildService.findByCardNumber(rideRequest.getChildCardNumber());
-        Long childId = academyChild.getChild().getId();
+        AcademyChildDeprecated academyChildDeprecated = academyChildServiceDeprecated.findByCardNumber(rideRequest.getChildCardNumber());
+        Long childId = academyChildDeprecated.getChild().getId();
 
         ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, childId);
         shuttleChildRideService.save(shuttleChildRide);
 
-        return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
+        return ShuttleChildRideResponse.of(academyChildDeprecated, shuttleChildRide);
     }
 
     @Override
@@ -205,7 +207,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         }
 
         shuttleLocationHistoryService.save(locationHistory);
-        sseFacade.broadcastShuttleLocation(shuttleId,locationRequest);
+        sseFacade.broadcastShuttleLocation(shuttleId, locationRequest);
 
     }
 

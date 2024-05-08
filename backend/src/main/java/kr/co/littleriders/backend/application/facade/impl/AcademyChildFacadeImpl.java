@@ -4,7 +4,7 @@ import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailRes
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.PendingListResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyChildServiceDeprecated;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
@@ -37,61 +37,67 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     private final PendingService pendingService;
     private final AcademyService academyService;
     private final AcademyFamilyService academyFamilyService;
-    private final AcademyChildService academyChildService;
+    private final AcademyChildServiceDeprecated academyChildServiceDeprecated;
     private final ChildHistoryService childHistoryService;
     private final FamilyHistoryService familyHistoryService;
     private final ImageUtil imageUtil;
 
+
+    @Deprecated
     @Override
     public List<AcademyChildResponse> readAcademyChildList(Long academyId) {
 
         Academy academy = academyService.findById(academyId);
 
-        List<AcademyChildResponse> academyChildList = academyChildService.findByAcademy(academy)
-                                                     .stream()
-                                                     .sorted(Comparator.comparing(child -> {
-                                                         return child.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
-                                                     }))
-                                                     .map(academyChild -> {
-                                                         ChildHistory childHistory = childHistoryService.findByAcademyChild(academyChild);
-                                                         AcademyChildResponse childResponse = AcademyChildResponse.of(academyChild, childHistory);
+        List<AcademyChildResponse> academyChildList = academyChildServiceDeprecated.findByAcademy(academy)
+                .stream()
+                .sorted(Comparator.comparing(child -> {
+                    return child.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
+                }))
+                .map(academyChild -> {
+                    ChildHistory childHistory = childHistoryService.findByAcademyChild(academyChild);
+                    AcademyChildResponse childResponse = AcademyChildResponse.of(academyChild, childHistory);
 
-                                                         return childResponse;
-                                                     })
-                                                     .collect(Collectors.toList());
+                    return childResponse;
+                })
+                .collect(Collectors.toList());
 
         return academyChildList;
     }
 
+
+    @Deprecated
     @Override
     public AcademyChildDetailResponse readAcademyChildDetail(Long academyId, Long academyChildId) {
 
         Academy academy = academyService.findById(academyId);
-        AcademyChild academyChild = academyChildService.findById(academyChildId);
-        if (!academyChild.equalsAcademy(academy)) {
+        AcademyChildDeprecated academyChildDeprecated = academyChildServiceDeprecated.findById(academyChildId);
+        if (!academyChildDeprecated.equalsAcademy(academy)) {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
         AcademyChildDetailResponse childDetail;
-        ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
-        if (academyChild.isFamilyAvail()) {
-            childDetail = AcademyChildDetailResponse.of(childHistory, null, academyChild);
+        ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChildDeprecated);
+        if (academyChildDeprecated.isFamilyAvail()) {
+            childDetail = AcademyChildDetailResponse.of(childHistory, null, academyChildDeprecated);
         } else {
-            FamilyHistory familyHistory = familyHistoryService.findByCreatedAt(academyChild.getAcademyFamily());
-            childDetail = AcademyChildDetailResponse.of(childHistory, familyHistory, academyChild);
+            FamilyHistory familyHistory = familyHistoryService.findByCreatedAt(academyChildDeprecated.getAcademyFamily());
+            childDetail = AcademyChildDetailResponse.of(childHistory, familyHistory, academyChildDeprecated);
         }
 
         return childDetail;
     }
 
+
+    @Deprecated
     @Override
     public Map<String, Object> readAcademyChildImage(Long academyId, Long childHistoryId) {
 
         Academy academy = academyService.findById(academyId);
         ChildHistory childHistory = childHistoryService.findById(childHistoryId);
         Child child = childHistory.getChild();
-        AcademyChild academyChild = academyChildService.findByChildAndAcademy(child, academy);
-        if (childHistory.isBeforeUpdatedAt(academyChild)) {
+        AcademyChildDeprecated academyChildDeprecated = academyChildServiceDeprecated.findByChildAndAcademy(child, academy);
+        if (childHistory.isBeforeUpdatedAt(academyChildDeprecated)) {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
@@ -101,17 +107,19 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         return result;
     }
 
+
+    @Deprecated
     @Override
     public Long updateAcademyChild(Long academyId, Long academyChildId, String status) {
 
         Academy academy = academyService.findById(academyId);
 
-        AcademyChild academyChild = academyChildService.findById(academyChildId);
-        if (!academyChild.equalsAcademy(academy)) {
+        AcademyChildDeprecated academyChildDeprecated = academyChildServiceDeprecated.findById(academyChildId);
+        if (!academyChildDeprecated.equalsAcademy(academy)) {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
-        if (!academyChild.getStatus().equals(AcademyChildStatus.ATTENDING)) {
+        if (!academyChildDeprecated.getStatus().equals(AcademyChildStatus.ATTENDING)) {
             throw AcademyChildException.from(AcademyChildErrorCode.FORBIDDEN);
         }
 
@@ -119,16 +127,16 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         if (updateStatus.equals(AcademyChildStatus.ATTENDING)) {
             throw AcademyChildException.from(AcademyChildErrorCode.FORBIDDEN);
         }
-        academyChild.updateStatus(updateStatus);
-        academyChildService.save(academyChild);
+        academyChildDeprecated.updateStatus(updateStatus);
+        academyChildServiceDeprecated.save(academyChildDeprecated);
 
-        AcademyFamily academyFamily = academyChild.getAcademyFamily();
-        if (!academyChildService.existsByAcademyFamilyAndAttending(academyFamily)) {
+        AcademyFamily academyFamily = academyChildDeprecated.getAcademyFamily();
+        if (!academyChildServiceDeprecated.existsByAcademyFamilyAndAttending(academyFamily)) {
             academyFamily.updateStatus(AcademyFamilyStatus.NOT_AVAIL);
             academyFamilyService.save(academyFamily);
         }
 
-        return academyChild.getId();
+        return academyChildDeprecated.getId();
     }
 
 
@@ -137,8 +145,8 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
         Academy academy = academyService.findById(academyId);
         List<PendingListResponse> pendingList = pendingService.searchByAcademy(academy).stream()
-                                                              .map(PendingListResponse::from)
-                                                              .collect(Collectors.toList());
+                .map(PendingListResponse::from)
+                .collect(Collectors.toList());
 
         return pendingList;
     }
@@ -165,6 +173,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         });
     }
 
+    @Deprecated
     @Transactional
     public void insertAcademyChild(Pending pending, Academy academy) {
 
@@ -176,7 +185,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         pendingService.save(pending);
 
         AcademyFamily academyFamily;
-        if(!academyFamilyService.existsByFamilyAndAcademy(pending.getChild().getFamily(), academy)) {
+        if (!academyFamilyService.existsByFamilyAndAcademy(pending.getChild().getFamily(), academy)) {
             academyFamily = AcademyFamily.of(pending.getChild().getFamily(), academy, AcademyFamilyStatus.AVAIL);
         } else {
             academyFamily = academyFamilyService.findByFamilyAndAcademy(pending.getChild().getFamily(), academy);
@@ -184,19 +193,19 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         }
         academyFamilyService.save(academyFamily);
 
-        AcademyChild academyChild;
-        if(!academyChildService.existsByChildAndAcademy(pending.getChild(), academy)) {
-            academyChild = AcademyChild.of(pending.getChild(),
-                                            pending.getAcademy(),
-                                            academyFamily,
-                                            AcademyChildStatus.ATTENDING,
-                                            CardType.BEACON);
+        AcademyChildDeprecated academyChildDeprecated;
+        if (!academyChildServiceDeprecated.existsByChildAndAcademy(pending.getChild(), academy)) {
+            academyChildDeprecated = AcademyChildDeprecated.of(pending.getChild(),
+                    pending.getAcademy(),
+                    academyFamily,
+                    AcademyChildStatus.ATTENDING,
+                    CardType.BEACON);
         } else {
-            academyChild = academyChildService.findByChildAndAcademy(pending.getChild(), academy);
-            academyChild.updateStatus(AcademyChildStatus.ATTENDING);
+            academyChildDeprecated = academyChildServiceDeprecated.findByChildAndAcademy(pending.getChild(), academy);
+            academyChildDeprecated.updateStatus(AcademyChildStatus.ATTENDING);
         }
 
-        academyChildService.save(academyChild);
+        academyChildServiceDeprecated.save(academyChildDeprecated);
     }
 
     @Transactional

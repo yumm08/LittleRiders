@@ -19,6 +19,8 @@ public class RouteDetailResponse {
     private String type;
     private List<StationInfo> stationList;
 
+
+    @Deprecated
     public static RouteDetailResponse from(Route route) {
         RouteDetailResponse response = new RouteDetailResponse();
         response.id = route.getId();
@@ -33,7 +35,7 @@ public class RouteDetailResponse {
                         routeStation.getStation().getLongitude(),
                         routeStation.getVisitOrder(),
                         routeStation.getChildBoardInfoList().stream()
-                                .map(info -> new StationInfo.ChildInfo(info.getAcademyChild().getId(), info.getAcademyChild().getChild().getName()))
+                                .map(info -> new StationInfo.ChildInfo(info.getAcademyChildDeprecated().getId(), info.getAcademyChildDeprecated().getChild().getName()))
                                 .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());

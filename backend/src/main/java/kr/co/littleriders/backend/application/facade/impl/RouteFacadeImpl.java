@@ -6,10 +6,10 @@ import kr.co.littleriders.backend.application.dto.request.RouteStationRequest;
 import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.RouteResponse;
 import kr.co.littleriders.backend.application.facade.RouteFacade;
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyChildServiceDeprecated;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildDeprecated;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
@@ -23,7 +23,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -35,7 +38,7 @@ class RouteFacadeImpl implements RouteFacade {
     private final AcademyService academyService;
     private final StationService stationService;
     private final RouteStationService routeStationService;
-    private final AcademyChildService academyChildService;
+    private final AcademyChildServiceDeprecated academyChildServiceDeprecated;
 
     @Override
     public long createRoute(long academyId, RouteRequest routeRequest) {
@@ -98,6 +101,8 @@ class RouteFacadeImpl implements RouteFacade {
         }
     }
 
+
+    @Deprecated
     @Transactional
     @Override
     public void addAcademyChildToRouteStation(long academyId, long routeId, List<RouteStationAcademyChildRequest> requestList) {
@@ -112,8 +117,8 @@ class RouteFacadeImpl implements RouteFacade {
 
             // request에서 받은 원생 승하차 정보를 저장
             for (Long academyChildId : request.getAcademyChildIdList()) {
-                AcademyChild academyChild = academyChildService.findById(academyChildId);
-                ChildBoardDropInfo newInfo = request.toChildBoardDropInfo(academyChild, academy, routeStation);
+                AcademyChildDeprecated academyChildDeprecated = academyChildServiceDeprecated.findById(academyChildId);
+                ChildBoardDropInfo newInfo = request.toChildBoardDropInfo(academyChildDeprecated, academy, routeStation);
                 routeStation.addChildBoardDropInfo(newInfo);
             }
 
@@ -134,7 +139,7 @@ class RouteFacadeImpl implements RouteFacade {
     public RouteDetailResponse getRoute(long academyId, long routeId) {
         Route route = routeService.findById(routeId);
 
-        if(!Objects.equals(academyId, route.getAcademy().getId())) {
+        if (!Objects.equals(academyId, route.getAcademy().getId())) {
             throw RouteException.from(RouteErrorCode.FORBIDDEN);
         }
 
@@ -146,7 +151,7 @@ class RouteFacadeImpl implements RouteFacade {
     public void updateRoute(long academyId, long routeId, RouteRequest routeRequest) {
         Route route = routeService.findById(routeId);
 
-        if(route.getAcademy().getId() != academyId) {
+        if (route.getAcademy().getId() != academyId) {
             throw RouteException.from(RouteErrorCode.FORBIDDEN);
         }
         routeService.updateRoute(route, routeRequest);
@@ -156,7 +161,7 @@ class RouteFacadeImpl implements RouteFacade {
     public void deleteRoute(long academyId, long routeId) {
         Route route = routeService.findById(routeId);
 
-        if(route.getAcademy().getId() != academyId) {
+        if (route.getAcademy().getId() != academyId) {
             throw RouteException.from(RouteErrorCode.FORBIDDEN);
         }
         routeService.deleteRoute(route);

@@ -1,12 +1,11 @@
 package kr.co.littleriders.backend.domain.history;
 
-import java.util.List;
-
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildDeprecated;
+import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
+import java.util.List;
 
 public interface BoardDropHistoryService {
 
@@ -16,7 +15,7 @@ public interface BoardDropHistoryService {
 
     boolean notExistsById(Long id);
 
-	Slice<BoardDropHistory> findByAcademyChild(List<AcademyChild> academyChildList, Pageable pageable);
+    Slice<BoardDropHistory> findByAcademyChild(List<AcademyChildDeprecated> academyChildDeprecatedList, Pageable pageable);
 
-	Long save(BoardDropHistory boardDropHistory);
+    Long save(BoardDropHistory boardDropHistory);
 }

@@ -7,7 +7,7 @@ import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.common.fixture.DriverFixture;
 import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
 import kr.co.littleriders.backend.common.fixture.TeacherFixture;
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyChildServiceDeprecated;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
@@ -84,7 +84,7 @@ public class ShuttleFacadeTest {
     private AcademyFamilyService academyFamilyService;
 
     @Autowired
-    private AcademyChildService academyChildService;
+    private AcademyChildServiceDeprecated academyChildServiceDeprecated;
 
     private Academy academy;
 
@@ -170,10 +170,10 @@ public class ShuttleFacadeTest {
             childService.save(child);
             AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
             academyFamilyService.save(academyFamily);
-            AcademyChild academyChild = AcademyChild.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BARCODE);
-            academyChildService.save(academyChild);
+            AcademyChildDeprecated academyChildDeprecated = AcademyChildDeprecated.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BARCODE);
+            academyChildServiceDeprecated.save(academyChildDeprecated);
 
-            ShuttleChildRideRequest shuttleChildRideRequest = new ShuttleChildRideRequest(academyChild.getCardNumber(), 23.4, 22.2);
+            ShuttleChildRideRequest shuttleChildRideRequest = new ShuttleChildRideRequest(academyChildDeprecated.getCardNumber(), 23.4, 22.2);
             shuttleFacade.recordChildRiding(authTerminal, shuttleChildRideRequest);
         }
     }
@@ -192,22 +192,22 @@ public class ShuttleFacadeTest {
 
     @Nested
     @DisplayName("endDrive 테스트")
-    class endDrive{
+    class endDrive {
 
         @Test
         @DisplayName("성공")
-        void whenSuccess(){
+        void whenSuccess() {
             //given
             Academy academy = AcademyFixture.BOXING.toAcademy();
             academyService.save(academy);
 
-            Shuttle shuttle = ShuttleFixture.HO_11.toShuttle(academy,ShuttleStatus.USE);
+            Shuttle shuttle = ShuttleFixture.HO_11.toShuttle(academy, ShuttleStatus.USE);
             shuttleService.save(shuttle);
 
-            Driver driver = DriverFixture.YOON.toDriver(academy,DriverStatus.WORK);
+            Driver driver = DriverFixture.YOON.toDriver(academy, DriverStatus.WORK);
             driverService.save(driver);
 
-            Teacher teacher = TeacherFixture.NAM.toTeacher(academy,TeacherStatus.WORK);
+            Teacher teacher = TeacherFixture.NAM.toTeacher(academy, TeacherStatus.WORK);
 
             teacherService.save(teacher);
 
@@ -219,10 +219,10 @@ public class ShuttleFacadeTest {
             double latitude = 34.123;
             double longitude = 126.123;
             int speed = 14;
-            ShuttleLocationHistory shuttleLocationHistory = ShuttleLocationHistory.of(shuttleId,latitude,longitude,speed);
-            ShuttleDrive shuttleDrive = ShuttleDrive.of(shuttleId,1,driverId,teacherId);
-            ShuttleChildRide shuttleChildRide = ShuttleChildRide.of(shuttleId,1,latitude,longitude);
-            ShuttleLocation shuttleLocation = ShuttleLocation.of(shuttleId,latitude,longitude,speed);
+            ShuttleLocationHistory shuttleLocationHistory = ShuttleLocationHistory.of(shuttleId, latitude, longitude, speed);
+            ShuttleDrive shuttleDrive = ShuttleDrive.of(shuttleId, 1, driverId, teacherId);
+            ShuttleChildRide shuttleChildRide = ShuttleChildRide.of(shuttleId, 1, latitude, longitude);
+            ShuttleLocation shuttleLocation = ShuttleLocation.of(shuttleId, latitude, longitude, speed);
 
             shuttleLocationService.save(shuttleLocation);
             shuttleLocationHistoryService.save(shuttleLocationHistory);
@@ -244,7 +244,6 @@ public class ShuttleFacadeTest {
 
             assertThrows(ShuttleChildRideException.class,
                     () -> shuttleChildRideService.findByShuttleId(shuttleId));
-
 
 
         }

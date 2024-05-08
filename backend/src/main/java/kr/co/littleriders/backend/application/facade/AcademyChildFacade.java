@@ -15,11 +15,15 @@ public interface AcademyChildFacade {
 
     void deletePendingList(Long academyId, List<Long> pendingList);
 
+    @Deprecated
     List<AcademyChildResponse> readAcademyChildList(Long academyId);
 
+    @Deprecated
     Long updateAcademyChild(Long academyId, Long academyChildId, String status);
 
+    @Deprecated
     AcademyChildDetailResponse readAcademyChildDetail(Long academyId, Long academyChildId);
 
+    @Deprecated
     Map<String, Object> readAcademyChildImage(Long academyId, Long childHistoryId);
 }

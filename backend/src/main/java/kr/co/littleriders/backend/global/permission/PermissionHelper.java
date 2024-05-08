@@ -1,7 +1,7 @@
 package kr.co.littleriders.backend.global.permission;
 
 
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyChildServiceDeprecated;
 import kr.co.littleriders.backend.domain.child.ChildService;
 import kr.co.littleriders.backend.domain.family.FamilyService;
 import kr.co.littleriders.backend.domain.family.entity.Family;
@@ -17,9 +17,9 @@ public class PermissionHelper {
     private final FamilyService familyService;
     private final ChildService childService;
     private final ShuttleService shuttleService;
-    private final AcademyChildService academyChildService;
+    private final AcademyChildServiceDeprecated academyChildServiceDeprecated;
 
-    public boolean check(Family family, Shuttle shuttle){
+    public boolean check(Family family, Shuttle shuttle) {
         /*
             가족 -> 아이
             셔틀 -> 학원
@@ -34,9 +34,8 @@ public class PermissionHelper {
 //            }
 //        }
 //        return false;
-        return  false;
+        return false;
     }
-
 
 
 }

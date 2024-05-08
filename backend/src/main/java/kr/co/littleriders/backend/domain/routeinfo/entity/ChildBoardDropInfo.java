@@ -4,14 +4,9 @@ package kr.co.littleriders.backend.domain.routeinfo.entity;
 import jakarta.persistence.*;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.route.entity.Route;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "child_board_drop_info")
@@ -21,7 +16,7 @@ public class ChildBoardDropInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id; // 원생 승하차 id
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,7 +28,7 @@ public class ChildBoardDropInfo {
     private Academy academy; // 학원
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_route_station_id",nullable = false)
+    @JoinColumn(name = "board_route_station_id", nullable = false)
     private RouteStation boardRouteStation; // 승차/하차 정류장
 
     private ChildBoardDropInfo(AcademyChild academyChild, Academy academy, RouteStation boardRouteStation) {

@@ -1,7 +1,7 @@
 package kr.co.littleriders.backend.application.dto.request;
 
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildDeprecated;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
 import kr.co.littleriders.backend.domain.routeinfo.entity.RouteStation;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,9 @@ public class RouteStationAcademyChildRequest {
     private Long stationId;
     private List<Long> academyChildIdList;
 
-    public ChildBoardDropInfo toChildBoardDropInfo(AcademyChild academyChild, Academy academy, RouteStation boardRouteStation) {
-        return ChildBoardDropInfo.of(academyChild, academy, boardRouteStation);
+
+    @Deprecated
+    public ChildBoardDropInfo toChildBoardDropInfo(AcademyChildDeprecated academyChildDeprecated, Academy academy, RouteStation boardRouteStation) {
+        return ChildBoardDropInfo.of(academyChildDeprecated, academy, boardRouteStation);
     }
 }

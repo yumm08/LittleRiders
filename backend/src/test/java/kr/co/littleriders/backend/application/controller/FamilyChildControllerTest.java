@@ -9,7 +9,7 @@ import kr.co.littleriders.backend.application.facade.FamilyChildFacade;
 import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 import kr.co.littleriders.backend.common.fixture.ChildFixture;
 import kr.co.littleriders.backend.common.fixture.FamilyFixture;
-import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyChildServiceDeprecated;
 import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
@@ -39,145 +39,145 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class FamilyChildControllerTest {
 
-	@Autowired
-	private FamilyChildFacade familyChildFacade;
+    @Autowired
+    private FamilyChildFacade familyChildFacade;
 
-	@Autowired
-	private AcademyFamilyService academyFamilyService;
+    @Autowired
+    private AcademyFamilyService academyFamilyService;
 
-	@Autowired
-	private AcademyChildService academyChildService;
+    @Autowired
+    private AcademyChildServiceDeprecated academyChildServiceDeprecated;
 
-	@Autowired
-	private AcademyService academyService;
+    @Autowired
+    private AcademyService academyService;
 
-	@Autowired
-	private ChildService childService;
+    @Autowired
+    private ChildService childService;
 
-	@Autowired
-	private FamilyService familyService;
+    @Autowired
+    private FamilyService familyService;
 
-	@Autowired
-	MockMvc mockMvc;
+    @Autowired
+    MockMvc mockMvc;
 
-	@Autowired
-	ObjectMapper objectMapper;
-
-
-	@Nested
-	@DisplayName("자녀 추가 기능 테스트")
-	class addChild {
-
-		@Test
-		@DisplayName("성공")
-		void whenSuccess() throws Exception {
-			Family family = FamilyFixture.KIM.toFamily();
-			familyService.save(family);
-			Child child = ChildFixture.KIM_MALE.toChild(family);
-			ChildRegistRequest regist = ChildFixture.KIM_MALE.toChildRegistRequest();
-			Long childId = childService.save(child);
+    @Autowired
+    ObjectMapper objectMapper;
 
 
-			mockMvc.perform(
-					post("/family/child")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(regist))
-				)
-				.andExpect(status().isOk())
-				.andExpect(content().string(String.valueOf(childId)))
-				.andDo(print());
+    @Nested
+    @DisplayName("자녀 추가 기능 테스트")
+    class addChild {
 
-		}
-	}
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Family family = FamilyFixture.KIM.toFamily();
+            familyService.save(family);
+            Child child = ChildFixture.KIM_MALE.toChild(family);
+            ChildRegistRequest regist = ChildFixture.KIM_MALE.toChildRegistRequest();
+            Long childId = childService.save(child);
 
-	@Nested
-	@DisplayName("자녀 목록 조회 기능 테스트")
-	class getChildList {
 
-		@Test
-		@DisplayName("성공")
-		void whenSuccess() throws Exception {
-			Family family = FamilyFixture.KIM.toFamily();
-			familyService.save(family);
-			ChildRegistRequest regist1 = ChildFixture.KIM_MALE.toChildRegistRequest();
-			ChildRegistRequest regist2 = ChildFixture.KIM_FEMALE.toChildRegistRequest();
-			familyChildFacade.insertChild(regist1, family.getId());
-			familyChildFacade.insertChild(regist2, family.getId());
+            mockMvc.perform(
+                            post("/family/child")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(regist))
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(String.valueOf(childId)))
+                    .andDo(print());
 
-			Child c1 = childService.findById(1);
-			Child c2 = childService.findById(2);
-			ChildListResponse child1 = ChildListResponse.from(c1);
-			ChildListResponse child2 = ChildListResponse.from(c2);
+        }
+    }
 
-			List<ChildListResponse> childList = new ArrayList<ChildListResponse>();
-			childList.add(child1);
-			childList.add(child2);
+    @Nested
+    @DisplayName("자녀 목록 조회 기능 테스트")
+    class getChildList {
 
-			mockMvc.perform(
-					get("/family/child")
-				)
-				.andExpect(status().isOk())
-				.andExpect(content().json(objectMapper.writeValueAsString(childList)))
-				.andDo(print());
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            Family family = FamilyFixture.KIM.toFamily();
+            familyService.save(family);
+            ChildRegistRequest regist1 = ChildFixture.KIM_MALE.toChildRegistRequest();
+            ChildRegistRequest regist2 = ChildFixture.KIM_FEMALE.toChildRegistRequest();
+            familyChildFacade.insertChild(regist1, family.getId());
+            familyChildFacade.insertChild(regist2, family.getId());
 
-		}
-	}
+            Child c1 = childService.findById(1);
+            Child c2 = childService.findById(2);
+            ChildListResponse child1 = ChildListResponse.from(c1);
+            ChildListResponse child2 = ChildListResponse.from(c2);
 
-	@Nested
-	@DisplayName("자녀 상세 조회 기능 테스트")
-	class getChildDetail {
+            List<ChildListResponse> childList = new ArrayList<ChildListResponse>();
+            childList.add(child1);
+            childList.add(child2);
 
-		@Test
-		@DisplayName("성공")
-		void whenSuccess() throws Exception {
-			// academy 생성
-			Academy academy = AcademyFixture.BOXING.toAcademy();
-			academyService.save(academy);
+            mockMvc.perform(
+                            get("/family/child")
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(objectMapper.writeValueAsString(childList)))
+                    .andDo(print());
 
-			// academy 생성
+        }
+    }
 
-			Academy academy1 = AcademyFixture.BASEBALL.toAcademy();
-			academyService.save(academy1);
+    @Nested
+    @DisplayName("자녀 상세 조회 기능 테스트")
+    class getChildDetail {
 
-			// family 생성
-			Family family = FamilyFixture.KIM.toFamily();
-			familyService.save(family);
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            // academy 생성
+            Academy academy = AcademyFixture.BOXING.toAcademy();
+            academyService.save(academy);
 
-			// child 생성
-			Child child = ChildFixture.KIM_MALE.toChild(family);
-			childService.save(child);
+            // academy 생성
 
-			// academyFamily 생성
-			AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
-			academyFamilyService.save(academyFamily);
+            Academy academy1 = AcademyFixture.BASEBALL.toAcademy();
+            academyService.save(academy1);
 
-			// academyChild 생성
-			AcademyChild academyChild = AcademyChild.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
-			academyChildService.save(academyChild);
+            // family 생성
+            Family family = FamilyFixture.KIM.toFamily();
+            familyService.save(family);
 
-			// academyFamily 생성
-			AcademyFamily academyFamily1 = AcademyFamily.of(family, academy1, AcademyFamilyStatus.AVAIL);
-			academyFamilyService.save(academyFamily1);
+            // child 생성
+            Child child = ChildFixture.KIM_MALE.toChild(family);
+            childService.save(child);
 
-			// academyChild 생성
-			AcademyChild academyChild1 = AcademyChild.of(child, academy1, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
-			academyChildService.save(academyChild1);
+            // academyFamily 생성
+            AcademyFamily academyFamily = AcademyFamily.of(family, academy, AcademyFamilyStatus.AVAIL);
+            academyFamilyService.save(academyFamily);
 
-			List<AcademyList> academyList = new ArrayList<>();
-			AcademyList academyResponse = AcademyList.from(academy);
-			AcademyList academyResponse1 = AcademyList.from(academy1);
-			academyList.add(academyResponse);
-			academyList.add(academyResponse1);
+            // academyChild 생성
+            AcademyChildDeprecated academyChildDeprecated = AcademyChildDeprecated.of(child, academy, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
+            academyChildServiceDeprecated.save(academyChildDeprecated);
 
-			ChildDetailResponse childDetailResponse = ChildDetailResponse.of(child, null, academyList);
+            // academyFamily 생성
+            AcademyFamily academyFamily1 = AcademyFamily.of(family, academy1, AcademyFamilyStatus.AVAIL);
+            academyFamilyService.save(academyFamily1);
 
-			mockMvc.perform(
-					get("/family/child/" + child.getId())
-				)
-				.andExpect(status().isOk())
-				.andExpect(content().json(objectMapper.writeValueAsString(childDetailResponse)))
-				.andDo(print());
+            // academyChild 생성
+            AcademyChildDeprecated academyChildDeprecated1 = AcademyChildDeprecated.of(child, academy1, academyFamily, AcademyChildStatus.ATTENDING, CardType.BEACON);
+            academyChildServiceDeprecated.save(academyChildDeprecated1);
 
-		}
-	}
+            List<AcademyList> academyList = new ArrayList<>();
+            AcademyList academyResponse = AcademyList.from(academy);
+            AcademyList academyResponse1 = AcademyList.from(academy1);
+            academyList.add(academyResponse);
+            academyList.add(academyResponse1);
+
+            ChildDetailResponse childDetailResponse = ChildDetailResponse.of(child, null, academyList);
+
+            mockMvc.perform(
+                            get("/family/child/" + child.getId())
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(objectMapper.writeValueAsString(childDetailResponse)))
+                    .andDo(print());
+
+        }
+    }
 }

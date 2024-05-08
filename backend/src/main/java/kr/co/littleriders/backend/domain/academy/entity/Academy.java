@@ -45,10 +45,10 @@ public class Academy implements Member {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // 학원 전화번호
 
-    @Column(name = "latitude",nullable = false)
+    @Column(name = "latitude", nullable = false)
     private double latitude;
 
-    @Column(name = "longitude",nullable = false)
+    @Column(name = "longitude", nullable = false)
     private double longitude;
 
     @Column(name = "image_path")
@@ -75,8 +75,8 @@ public class Academy implements Member {
     @OneToMany(mappedBy = "academy")
     private List<BoardDropHistory> boardDropHistoryList; // 원생 탑승 이력 목록
 
-    @OneToMany(mappedBy = "academy")
-    private List<AcademyChild> academyChildList; // 원생정보 목록
+//    @OneToMany(mappedBy = "academy")
+//    private List<AcademyChildDeprecated> academyChildDeprecatedList; // 원생정보 목록
 
     @OneToMany(mappedBy = "academy")
     private List<AcademyFamily> academyFamilyList; // 보호자 정보 목록

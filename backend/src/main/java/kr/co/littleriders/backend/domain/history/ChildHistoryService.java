@@ -1,13 +1,13 @@
 package kr.co.littleriders.backend.domain.history;
 
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChildDeprecated;
 import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 
 public interface ChildHistoryService {
 
-    ChildHistory findByCreatedAt(AcademyChild academyChild);
+    ChildHistory findByCreatedAt(AcademyChildDeprecated academyChildDeprecated);
 
-    ChildHistory findByAcademyChild(AcademyChild academyChild);
+    ChildHistory findByAcademyChild(AcademyChildDeprecated academyChildDeprecated);
 
     void save(ChildHistory childHistory);
 
