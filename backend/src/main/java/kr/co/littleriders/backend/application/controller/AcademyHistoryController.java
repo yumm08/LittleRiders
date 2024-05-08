@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.littleriders.backend.application.dto.response.ShuttleDailyHistoryResponse;
@@ -37,8 +37,8 @@ public class AcademyHistoryController {
 
 	@GetMapping("/shuttle")
 	public ResponseEntity<List<ShuttleDailyHistoryResponse>> getShuttleDailyHistory(@Auth AuthAcademy authAcademy,
-																					@RequestPart(value = "shuttleId") Long shuttleId,
-																					@RequestPart(value = "date") LocalDate date) {
+																					@RequestParam(value = "shuttleId") Long shuttleId,
+																					@RequestParam(value = "date") LocalDate date) {
 
 		Long academyId = authAcademy.getId();
 		List<ShuttleDailyHistoryResponse> shuttleDailyHistoryList = histroyFacade.readShuttleDailyHistory(academyId, shuttleId, date);
