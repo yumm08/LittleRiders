@@ -4,6 +4,8 @@ package kr.co.littleriders.backend.application.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import kr.co.littleriders.backend.application.dto.request.AcademySignUpRequest;
 import kr.co.littleriders.backend.application.dto.request.ChangePasswordRequest;
 import kr.co.littleriders.backend.application.dto.request.SignInRequest;
 import kr.co.littleriders.backend.application.dto.request.ValidateEmailRequest;
@@ -14,6 +16,7 @@ import kr.co.littleriders.backend.global.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,33 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private final AccountFacade accountFacade;
+
+    @GetMapping("/sign-up/validate")
+    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam @NotBlank String email) { //TODO : 변경필요
+        accountFacade.sendSignUpEmail(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/sign-up/validate")
+    public ResponseEntity<?> validateEmailWithCode(@Valid @RequestBody ValidateEmailRequest validateEmailRequest, HttpServletResponse response) {
+        log.info("validateEmailWithCode: call");
+        String email = validateEmailRequest.getEmail();
+        String code = validateEmailRequest.getCode();
+        String signUpToken = accountFacade.getSignUpToken(email, code);
+        Cookie cookie = new Cookie("signup-token", signUpToken);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60*30);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<Void> signUp(@Valid @RequestBody AcademySignUpRequest academySignUpRequest, @CookieValue("signup-token") String token) {
+        log.info("signup-token = [{}]",token);
+        accountFacade.signUp(academySignUpRequest,token);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
     @GetMapping("/re-issue")
     public ResponseEntity<Void> reIssueTokenByRefresh(@CookieValue("refresh-token") String requestRefreshToken, HttpServletResponse response) {
