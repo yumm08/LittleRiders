@@ -60,7 +60,7 @@ public class ShuttleDriveHistory {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class ShuttleInShuttleDriveHistory {
+    public static class ShuttleInShuttleDriveHistory {
         private long id;
         private String name;
         private String type;
@@ -78,7 +78,7 @@ public class ShuttleDriveHistory {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class DriverInShuttleDriveHistory {
+    public static class DriverInShuttleDriveHistory {
 
         private long id;
         private String name;
@@ -96,7 +96,7 @@ public class ShuttleDriveHistory {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class TeacherInShuttleDriveHistory {
+    public static class TeacherInShuttleDriveHistory {
 
         private long id;
         private String name;
@@ -127,7 +127,7 @@ public class ShuttleDriveHistory {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    private static class LocationInShuttleDriveHistory {
+    public static class LocationInShuttleDriveHistory {
         private double latitude;
         private double longitude;
         private LocalDateTime time;
