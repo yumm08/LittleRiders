@@ -1,7 +1,7 @@
 import ChildPage from '@pages/ChildPage'
 import DispatchPage from '@pages/DispatchPage'
 import DriveHistoryPage from '@pages/DriveHistoryPage'
-import HomePage from '@pages/HomePage'
+import MainPage from '@pages/MainPage'
 import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
 import SignInPage from '@pages/SignInPage'
@@ -29,11 +29,11 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <HomePage />,
+            element: <MainPage />,
           },
           {
             path: 'home',
-            element: <HomePage />,
+            element: <MainPage />,
           },
           {
             path: 'manage',
