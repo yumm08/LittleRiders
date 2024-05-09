@@ -200,7 +200,6 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
             >
               <p className="w-20 font-bold text-white">주소 검색</p>
             </Button>
-            {/* // TODO: 주소 검색 필요 */}
             {openAddressSearchModal && (
               <SearchAddressModal onModalToggle={modalToggleHandler} />
             )}
