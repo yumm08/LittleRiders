@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AcademyChildUpdateRequest {
+public class UpdateAcademyChildRequest {
 
 	private String status;
 }
