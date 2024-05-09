@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import {
+  deleteStation,
   getRouteDetail,
   getRouteList,
   getStationList,
   postRoute,
+  postStation,
   putRoute,
 } from '@apis/dispatch'
 
@@ -47,22 +49,6 @@ export const useGetStationList = () => {
   return { stationList, ...rest }
 }
 
-// TODO childList query add
-/**
- *
- */
-// export const useGetChildList = () => {
-//   const { data: childList, ...rest } = useQuery({
-//     queryKey: ['childList'],
-//     queryFn: getChildList,
-//     select: (data) => {
-//       const childList = data?.data.content
-//       return childList
-//     },
-//   })
-
-//   return { childList, ...rest }
-// }
 export const usePostRoute = () => {
   const queryClient = useQueryClient()
   const { mutate: addRoute, ...rest } = useMutation({
@@ -87,8 +73,47 @@ export const usePutRoute = () => {
   return { modifyRoute, ...rest }
 }
 
-export const StationModifyMutate = () => {}
+export const usePostStation = () => {
+  const queryClient = useQueryClient()
+  const { mutate: addStation, ...rest } = useMutation({
+    mutationFn: ({
+      name,
+      latitude,
+      longitude,
+    }: {
+      name: string
+      latitude: number
+      longitude: number
+    }) => postStation(name, latitude, longitude),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['stationList'] })
+    },
+  })
 
-export const RouteDeleteMutate = () => {}
+  return { addStation, ...rest }
+}
 
-export const StationDeleteMutate = () => {}
+export const useModifyStation = () => {}
+
+export const useDeleteRoute = () => {
+  const queryClient = useQueryClient()
+  const { mutate: removeStation, ...rest } = useMutation({
+    mutationFn: (routeId: number) => deleteStation(routeId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['stationList'] })
+    },
+  })
+  return { removeStation, ...rest }
+}
+
+export const useDeleteStation = () => {
+  const queryClient = useQueryClient()
+  const { mutate: removeStation, ...rest } = useMutation({
+    mutationFn: (stationId: number) => deleteStation(stationId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['stationList'] })
+    },
+  })
+
+  return { removeStation, ...rest }
+}

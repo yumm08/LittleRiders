@@ -5,7 +5,10 @@ import { SortableItem } from '@components/Dispatch/SortableItem'
 import Button from '@components/Shared/Button'
 
 import { useFetchChildList } from '@hooks/child'
-import { useGetRouteDetail, useGetStationList } from '@hooks/dispatch'
+import {
+  useGetRouteDetail,
+  useGetStationList, // usePutRoute,
+} from '@hooks/dispatch/dispatch'
 import '@hooks/map'
 import { MapHook } from '@hooks/map'
 
@@ -68,6 +71,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
 
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
   const { childList, isLoading: isChildListLoading } = useFetchChildList()
+  // const { modifyRoute } = usePutRoute()
 
   const {
     drawRoute,
@@ -119,7 +123,11 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
 
   const handleStationItemHover = () => {}
 
-  const handleModifyClick = () => {}
+  const handleModifyClick = () => {
+    //   const childStation = []
+    //   stationItems.stationList.forEach((station) => {})
+    //   modifyRoute()
+  }
 
   const handleCancelClick = () => {}
 
@@ -169,24 +177,27 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       }
       setChildItems(() => {
         const tempChildList: ChildInfo[] = []
-        childList.forEach((child: ChildInfo) => {
-          let isSame = false
-          routeDetail.stationList.forEach((station: Station) => {
-            if (
-              station.childList!.some(
-                (stationChild) =>
-                  stationChild.academyChildId === child.academyChildId,
-              )
-            ) {
-              isSame = true
-            }
+        if (childList) {
+          childList.forEach((child: ChildInfo) => {
+            let isSame = false
+            routeDetail.stationList.forEach((station: Station) => {
+              if (
+                station.childList!.some(
+                  (stationChild) =>
+                    stationChild.academyChildId === child.academyChildId,
+                )
+              ) {
+                isSame = true
+              }
+            })
+            if (!isSame) tempChildList.push(child)
           })
-          if (!isSame) tempChildList.push(child)
-        })
-        return {
-          childList: [...tempChildList],
-          selectedChildList: [],
+          return {
+            childList: [...tempChildList],
+            selectedChildList: [],
+          }
         }
+        return { childList: [], selectedChildList: [] }
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,7 +211,8 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
         selectedChildList: [],
       })
     }
-  }, [childList, isChildListLoading])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChildListLoading])
 
   useEffect(() => {
     drawRoute(stationItems['selectedStationList'], markerList, setMarkerList)
@@ -209,10 +221,13 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   }, [stationItems['selectedStationList']])
 
   useEffect(() => {
-    stationItems.selectedStationList?.forEach((station: Station) => {
-      if (station.id === selectedStation) {
-        station.childList = [...childItems['selectedChildList']]
-      }
+    setStationItems((prev) => {
+      prev.selectedStationList?.forEach((station: Station) => {
+        if (station.id === selectedStation) {
+          station.childList = [...childItems['selectedChildList']]
+        }
+      })
+      return { ...prev }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [childItems['selectedChildList']])

@@ -1,6 +1,6 @@
 import { HttpResponse, http } from 'msw'
 
-const BASE_URL = 'station'
+const BASE_URL = 'admin/station'
 
 export const stationHandlers = [
   http.get(`/api/${BASE_URL}`, () => {

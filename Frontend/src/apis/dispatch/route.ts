@@ -2,7 +2,7 @@ import axiosInstance from '@utils/httpCommons'
 
 import { Route } from '@types'
 
-const BASE_URL = 'route'
+const BASE_URL = 'academy/route'
 
 /**
  * get Route List Axios Call
@@ -59,7 +59,9 @@ export const deleteRoute = async (routeId: number) => {
  *
  * @returns
  */
-export const postRouteChild = async () => {
-  const response = await axiosInstance.get(`/${BASE_URL}/child`)
+export const postRouteChild = async (
+  routeChild: [{ stationId: number; childId: number }],
+) => {
+  const response = await axiosInstance.post(`/${BASE_URL}/child`, routeChild)
   return response
 }

@@ -3,15 +3,17 @@ import { RefObject, SetStateAction, useState } from 'react'
 import { BASE_LAT, BASE_LNG } from '@constants'
 import { Station } from '@types'
 
-const DEFAULT_OPTION = {
+const DEFAULT_OPTION: naver.maps.MapOptions = {
   center: new naver.maps.LatLng(BASE_LAT, BASE_LNG),
   zoom: 15,
   minZoom: 7,
-  ZoomControl: true,
+  zoomControl: true,
   disableKineticPan: false,
 }
 
-export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
+export function MapHook(
+  mapRef?: React.MutableRefObject<naver.maps.Map | null>,
+) {
   // const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [polyline, setPolyline] = useState<naver.maps.Polyline>()
   //const [circleList, setCircleList] = useState<naver.maps.Circle[]>([])
@@ -26,8 +28,8 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     options = DEFAULT_OPTION,
   ) => {
     console.log('initMap')
-    if (mapRef.current) return
-    mapRef.current = new naver.maps.Map(mapDiv.current!, options)
+    if (mapRef!.current) return
+    mapRef!.current = new naver.maps.Map(mapDiv.current!, options)
   }
 
   /**
@@ -37,7 +39,7 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     console.log('initPolyline')
     setPolyline(
       new naver.maps.Polyline({
-        map: mapRef.current!,
+        map: mapRef!.current!,
         path: [],
         strokeWeight: 3,
         strokeColor: '#007F73',
@@ -65,14 +67,14 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     })
     naver.maps.Event.addListener(marker, 'mouseover', () => {
       console.log('mouseon')
-      if (mapRef.current) {
-        infoWindow.open(mapRef.current, marker)
+      if (mapRef!.current) {
+        infoWindow.open(mapRef!.current, marker)
       }
     })
 
     naver.maps.Event.addListener(marker, 'mouseout', () => {
       console.log('mouseout')
-      if (mapRef.current) infoWindow.close()
+      if (mapRef!.current) infoWindow.close()
     })
   }
 
@@ -112,7 +114,7 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
       tmpMarkerList.push(
         new naver.maps.Marker({
           position: newPathList[k],
-          map: mapRef.current!,
+          map: mapRef!.current!,
           icon: {
             content: [
               `<img src="/src/assets/image/${markerImg}" style="width:30px; height:30px"/>`,
@@ -196,7 +198,7 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
   // const drawCircleList = () => {}
 
   const moveMap = (latLng: naver.maps.LatLng) => {
-    mapRef.current?.setCenter(latLng)
+    mapRef!.current?.setCenter(latLng)
   }
 
   return {
