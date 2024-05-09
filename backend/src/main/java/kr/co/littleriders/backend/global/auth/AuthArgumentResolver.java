@@ -4,8 +4,6 @@ package kr.co.littleriders.backend.global.auth;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
-import kr.co.littleriders.backend.domain.family.FamilyService;
-import kr.co.littleriders.backend.domain.family.entity.Family;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.terminal.TerminalService;
 import kr.co.littleriders.backend.domain.terminal.entity.ShuttleTerminalAttach;
@@ -15,7 +13,6 @@ import kr.co.littleriders.backend.domain.terminal.error.exception.ShuttleTermina
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import kr.co.littleriders.backend.global.auth.dto.AuthDTO;
-import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import kr.co.littleriders.backend.global.entity.MemberType;
 import kr.co.littleriders.backend.global.error.code.AuthErrorCode;
@@ -36,7 +33,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Slf4j
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     private final JwtProvider jwtProvider;
-    private final FamilyService familyService;
     private final AcademyService academyService;
     private final TerminalService terminalService;
 
@@ -87,10 +83,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         if (memberType == MemberType.ACADEMY) {
             Academy academy = academyService.findById(memberId);
             return AuthAcademy.from(academy);
-        }
-        if (memberType == MemberType.FAMILY) {
-            Family family = familyService.findById(memberId);
-            return AuthFamily.from(family);
         }
         if(memberType == MemberType.TERMINAL){
             Terminal terminal = terminalService.findById(memberId);

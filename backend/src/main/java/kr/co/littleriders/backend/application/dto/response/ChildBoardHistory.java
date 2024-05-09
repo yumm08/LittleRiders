@@ -1,12 +1,10 @@
 package kr.co.littleriders.backend.application.dto.response;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import kr.co.littleriders.backend.domain.history.entity.BoardDropHistory;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -33,7 +31,7 @@ public class ChildBoardHistory {
 	public static ChildBoardHistory from(BoardDropHistory boardDropHistory) {
 		return new ChildBoardHistory(boardDropHistory.getId(),
 			boardDropHistory.getAcademy().getName(),
-			boardDropHistory.getAcademyChild().getChild().getName(),
+			boardDropHistory.getAcademyChild().getName(),
 			boardDropHistory.getStatus().name(), boardDropHistory.getCreatedAt());
 	}
 }

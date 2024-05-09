@@ -1,20 +1,23 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import kr.co.littleriders.backend.application.client.AddressConvertFetchAPI;
+import kr.co.littleriders.backend.application.client.AddressConvertPositionClientRequest;
+import kr.co.littleriders.backend.application.client.AddressConvertPositionClientResponse;
+import kr.co.littleriders.backend.application.dto.request.AcademySignUpRequest;
 import kr.co.littleriders.backend.application.facade.AccountFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyException;
-import kr.co.littleriders.backend.domain.family.FamilyService;
-import kr.co.littleriders.backend.domain.family.entity.Family;
-import kr.co.littleriders.backend.domain.family.error.code.FamilyErrorCode;
-import kr.co.littleriders.backend.domain.family.error.exception.FamilyException;
 import kr.co.littleriders.backend.domain.terminal.TerminalService;
 import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
 import kr.co.littleriders.backend.domain.terminal.error.code.ShuttleTerminalAttachErrorCode;
 import kr.co.littleriders.backend.domain.terminal.error.exception.ShuttleTerminalAttachException;
 import kr.co.littleriders.backend.domain.token.RefreshTokenService;
+import kr.co.littleriders.backend.domain.token.SignUpTokenService;
 import kr.co.littleriders.backend.domain.token.entity.RefreshToken;
+import kr.co.littleriders.backend.domain.token.entity.SignUpToken;
+import kr.co.littleriders.backend.domain.token.entity.SignUpTokenType;
 import kr.co.littleriders.backend.domain.verification.VerificationService;
 import kr.co.littleriders.backend.domain.verification.entity.Verification;
 import kr.co.littleriders.backend.domain.verification.entity.VerificationType;
@@ -22,10 +25,11 @@ import kr.co.littleriders.backend.domain.verification.error.code.VerificationErr
 import kr.co.littleriders.backend.domain.verification.error.exception.VerificationException;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import kr.co.littleriders.backend.global.auth.dto.AuthDTO;
-import kr.co.littleriders.backend.global.auth.dto.AuthFamily;
 import kr.co.littleriders.backend.global.entity.MemberType;
 import kr.co.littleriders.backend.global.error.code.AuthErrorCode;
+import kr.co.littleriders.backend.global.error.code.MemberErrorCode;
 import kr.co.littleriders.backend.global.error.exception.AuthException;
+import kr.co.littleriders.backend.global.error.exception.MemberException;
 import kr.co.littleriders.backend.global.jwt.JwtMemberInfo;
 import kr.co.littleriders.backend.global.jwt.JwtProvider;
 import kr.co.littleriders.backend.global.jwt.JwtToken;
@@ -34,6 +38,7 @@ import kr.co.littleriders.backend.global.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -44,7 +49,6 @@ class AccountFacadeImpl implements AccountFacade {
 
     private final JwtProvider jwtProvider;
 
-    private final FamilyService familyService;
 
     private final AcademyService academyService;
 
@@ -56,6 +60,10 @@ class AccountFacadeImpl implements AccountFacade {
 
     private final MailHelper mailHelper;
 
+    private final SignUpTokenService signUpTokenService;
+
+    private final AddressConvertFetchAPI addressConvertFetchAPI;
+
     @Override
     public JwtToken tokenReIssue(final String token) {
         RefreshToken refreshToken = refreshTokenService.findByToken(token);
@@ -65,11 +73,6 @@ class AccountFacadeImpl implements AccountFacade {
         Long id = jwtMemberInfo.getMemberId();
         MemberType memberType = jwtMemberInfo.getMemberType();
 
-        if (memberType == MemberType.FAMILY) { //신원 검증
-            if (familyService.notExistsById(id)) {
-                throw FamilyException.from(FamilyErrorCode.NOT_FOUND);
-            }
-        }
 
         if (memberType == MemberType.ACADEMY) {
             if (academyService.notExistsById(id)) { //신원 검증
@@ -97,29 +100,42 @@ class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public JwtToken signIn(String email, String password) { //리팩토링이 될거같음
-        if (familyService.existsByEmail(email)) {
-            Family family = familyService.findByEmail(email);
-            if (passwordUtil.notEqualsPassword(password, family.getPassword())) {
-                throw AuthException.from(AuthErrorCode.PASSWORD_NOT_EQUAL);
-            }
-            JwtToken jwtToken = jwtProvider.createToken(family.getId(), MemberType.FAMILY);
-            RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
-            refreshTokenService.save(refreshToken);
-            return jwtToken;
+
+        Academy academy = academyService.findByEmail(email);
+        if (passwordUtil.notEqualsPassword(password, academy.getPassword())) {
+            throw AuthException.from(AuthErrorCode.PASSWORD_NOT_EQUAL);
         }
-        if (academyService.existsByEmail(email)) {
-            Academy academy = academyService.findByEmail(email);
-            if (passwordUtil.notEqualsPassword(password, academy.getPassword())) {
-                throw AuthException.from(AuthErrorCode.PASSWORD_NOT_EQUAL);
-            }
-            JwtToken jwtToken = jwtProvider.createToken(academy.getId(), MemberType.ACADEMY);
-            RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
-            refreshTokenService.save(refreshToken);
-            return jwtToken;
-        }
-        throw AuthException.from(AuthErrorCode.USER_NOT_FOUND);
+        JwtToken jwtToken = jwtProvider.createToken(academy.getId(), MemberType.ACADEMY);
+        RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
+        refreshTokenService.save(refreshToken);
+        return jwtToken;
+
 
     }
+
+    @Override
+    @Transactional
+    public void signUp(final AcademySignUpRequest academySignUpRequest, final String token) {
+
+        String email = academySignUpRequest.getEmail();
+        SignUpToken signUpToken = signUpTokenService.findAcademySignUpTokenByEmailAndToken(email, token);
+        signUpTokenService.delete(signUpToken);
+        if (academyService.existsByEmail(email)) {
+            throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);
+        }
+
+        String address = academySignUpRequest.getAddress();
+        AddressConvertPositionClientRequest addressConvertPositionClientRequest = AddressConvertPositionClientRequest.from(address);
+
+        AddressConvertPositionClientResponse addressConvertPositionClientResponse = addressConvertFetchAPI.fetchAPI(addressConvertPositionClientRequest);
+
+        double latitude = addressConvertPositionClientResponse.getLatitude();
+        double longitude = addressConvertPositionClientResponse.getLongitude();
+        Academy academy = academySignUpRequest.toAcademy(passwordUtil,latitude,longitude);
+        academyService.save(academy);
+    }
+
+
 
     @Override
     public JwtToken signInByTerminalNumber(String terminalNumber) {
@@ -135,11 +151,10 @@ class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public void sendChangePasswordEmail(String email) {
-        if (familyService.existsByEmail(email) && academyService.notExistsByEmail(email)) {
-            throw AuthException.from(AuthErrorCode.USER_NOT_FOUND);
-        }
-        VerificationType verificationType = familyService.existsByEmail(email) ? VerificationType.FAMILY_CHANGE_PASSWORD : VerificationType.ACADEMY_CHANGE_PASSWORD;
-        Verification verification = Verification.of(email, verificationType);
+        Academy academy = academyService.findByEmail(email);
+
+        VerificationType verificationType = VerificationType.CHANGE_PASSWORD;
+        Verification verification = Verification.of(academy.getEmail(), verificationType);
         verificationService.save(verification);
         String code = verification.getCode();
         mailHelper.sendChangePasswordVerificationEmail(email, code);
@@ -150,16 +165,11 @@ class AccountFacadeImpl implements AccountFacade {
     public JwtToken signInByEmailAndVerificationCode(String email, String code) {
         Verification verification = verificationService.findByEmail(email);
         VerificationType verificationType = verification.getType();
-        if (verificationType != VerificationType.ACADEMY_CHANGE_PASSWORD && verificationType != VerificationType.FAMILY_CHANGE_PASSWORD) {
+        if (verificationType != VerificationType.CHANGE_PASSWORD) {
             throw VerificationException.from(VerificationErrorCode.NOT_FOUND);
         }
-        MemberType memberType = verificationType == VerificationType.ACADEMY_CHANGE_PASSWORD ? MemberType.ACADEMY : MemberType.FAMILY;
-        long id = 0;
-        if (memberType == MemberType.ACADEMY) {
-            id = academyService.findByEmail(email).getId();
-        }
-        id = familyService.findByEmail(email).getId();
-        JwtToken jwtToken = jwtProvider.createToken(id, memberType);
+        long id = academyService.findByEmail(email).getId();
+        JwtToken jwtToken = jwtProvider.createToken(id, MemberType.ACADEMY);
         RefreshToken refreshToken = RefreshToken.of(jwtToken.getRefreshToken(), jwtToken.getRefreshTokenExpTimeToSecond());
         verificationService.delete(verification);
         refreshTokenService.save(refreshToken);
@@ -168,21 +178,38 @@ class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public void changePassword(AuthDTO authDTO, String password) {
-        log.info("changePasswordCalled");
         String encrypted = passwordUtil.encrypt(password);
-        if (authDTO instanceof AuthFamily authFamily) {
-            Family family = familyService.findById(authFamily.getId());
-            family.setPassword(encrypted);
-            familyService.save(family);
-            return;
-        }
-        if(authDTO instanceof AuthAcademy authAcademy){
+        if (authDTO instanceof AuthAcademy authAcademy) {
             Academy academy = academyService.findById(authAcademy.getId());
             academy.setPassword(encrypted);
             academyService.save(academy);
             return;
         }
         throw AuthException.from(AuthErrorCode.NOT_VALID_REQUEST);
+    }
+
+    @Override
+    public String sendSignUpEmail(final String email) {
+        if ( academyService.existsByEmail(email)) {
+            throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);
+        }
+        Verification verification = Verification.of(email, VerificationType.SIGN_UP);
+        verificationService.save(verification);
+        String code = verification.getCode();
+        mailHelper.sendSignUpVerificationEmail(email, code);
+        return code;
+    }
+
+
+
+    @Override
+    public String getSignUpToken(String email, String code) {
+        Verification verification = verificationService.findAcademySignUpByEmailAndCode(email, code);
+        verificationService.delete(verification);
+        SignUpToken signUpToken = SignUpToken.of(email, SignUpTokenType.ACADEMY);
+        signUpTokenService.save(signUpToken);
+        return signUpToken.getToken();
+
     }
 
 

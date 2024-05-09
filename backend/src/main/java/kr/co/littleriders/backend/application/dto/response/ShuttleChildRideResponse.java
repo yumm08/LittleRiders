@@ -18,7 +18,7 @@ public class ShuttleChildRideResponse {
     public static ShuttleChildRideResponse of(AcademyChild academyChild, ShuttleChildRide shuttleChildRide) {
         ShuttleChildRideResponse response = new ShuttleChildRideResponse();
 
-        response.name = academyChild.getChild().getName();
+        response.name = academyChild.getName();
         response.academyChildId = academyChild.getId();
 
         List<ShuttleChildRide.RideInfo> ChildRideInfoList = shuttleChildRide.getRideInfoList().stream()

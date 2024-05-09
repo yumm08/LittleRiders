@@ -1,6 +1,5 @@
 package kr.co.littleriders.backend.domain.driver.error.exception;
 
-import kr.co.littleriders.backend.domain.child.error.code.ChildErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.global.error.exception.LittleRidersException;
 import lombok.Getter;

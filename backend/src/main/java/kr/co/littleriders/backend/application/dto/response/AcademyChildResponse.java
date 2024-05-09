@@ -1,7 +1,6 @@
 package kr.co.littleriders.backend.application.dto.response;
 
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.history.entity.ChildHistory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,22 +31,11 @@ public class AcademyChildResponse {
 
     public static AcademyChildResponse from(AcademyChild academyChild) {
         return new AcademyChildResponse(academyChild.getId()
-                                        , academyChild.getChild().getName()
-                                        , academyChild.getChild().getBirthDate().toString()
-                                        , academyChild.getChild().getGender().name()
-                                        , academyChild.getChild().getImagePath()
+                                        , academyChild.getName()
+                                        , academyChild.getBirthDate().toString()
+                                        , academyChild.getGender().name()
+                                        , academyChild.getImagePath()
                                         , academyChild.getStatus().name());
     }
 
-    public static AcademyChildResponse of(AcademyChild academyChild, ChildHistory childHistory) {
-
-        // String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
-
-        return new AcademyChildResponse(academyChild.getId()
-                                        , childHistory.getName()
-                                        , childHistory.getBirthDate().toString()
-                                        , childHistory.getGender().name()
-                                        , childHistory.getImagePath()
-                                        , academyChild.getStatus().name());
-    }
 }

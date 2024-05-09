@@ -181,17 +181,17 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
     }
 
+
     @Override
     public ShuttleChildRideResponse recordChildRiding(AuthTerminal authTerminal, ShuttleChildRideRequest rideRequest) {
 
         long shuttleId = authTerminal.getShuttleId();
 
-        // TODO: 탈퇴한 회원에 대한 valid check 추가
+        // TODO: 졸업을 한 아이에 대한 valid check 추가
 
-        AcademyChild academyChild = academyChildService.findByCardNumber(rideRequest.getChildCardNumber());
-        Long childId = academyChild.getChild().getId();
-
-        ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, childId);
+        AcademyChild academyChild = academyChildService.findByBeaconNumber(rideRequest.getBeaconNumber());
+        //TODO - HOTFIX - 이수현 - 수정 필요. ShuttleChildRide 가 필요없어짐.
+        ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, 0);
         shuttleChildRideService.save(shuttleChildRide);
 
         return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
