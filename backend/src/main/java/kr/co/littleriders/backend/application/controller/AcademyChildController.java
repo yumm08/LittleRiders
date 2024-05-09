@@ -1,7 +1,7 @@
 package kr.co.littleriders.backend.application.controller;
 
-import kr.co.littleriders.backend.application.dto.request.AcademyChildUpdateRequest;
 import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequest;
+import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
@@ -29,6 +29,7 @@ public class AcademyChildController {
         return ResponseEntity.ok().body(academyChildList);
     }
 
+    //TODO-이윤지-요구사항 변경으로 인한 상세 조회 내역 변경
     @GetMapping("/{academyChildId}")
     public ResponseEntity<AcademyChildDetailResponse> getAcademyChildDetail(@Auth AuthAcademy authAcademy,
                                                                             @PathVariable(value = "academyChildId") Long academyChildId) {
@@ -49,13 +50,14 @@ public class AcademyChildController {
         return ResponseEntity.ok().build();
     }
 
+    //TODO-이윤지-요구사항 변경으로 인한 수정 필드 추가
     @PutMapping("/{academyChildId}")
     public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy,
                                                 @PathVariable(value = "academyChildId") Long academyChildId,
-                                                @RequestBody AcademyChildUpdateRequest academyChildUpdateRequest) {
+                                                @RequestBody UpdateAcademyChildRequest updateAcademyChildRequest) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, academyChildUpdateRequest.getStatus());
+        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, updateAcademyChildRequest.getStatus());
 
         return ResponseEntity.ok().body(updateChildId);
     }
