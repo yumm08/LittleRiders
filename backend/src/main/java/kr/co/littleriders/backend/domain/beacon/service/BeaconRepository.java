@@ -9,5 +9,5 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 
 public interface BeaconRepository extends JpaRepository<Beacon, Long> {
-	List<BeaconResponse> findByAcademy(Academy academy);
+	List<Beacon> findByAcademy(Academy academy);
 }

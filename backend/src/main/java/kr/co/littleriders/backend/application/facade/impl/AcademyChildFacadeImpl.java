@@ -14,9 +14,11 @@ import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
 import kr.co.littleriders.backend.domain.beacon.BeaconServcie;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
@@ -59,14 +61,20 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         return childDetail;
     }
 
+    @Transactional
     @Override
     public Long insertAcademyChild(Long academyId, CreateAcademyChildRequest createAcademyChildRequest) {
 
         Academy academy = academyService.findById(academyId);
         MultipartFile image = createAcademyChildRequest.getImage();
         String imagePath = imageUtil.saveImage(image);
+        Beacon beacon = beaconServcie.findById(createAcademyChildRequest.getBeaconId());
 
-        AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, imagePath, AcademyChildStatus.ATTENDING);
+        AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, beacon, imagePath, AcademyChildStatus.ATTENDING);
+
+        beacon.updateAcademyChild(academyChild);
+        beaconServcie.save(beacon);
+
         return academyChildService.save(academyChild);
     }
 
@@ -74,21 +82,32 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     public List<BeaconResponse> getBeaconList(Long academyId) {
 
         Academy academy = academyService.findById(academyId);
-        List<BeaconResponse> beaconList = beaconServcie.findByAcademy(academy);
+        List<BeaconResponse> beaconList = beaconServcie.findByAcademy(academy).stream()
+                                                       .filter(beacon -> beacon.getAcademyChild() == null)
+                                                       .map(BeaconResponse::from)
+                                                       .collect(Collectors.toList());
 
-        return null;
+        return beaconList;
     }
 
     @Override
     public Long updateAcademyChildStatus(Long academyId, Long academyChildId, String status) {
-        // TODO-이윤지-attending->leave/graduate로 변경시 비콘 상태도 바뀌어야 함..!!
+
         Academy academy = academyService.findById(academyId);
         AcademyChild academyChild = academyChildService.findById(academyChildId);
         if (!academyChild.equalsAcademy(academy)) {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
-        academyChild.updateStatus(AcademyChildStatus.valueOf(status));
+        AcademyChildStatus childStatus = AcademyChildStatus.valueOf(status);
+        if (academyChild.isAttending() && !childStatus.equals(AcademyChildStatus.ATTENDING)) {
+            Beacon beacon = academyChild.getBeacon();
+            beacon.updateAcademyChild(null);
+            beaconServcie.save(beacon);
+            academyChild.detachBeacon();
+        }
+
+        academyChild.updateStatus(childStatus);
         academyChildService.save(academyChild);
 
         return academyChild.getId();

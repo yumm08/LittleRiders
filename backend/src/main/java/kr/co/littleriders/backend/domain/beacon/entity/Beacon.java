@@ -1,5 +1,7 @@
 package kr.co.littleriders.backend.domain.beacon.entity;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity @Getter
 @Table(name = "beacon")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 public class Beacon {
 
 	@Id
@@ -34,5 +37,9 @@ public class Beacon {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "academy_child_id")
-	private AcademyChild academyChild; // 학원
+	private AcademyChild academyChild; // 원생
+
+	public void updateAcademyChild(AcademyChild academyChild) {
+		this.academyChild = academyChild;
+	}
 }

@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.domain.academy.entity;
 
 import jakarta.persistence.*;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
 import kr.co.littleriders.backend.global.entity.Gender;
 import lombok.AccessLevel;
@@ -40,8 +41,9 @@ public class AcademyChild {
     @Column(name = "image_path")
     private String imagePath;
 
-    @Column(name = "beacon_number")
-    private String beaconNumber; // 카드 정보
+    @OneToOne(optional = true)
+    @JoinColumn(name = "beacon_id")
+    private Beacon beacon; // 카드 정보
 
     @Column(name = "family_name")
     private String familyName;
@@ -72,13 +74,13 @@ public class AcademyChild {
     //TODO- HOTFIX-이윤지 -
     //TODO- HOTFIX-이수현 - null 다른값 처리 필요함
 
-    private AcademyChild(String name, String address, LocalDate birthDate, Gender gender, String imagePath, String beaconNumber, String familyName, String phoneNumber, AcademyChildStatus status, String memo, Academy academy) {
+    private AcademyChild(String name, String address, LocalDate birthDate, Gender gender, String imagePath, Beacon beacon, String familyName, String phoneNumber, AcademyChildStatus status, String memo, Academy academy) {
         this.name = name;
         this.address = address;
         this.birthDate = birthDate;
         this.gender = gender;
         this.imagePath = imagePath;
-        this.beaconNumber = beaconNumber;
+        this.beacon = beacon;
         this.familyName = familyName;
         this.phoneNumber = phoneNumber;
         this.status = status;
@@ -92,7 +94,7 @@ public class AcademyChild {
                                   LocalDate birthDate,
                                   Gender gender,
                                   String imagePath,
-                                  String beaconNumber,
+                                  Beacon beacon,
                                   String familyName,
                                   String phoneNumber,
                                   AcademyChildStatus status,
@@ -104,7 +106,7 @@ public class AcademyChild {
                 , birthDate
                 , gender
                 , imagePath
-                , beaconNumber
+                , beacon
                 , familyName
                 , phoneNumber
                 , status
@@ -121,5 +123,9 @@ public class AcademyChild {
 
     public boolean isAttending() {
         return this.status.equals(AcademyChildStatus.ATTENDING);
+    }
+
+    public void detachBeacon() {
+        this.beacon = null;
     }
 }

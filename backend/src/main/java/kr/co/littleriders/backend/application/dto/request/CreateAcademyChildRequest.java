@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import kr.co.littleriders.backend.global.entity.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,9 +47,9 @@ public class CreateAcademyChildRequest {
 
     private String memo;
 
-    public AcademyChild toAcademyChild(Academy academy, String imagePath, AcademyChildStatus status){
+    public AcademyChild toAcademyChild(Academy academy, Beacon beacon, String imagePath, AcademyChildStatus status){
         return AcademyChild.of(academy, this.name, this.address, this.birthDate,
-                            Gender.valueOf(this.gender), imagePath, null,
+                            Gender.valueOf(this.gender), imagePath, beacon,
                             this.familyName, this.phoneNumber, status, this.memo);
     }
 
