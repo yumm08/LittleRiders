@@ -61,8 +61,8 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         return childDetail;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Long insertAcademyChild(Long academyId, CreateAcademyChildRequest createAcademyChildRequest) {
 
         Academy academy = academyService.findById(academyId);
@@ -71,11 +71,11 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         Beacon beacon = beaconServcie.findById(createAcademyChildRequest.getBeaconId());
 
         AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, beacon, imagePath, AcademyChildStatus.ATTENDING);
-
+        Long insertChildId = academyChildService.save(academyChild);
         beacon.updateAcademyChild(academyChild);
         beaconServcie.save(beacon);
 
-        return academyChildService.save(academyChild);
+        return insertChildId;
     }
 
     @Override

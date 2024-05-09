@@ -1,10 +1,12 @@
 package kr.co.littleriders.backend.application.dto.response;
 
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -24,14 +26,14 @@ public class AcademyChildDetailResponse {
 
 	private String childStatus;
 
-	private String beconUUID;
+	private String beaconUUID;
 
 	private String familyName;
 
 	private String familyPhoneNumber;
 
 	private AcademyChildDetailResponse(Long academyChildId, String name, LocalDate birthDate, String gender,
-		String imagePath, String address, String status, String beconUUID, String familyName, String phoneNumber) {
+		String imagePath, String address, String status, String beaconUUID, String familyName, String phoneNumber) {
 		this.academyChildId = academyChildId;
 		this.name = name;
 		this.birthDate = birthDate;
@@ -39,7 +41,7 @@ public class AcademyChildDetailResponse {
 		this.imagePath = imagePath;
 		this.address = address;
 		this.childStatus = status;
-		this.beconUUID = beconUUID;
+		this.beaconUUID = beaconUUID;
 		this.familyName = familyName;
 		this.familyPhoneNumber = phoneNumber;
 	}
@@ -52,7 +54,9 @@ public class AcademyChildDetailResponse {
 											academyChild.getImagePath(),
 											academyChild.getAddress(),
 											academyChild.getStatus().name(),
-											academyChild.getBeacon().getUuid(),
+											Optional.ofNullable(academyChild.getBeacon())
+												.map(Beacon::getUuid)
+												.orElse(null),
 											academyChild.getFamilyName(),
 											academyChild.getPhoneNumber());
 	}
