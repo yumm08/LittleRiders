@@ -16,4 +16,6 @@ public interface TeacherService {
 	long save(Teacher teacher);
 
     List<Teacher> findByAcademy(Academy academy);
+
+    Teacher findByCardNumber(String cardNumber);
 }

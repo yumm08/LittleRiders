@@ -42,4 +42,13 @@ class DriverServiceImpl implements DriverService {
     public List<Driver> findByAcademy(Academy academy) {
         return driverRepository.findByAcademy(academy);
     }
+
+    @Override
+    public Driver findByCardNumber(String cardNumber) {
+
+        return driverRepository.findByCardNumber(cardNumber).orElseThrow(
+                () -> DriverException.from(DriverErrorCode.NOT_FOUND)
+        );
+
+    }
 }

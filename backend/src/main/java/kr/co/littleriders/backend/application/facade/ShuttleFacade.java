@@ -3,9 +3,7 @@ package kr.co.littleriders.backend.application.facade;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
-import kr.co.littleriders.backend.application.dto.response.RouteResponse;
-import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
-import kr.co.littleriders.backend.application.dto.response.ShuttleChildRideResponse;
+import kr.co.littleriders.backend.application.dto.response.*;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 
 import java.util.List;
@@ -25,6 +23,9 @@ public interface ShuttleFacade {
 
     void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest);
 
+    DriverInfoResponse getDriverInfoByCardNumber(AuthTerminal authTerminal, String cardNumber);
+
+    TeacherInfoResponse getTeacherInfoByCardNumber(AuthTerminal authTerminal, String cardNumber);
 }
 
 

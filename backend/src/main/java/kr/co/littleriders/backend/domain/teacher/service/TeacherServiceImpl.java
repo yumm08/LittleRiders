@@ -43,4 +43,12 @@ class TeacherServiceImpl implements TeacherService {
         return teacherRepository.findByAcademy(academy);
     }
 
+    @Override
+    public Teacher findByCardNumber(String cardNumber) {
+
+        return teacherRepository.findByCardNumber(cardNumber).orElseThrow(
+                () -> TeacherException.from(TeacherErrorCode.NOT_FOUND)
+        );
+    }
+
 }

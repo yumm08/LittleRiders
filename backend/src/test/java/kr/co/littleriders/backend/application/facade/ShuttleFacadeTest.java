@@ -3,16 +3,23 @@
 //import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 //import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 //import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+//import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
+//import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
 //import kr.co.littleriders.backend.common.fixture.AcademyFixture;
 //import kr.co.littleriders.backend.common.fixture.DriverFixture;
 //import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
 //import kr.co.littleriders.backend.common.fixture.TeacherFixture;
 //import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+//import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
 //import kr.co.littleriders.backend.domain.academy.AcademyService;
 //import kr.co.littleriders.backend.domain.academy.entity.*;
+//import kr.co.littleriders.backend.domain.child.ChildService;
+//import kr.co.littleriders.backend.domain.child.entity.Child;
 //import kr.co.littleriders.backend.domain.driver.DriverService;
 //import kr.co.littleriders.backend.domain.driver.entity.Driver;
 //import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
+//import kr.co.littleriders.backend.domain.family.FamilyService;
+//import kr.co.littleriders.backend.domain.family.entity.Family;
 //import kr.co.littleriders.backend.domain.route.RouteService;
 //import kr.co.littleriders.backend.domain.route.entity.Route;
 //import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
@@ -42,6 +49,7 @@
 //
 //import java.time.LocalDate;
 //
+//import static org.junit.jupiter.api.Assertions.assertEquals;
 //import static org.junit.jupiter.api.Assertions.assertThrows;
 //
 //@Transactional
@@ -69,6 +77,14 @@
 //    @Autowired
 //    private TeacherService teacherService;
 //
+//    @Autowired
+//    private FamilyService familyService;
+//
+//    @Autowired
+//    private ChildService childService;
+//
+//    @Autowired
+//    private AcademyFamilyService academyFamilyService;
 //
 //    @Autowired
 //    private AcademyChildService academyChildService;
@@ -102,6 +118,62 @@
 //    }
 //
 //    @Nested
+//    @DisplayName("기사님 정보 QR 조회")
+//    class getDriverInfoByCardNumber{
+//
+//        @Test
+//        @DisplayName("성공")
+//        void  whenSuccess(){
+//
+//            //given
+//            Driver driver = DriverFixture.YOON.toDriver(academy,DriverStatus.WORK);
+//            driverService.save(driver);
+//            String cardNumber = driver.getCardNumber();
+//
+//
+//            //when
+//            DriverInfoResponse driverInfoResponse = shuttleFacade.getDriverInfoByCardNumber(authTerminal,cardNumber);
+//
+//
+//
+//            //then
+//            assertEquals(driverInfoResponse.getId(), driver.getId());
+//            assertEquals(driverInfoResponse.getName(),driver.getName());
+//            assertEquals(driverInfoResponse.getImage(),driver.getImagePath());
+//            assertEquals(driverInfoResponse.getPhoneNumber(),driver.getPhoneNumber());
+//
+//        }
+//    }
+//
+//
+//    @Nested
+//    @DisplayName("선생님 정보 QR 조회")
+//    class getTeacherInfoByCardNumber{
+//
+//        @Test
+//        @DisplayName("성공")
+//        void  whenSuccess(){
+//
+//            //given
+//            Teacher teacher = TeacherFixture.NAM.toTeacher(academy,TeacherStatus.WORK);
+//            teacherService.save(teacher);
+//            String cardNumber = teacher.getCardNumber();
+//
+//
+//            //when
+//            TeacherInfoResponse teacherInfoResponse = shuttleFacade.getTeacherInfoByCardNumber(authTerminal,cardNumber);
+//
+//
+//
+//            //then
+//            assertEquals(teacherInfoResponse.getId(), teacher.getId());
+//            assertEquals(teacherInfoResponse.getName(),teacher.getName());
+//            assertEquals(teacherInfoResponse.getImage(),teacher.getImagePath());
+//            assertEquals(teacherInfoResponse.getPhoneNumber(),teacher.getPhoneNumber());
+//
+//        }
+//    }
+//    @Nested
 //    @DisplayName("운행 가능 노선 목록 조회")
 //    class getRouteList {
 //
@@ -109,20 +181,6 @@
 //        @DisplayName("성공")
 //        void whenSuccess() throws Exception {
 //            shuttleFacade.getRouteList(authTerminal);
-//        }
-//    }
-//
-//    @Nested
-//    @DisplayName("운행 가능 노선 상세 조회")
-//    class getRoute {
-//
-//        @Test
-//        @DisplayName("성공")
-//        void whenSuccess() throws Exception {
-//            Route route = Route.of(academy, "등원A", "board");
-//            long routeId = routeService.save(route);
-//
-//            shuttleFacade.getRoute(authTerminal, routeId);
 //        }
 //    }
 //

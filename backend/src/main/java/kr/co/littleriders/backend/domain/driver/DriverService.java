@@ -16,4 +16,6 @@ public interface DriverService {
 	long save(Driver driver);
 
     List<Driver> findByAcademy(Academy academy);
+
+    Driver findByCardNumber(String cardNumber);
 }
