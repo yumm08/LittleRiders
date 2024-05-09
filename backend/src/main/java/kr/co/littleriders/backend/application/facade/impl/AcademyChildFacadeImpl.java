@@ -14,6 +14,7 @@ import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildExc
 import kr.co.littleriders.backend.global.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
 import java.util.List;
@@ -64,31 +65,15 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         return null;
     }
 
-
-    //TODO - HOTFIX-이윤지 수정 필요 - 사실 필요없음 이거 (김도현)
-//    @Deprecated
-//    @Override
-//    public Map<String, Object> readAcademyChildImage(Long academyId, Long childHistoryId) {
-//
-//        Academy academy = academyService.findById(academyId);
-//        ChildHistory childHistory = childHistoryService.findById(childHistoryId);
-//        Child child = childHistory.getChild();
-//        AcademyChild academyChild = academyChildService.findByChildAndAcademy(child, academy);
-//        if (childHistory.isBeforeUpdatedAt(academyChild)) {
-//            throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
-//        }
-//
-//        String imagePath = childHistory.getImagePath();
-//        Map<String, Object> result = imageUtil.getImage(imagePath);
-//
-//        return result;
-//    }
-
-
-    //TODO - HOTFIX-이윤지 수정 필요 - 학원 아이 등록
     @Override
-    public void createAcademyChild(Long academyId, CreateAcademyChildRequest createAcademyChildRequest) {
+    public Long insertAcademyChild(Long academyId, CreateAcademyChildRequest createAcademyChildRequest) {
 
+        Academy academy = academyService.findById(academyId);
+        MultipartFile image = createAcademyChildRequest.getImage();
+        String imagePath = imageUtil.saveImage(image);
+
+        AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, imagePath, AcademyChildStatus.ATTENDING);
+        return academyChildService.save(academyChild);
     }
 
 

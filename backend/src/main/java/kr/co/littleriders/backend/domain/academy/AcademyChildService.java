@@ -14,6 +14,7 @@ public interface AcademyChildService {
     boolean notExistsById(long id);
 
     AcademyChild findByBeaconNumber(String cardNumber);
+
     long save(AcademyChild academyChild);
 
 	List<AcademyChild> findByAcademy(Academy academy);

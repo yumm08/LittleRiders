@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.controller;
 
+import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
@@ -42,12 +43,12 @@ public class AcademyChildController {
 
     //TODO - HOTFIX-이윤지 수정 필요 - 학원 아이 등록
     @PostMapping
-    public ResponseEntity<Void> addAcademyChild(@Auth AuthAcademy authAcademy, @RequestBody CreateAcademyChildRequest createAcademyChildRequest) {
+    public ResponseEntity<Long> addAcademyChild(@Auth AuthAcademy authAcademy, @ModelAttribute @Valid CreateAcademyChildRequest createAcademyChildRequest) {
 
         Long academyId = authAcademy.getId();
-        academyChildFacade.createAcademyChild(academyId, createAcademyChildRequest);
+        Long createChildId = academyChildFacade.insertAcademyChild(academyId, createAcademyChildRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(createChildId);
     }
 
     //TODO-이윤지-요구사항 변경으로 인한 수정 필드 추가
