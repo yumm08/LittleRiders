@@ -31,4 +31,9 @@ class BeaconServiceImpl implements BeaconServcie {
 	public void save(Beacon beacon) {
 		beaconRepository.save(beacon);
 	}
+
+	@Override
+	public Beacon findByUuid(String uuid) {
+		return beaconRepository.findByUuid(uuid);
+	}
 }

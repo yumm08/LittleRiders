@@ -39,5 +39,10 @@ class DriveUniqueKeyServiceImpl implements DriveUniqueKeyService {
         return driveUniqueKeyRepository.findById(uuid).orElseThrow();
     }
 
+    @Override
+    public DriveUniqueKey findByAcademyChildId(long academyChildId) {
+        return driveUniqueKeyRepository.findByAcademyChildId(academyChildId);
+    }
+
 
 }

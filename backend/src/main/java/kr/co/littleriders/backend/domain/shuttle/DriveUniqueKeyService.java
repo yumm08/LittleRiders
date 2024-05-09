@@ -16,4 +16,6 @@ public interface DriveUniqueKeyService {
 
     DriveUniqueKey findByUuid(String uuid);
 
+    DriveUniqueKey findByAcademyChildId(long academyChildId);
+
 }

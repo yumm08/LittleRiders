@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.client.SmsFetchAPI;
 import kr.co.littleriders.backend.application.client.SmsSendClientRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
+import kr.co.littleriders.backend.application.dto.request.ShuttleChildDropRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.*;
@@ -11,6 +12,8 @@ import kr.co.littleriders.backend.application.facade.SseFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.beacon.BeaconServcie;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
@@ -31,7 +34,9 @@ import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrive;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.shuttle.*;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
+import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleBoardErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleBoardException;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
@@ -39,6 +44,8 @@ import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
 import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherException;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -64,6 +71,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final ShuttleBoardService shuttleBoardService;
     private final SseFacade sseFacade;
     private final SmsFetchAPI smsFetchAPI;
+    private final BeaconServcie beaconServcie;
 
 
     private final ShuttleDriveHistoryService shuttleDriveHistoryService;
@@ -222,7 +230,9 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         Academy academy = shuttle.getAcademy();
 
         String uuid = boardRequest.getBeaconUUID();
-        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByUuid(uuid);
+        Beacon beacon = beaconServcie.findByUuid(uuid);
+        long academyChildId = beacon.getAcademyChild().getId();
+        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId);
 
         ShuttleBoard shuttleBoard = boardRequest.toShuttleBoard(driveUniqueKey, academy.getId());
 
@@ -240,7 +250,6 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         return ShuttleChildBoardResponse.from(academyChild);
     }
-
 
     @Override
     public void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest) {

@@ -10,4 +10,6 @@ import java.util.List;
 interface DriveUniqueKeyRepository extends CrudRepository<DriveUniqueKey, String> {
 
     List<DriveUniqueKey> findByShuttleId(long shuttleId);
+
+    DriveUniqueKey findByAcademyChildId(long academyChildId);
 }
