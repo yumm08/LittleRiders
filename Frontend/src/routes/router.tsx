@@ -4,6 +4,7 @@ import DriveHistoryPage from '@pages/DriveHistoryPage'
 import HomePage from '@pages/HomePage'
 import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
+import ParentViewPage from '@pages/ParentViewPage'
 import SignInPage from '@pages/SignInPage'
 import SignUpPage from '@pages/SignUpPage'
 import StationPage from '@pages/StationPage'
@@ -13,6 +14,7 @@ import App from 'App'
 import { createBrowserRouter } from 'react-router-dom'
 
 const router = createBrowserRouter([
+  { path: '/parent-view', element: <ParentViewPage /> },
   {
     path: '/',
     element: <App />,
