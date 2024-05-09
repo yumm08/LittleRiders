@@ -66,7 +66,6 @@ public class ShuttleController {
     // 원생 승차
     @PostMapping("/child/board")
     public ResponseEntity<ShuttleChildBoardResponse> recordChildBoard(@Auth AuthTerminal authTerminal, @RequestBody ShuttleChildBoardRequest boardRequest) {
-        shuttleFacade.recordChildBoard(authTerminal, boardRequest);
         return ResponseEntity.ok().body(shuttleFacade.recordChildBoard(authTerminal, boardRequest));
     }
 
