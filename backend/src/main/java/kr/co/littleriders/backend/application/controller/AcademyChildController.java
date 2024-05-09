@@ -1,9 +1,11 @@
 package kr.co.littleriders.backend.application.controller;
 
-import kr.co.littleriders.backend.application.dto.request.AcademyChildUpdateRequest;
+import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequest;
+import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
+import kr.co.littleriders.backend.application.dto.response.BeaconResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
@@ -19,8 +21,6 @@ import java.util.List;
 public class AcademyChildController {
 
     private final AcademyChildFacade academyChildFacade;
-
-
 
     @GetMapping
     public ResponseEntity<List<AcademyChildResponse>> getAcademyChildList(@Auth AuthAcademy authAcademy) {
@@ -41,49 +41,44 @@ public class AcademyChildController {
         return ResponseEntity.ok().body(academyChildDetailResponse);
     }
 
-
-    //TODO - HOTFIX-이윤지 필요없음(김도현)
-//    @GetMapping("/{childHistoryId}/image")
-//    public ResponseEntity<Resource> getAcademyChildImage(@Auth AuthAcademy authAcademy,
-//                                                         @PathVariable(value = "childHistoryId") Long childHistoryId) {
-//
-//        Long academyId = authAcademy.getId();
-//
-//        Map<String, Object> image = academyChildFacade.readAcademyChildImage(academyId, childHistoryId);
-//
-//        Resource imageResource = (Resource) image.get("resource");
-//        MediaType mediaType = (MediaType) image.get("mediaType");
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        if (mediaType != null) {
-//            headers.setContentType(mediaType);
-//        } else {
-//            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        }
-//
-//        return ResponseEntity.ok().headers(headers).body(imageResource);
-//    }
-
-    @PutMapping("/{academyChildId}")
-    public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy,
-                                                @PathVariable(value = "academyChildId") Long academyChildId,
-                                                @RequestBody AcademyChildUpdateRequest academyChildUpdateRequest) {
+    @GetMapping("/beacon")
+    public ResponseEntity<List<BeaconResponse>> getAcademyBeacon(@Auth AuthAcademy authAcademy) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, academyChildUpdateRequest.getStatus());
+        List<BeaconResponse> beaconList = academyChildFacade.getBeaconList(academyId);
+
+        return ResponseEntity.ok().body(beaconList);
+    }
+
+    @PostMapping
+    public ResponseEntity<Long> addAcademyChild(@Auth AuthAcademy authAcademy, @ModelAttribute @Valid CreateAcademyChildRequest createAcademyChildRequest) {
+
+        Long academyId = authAcademy.getId();
+        Long createChildId = academyChildFacade.insertAcademyChild(academyId, createAcademyChildRequest);
+
+        return ResponseEntity.ok().body(createChildId);
+    }
+
+    @PutMapping("/{academyChildId}/status")
+    public ResponseEntity<Long> editAcademyChildStatus(@Auth AuthAcademy authAcademy,
+                                                     @PathVariable(value = "academyChildId") Long academyChildId,
+                                                     @RequestBody String status) {
+
+        Long academyId = authAcademy.getId();
+        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, status);
 
         return ResponseEntity.ok().body(updateChildId);
     }
 
-
-    //TODO - HOTFIX-이윤지 수정 필요 - 학원 아이 등록
-    @PostMapping("")
-    public ResponseEntity<Void> createAcademyChild(@Auth AuthAcademy authAcademy, @RequestBody CreateAcademyChildRequest createAcademyChildRequest) {
+    @PutMapping("/{academyChildId}")
+    public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy,
+                                                @PathVariable(value = "academyChildId") Long academyChildId,
+                                                @RequestBody UpdateAcademyChildRequest updateAcademyChildRequest) {
 
         Long academyId = authAcademy.getId();
-        academyChildFacade.createAcademyChild(academyId, createAcademyChildRequest);
-        return ResponseEntity.ok().build();
-    }
+        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, updateAcademyChildRequest);
 
+        return ResponseEntity.ok().body(updateChildId);
+    }
 
 }

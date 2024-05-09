@@ -31,7 +31,6 @@ public class Academy implements Member {
     @Column(name = "email", nullable = false)
     private String email; // 이메일
 
-
     @Setter
     @Column(name = "password", nullable = false)
     private String password; // 비밀번호

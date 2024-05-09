@@ -1,8 +1,10 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequest;
+import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
+import kr.co.littleriders.backend.application.dto.response.BeaconResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -11,9 +13,13 @@ import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
+import kr.co.littleriders.backend.domain.beacon.BeaconServcie;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,9 +32,8 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     private final AcademyService academyService;
     private final AcademyChildService academyChildService;
     private final ImageUtil imageUtil;
+    private final BeaconServcie beaconServcie;
 
-
-    //TODO - HOTFIX-이윤지 수정 필요 - 반환값 더 들어가야함
     @Override
     public List<AcademyChildResponse> getAcademyChildListByAcademyId(Long academyId) {
 
@@ -44,71 +49,77 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
     @Override
     public AcademyChildDetailResponse getAcademyChildDetail(Long academyId, Long academyChildId) {
-        //TODO - HOTFIX-이윤지 수정 필요 - 학원아이 디테일 정보 반환해야함. ATTENDING 상관 X
 
-//        Academy academy = academyService.findById(academyId);
-//        AcademyChild academyChild = academyChildService.findById(academyChildId);
-//        if (!academyChild.equalsAcademy(academy)) {
-//            throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
-//        }
-//
-//        AcademyChildDetailResponse childDetail;
-//        ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
-//        if (academyChild.isFamilyAvail()) {
-//            childDetail = AcademyChildDetailResponse.of(childHistory, null, academyChild);
-//        } else {
-//            FamilyHistory familyHistory = familyHistoryService.findByCreatedAt(academyChild.getAcademyFamily());
-//            childDetail = AcademyChildDetailResponse.of(childHistory, familyHistory, academyChild);
-//        }
+       Academy academy = academyService.findById(academyId);
+       AcademyChild academyChild = academyChildService.findById(academyChildId);
+       if (!academyChild.equalsAcademy(academy)) {
+           throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
+       }
 
-        return null;
+       AcademyChildDetailResponse childDetail = AcademyChildDetailResponse.from(academyChild);
+
+        return childDetail;
     }
 
-
-    //TODO - HOTFIX-이윤지 수정 필요 - 사실 필요없음 이거 (김도현)
-//    @Deprecated
-//    @Override
-//    public Map<String, Object> readAcademyChildImage(Long academyId, Long childHistoryId) {
-//
-//        Academy academy = academyService.findById(academyId);
-//        ChildHistory childHistory = childHistoryService.findById(childHistoryId);
-//        Child child = childHistory.getChild();
-//        AcademyChild academyChild = academyChildService.findByChildAndAcademy(child, academy);
-//        if (childHistory.isBeforeUpdatedAt(academyChild)) {
-//            throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
-//        }
-//
-//        String imagePath = childHistory.getImagePath();
-//        Map<String, Object> result = imageUtil.getImage(imagePath);
-//
-//        return result;
-//    }
-
-
-    //TODO - HOTFIX-이윤지 수정 필요 - 학원 아이 등록
     @Override
-    public void createAcademyChild(Long academyId, CreateAcademyChildRequest createAcademyChildRequest) {
-
-    }
-
-
-    //TODO - HOTFIX-이윤지 수정 필요 - status 만 업데이트 할게 아닌 다른 정보도 업데이트 해야함 Attending 상관없음 (김도현)
-    @Override
-    public Long updateAcademyChild(Long academyId, Long academyChildId, String status) {
+    @Transactional
+    public Long insertAcademyChild(Long academyId, CreateAcademyChildRequest createAcademyChildRequest) {
 
         Academy academy = academyService.findById(academyId);
+        MultipartFile image = createAcademyChildRequest.getImage();
+        String imagePath = imageUtil.saveImage(image);
+        Beacon beacon = beaconServcie.findById(createAcademyChildRequest.getBeaconId());
 
+        AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, beacon, imagePath, AcademyChildStatus.ATTENDING);
+        Long insertChildId = academyChildService.save(academyChild);
+        beacon.updateAcademyChild(academyChild);
+        beaconServcie.save(beacon);
+
+        return insertChildId;
+    }
+
+    @Override
+    public List<BeaconResponse> getBeaconList(Long academyId) {
+
+        Academy academy = academyService.findById(academyId);
+        List<BeaconResponse> beaconList = beaconServcie.findByAcademy(academy).stream()
+                                                       .filter(beacon -> beacon.getAcademyChild() == null)
+                                                       .map(BeaconResponse::from)
+                                                       .collect(Collectors.toList());
+
+        return beaconList;
+    }
+
+    @Override
+    public Long updateAcademyChildStatus(Long academyId, Long academyChildId, String status) {
+
+        Academy academy = academyService.findById(academyId);
         AcademyChild academyChild = academyChildService.findById(academyChildId);
         if (!academyChild.equalsAcademy(academy)) {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
-        //여기에 로직 추가
+        AcademyChildStatus childStatus = AcademyChildStatus.valueOf(status);
+        if (academyChild.isAttending() && !childStatus.equals(AcademyChildStatus.ATTENDING)) {
+            Beacon beacon = academyChild.getBeacon();
+            beacon.updateAcademyChild(null);
+            beaconServcie.save(beacon);
+            academyChild.detachBeacon();
+        }
+
+        academyChild.updateStatus(childStatus);
         academyChildService.save(academyChild);
 
         return academyChild.getId();
     }
 
+    //TODO - HOTFIX-이윤지 수정 필요 - status 만 업데이트 할게 아닌 다른 정보도 업데이트 해야함 Attending 상관없음 (김도현)
+    @Override
+    public Long updateAcademyChild(Long academyId, Long academyChildId, UpdateAcademyChildRequest updateAcademyChildRequest) {
 
+
+
+        return null;
+    }
 
 }

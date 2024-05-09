@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,12 +24,18 @@ import kr.co.littleriders.backend.global.error.exception.ImageException;
 
 public class ImageUtil {
 	private final String BASE_PATH;
+	// TODO-이윤지-default image 설정 필요
+	private final String defaultImage = "default.jpg";
 
 	public ImageUtil(@Value("${spring.resource.directory}") String basePath) {
 		BASE_PATH = basePath;
 	}
 
 	public String saveImage(MultipartFile file)  {
+
+		if (file.isEmpty()) {
+			return defaultImage;
+		}
 
 		// 확장자 valid 검사
 		String originName = file.getOriginalFilename(); //원본 이미지 이름
@@ -85,15 +91,15 @@ public class ImageUtil {
 		Map<String, Object> result = new HashMap<>();
 		Path imageFilePath = Paths.get(imagePath);
 
-		try {
-			Resource imageResource = new UrlResource(imageFilePath.toUri());
-			MediaType mediaType = getMediaType(imagePath);
-
-			result.put("resource", imageResource);
-			result.put("mediaType", mediaType);
-		} catch (MalformedURLException urlException) {
+		if (!Files.exists(imageFilePath)) {
 			throw ImageException.from(ImageErrorCode.NOT_FOUND);
 		}
+
+		Resource imageResource = new FileSystemResource(imageFilePath);
+		MediaType mediaType = getMediaType(imagePath);
+
+		result.put("resource", imageResource);
+		result.put("mediaType", mediaType);
 
 		return result;
     }

@@ -22,14 +22,10 @@ class AcademyChildServiceImpl implements AcademyChildService {
         );
     }
 
-
-
     @Override
     public List<AcademyChild> findByAcademy(Academy academy) {
         return academyChildRepository.findByAcademy(academy);
     }
-
-
 
     @Override
     public boolean existsById(long id) {
@@ -42,17 +38,8 @@ class AcademyChildServiceImpl implements AcademyChildService {
     }
 
     @Override
-    public AcademyChild findByBeaconNumber(String cardNumber) {
-        return academyChildRepository.findByBeaconNumber(cardNumber).orElseThrow(
-                () -> AcademyChildException.from(AcademyChildErrorCode.NOT_FOUND)
-        );
-
-    }
-
-    @Override
     public long save(AcademyChild academyChild) {
         return academyChildRepository.save(academyChild).getId();
     }
-
 
 }

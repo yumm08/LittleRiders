@@ -1,9 +1,12 @@
 package kr.co.littleriders.backend.application.dto.response;
 
+import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -23,17 +26,14 @@ public class AcademyChildDetailResponse {
 
 	private String childStatus;
 
-	private String cardType;
-
-	private String cardNumber;
+	private String beaconUUID;
 
 	private String familyName;
 
 	private String familyPhoneNumber;
 
 	private AcademyChildDetailResponse(Long academyChildId, String name, LocalDate birthDate, String gender,
-		String imagePath, String address, String status, String cardType, String cardNumber,
-		String familyName, String phoneNumber) {
+		String imagePath, String address, String status, String beaconUUID, String familyName, String phoneNumber) {
 		this.academyChildId = academyChildId;
 		this.name = name;
 		this.birthDate = birthDate;
@@ -41,29 +41,24 @@ public class AcademyChildDetailResponse {
 		this.imagePath = imagePath;
 		this.address = address;
 		this.childStatus = status;
-		this.cardType = cardType;
-		this.cardNumber = cardNumber;
+		this.beaconUUID = beaconUUID;
 		this.familyName = familyName;
 		this.familyPhoneNumber = phoneNumber;
 	}
 
-//	public static AcademyChildDetailResponse of(ChildHistory childHistory, FamilyHistory familyHistory, AcademyChild academyChild) {
-//		String address = (familyHistory != null) ? familyHistory.getAddress() : academyChild.getAcademyFamily().getFamily().getAddress();
-//		String familyName = (familyHistory != null) ? familyHistory.getName() : academyChild.getAcademyFamily().getFamily().getName();
-//		String phoneNumber = (familyHistory != null) ? familyHistory.getPhoneNumber() : academyChild.getAcademyFamily().getFamily().getPhoneNumber();
-//
-//		String imagePath = "/api/academy/child/" + childHistory.getId() + "/image";
-//
-//		return new AcademyChildDetailResponse(academyChild.getId(),
-//											childHistory.getName(),
-//											childHistory.getBirthDate(),
-//											childHistory.getGender().name(),
-//											imagePath,
-//											address,
-//											academyChild.getStatus().name(),
-//											academyChild.getCardType().name(),
-//											academyChild.getCardNumber(),
-//											familyName,
-//											phoneNumber);
-//	}
+	public static AcademyChildDetailResponse from(AcademyChild academyChild) {
+		return new AcademyChildDetailResponse(academyChild.getId(),
+											academyChild.getName(),
+											academyChild.getBirthDate(),
+											academyChild.getGender().name(),
+											academyChild.getImagePath(),
+											academyChild.getAddress(),
+											academyChild.getStatus().name(),
+											Optional.ofNullable(academyChild.getBeacon())
+												.map(Beacon::getUuid)
+												.orElse(null),
+											academyChild.getFamilyName(),
+											academyChild.getPhoneNumber());
+	}
+
 }

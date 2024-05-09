@@ -187,13 +187,15 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         // TODO: 졸업을 한 아이에 대한 valid check 추가
 
-        AcademyChild academyChild = academyChildService.findByBeaconNumber(rideRequest.getBeaconNumber());
+        // AcademyChild academyChild = academyChildService.findByBeaconNumber(rideRequest.getBeaconNumber());
         //TODO - HOTFIX - 이수현 - 수정 필요. ShuttleChildRide 가 필요없어짐.
         ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, 0);
         shuttleChildRideService.save(shuttleChildRide);
 
-        return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
+        // return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
+        return null;
     }
+
 
     @Override
     public void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest) {
