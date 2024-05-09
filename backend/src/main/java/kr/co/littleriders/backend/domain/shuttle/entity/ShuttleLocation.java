@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,9 @@ import java.time.LocalDateTime;
 @Getter
 public class ShuttleLocation {
     @Id
+    private String id;
+
+    @Indexed
     private long shuttleId;
 
     private double latitude;
