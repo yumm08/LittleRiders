@@ -11,4 +11,6 @@ public interface BeaconServcie {
 	Beacon findById(Long beaconId);
 
 	void save(Beacon beacon);
+
+	Beacon findByUuid(String uuid);
 }

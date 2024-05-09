@@ -1,10 +1,6 @@
 package kr.co.littleriders.backend.application.facade;
 
-import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
-import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
-import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
-import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
 import kr.co.littleriders.backend.common.fixture.*;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -14,23 +10,16 @@ import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
-import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleChildRideException;
-import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleDriveException;
-import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationException;
-import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationHistoryException;
-import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
 import kr.co.littleriders.backend.domain.terminal.TerminalService;
 import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
-import kr.co.littleriders.backend.global.entity.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,8 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -77,13 +64,7 @@ public class ShuttleFacadeTest {
     private AuthTerminal authTerminal;
 
     @Autowired
-    ShuttleLocationHistoryService shuttleLocationHistoryService;
-
-    @Autowired
     ShuttleDriveService shuttleDriveService;
-
-    @Autowired
-    ShuttleChildRideService shuttleChildRideService;
 
     @Autowired
     ShuttleLocationService shuttleLocationService;
