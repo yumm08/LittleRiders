@@ -27,7 +27,6 @@ export function MapHook(
     mapDiv: RefObject<HTMLDivElement>,
     options = DEFAULT_OPTION,
   ) => {
-    console.log('initMap')
     if (mapRef!.current) return
     mapRef!.current = new naver.maps.Map(mapDiv.current!, options)
   }
@@ -36,7 +35,6 @@ export function MapHook(
    * 초기 Polyline Overlay 생성
    */
   const initPolyLine = () => {
-    console.log('initPolyline')
     setPolyline(
       new naver.maps.Polyline({
         map: mapRef!.current!,
@@ -53,7 +51,6 @@ export function MapHook(
    * @param marker 대상이 되는 Marker
    */
   const addInfoWindow = async (marker: naver.maps.Marker, content: string) => {
-    console.log('addInfoWindow')
     const infoWindow = new naver.maps.InfoWindow({
       content: content,
       maxWidth: 140,
@@ -66,14 +63,12 @@ export function MapHook(
       pixelOffset: new naver.maps.Point(10, -5),
     })
     naver.maps.Event.addListener(marker, 'mouseover', () => {
-      console.log('mouseon')
       if (mapRef!.current) {
         infoWindow.open(mapRef!.current, marker)
       }
     })
 
     naver.maps.Event.addListener(marker, 'mouseout', () => {
-      console.log('mouseout')
       if (mapRef!.current) infoWindow.close()
     })
   }
@@ -85,8 +80,6 @@ export function MapHook(
       (arg0: never[]): void
     },
   ) => {
-    console.log('deleteMarkers')
-    console.log(markerList)
     for (let k = 0; k < markerList.length; k++) {
       markerList[k].setMap(null)
     }
@@ -136,7 +129,6 @@ export function MapHook(
    * draw polylines to represent the route
    */
   const drawPolyLines = (newPathList: naver.maps.LatLng[]) => {
-    console.log('drawPolyLines')
     if (polyline) polyline.setPath(newPathList)
   }
 

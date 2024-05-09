@@ -1,16 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import {
+  deleteRoute,
   deleteStation,
   getRouteDetail,
   getRouteList,
   getStationList,
   postRoute,
+  postRouteChild,
+  postRouteStation,
   postStation,
-  putRoute,
 } from '@apis/dispatch'
 
-import { Route } from '@types'
+import { showErrorAlert, showSuccessAlert } from '@utils/alertUtils'
+
+import { ChildtoStationArgType, Route, Station } from '@types'
 
 export const useGetRouteList = () => {
   const { data: routeList, ...rest } = useQuery({
@@ -60,19 +64,47 @@ export const usePostRoute = () => {
 
   return { addRoute, ...rest }
 }
-export const usePutRoute = () => {
+export const usePostRouteStation = () => {
   const queryClient = useQueryClient()
-  const { mutate: modifyRoute, ...rest } = useMutation({
-    mutationFn: ({ routeId, route }: { routeId: number; route: Route }) =>
-      putRoute(routeId, route),
+  const { mutate: modifyRouteStation, ...rest } = useMutation({
+    mutationFn: ({
+      routeId,
+      stationList,
+    }: {
+      routeId: number
+      stationList: Station[]
+    }) => postRouteStation(routeId, stationList),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['routeList'] })
     },
+    onError: () => {
+      showErrorAlert({ text: '오류가 발생했습니다.' })
+    },
   })
 
-  return { modifyRoute, ...rest }
+  return { modifyRouteStation, ...rest }
 }
+export const usePostRouteChild = () => {
+  const queryClient = useQueryClient()
+  const { mutate: modifyRouteChild, ...rest } = useMutation({
+    mutationFn: ({
+      routeId,
+      stationList,
+    }: {
+      routeId: number
+      stationList: ChildtoStationArgType[]
+    }) => postRouteChild(routeId, stationList),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['routeList'] })
+      showSuccessAlert({ text: '성공적으로 경로를 저장했습니다.' })
+    },
+    onError: () => {
+      showErrorAlert({ text: '오류가 발생했습니다.' })
+    },
+  })
 
+  return { modifyRouteChild, ...rest }
+}
 export const usePostStation = () => {
   const queryClient = useQueryClient()
   const { mutate: addStation, ...rest } = useMutation({
@@ -87,6 +119,10 @@ export const usePostStation = () => {
     }) => postStation(name, latitude, longitude),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['stationList'] })
+      showSuccessAlert({ text: '성공적으로 정류장을 추가했습니다.' })
+    },
+    onError: () => {
+      showErrorAlert({ text: '오류가 발생했습니다.' })
     },
   })
 
@@ -97,13 +133,17 @@ export const useModifyStation = () => {}
 
 export const useDeleteRoute = () => {
   const queryClient = useQueryClient()
-  const { mutate: removeStation, ...rest } = useMutation({
-    mutationFn: (routeId: number) => deleteStation(routeId),
+  const { mutate: removeRoute, ...rest } = useMutation({
+    mutationFn: (routeId: number) => deleteRoute(routeId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['stationList'] })
+      await queryClient.invalidateQueries({ queryKey: ['routeList'] })
+      showSuccessAlert({ text: '성공적으로 경로를 삭제했습니다.' })
+    },
+    onError: () => {
+      showErrorAlert({ text: '오류가 발생했습니다.' })
     },
   })
-  return { removeStation, ...rest }
+  return { removeRoute, ...rest }
 }
 
 export const useDeleteStation = () => {
@@ -112,6 +152,10 @@ export const useDeleteStation = () => {
     mutationFn: (stationId: number) => deleteStation(stationId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['stationList'] })
+      showSuccessAlert({ text: '성공적으로 정류장을 삭제했습니다.' })
+    },
+    onError: () => {
+      showErrorAlert({ text: '오류가 발생했습니다.' })
     },
   })
 

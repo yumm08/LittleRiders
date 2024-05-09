@@ -1,49 +1,49 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useState } from 'react'
 
-import SortableContainer from '@components/Dispatch/SortableContainer'
-import { SortableItem } from '@components/Dispatch/SortableItem'
-import Button from '@components/Shared/Button'
+import {
+  RouteDetailChild,
+  RouteDetailSlideFooter,
+  RouteDetailSlideHeader,
+  RouteDetailStation,
+} from '@components/Dispatch'
 
 import { useFetchChildList } from '@hooks/child'
 import {
+  useDeleteStation,
   useGetRouteDetail,
-  useGetStationList, // usePutRoute,
-} from '@hooks/dispatch/dispatch'
+  useGetStationList, // usePostRouteChild,
+  usePostRouteStation, // usePutRoute,
+} from '@hooks/dispatch'
 import '@hooks/map'
 import { MapHook } from '@hooks/map'
 
 import {
-  handleChildDragCancel,
-  handleChildDragEnd,
-  handleChildDragOver,
-  handleChildDragStart,
-  handleStationDragCancel,
-  handleStationDragEnd,
-  handleStationDragOver,
-  handleStationDragStart,
-} from '@utils/dndUtils'
-
-import {
-  DndContext,
-  DragOverlay,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
   UniqueIdentifier,
-  closestCorners,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { ChildInfo, Station } from '@types'
+import { ChildInfo, ChildtoStationArgType, Station } from '@types'
 
 interface Props {
   selectedRouteId: number
-  mapDiv: RefObject<HTMLDivElement>
+  selectedRouteName: string
+  setSelectedRouteId: React.Dispatch<React.SetStateAction<number>>
+  mapRef: RefObject<naver.maps.Map>
+  handleAddButton: () => void
 }
 
 // TODO : 함수 분리 해야 한다. Refactor coming soon...
-export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
+export default function RouteDetailSlide({
+  mapRef,
+  selectedRouteId,
+  selectedRouteName,
+  setSelectedRouteId,
+  handleAddButton,
+}: Props) {
   const [activeStationId, setActiveStationId] = useState<UniqueIdentifier>()
   const [activeStationName, setActiveStationName] = useState<string>('')
   const [stationItems, setStationItems] = useState<{
@@ -58,7 +58,6 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   const [selectedStation, setSelectedStation] = useState<number>(-1)
   // const [hoveredStation, setHoveredStation] = useState<number>(-1)
   const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
-  const mapRef = useRef<naver.maps.Map | null>(null)
   const [selectedStationMarker, setSelectedStationMarker] = useState<
     naver.maps.Marker[]
   >([])
@@ -71,16 +70,12 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
 
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
   const { childList, isLoading: isChildListLoading } = useFetchChildList()
-  // const { modifyRoute } = usePutRoute()
+  const { removeStation } = useDeleteStation()
+  // const { modifyRouteChild } = usePostRouteChild()
+  const { modifyRouteStation } = usePostRouteStation()
 
-  const {
-    drawRoute,
-    initMap,
-    initPolyLine,
-    drawRouteMarkers,
-    deleteMarkers,
-    moveMap,
-  } = MapHook(mapRef)
+  const { drawRoute, initPolyLine, drawRouteMarkers, deleteMarkers, moveMap } =
+    MapHook(mapRef)
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -120,16 +115,57 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       moveMap(new naver.maps.LatLng(station.latitude!, station.longitude!))
     }
   }
+  const handleStationRemoveClick = (
+    e: React.MouseEvent<SVGElement, MouseEvent>,
+    id: UniqueIdentifier,
+  ) => {
+    e.stopPropagation()
+    if (Number(id.toString()) === selectedStation) {
+      deleteMarkers(selectedStationMarker, setSelectedStationMarker)
+      setSelectedStation(-1)
+    }
+    removeStation(Number(id.toString()))
+  }
 
   const handleStationItemHover = () => {}
 
   const handleModifyClick = () => {
-    //   const childStation = []
-    //   stationItems.stationList.forEach((station) => {})
-    //   modifyRoute()
+    const stationListTemp: Station[] = []
+    const stationListChildListTemp: ChildtoStationArgType[] = []
+    const selectedStationListTemp = stationItems.selectedStationList
+    for (let k = 0; k < selectedStationListTemp.length; k++) {
+      stationListTemp.push({
+        id: selectedStationListTemp[k].id,
+        visitOrder: k,
+      })
+      const academyChildIdList: number[] = []
+      if (selectedStationListTemp[k].childList) {
+        for (let s = 0; s < selectedStationListTemp[k].childList!.length; s++) {
+          academyChildIdList.push(
+            selectedStationListTemp[k].childList![s].academyChildId,
+          )
+        }
+      }
+      stationListChildListTemp.push({
+        stationId: selectedStationListTemp[k].id,
+        academyChildIdList: academyChildIdList,
+      })
+    }
+
+    modifyRouteStation({
+      routeId: Number(selectedRouteId.toString()),
+      stationList: stationListTemp,
+    })
+
+    // modifyRouteChild({
+    //   routeId: Number(selectedRouteId.toString()),
+    //   stationList: stationListChildListTemp,
+    // })
   }
 
-  const handleCancelClick = () => {}
+  const handleCancelClick = () => {
+    setSelectedRouteId(-1)
+  }
 
   useEffect(() => {
     if (stationItems.selectedStationList) {
@@ -201,7 +237,7 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRouteDetailLoading, isStationListLoading, selectedRouteId])
+  }, [isRouteDetailLoading, isStationListLoading, selectedRouteId, stationList])
 
   // 초기 ChildList 구현
   useEffect(() => {
@@ -233,115 +269,54 @@ export default function ItemListView({ mapDiv, selectedRouteId }: Props) {
   }, [childItems['selectedChildList']])
 
   useEffect(() => {
-    initMap(mapDiv)
     initPolyLine()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <div className="mx-auto flex h-[350px] w-[1536px] justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={(e) => {
-          handleStationDragStart(
-            e,
-            stationItems,
-            setActiveStationId,
-            setActiveStationName,
-          )
-        }}
-        onDragOver={(e) => {
-          handleStationDragOver(
-            e,
-            stationItems,
-            setActiveStationId,
-            setStationItems,
-          )
-        }}
-        onDragEnd={(e) => {
-          handleStationDragEnd(e, stationItems, setStationItems)
-        }}
-        onDragCancel={() => handleStationDragCancel(setActiveStationId)}
-      >
-        <SortableContainer
-          subject="전체 정류장"
-          id="stationList"
-          selectedStation={selectedStation}
-          items={stationItems['stationList']}
-          isLoading={isStationListLoading}
-          isPending={isRouteDetailPending}
-          onClick={handleStationItemClick}
-          onHover={handleStationItemHover}
-        />
-        <SortableContainer
-          subject="선택된 정류장"
-          id="selectedStationList"
-          selectedStation={selectedStation}
-          items={stationItems['selectedStationList']}
-          isLoading={isRouteDetailLoading}
-          isPending={isRouteDetailPending}
-          onClick={handleStationItemClick}
-        />
-        <DragOverlay>
-          <SortableItem
-            id={activeStationId!}
-            name={activeStationName}
-            index={0}
+    <div className="mx-auto mt-[120px] flex h-[calc(100%-120px)] flex-col justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
+      <RouteDetailSlideHeader
+        selectedRouteName={selectedRouteName}
+        handleAddButton={handleAddButton}
+      />
+      <div className="flex grow">
+        <div className="flex-col">
+          <RouteDetailStation
+            sensors={sensors}
+            stationItems={stationItems}
+            setActiveStationId={setActiveStationId}
+            setActiveStationName={setActiveStationName}
+            setStationItems={setStationItems}
+            isRouteDetailLoading={isRouteDetailLoading}
+            isRouteDetailPending={isRouteDetailPending}
+            activeStationId={activeStationId}
+            activeStationName={activeStationName}
+            selectedStation={selectedStation}
+            isStationListLoading={isStationListLoading}
+            handleStationItemClick={handleStationItemClick}
+            handleStationRemoveClick={handleStationRemoveClick}
+            handleStationItemHover={handleStationItemHover}
           />
-        </DragOverlay>
-      </DndContext>
-      <div className=" flex-row justify-center  self-center">
-        <div className="m-1 mb-3">
-          <Button color="px-3 bg-lightgreen " onClick={handleModifyClick}>
-            수정
-          </Button>
         </div>
-        <div className="m-1 mt-3">
-          <Button color="px-3 bg-yellow" onClick={handleCancelClick}>
-            취소
-          </Button>
+        <div className="h-full flex-row">
+          <RouteDetailChild
+            sensors={sensors}
+            childItems={childItems}
+            setActiveChildId={setActiveChildId}
+            setActiveChildName={setActiveChildName}
+            setChildItems={setChildItems}
+            childDragDisabled={childDragDisabled}
+            isRouteDetailLoading={isRouteDetailLoading}
+            isRouteDetailPending={isRouteDetailPending}
+            activeChildId={activeChildId}
+            activeChildName={activeChildName}
+          />
         </div>
       </div>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={(e) => {
-          handleChildDragStart(
-            e,
-            childItems,
-            setActiveChildId,
-            setActiveChildName,
-          )
-        }}
-        onDragOver={(e) => {
-          handleChildDragOver(e, childItems, setActiveChildId, setChildItems)
-        }}
-        onDragEnd={(e) => {
-          handleChildDragEnd(e, childItems, setChildItems)
-        }}
-        onDragCancel={() => handleChildDragCancel(setActiveChildId)}
-      >
-        <SortableContainer
-          subject="모든 어린이"
-          id="childList"
-          items={childItems['childList']}
-          isDisabled={childDragDisabled}
-          isLoading={isRouteDetailLoading}
-          isPending={isRouteDetailPending}
-        />
-        <SortableContainer
-          subject="하차할 어린이"
-          id="selectedChildList"
-          items={childItems['selectedChildList']}
-          isDisabled={childDragDisabled}
-          isLoading={isRouteDetailLoading}
-          isPending={isRouteDetailPending}
-        />
-        <DragOverlay>
-          <SortableItem id={activeChildId!} name={activeChildName} index={0} />
-        </DragOverlay>
-      </DndContext>
+      <RouteDetailSlideFooter
+        handleModifyClick={handleModifyClick}
+        handleCancelClick={handleCancelClick}
+      />
     </div>
   )
 }
