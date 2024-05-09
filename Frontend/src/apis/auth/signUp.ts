@@ -2,7 +2,7 @@ import axiosInstance from '@utils/httpCommons'
 
 import { SignUpInfo } from '@types'
 
-const BASE_URL = 'academy/account'
+const BASE_URL = 'account'
 
 /**
  * 회원가입 API 요청 함수
