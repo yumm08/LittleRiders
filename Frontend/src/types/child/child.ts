@@ -38,6 +38,9 @@ export type ChildRegistInfo = {
   phoneNumber: string
   address: string
   beaconId: number
-  image: File
-  memo: string
+  image: File | null
+  memo: string | null
+}
+export type ChildRegistFormInfo = ChildRegistInfo & {
+  image: File[] | null
 }
