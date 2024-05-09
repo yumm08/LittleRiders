@@ -6,7 +6,6 @@ import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
 import SignInPage from '@pages/SignInPage'
 import SignUpPage from '@pages/SignUpPage'
-import StationPage from '@pages/StationPage'
 
 import ProtectedRoute from '@routes/ProtectedRoute'
 import App from 'App'
@@ -46,10 +45,6 @@ const router = createBrowserRouter([
               {
                 path: 'dispatch',
                 element: <DispatchPage />,
-              },
-              {
-                path: 'dispatch/station',
-                element: <StationPage />,
               },
               {
                 path: 'operate',

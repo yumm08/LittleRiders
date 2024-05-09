@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react'
 
-import Logo from '@assets/Mock/Logo.jpg'
+import Logo from '@assets/Mock/Logo.webp'
 import { DriverCardType } from '@types'
 import { MdCancel } from 'react-icons/md'
 
@@ -19,9 +19,10 @@ export default function DriverCard({ data }: Props) {
       />
       <div>
         <img
-          className="h-[150px] w-full rounded-md border-2 border-slate-300 "
+          className="h-[150px] w-[150px] rounded-md border-2 border-slate-300 "
           src={data.imagePath}
           onError={addDefaultImage}
+          alt="기본 이미지"
         ></img>
       </div>
       <div className="flex items-center justify-between pt-1">

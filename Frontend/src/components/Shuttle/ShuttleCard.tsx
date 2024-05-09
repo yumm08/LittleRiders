@@ -2,7 +2,7 @@ import { SyntheticEvent } from 'react'
 
 import Button from '@components/Shared/Button'
 
-import Logo from '@assets/Mock/Logo.jpg'
+import Logo from '@assets/Mock/Logo.webp'
 import { Shuttle } from '@types'
 import { useNavigate } from 'react-router'
 
@@ -21,7 +21,7 @@ export default function ShuttleCard({ data }: Props) {
     <div className="w-[150px] flex-col items-center justify-center">
       <div className="relative">
         <img
-          className="w-full rounded-md border-2 border-slate-300"
+          className="h-[150px] w-[150px] rounded-md border-2 border-slate-300"
           src={data.imagePath}
           alt="이미지"
           onError={addDefaultImage}

@@ -1,7 +1,7 @@
 import axiosInstance from '@utils/httpCommons'
 
-const BASE_URL = 'academy'
+import API from '@constants/api'
 
 export const getDriveHistoryList = async (shuttleId: number) => {
-  return await axiosInstance.get(`${BASE_URL}/shuttle/${shuttleId}/history`)
+  return await axiosInstance.get(`${API.BASE_URL}/history/shuttle/${shuttleId}`)
 }
