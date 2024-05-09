@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import ChildList from '@pages/ChildPage/ChildList'
-
 import RealTimeMap from '@components/Main/RealTimeMap'
 import ShuttleInfo from '@components/Main/ShuttleInfo'
 import Spacing from '@components/Shared/Spacing'
 
 import { useFetchShuttleList } from '@hooks/shuttle'
 
-import Page from '@layouts/Page'
 import { AcademyShuttle } from '@types'
 
-export default function HomePage() {
+export default function MainPage() {
   const [selectedShuttle, setSelectedShuttle] = useState<AcademyShuttle>(null!)
   const { shuttleList, isLoading } = useFetchShuttleList()
 
@@ -33,20 +30,15 @@ export default function HomePage() {
     <>
       <Spacing style="h-[120px]" />
 
-      <div className="flex h-1/2 w-full border-b-2">
-        {selectedShuttle && <ShuttleInfo selectedShuttle={selectedShuttle} />}
-        {selectedShuttle && (
-          <RealTimeMap
-            shuttleList={shuttleList}
-            selectedShuttle={selectedShuttle}
-            onSelect={handleShuttleButtonClick}
-          />
-        )}
-      </div>
+      <div className="flex h-[calc(100%-120px)] w-full border-b-2">
+        {<ShuttleInfo selectedShuttle={selectedShuttle} />}
 
-      <Page>
-        <ChildList />
-      </Page>
+        <RealTimeMap
+          shuttleList={shuttleList}
+          selectedShuttle={selectedShuttle}
+          onSelect={handleShuttleButtonClick}
+        />
+      </div>
     </>
   )
 }
