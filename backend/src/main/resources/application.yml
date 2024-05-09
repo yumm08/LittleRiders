@@ -20,3 +20,8 @@ spring:
 
   resource:
     directory: .
+
+  sms:
+    key: ${SMS_KEY}
+    secret: ${SMS_SECRET}
+    sender: ${SMS_SENDER}

@@ -6,10 +6,7 @@ import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
 import kr.co.littleriders.backend.global.entity.Gender;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -31,6 +28,7 @@ public enum AcademyChildFixture {
     private Gender gender;
     private String imagePath;
     private String beaconNumber;
+    @Setter
     private String phoneNumber;
     private String memo;
 
