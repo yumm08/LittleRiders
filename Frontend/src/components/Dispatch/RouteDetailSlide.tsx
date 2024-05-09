@@ -1,9 +1,11 @@
 import { RefObject, useEffect, useState } from 'react'
 
-import { RouteDetailChild } from '@components/Dispatch'
-import { RouteDetailSlideFooter } from '@components/Dispatch'
-import { RouteDetailSlideHeader } from '@components/Dispatch'
-import { RouteDetailStation } from '@components/Dispatch'
+import {
+  RouteDetailChild,
+  RouteDetailSlideFooter,
+  RouteDetailSlideHeader,
+  RouteDetailStation,
+} from '@components/Dispatch'
 
 import { useFetchChildList } from '@hooks/child'
 import {

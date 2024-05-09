@@ -59,7 +59,7 @@ export default function RouteListAddItem({
           추가
         </button>
         <button
-          className="transition-allease-in-out ms-1 rounded-md px-2 py-1  hover:bg-yellow active:border-red active:bg-red"
+          className="ms-1 rounded-md px-2 py-1 transition-all ease-in-out  hover:bg-yellow active:border-red active:bg-red"
           onClick={handleCancelAddClick}
         >
           삭제
