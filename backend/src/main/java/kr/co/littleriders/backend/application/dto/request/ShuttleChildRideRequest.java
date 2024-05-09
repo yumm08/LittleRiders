@@ -1,6 +1,5 @@
 package kr.co.littleriders.backend.application.dto.request;
 
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleChildRide;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,9 @@ public class ShuttleChildRideRequest {
     private double latitude;
     private double longitude;
 
-    public ShuttleChildRide toShuttleChildRide(long shuttleId, long childId) {
-        return ShuttleChildRide.of(shuttleId, childId, this.latitude, this.longitude);
-    }
+    //주석처리 - 김도현
+
+//    public ShuttleChildRide toShuttleChildRide(long shuttleId, long childId) {
+//        return ShuttleChildRide.of(shuttleId, childId, this.latitude, this.longitude);
+//    }
 }

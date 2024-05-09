@@ -69,7 +69,7 @@ public class ShuttleController {
     // 원생 승하차
     @PostMapping("/child/ride")
     public ResponseEntity<Void> recordChildRiding(@Auth AuthTerminal authTerminal, @RequestBody ShuttleChildRideRequest rideRequest) {
-        shuttleFacade.recordChildRiding(authTerminal, rideRequest);
+//        shuttleFacade.recordChildRiding(authTerminal, rideRequest);//주석처리 - 김도현
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

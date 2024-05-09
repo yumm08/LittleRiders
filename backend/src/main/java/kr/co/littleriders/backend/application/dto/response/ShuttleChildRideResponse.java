@@ -1,13 +1,14 @@
+/*//주석처리 - 김도현
 package kr.co.littleriders.backend.application.dto.response;
 
-import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleChildRide;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleChildRideStatus;
-import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleChildRideErrorCode;
-import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleChildRideException;
+        import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
+        import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleChildRide;
+        import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleChildRideStatus;
+        import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleChildRideErrorCode;
+        import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleChildRideException;
 
-import java.time.LocalDateTime;
-import java.util.List;
+        import java.time.LocalDateTime;
+        import java.util.List;
 
 public class ShuttleChildRideResponse {
     private String name;
@@ -39,3 +40,4 @@ public class ShuttleChildRideResponse {
         return response;
     }
 }
+*/

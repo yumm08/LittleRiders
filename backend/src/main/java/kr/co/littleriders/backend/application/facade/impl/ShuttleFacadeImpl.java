@@ -16,18 +16,21 @@ import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
 import kr.co.littleriders.backend.domain.history.ShuttleDriveHistoryService;
-import kr.co.littleriders.backend.domain.history.entity.ShuttleDriveHistory;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
-import kr.co.littleriders.backend.domain.shuttle.*;
-import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
-import kr.co.littleriders.backend.domain.shuttle.entity.*;
+import kr.co.littleriders.backend.domain.shuttle.DriveUniqueKeyService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
+import kr.co.littleriders.backend.domain.shuttle.entity.DriveUniqueKey;
+import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrive;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
-import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
@@ -54,10 +57,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final AcademyChildService academyChildService;
 
     private final ShuttleLocationService shuttleLocationService;
-    private final ShuttleLocationHistoryService shuttleLocationHistoryService;
     private final ShuttleDriveService shuttleDriveService;
     private final DriveUniqueKeyService driveUniqueKeyService;
-    private final ShuttleChildRideService shuttleChildRideService;
     private final SseFacade sseFacade;
     private final SmsFetchAPI smsFetchAPI;
 
@@ -164,16 +165,16 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         //TODO - 김도현 - ifnotexists then throw error
 
         //실시간 위도 경도 정보
-        ShuttleLocationHistory shuttleLocationHistory = shuttleLocationHistoryService.findByShuttleId(shuttleId);
+//        ShuttleLocationHistory shuttleLocationHistory = shuttleLocationHistoryService.findByShuttleId(shuttleId);//주석처리 - 김도현
         //실시간 운행자 정보
         ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
 
         //실시간 어린이 승하차 내역
-        ShuttleChildRide shuttleChildRide = shuttleChildRideService.findByShuttleId(shuttleId);
+//        ShuttleChildRide shuttleChildRide = shuttleChildRideService.findByShuttleId(shuttleId);//주석처리 - 김도현
         //dto 변환
-        List<ShuttleLocationDTO> shuttleLocationDTOList = shuttleLocationHistory.getLocationInfoList()
-                .stream().map(ShuttleLocationDTO::from)
-                .toList();
+//        List<ShuttleLocationDTO> shuttleLocationDTOList = shuttleLocationHistory.getLocationInfoList()//주석처리 - 김도현
+//                .stream().map(ShuttleLocationDTO::from)//주석처리 - 김도현
+//                .toList();
         long driverId = shuttleDrive.getDriverId();
         long teacherId = shuttleDrive.getTeacherId();
 
@@ -182,25 +183,25 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         Shuttle shuttle  = shuttleService.findById(shuttleId);
         LocalDateTime start = shuttleDrive.getTime();
         LocalDateTime end = LocalDateTime.now();
-        ShuttleDriveHistory shuttleDriveHistory = ShuttleDriveHistory.of(
-                start,
-                end,
-                shuttle,
-                driver,
-                teacher,
-                shuttleLocationDTOList);
+//        ShuttleDriveHistory shuttleDriveHistory = ShuttleDriveHistory.of(
+//                start,
+//                end,
+//                shuttle,
+//                driver,
+//                teacher,
+//                shuttleLocationDTOList); //주석처리 - 김도현
 
         //TODO - 김도현 - 어린이 저장 및 정상 종료 여부 확인하기
         //mongoDB 에 저장
-        shuttleDriveHistoryService.save(shuttleDriveHistory);
+//        shuttleDriveHistoryService.save(shuttleDriveHistory);//주석처리 - 김도현
 
         //현재 위치도 지워버려야함
-        shuttleLocationHistoryService.delete(shuttleLocationHistory);
-        shuttleDriveService.delete(shuttleDrive);
-        shuttleChildRideService.delete(shuttleChildRide);
-
-        ShuttleLocation shuttleLocation = shuttleLocationService.findByShuttleId(shuttleId);
-        shuttleLocationService.delete(shuttleLocation);
+//        shuttleLocationHistoryService.delete(shuttleLocationHistory);//주석처리 - 김도현
+//        shuttleDriveService.delete(shuttleDrive);//주석처리 - 김도현
+//        shuttleChildRideService.delete(shuttleChildRide);//주석처리 - 김도현
+//
+//        ShuttleLocation shuttleLocation = shuttleLocationService.findByShuttleId(shuttleId);//주석처리 - 김도현
+//        shuttleLocationService.delete(shuttleLocation);//주석처리 - 김도현
 
         //TODO - 김도현: 어린이 삭제 필요
 
@@ -209,21 +210,21 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
 
-    @Override
-    public ShuttleChildRideResponse recordChildRiding(AuthTerminal authTerminal, ShuttleChildRideRequest rideRequest) {
-
-        long shuttleId = authTerminal.getShuttleId();
-
-        // TODO: 졸업을 한 아이에 대한 valid check 추가
-
-        // AcademyChild academyChild = academyChildService.findByBeaconNumber(rideRequest.getBeaconNumber());
-        //TODO - HOTFIX - 이수현 - 수정 필요. ShuttleChildRide 가 필요없어짐.
-        ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, 0);
-        shuttleChildRideService.save(shuttleChildRide);
-
-        // return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
-        return null;
-    }
+//    @Override//주석처리 - 김도현
+//    public ShuttleChildRideResponse recordChildRiding(AuthTerminal authTerminal, ShuttleChildRideRequest rideRequest) {
+//
+//        long shuttleId = authTerminal.getShuttleId();
+//
+//        // TODO: 졸업을 한 아이에 대한 valid check 추가
+//
+//        // AcademyChild academyChild = academyChildService.findByBeaconNumber(rideRequest.getBeaconNumber());
+//        //TODO - HOTFIX - 이수현 - 수정 필요. ShuttleChildRide 가 필요없어짐.
+////        ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, 0);//주석처리 - 김도현
+////        shuttleChildRideService.save(shuttleChildRide);//주석처리 - 김도현
+//
+//        // return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
+//        return null;
+//    }
 
 
     @Override
@@ -234,6 +235,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         ShuttleLocation location = locationRequest.toShuttleLocation(shuttleId);
         shuttleLocationService.save(location);
 
+        /* //주석처리 - 김도현
         ShuttleLocationHistory locationHistory;
 
         if (shuttleLocationHistoryService.existsByShuttleId(shuttleId)) {
@@ -246,7 +248,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
             locationHistory = locationRequest.toShuttleLocationHistory(shuttleId);
         }
 
-        shuttleLocationHistoryService.save(locationHistory);
+        shuttleLocationHistoryService.save(locationHistory);*/
         sseFacade.broadcastShuttleLocation(shuttleId,locationRequest);
 
     }
