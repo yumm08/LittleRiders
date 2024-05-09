@@ -1,5 +1,7 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import kr.co.littleriders.backend.application.client.SmsFetchAPI;
+import kr.co.littleriders.backend.application.client.SmsSendClientRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
@@ -19,10 +21,8 @@ import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
+import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
+import kr.co.littleriders.backend.domain.shuttle.*;
 import kr.co.littleriders.backend.domain.shuttle.dto.ShuttleLocationDTO;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
@@ -37,8 +37,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,8 +56,10 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final ShuttleLocationService shuttleLocationService;
     private final ShuttleLocationHistoryService shuttleLocationHistoryService;
     private final ShuttleDriveService shuttleDriveService;
+    private final DriveUniqueKeyService driveUniqueKeyService;
     private final ShuttleChildRideService shuttleChildRideService;
     private final SseFacade sseFacade;
+    private final SmsFetchAPI smsFetchAPI;
 
 
     private final ShuttleDriveHistoryService shuttleDriveHistoryService;
@@ -118,14 +122,39 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         }
 
         Shuttle shuttle = shuttleService.findById(shuttleId);
+        Teacher teacher = teacherService.findById(startRequest.getTeacherId());
+        Driver driver = driverService.findById(startRequest.getDriverId());
         Route route = routeService.findById(startRequest.getRouteId());
 
         if (!Objects.equals(shuttle.getAcademy().getId(), route.getAcademy().getId())) {
             throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
         }
 
+        // 셔틀 정보 저장
         ShuttleDrive shuttleDrive = startRequest.toShuttleDrive(shuttleId);
         shuttleDriveService.save(shuttleDrive);
+
+        // 탑승 원생 리스트
+        List<AcademyChild> academyChildList = route.getRouteStationList().stream()
+                .flatMap(station -> station.getChildBoardInfoList().stream())
+                .map(ChildBoardDropInfo::getAcademyChild)
+                .toList();
+
+        List<SmsSendClientRequest> smsSendClientRequestList = new ArrayList<>();
+
+        academyChildList.forEach(academyChild -> {
+            String uuid = UUID.randomUUID().toString();
+            long academyChildId = academyChild.getAcademy().getId();
+            DriveUniqueKey driveUniqueKey = DriveUniqueKey.of(uuid, shuttleId, academyChildId);
+            driveUniqueKeyService.save(driveUniqueKey);
+
+            smsSendClientRequestList.add(SmsSendClientRequest.toStartDriveMessage(
+                    uuid, academyChild, teacher, driver, shuttle
+            ));
+        });
+
+        // 운행 시작 sms 발송
+        smsFetchAPI.sendLMS(smsSendClientRequestList);
     }
 
     @Override
