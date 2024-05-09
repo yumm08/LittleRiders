@@ -10,7 +10,9 @@ public interface AcademyChildFacade {
 
     List<AcademyChildResponse> getAcademyChildListByAcademyId(Long academyId);
 
-    Long updateAcademyChild(Long academyId, Long academyChildId, String status);
+    Long updateAcademyChildStatus(Long academyId, Long academyChildId, String status);
+
+    Long updateAcademyChild(Long academyId, Long academyChildId );
 
     AcademyChildDetailResponse getAcademyChildDetail(Long academyId, Long academyChildId);
 

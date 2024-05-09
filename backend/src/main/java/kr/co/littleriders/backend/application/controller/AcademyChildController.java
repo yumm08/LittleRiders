@@ -41,7 +41,6 @@ public class AcademyChildController {
         return ResponseEntity.ok().body(academyChildDetailResponse);
     }
 
-    //TODO - HOTFIX-이윤지 수정 필요 - 학원 아이 등록
     @PostMapping
     public ResponseEntity<Long> addAcademyChild(@Auth AuthAcademy authAcademy, @ModelAttribute @Valid CreateAcademyChildRequest createAcademyChildRequest) {
 
@@ -51,6 +50,17 @@ public class AcademyChildController {
         return ResponseEntity.ok().body(createChildId);
     }
 
+    @PutMapping("/{academyChildId}/status")
+    public ResponseEntity<Long> editAcademyChildStatus(@Auth AuthAcademy authAcademy,
+                                                     @PathVariable(value = "academyChildId") Long academyChildId,
+                                                     @RequestBody UpdateAcademyChildRequest updateAcademyChildRequest) {
+
+        Long academyId = authAcademy.getId();
+        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, updateAcademyChildRequest.getStatus());
+
+        return ResponseEntity.ok().body(updateChildId);
+    }
+
     //TODO-이윤지-요구사항 변경으로 인한 수정 필드 추가
     @PutMapping("/{academyChildId}")
     public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy,
@@ -58,7 +68,7 @@ public class AcademyChildController {
                                                 @RequestBody UpdateAcademyChildRequest updateAcademyChildRequest) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, updateAcademyChildRequest.getStatus());
+        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, updateAcademyChildRequest.getStatus());
 
         return ResponseEntity.ok().body(updateChildId);
     }

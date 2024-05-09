@@ -45,24 +45,16 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
     @Override
     public AcademyChildDetailResponse getAcademyChildDetail(Long academyId, Long academyChildId) {
-        //TODO - HOTFIX-이윤지 수정 필요 - 학원아이 디테일 정보 반환해야함. ATTENDING 상관 X
 
-//        Academy academy = academyService.findById(academyId);
-//        AcademyChild academyChild = academyChildService.findById(academyChildId);
-//        if (!academyChild.equalsAcademy(academy)) {
-//            throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
-//        }
-//
-//        AcademyChildDetailResponse childDetail;
-//        ChildHistory childHistory = childHistoryService.findByCreatedAt(academyChild);
-//        if (academyChild.isFamilyAvail()) {
-//            childDetail = AcademyChildDetailResponse.of(childHistory, null, academyChild);
-//        } else {
-//            FamilyHistory familyHistory = familyHistoryService.findByCreatedAt(academyChild.getAcademyFamily());
-//            childDetail = AcademyChildDetailResponse.of(childHistory, familyHistory, academyChild);
-//        }
+       Academy academy = academyService.findById(academyId);
+       AcademyChild academyChild = academyChildService.findById(academyChildId);
+       if (!academyChild.equalsAcademy(academy)) {
+           throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
+       }
 
-        return null;
+       AcademyChildDetailResponse childDetail = AcademyChildDetailResponse.from(academyChild);
+
+        return childDetail;
     }
 
     @Override
@@ -76,24 +68,24 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         return academyChildService.save(academyChild);
     }
 
-
-    //TODO - HOTFIX-이윤지 수정 필요 - status 만 업데이트 할게 아닌 다른 정보도 업데이트 해야함 Attending 상관없음 (김도현)
     @Override
-    public Long updateAcademyChild(Long academyId, Long academyChildId, String status) {
+    public Long updateAcademyChildStatus(Long academyId, Long academyChildId, String status) {
 
         Academy academy = academyService.findById(academyId);
-
         AcademyChild academyChild = academyChildService.findById(academyChildId);
         if (!academyChild.equalsAcademy(academy)) {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
-        //여기에 로직 추가
         academyChildService.save(academyChild);
 
         return academyChild.getId();
     }
 
-
+    //TODO - HOTFIX-이윤지 수정 필요 - status 만 업데이트 할게 아닌 다른 정보도 업데이트 해야함 Attending 상관없음 (김도현)
+    @Override
+    public Long updateAcademyChild(Long academyId, Long academyChildId) {
+        return null;
+    }
 
 }
