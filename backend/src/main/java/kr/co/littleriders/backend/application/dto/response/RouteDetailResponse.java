@@ -43,8 +43,8 @@ public class RouteDetailResponse {
     @Getter
     @AllArgsConstructor
     public static class StationInfo {
-        private Long stationId;
-        private String stationName;
+        private Long id;
+        private String name;
         private Double latitude;
         private Double longitude;
         private Integer visitOrder;
