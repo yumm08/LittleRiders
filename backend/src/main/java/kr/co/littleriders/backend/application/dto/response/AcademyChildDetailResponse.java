@@ -24,14 +24,14 @@ public class AcademyChildDetailResponse {
 
 	private String childStatus;
 
-	private String beconNumber;
+	private String beconUUID;
 
 	private String familyName;
 
 	private String familyPhoneNumber;
 
 	private AcademyChildDetailResponse(Long academyChildId, String name, LocalDate birthDate, String gender,
-		String imagePath, String address, String status, String beconNumber, String familyName, String phoneNumber) {
+		String imagePath, String address, String status, String beconUUID, String familyName, String phoneNumber) {
 		this.academyChildId = academyChildId;
 		this.name = name;
 		this.birthDate = birthDate;
@@ -39,7 +39,7 @@ public class AcademyChildDetailResponse {
 		this.imagePath = imagePath;
 		this.address = address;
 		this.childStatus = status;
-		this.beconNumber = beconNumber;
+		this.beconUUID = beconUUID;
 		this.familyName = familyName;
 		this.familyPhoneNumber = phoneNumber;
 	}
@@ -52,7 +52,7 @@ public class AcademyChildDetailResponse {
 											academyChild.getImagePath(),
 											academyChild.getAddress(),
 											academyChild.getStatus().name(),
-											academyChild.getBeaconNumber(),
+											academyChild.getBeacon().getUuid(),
 											academyChild.getFamilyName(),
 											academyChild.getPhoneNumber());
 	}
