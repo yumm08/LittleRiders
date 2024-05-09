@@ -17,3 +17,9 @@ export type AcademyShuttle = {
   terminalNumber: string
   status: ShuttleStatus
 }
+
+export type LocationInfo = {
+  latitude: number
+  longitude: number
+  speed: number
+}
