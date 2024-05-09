@@ -69,7 +69,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
     @Override
     public Long updateAcademyChildStatus(Long academyId, Long academyChildId, String status) {
-
+        // TODO-이윤지-attending->leave/graduate로 변경시 비콘 상태도 바뀌어야 함..!!
         Academy academy = academyService.findById(academyId);
         AcademyChild academyChild = academyChildService.findById(academyChildId);
         if (!academyChild.equalsAcademy(academy)) {
