@@ -76,6 +76,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
             throw AcademyChildException.from(AcademyChildErrorCode.ILLEGAL_ACCESS);
         }
 
+        academyChild.updateStatus(AcademyChildStatus.valueOf(status));
         academyChildService.save(academyChild);
 
         return academyChild.getId();

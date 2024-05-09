@@ -60,7 +60,6 @@ public class AcademyChildController {
         return ResponseEntity.ok().body(updateChildId);
     }
 
-    //TODO-이윤지-요구사항 변경으로 인한 수정 필드 추가
     @PutMapping("/{academyChildId}")
     public ResponseEntity<Long> editAcademyChild(@Auth AuthAcademy authAcademy,
                                                 @PathVariable(value = "academyChildId") Long academyChildId,
