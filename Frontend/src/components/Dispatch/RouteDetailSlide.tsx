@@ -1,19 +1,19 @@
 import { RefObject, useEffect, useState } from 'react'
 
+import { RouteDetailChild } from '@components/Dispatch'
+import { RouteDetailSlideFooter } from '@components/Dispatch'
+import { RouteDetailSlideHeader } from '@components/Dispatch'
+import { RouteDetailStation } from '@components/Dispatch'
+
 import { useFetchChildList } from '@hooks/child'
 import {
   useDeleteStation,
   useGetRouteDetail,
   useGetStationList, // usePostRouteChild,
   usePostRouteStation, // usePutRoute,
-} from '@hooks/dispatch/dispatch'
+} from '@hooks/dispatch'
 import '@hooks/map'
 import { MapHook } from '@hooks/map'
-
-import RouteDetailChild from './RouteDetailChild'
-import RouteDetailSlideFooter from './RouteDetailSlideFooter'
-import RouteDetailSlideHeader from './RouteDetailSlideHeader'
-import RouteDetailStation from './RouteDetailStation'
 
 import {
   KeyboardSensor,
@@ -150,7 +150,6 @@ export default function RouteDetailSlide({
       })
     }
 
-    console.log(stationListTemp)
     modifyRouteStation({
       routeId: Number(selectedRouteId.toString()),
       stationList: stationListTemp,

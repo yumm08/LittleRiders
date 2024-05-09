@@ -55,8 +55,6 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
         )
       }
     })
-    console.log(fullAddress)
-    console.log(data)
   }
 
   const handleAddStation = () => {
@@ -66,8 +64,6 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
       })
     } else {
       if (centerLatLng) {
-        console.log(input)
-        console.log(centerLatLng)
         addStation({
           name: input,
           latitude: centerLatLng.y,
@@ -83,7 +79,6 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
   useEffect(() => {
     naver.maps.Event.addListener(mapRef.current, 'dragend', () => {
       const latLng = mapRef.current!.getCenter()
-      console.log(latLng)
       if (latLng) {
         setCenterLatLng(new naver.maps.LatLng(latLng.y, latLng.x))
         naver.maps.Service.reverseGeocode(
@@ -101,7 +96,6 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
       }
     })
     const latLng = mapRef.current!.getCenter()
-    console.log(latLng)
     if (latLng) {
       setCenterLatLng(new naver.maps.LatLng(latLng.y, latLng.x))
       naver.maps.Service.reverseGeocode(

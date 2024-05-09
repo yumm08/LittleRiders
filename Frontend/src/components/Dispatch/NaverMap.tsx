@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
-import { MapHook } from '@hooks/map'
+import { MapOverlay } from '@components/Dispatch'
 
-import MapOverlay from './MapOverlay'
+import { MapHook } from '@hooks/map'
 
 import { BASE_LAT, BASE_LNG } from '@constants'
 

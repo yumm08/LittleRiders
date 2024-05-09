@@ -19,11 +19,9 @@ export const routeHandlers = [
   // post route
   http.post(`/api/${BASE_URL}`, async ({ request }) => {
     const data = await request.json()
-    console.log(data)
     const routeDetail = data as Route
     routeDetail.id = routeList.length + 1
     routeList.push(routeDetail)
-    console.log(routeList)
     return HttpResponse.json({}, { status: 200 })
   }),
 

@@ -1,4 +1,4 @@
-import { SortableItem } from '@components/Dispatch/SortableItem'
+import { SortableItem } from '@components/Dispatch'
 
 import { UniqueIdentifier, useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -38,7 +38,6 @@ export default function SortableContainer({
   handleStationRemoveClick,
 }: Props) {
   const { setNodeRef } = useDroppable({ disabled: isDisabled, id })
-  console.log(items)
   if (isLoading || isPending || !items) {
     return (
       <div className="mx-5 h-1/2 flex-row p-1">

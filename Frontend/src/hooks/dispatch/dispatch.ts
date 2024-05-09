@@ -77,8 +77,7 @@ export const usePostRouteStation = () => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['routeList'] })
     },
-    onError: (e) => {
-      console.log(e)
+    onError: () => {
       showErrorAlert({ text: '오류가 발생했습니다.' })
     },
   })
@@ -118,13 +117,11 @@ export const usePostStation = () => {
       latitude: number
       longitude: number
     }) => postStation(name, latitude, longitude),
-    onSuccess: async (m) => {
-      console.log(m)
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['stationList'] })
       showSuccessAlert({ text: '성공적으로 정류장을 추가했습니다.' })
     },
-    onError: (e) => {
-      console.log(e)
+    onError: () => {
       showErrorAlert({ text: '오류가 발생했습니다.' })
     },
   })

@@ -1,12 +1,11 @@
+import { SortableContainer, SortableItem } from '@components/Dispatch'
+
 import {
   handleChildDragCancel,
   handleChildDragEnd,
   handleChildDragOver,
   handleChildDragStart,
 } from '@utils/dndUtils'
-
-import SortableContainer from './SortableContainer'
-import { SortableItem } from './SortableItem'
 
 import {
   DndContext,

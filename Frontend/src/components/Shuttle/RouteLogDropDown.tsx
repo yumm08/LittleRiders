@@ -32,7 +32,6 @@ export function RouteLogDropDown({
 }: Props) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState('')
-  console.log(historyId)
   return (
     <div className="absolute left-[50px] top-[20px] z-50">
       <Popover open={open} onOpenChange={setOpen}>

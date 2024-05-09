@@ -22,7 +22,7 @@ interface Props {
   ) => void
 }
 
-export function SortableItem({
+export default function SortableItem({
   id,
   selectedStation,
   name,

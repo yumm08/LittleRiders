@@ -53,7 +53,6 @@ export default function RealTimeMap({
 
   useEffect(() => {
     if (realTimeShuttleInfo) {
-      console.log(realTimeShuttleInfo)
       const { latitude, longitude } = realTimeShuttleInfo
       const position = { latitude, longitude }
 
