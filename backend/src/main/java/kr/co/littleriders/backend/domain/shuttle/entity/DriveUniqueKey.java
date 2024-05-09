@@ -14,6 +14,7 @@ public class DriveUniqueKey {
     @Id
     private String uuid;
 
+    @Indexed
     private long shuttleId;
 
     @Indexed
