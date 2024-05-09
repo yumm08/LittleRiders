@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public enum AuthErrorCode implements LittleRidersErrorCode {
 
 
-    JWT_EXPIRED(HttpStatus.BAD_REQUEST, "001", "토큰이 만료되었습니다."),
+    JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "001", "토큰이 만료되었습니다."),
     JWT_NOT_SUPPORT(HttpStatus.BAD_REQUEST, "002", "지원하지 않는 토큰입니다."),
     JWT_KEY_NOT_VALID(HttpStatus.INTERNAL_SERVER_ERROR, "003", "알 수 없는 오류가 발생했습니다."),
 
