@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequest;
+import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
@@ -28,8 +29,6 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     private final AcademyChildService academyChildService;
     private final ImageUtil imageUtil;
 
-
-    //TODO - HOTFIX-이윤지 수정 필요 - 반환값 더 들어가야함
     @Override
     public List<AcademyChildResponse> getAcademyChildListByAcademyId(Long academyId) {
 
@@ -84,7 +83,10 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
     //TODO - HOTFIX-이윤지 수정 필요 - status 만 업데이트 할게 아닌 다른 정보도 업데이트 해야함 Attending 상관없음 (김도현)
     @Override
-    public Long updateAcademyChild(Long academyId, Long academyChildId) {
+    public Long updateAcademyChild(Long academyId, Long academyChildId, UpdateAcademyChildRequest updateAcademyChildRequest) {
+
+
+
         return null;
     }
 

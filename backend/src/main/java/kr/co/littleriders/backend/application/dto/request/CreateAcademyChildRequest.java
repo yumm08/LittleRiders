@@ -21,8 +21,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CreateAcademyChildRequest {
 
-    // TODO-이윤지-비콘방식 고민 필요
-
     @NotBlank
     private String name;
 

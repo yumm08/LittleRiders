@@ -30,7 +30,6 @@ public class AcademyChildController {
         return ResponseEntity.ok().body(academyChildList);
     }
 
-    //TODO-이윤지-요구사항 변경으로 인한 상세 조회 내역 변경
     @GetMapping("/{academyChildId}")
     public ResponseEntity<AcademyChildDetailResponse> getAcademyChildDetail(@Auth AuthAcademy authAcademy,
                                                                             @PathVariable(value = "academyChildId") Long academyChildId) {
@@ -53,10 +52,10 @@ public class AcademyChildController {
     @PutMapping("/{academyChildId}/status")
     public ResponseEntity<Long> editAcademyChildStatus(@Auth AuthAcademy authAcademy,
                                                      @PathVariable(value = "academyChildId") Long academyChildId,
-                                                     @RequestBody UpdateAcademyChildRequest updateAcademyChildRequest) {
+                                                     @RequestBody String status) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, updateAcademyChildRequest.getStatus());
+        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, status);
 
         return ResponseEntity.ok().body(updateChildId);
     }
@@ -68,7 +67,7 @@ public class AcademyChildController {
                                                 @RequestBody UpdateAcademyChildRequest updateAcademyChildRequest) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, updateAcademyChildRequest.getStatus());
+        Long updateChildId = academyChildFacade.updateAcademyChild(academyId, academyChildId, updateAcademyChildRequest);
 
         return ResponseEntity.ok().body(updateChildId);
     }

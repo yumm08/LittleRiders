@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.facade;
 
 import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequest;
+import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 
@@ -12,7 +13,7 @@ public interface AcademyChildFacade {
 
     Long updateAcademyChildStatus(Long academyId, Long academyChildId, String status);
 
-    Long updateAcademyChild(Long academyId, Long academyChildId );
+    Long updateAcademyChild(Long academyId, Long academyChildId, UpdateAcademyChildRequest updateAcademyChildRequest);
 
     AcademyChildDetailResponse getAcademyChildDetail(Long academyId, Long academyChildId);
 
