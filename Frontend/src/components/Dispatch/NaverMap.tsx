@@ -38,7 +38,7 @@ export default function NaverMap({
   return (
     <div
       id="map"
-      className={`flex max-h-full w-full items-center justify-center transition-all duration-500 ease-in-out max-2xl:w-full ${selectedRouteId === -1 ? 'pr-0' : 'mr-[674px]'}`}
+      className={`flex max-h-full grow items-center justify-center transition-all duration-500 ease-in-out max-2xl:w-full ${selectedRouteId === -1 ? 'pr-0' : 'mr-[674px]'}`}
       ref={mapDiv}
     >
       {isOverlayOpen && (

@@ -75,7 +75,7 @@ export const usePostRouteStation = () => {
       stationList: Station[]
     }) => postRouteStation(routeId, stationList),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['routeList'] })
+      await queryClient.invalidateQueries({ queryKey: ['routeDetail'] })
     },
     onError: () => {
       showErrorAlert({ text: '오류가 발생했습니다.' })
@@ -95,7 +95,7 @@ export const usePostRouteChild = () => {
       stationList: ChildtoStationArgType[]
     }) => postRouteChild(routeId, stationList),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['routeList'] })
+      await queryClient.invalidateQueries({ queryKey: ['routeDetail'] })
       showSuccessAlert({ text: '성공적으로 경로를 저장했습니다.' })
     },
     onError: () => {

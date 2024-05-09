@@ -23,22 +23,22 @@ export default function RouteListAddItem({
   `}
     >
       <div
-        className={`me-2 flex-row justify-center text-sm transition-all ease-in-out hover:scale-110 active:scale-110
+        className={`me-2 flex w-8 flex-col items-center justify-center text-sm transition-all ease-in-out hover:scale-110 active:scale-110
           ${routeType ? 'text-darkgreen' : 'text-red'}
         `}
         onClick={handleRouteTypeClick}
       >
         {routeType && (
-          <>
+          <div className="flex w-8 flex-col items-center">
             <p className="">등원</p>
             <FaCircleArrowUp size={25} />
-          </>
+          </div>
         )}
         {!routeType && (
-          <>
+          <div className="flex w-8 flex-col items-center">
             <FaCircleArrowDown size={25} />
             <p className="">하원</p>
-          </>
+          </div>
         )}
       </div>
       <input
@@ -51,7 +51,7 @@ export default function RouteListAddItem({
       ></input>
       <div className="flex w-full justify-end">
         <button
-          className="ms-1 rounded-md px-2 py-1 text-darkgreen transition-all ease-in-out hover:bg-lightgreen active:bg-darkgreen"
+          className="ms-1 rounded-md px-1 py-1 text-darkgreen transition-all ease-in-out hover:bg-lightgreen active:bg-darkgreen"
           onClick={() =>
             handleConfirmAddClick(inputValue, routeType ? 'board' : 'drop')
           }
@@ -59,7 +59,7 @@ export default function RouteListAddItem({
           추가
         </button>
         <button
-          className="ms-1 rounded-md px-2 py-1 transition-all ease-in-out  hover:bg-yellow active:border-red active:bg-red"
+          className="ms-1 rounded-md px-1 py-1 transition-all ease-in-out  hover:bg-yellow active:border-red active:bg-red"
           onClick={handleCancelAddClick}
         >
           삭제

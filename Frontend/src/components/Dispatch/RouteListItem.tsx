@@ -47,9 +47,11 @@ export default function RouteListItem({
         onRouteClick(id)
       }}
     >
-      <FaRoute className="me-2" size={40} />
+      <div>
+        <FaRoute className="me-2" size={25} />
+      </div>
       <div className="flex items-center text-xl">
-        <p className="w-44 truncate">{name} </p>
+        <p className="w-36 truncate">{name} </p>
         {type === 'board' ? (
           <div className="mx-1 w-8 rounded-sm bg-darkgreen text-center text-xs text-white">
             등원
