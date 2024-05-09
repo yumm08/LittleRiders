@@ -1,122 +1,105 @@
-//package kr.co.littleriders.backend.application.facade;
-//
-//import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
-//import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
-//import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
-//import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
-//import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
-//import kr.co.littleriders.backend.common.fixture.AcademyFixture;
-//import kr.co.littleriders.backend.common.fixture.DriverFixture;
-//import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
-//import kr.co.littleriders.backend.common.fixture.TeacherFixture;
-//import kr.co.littleriders.backend.domain.academy.AcademyChildService;
-//import kr.co.littleriders.backend.domain.academy.AcademyFamilyService;
-//import kr.co.littleriders.backend.domain.academy.AcademyService;
-//import kr.co.littleriders.backend.domain.academy.entity.*;
-//import kr.co.littleriders.backend.domain.child.ChildService;
-//import kr.co.littleriders.backend.domain.child.entity.Child;
-//import kr.co.littleriders.backend.domain.driver.DriverService;
-//import kr.co.littleriders.backend.domain.driver.entity.Driver;
-//import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
-//import kr.co.littleriders.backend.domain.family.FamilyService;
-//import kr.co.littleriders.backend.domain.family.entity.Family;
-//import kr.co.littleriders.backend.domain.route.RouteService;
-//import kr.co.littleriders.backend.domain.route.entity.Route;
-//import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
-//import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
-//import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
-//import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
-//import kr.co.littleriders.backend.domain.shuttle.entity.*;
-//import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleChildRideException;
-//import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleDriveException;
-//import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationException;
-//import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationHistoryException;
-//import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
-//import kr.co.littleriders.backend.domain.teacher.TeacherService;
-//import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
-//import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
-//import kr.co.littleriders.backend.domain.terminal.TerminalService;
-//import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
-//import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
-//import kr.co.littleriders.backend.global.entity.Gender;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Nested;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.time.LocalDate;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//
-//@Transactional
-//@SpringBootTest
-//public class ShuttleFacadeTest {
-//
-//    @Autowired
-//    private ShuttleFacade shuttleFacade;
-//
-//    @Autowired
-//    private AcademyService academyService;
-//
-//    @Autowired
-//    private TerminalService terminalService;
-//
-//    @Autowired
-//    private ShuttleService shuttleService;
-//
-//    @Autowired
-//    private RouteService routeService;
-//
-//    @Autowired
-//    private DriverService driverService;
-//
-//    @Autowired
-//    private TeacherService teacherService;
-//
-//    @Autowired
-//    private FamilyService familyService;
-//
-//    @Autowired
-//    private ChildService childService;
-//
-//    @Autowired
-//    private AcademyFamilyService academyFamilyService;
-//
-//    @Autowired
-//    private AcademyChildService academyChildService;
-//
-//    private Academy academy;
-//
-//    private AuthTerminal authTerminal;
-//
-//    @Autowired
-//    ShuttleLocationHistoryService shuttleLocationHistoryService;
-//
-//    @Autowired
-//    ShuttleDriveService shuttleDriveService;
-//
-//    @Autowired
-//    ShuttleChildRideService shuttleChildRideService;
-//
-//    @Autowired
-//    ShuttleLocationService shuttleLocationService;
-//
-//
-//    @BeforeEach
-//    void setUP() {
-//        academy = Academy.of("a123@gmail.com", "1234", "어린이집B", "서울시 강남구", "010-1111-1111", 35.6, 23.8);
-//        academyService.save(academy);
-//        Terminal terminal = Terminal.of(academy, "bbbb");
-//        terminalService.save(terminal);
-//        Shuttle shuttle = Shuttle.of("license1234", "2호차", "a", academy, ShuttleStatus.USE);
-//        shuttleService.save(shuttle);
-//        authTerminal = AuthTerminal.of(terminal, shuttle);
-//    }
-//
+package kr.co.littleriders.backend.application.facade;
+
+import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
+import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
+import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
+import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
+import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
+import kr.co.littleriders.backend.common.fixture.*;
+import kr.co.littleriders.backend.domain.academy.AcademyChildService;
+import kr.co.littleriders.backend.domain.academy.AcademyService;
+import kr.co.littleriders.backend.domain.academy.entity.*;
+import kr.co.littleriders.backend.domain.driver.DriverService;
+import kr.co.littleriders.backend.domain.driver.entity.Driver;
+import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
+import kr.co.littleriders.backend.domain.route.RouteService;
+import kr.co.littleriders.backend.domain.route.entity.Route;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleChildRideService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
+import kr.co.littleriders.backend.domain.shuttle.entity.*;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleChildRideException;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleDriveException;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationException;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleLocationHistoryException;
+import kr.co.littleriders.backend.domain.shuttle.service.ShuttleLocationHistoryService;
+import kr.co.littleriders.backend.domain.teacher.TeacherService;
+import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
+import kr.co.littleriders.backend.domain.teacher.entity.TeacherStatus;
+import kr.co.littleriders.backend.domain.terminal.TerminalService;
+import kr.co.littleriders.backend.domain.terminal.entity.Terminal;
+import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
+import kr.co.littleriders.backend.global.entity.Gender;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@Transactional
+@SpringBootTest
+public class ShuttleFacadeTest {
+
+    @Autowired
+    private ShuttleFacade shuttleFacade;
+
+    @Autowired
+    private AcademyService academyService;
+
+    @Autowired
+    private TerminalService terminalService;
+
+    @Autowired
+    private ShuttleService shuttleService;
+
+    @Autowired
+    private RouteService routeService;
+
+    @Autowired
+    private DriverService driverService;
+
+    @Autowired
+    private TeacherService teacherService;
+
+    @Autowired
+    private AcademyChildService academyChildService;
+
+    private Academy academy;
+
+    private AuthTerminal authTerminal;
+
+    @Autowired
+    ShuttleLocationHistoryService shuttleLocationHistoryService;
+
+    @Autowired
+    ShuttleDriveService shuttleDriveService;
+
+    @Autowired
+    ShuttleChildRideService shuttleChildRideService;
+
+    @Autowired
+    ShuttleLocationService shuttleLocationService;
+
+
+    @BeforeEach
+    void setUP() {
+        academy = Academy.of("a123@gmail.com", "1234", "어린이집B", "서울시 강남구", "010-1111-1111", 35.6, 23.8);
+        academyService.save(academy);
+        Terminal terminal = Terminal.of(academy, "bbbb");
+        terminalService.save(terminal);
+        Shuttle shuttle = Shuttle.of("license1234", "2호차", "a", academy, ShuttleStatus.USE);
+        shuttleService.save(shuttle);
+        authTerminal = AuthTerminal.of(terminal, shuttle);
+    }
+
 //    @Nested
 //    @DisplayName("기사님 정보 QR 조회")
 //    class getDriverInfoByCardNumber{
@@ -183,25 +166,49 @@
 //            shuttleFacade.getRouteList(authTerminal);
 //        }
 //    }
-//
-//    @Nested
-//    @DisplayName("운행 시작")
-//    class startDrive {
-//
-//        @Test
-//        @DisplayName("성공")
-//        void whenSuccess() throws Exception {
-//            Route route = Route.of(academy, "등원A", "board");
-//            routeService.save(route);
-//            Driver driver = Driver.of("이름", "010-1111-1111", academy, DriverStatus.WORK);
-//            driverService.save(driver);
-//            Teacher teacher = Teacher.of("이름", "010-2222-2222", academy, TeacherStatus.WORK);
-//            teacherService.save(teacher);
-//            ShuttleStartRequest shuttleStartRequest = new ShuttleStartRequest(route.getId(), driver.getId(), teacher.getId());
-//            shuttleFacade.startDrive(authTerminal, shuttleStartRequest);
-//        }
-//    }
-//
+
+
+
+
+    @Nested
+    @DisplayName("운행 시작 테스트")
+    class startDriveTest {
+
+        @Test
+        @DisplayName("성공")
+        void whenSuccess() throws Exception {
+            AcademyFixture academyFixture = AcademyFixture.BOXING;
+            Academy academy = academyFixture.toAcademy();
+            TerminalFixture terminalFixture = TerminalFixture.A;
+            Terminal terminal = terminalFixture.toTerminal(academy);
+            ShuttleFixture shuttleFixture = ShuttleFixture.HO_01;
+            Shuttle shuttle = shuttleFixture.toShuttle(academy, ShuttleStatus.USE);
+            AuthTerminal authTerminal = AuthTerminal.of(terminal, shuttle);
+
+            RouteFixture routeFixture = RouteFixture.A;
+            Route route = routeFixture.toRoute(academy, "board");
+            routeService.save(route);
+            DriverFixture driverFixture = DriverFixture.YOON;
+            Driver driver = driverFixture.toDriver(academy, DriverStatus.WORK);
+            driverService.save(driver);
+            TeacherFixture teacherFixture = TeacherFixture.CHA;
+            Teacher teacher = teacherFixture.toTeacher(academy, TeacherStatus.WORK);
+            teacherService.save(teacher);
+
+            ShuttleStartRequest shuttleStartRequest = new ShuttleStartRequest(route.getId(), driver.getId(), teacher.getId());
+            shuttleFacade.startDrive(authTerminal, shuttleStartRequest);
+
+
+            //TODO - 이수현 - 탑승할 원생 리스트 테스트
+//            AcademyChildFixture academyChildFixture1 = AcademyChildFixture.CHOI;
+//            AcademyChildFixture academyChildFixture2 = AcademyChildFixture.KANG;
+//            AcademyChildFixture academyChildFixture3 = AcademyChildFixture.KIM;
+//            AcademyChildFixture academyChildFixture4 = AcademyChildFixture.PARK;
+
+        }
+    }
+
+
 //    @Nested
 //    @DisplayName("원생 승하차")
 //    class recordChildRiding {
@@ -295,4 +302,4 @@
 //        }
 //
 //    }
-//}
+}
