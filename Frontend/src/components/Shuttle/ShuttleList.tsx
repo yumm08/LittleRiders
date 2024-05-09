@@ -28,7 +28,7 @@ export default function ShuttleList({ show }: Props) {
   if (isLoading)
     return (
       <CardListContainer type="차량" openModal={openAddShuttleModal}>
-        <Skeleton className="h-[150px] w-full rounded-full" />
+        <Skeleton className="h-[150px] w-full rounded-md" />
       </CardListContainer>
     )
   return (
