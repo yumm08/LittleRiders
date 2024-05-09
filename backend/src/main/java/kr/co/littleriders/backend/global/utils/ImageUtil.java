@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,15 +91,15 @@ public class ImageUtil {
 		Map<String, Object> result = new HashMap<>();
 		Path imageFilePath = Paths.get(imagePath);
 
-		try {
-			Resource imageResource = new UrlResource(imageFilePath.toUri());
-			MediaType mediaType = getMediaType(imagePath);
-
-			result.put("resource", imageResource);
-			result.put("mediaType", mediaType);
-		} catch (MalformedURLException urlException) {
+		if (!Files.exists(imageFilePath)) {
 			throw ImageException.from(ImageErrorCode.NOT_FOUND);
 		}
+
+		Resource imageResource = new FileSystemResource(imageFilePath);
+		MediaType mediaType = getMediaType(imagePath);
+
+		result.put("resource", imageResource);
+		result.put("mediaType", mediaType);
 
 		return result;
     }
