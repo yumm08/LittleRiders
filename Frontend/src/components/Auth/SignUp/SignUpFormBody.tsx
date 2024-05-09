@@ -209,11 +209,10 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
               required: '전화번호는 필수 입력 항목입니다.',
               pattern: {
                 value: VALIDATE_REGEX.PHONE_NUMBER,
-                message:
-                  '전화번호 형식이 올바르지 않습니다. (예: 010-0000-0000)',
+                message: '전화번호 형식이 올바르지 않습니다. (예: 02-000-0000)',
               },
             })}
-            placeholder="전화번호를 입력해주세요 (ex. 010-0000-0000)"
+            placeholder="전화번호를 입력해주세요 (ex. 02-000-0000)"
             type="tel"
             className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
           />
