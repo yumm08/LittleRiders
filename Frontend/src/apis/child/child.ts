@@ -40,3 +40,20 @@ export const putChild = async (academyChildId: number, status: ChildStatus) => {
 
   return response
 }
+
+/**
+ * 원생을 등록하는 API 요청 함수
+ *
+ * @param formData 원생 등록 데이터
+ */
+export const postChild = async (formData: FormData) => {
+  const response = await axiosInstance.post(`${BASE_URL}/child`, {
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+
+  return response
+}
