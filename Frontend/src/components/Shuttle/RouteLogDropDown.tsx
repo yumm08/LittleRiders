@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 
+import Loading from '@components/Shared/Loading'
+
 import { Button } from '@shadcn/ui/button'
 import {
   Command,
@@ -14,7 +16,7 @@ import { DriveInfoByDay } from '@types'
 import { CommandList } from 'cmdk'
 
 interface Props {
-  driveInfoByDayList: DriveInfoByDay[]
+  driveInfoByDayList: DriveInfoByDay[] | undefined
   onClickHistoryId: (id: number) => void
   historyId: number
 }
@@ -32,7 +34,14 @@ export function RouteLogDropDown({
 }: Props) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState('')
-  console.log(historyId)
+
+  if (driveInfoByDayList === undefined)
+    return (
+      <div>
+        <Loading />
+      </div>
+    )
+
   return (
     <div className="absolute left-[50px] top-[20px] z-50">
       <Popover open={open} onOpenChange={setOpen}>

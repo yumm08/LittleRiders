@@ -2,6 +2,13 @@ export interface DriveHistoryType {
   time: string
 }
 
+
+export interface DriveInfoByDay {
+  id: number
+  routerName: string
+  startTime: string
+  endTime: string
+}
 const SHUTTLE_STATUS = {
   USE: 'USE',
   REPAIRING: 'REPAIRING',
@@ -16,4 +23,5 @@ export type AcademyShuttle = {
   imagePath: string
   terminalNumber: string
   status: ShuttleStatus
+
 }
