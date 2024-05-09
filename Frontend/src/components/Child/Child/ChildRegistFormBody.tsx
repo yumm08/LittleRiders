@@ -4,12 +4,19 @@ import SearchAddressModal from '@components/Auth/SignUp/SearchAddressModal'
 import Button from '@components/Shared/Button'
 import GenderIcon from '@components/Shared/GenderIcon'
 
-import { ChildRegistInfo } from '@types'
+import { useFetchBeaconList } from '@hooks/child'
+
+import { VALIDATE_REGEX } from '@constants'
+import { Beacon, ChildRegistFormInfo } from '@types'
 import { useFormContext } from 'react-hook-form'
 
 export default function ChildRegistFormBody() {
-  const { register } = useFormContext<ChildRegistInfo>()
   const [openAddressSearchModal, setOpenAddressSearchModal] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string>('')
+
+  const { register } = useFormContext<ChildRegistFormInfo>()
+
+  const { beaconList } = useFetchBeaconList()
 
   const searchAddressClickHandler = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -21,16 +28,30 @@ export default function ChildRegistFormBody() {
     setOpenAddressSearchModal((prev) => !prev)
   }
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    } else {
+      setImagePreview('')
+    }
+  }
+
   return (
     <>
-      <div className="flex">
+      <div className="flex items-center gap-4">
+        <img src={imagePreview} alt="이미지 없음" className="w-40" />
+
         <input
-          {...register('image', {
-            setValueAs: (fileList) => fileList[0],
-          })}
+          {...register('image')}
           id="picture"
           type="file"
-          className=""
+          onChange={handleImageChange}
           accept="image/*"
         />
       </div>
@@ -77,9 +98,14 @@ export default function ChildRegistFormBody() {
       />
 
       <input
-        {...register('phoneNumber')}
+        {...register('phoneNumber', {
+          pattern: {
+            value: VALIDATE_REGEX.PHONE_NUMBER,
+            message: '전화번호 형식이 올바르지 않습니다. (예: 010-0000-0000)',
+          },
+        })}
         type="tel"
-        placeholder="보호자 휴대폰 번호를 입력해주세요"
+        placeholder="보호자 전화번호를 입력해주세요 (ex. 010-0000-0000)"
         className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
         required
       />
@@ -104,9 +130,23 @@ export default function ChildRegistFormBody() {
         )}
       </div>
 
+      <select
+        {...register('beaconId')}
+        className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
+        defaultValue={undefined}
+      >
+        <option disabled hidden selected>
+          사용할 비콘 UUID
+        </option>
+        {beaconList &&
+          beaconList.map((beacon: Beacon) => (
+            <option value={beacon.id}>{beacon.uuid}</option>
+          ))}
+      </select>
+
       <textarea
         placeholder="특이사항 혹은 메모를 입력하세요"
-        className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
+        className="bg-lightblue text-md w-full resize-none rounded-md border border-lightgray p-3"
         rows={10}
       />
     </>
