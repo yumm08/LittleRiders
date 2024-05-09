@@ -165,6 +165,9 @@ export default function RouteDetailSlide({
 
   const handleCancelClick = () => {
     setSelectedRouteId(-1)
+    setTimeout(function () {
+      window.dispatchEvent(new Event('resize'))
+    }, 50)
   }
 
   useEffect(() => {

@@ -46,17 +46,17 @@ export default function RouteList({
     setIsAddButtonClicked(false)
   }
   return (
-    <div className="h-full w-1/5 border shadow-md max-xl:w-full">
+    <div className="h-full w-96 border shadow-md">
       <div className="mx-5 mt-5 flex justify-between">
         <p className="text-xl">노선 목록</p>
         <button
-          className="text-xl text-darkgreen transition-all ease-in-out hover:scale-105 active:scale-110 "
+          className="text-xl text-darkgreen transition-all ease-in-out hover:scale-105 active:scale-110"
           onClick={handleAddRouteClick}
         >
           + 노선추가
         </button>
       </div>
-      <div className="mt-4 h-5/6 flex-row overflow-y-scroll">
+      <div className="mt-4 h-5/6 flex-row overflow-auto">
         {routeList &&
           routeList.map(({ id, name, type }) => (
             <RouteListItem
