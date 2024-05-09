@@ -1,12 +1,9 @@
 package kr.co.littleriders.backend.application.controller;
 
-import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
+import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
-import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
-import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
-import kr.co.littleriders.backend.application.dto.response.RouteResponse;
-import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
+import kr.co.littleriders.backend.application.dto.response.*;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
@@ -66,11 +63,11 @@ public class ShuttleController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 원생 승하차
-    @PostMapping("/child/ride")
-    public ResponseEntity<Void> recordChildRiding(@Auth AuthTerminal authTerminal, @RequestBody ShuttleChildRideRequest rideRequest) {
-//        shuttleFacade.recordChildRiding(authTerminal, rideRequest);//주석처리 - 김도현
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    // 원생 승차
+    @PostMapping("/child/board")
+    public ResponseEntity<ShuttleChildBoardResponse> recordChildBoard(@Auth AuthTerminal authTerminal, @RequestBody ShuttleChildBoardRequest boardRequest) {
+        shuttleFacade.recordChildBoard(authTerminal, boardRequest);
+        return ResponseEntity.ok().body(shuttleFacade.recordChildBoard(authTerminal, boardRequest));
     }
 
     // 위도 경도 업로드

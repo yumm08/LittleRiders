@@ -2,7 +2,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import kr.co.littleriders.backend.application.client.SmsFetchAPI;
 import kr.co.littleriders.backend.application.client.SmsSendClientRequest;
-import kr.co.littleriders.backend.application.dto.request.ShuttleChildRideRequest;
+import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.*;
@@ -29,6 +29,8 @@ import kr.co.littleriders.backend.domain.shuttle.entity.DriveUniqueKey;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrive;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
+import kr.co.littleriders.backend.domain.shuttle.*;
+import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
@@ -59,6 +61,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     private final ShuttleLocationService shuttleLocationService;
     private final ShuttleDriveService shuttleDriveService;
     private final DriveUniqueKeyService driveUniqueKeyService;
+    private final ShuttleBoardService shuttleBoardService;
     private final SseFacade sseFacade;
     private final SmsFetchAPI smsFetchAPI;
 
@@ -209,22 +212,34 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
     }
 
+    @Override
+    public ShuttleChildBoardResponse recordChildBoard(AuthTerminal authTerminal, ShuttleChildBoardRequest boardRequest) {
 
-//    @Override//주석처리 - 김도현
-//    public ShuttleChildRideResponse recordChildRiding(AuthTerminal authTerminal, ShuttleChildRideRequest rideRequest) {
-//
-//        long shuttleId = authTerminal.getShuttleId();
-//
-//        // TODO: 졸업을 한 아이에 대한 valid check 추가
-//
-//        // AcademyChild academyChild = academyChildService.findByBeaconNumber(rideRequest.getBeaconNumber());
-//        //TODO - HOTFIX - 이수현 - 수정 필요. ShuttleChildRide 가 필요없어짐.
-////        ShuttleChildRide shuttleChildRide = rideRequest.toShuttleChildRide(shuttleId, 0);//주석처리 - 김도현
-////        shuttleChildRideService.save(shuttleChildRide);//주석처리 - 김도현
-//
-//        // return ShuttleChildRideResponse.of(academyChild,shuttleChildRide);
-//        return null;
-//    }
+        // TODO: 졸업을 한 아이에 대한 valid check 추가
+
+        long shuttleId = authTerminal.getShuttleId();
+        Shuttle shuttle = shuttleService.findById(shuttleId);
+        Academy academy = shuttle.getAcademy();
+
+        String uuid = boardRequest.getBeaconUUID();
+        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByUuid(uuid);
+
+        ShuttleBoard shuttleBoard = boardRequest.toShuttleBoard(driveUniqueKey, academy.getId());
+
+        // redis에 승차 기록 저장
+        shuttleBoardService.save(shuttleBoard);
+
+        ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
+        AcademyChild academyChild = academyChildService.findById(driveUniqueKey.getAcademyChildId());
+        Teacher teacher = teacherService.findById(shuttleDrive.getTeacherId());
+        Driver driver = driverService.findById(shuttleDrive.getDriverId());
+
+        // 승차 sms 전송
+        SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toBoardMessage(uuid, academyChild, teacher, driver, shuttle);
+        smsFetchAPI.sendLMS(smsSendClientRequest);
+
+        return ShuttleChildBoardResponse.from(academyChild);
+    }
 
 
     @Override
