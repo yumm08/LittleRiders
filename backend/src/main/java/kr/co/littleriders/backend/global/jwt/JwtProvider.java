@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.global.jwt;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
 import kr.co.littleriders.backend.global.entity.MemberType;
 import kr.co.littleriders.backend.global.error.code.AuthErrorCode;
 import kr.co.littleriders.backend.global.error.exception.AuthException;
@@ -96,7 +97,10 @@ public class JwtProvider {
     private Claims validationAndParseClaimsByTokenAndSecret(String token,SecretKey secretKey) {
         try {
             return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
+        }catch (SignatureException e){
+            throw AuthException.from(AuthErrorCode.AUTHORIZATION_NOT_VALID);
+        }
+        catch (ExpiredJwtException e) {
             throw AuthException.from(AuthErrorCode.JWT_EXPIRED);
         } catch (UnsupportedJwtException e) {
             throw AuthException.from(AuthErrorCode.JWT_NOT_SUPPORT);
