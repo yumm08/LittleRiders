@@ -4,6 +4,7 @@ import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequ
 import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
+import kr.co.littleriders.backend.application.dto.response.BeaconResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
@@ -12,6 +13,7 @@ import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
 import kr.co.littleriders.backend.domain.academy.error.code.AcademyChildErrorCode;
 import kr.co.littleriders.backend.domain.academy.error.exception.AcademyChildException;
+import kr.co.littleriders.backend.domain.beacon.BeaconServcie;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     private final AcademyService academyService;
     private final AcademyChildService academyChildService;
     private final ImageUtil imageUtil;
+    private final BeaconServcie beaconServcie;
 
     @Override
     public List<AcademyChildResponse> getAcademyChildListByAcademyId(Long academyId) {
@@ -65,6 +68,15 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
         AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, imagePath, AcademyChildStatus.ATTENDING);
         return academyChildService.save(academyChild);
+    }
+
+    @Override
+    public List<BeaconResponse> getBeaconList(Long academyId) {
+
+        Academy academy = academyService.findById(academyId);
+        List<BeaconResponse> beaconList = beaconServcie.findByAcademy(academy);
+
+        return null;
     }
 
     @Override

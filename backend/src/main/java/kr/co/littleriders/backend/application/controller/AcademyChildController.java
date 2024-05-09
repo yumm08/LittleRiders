@@ -5,6 +5,7 @@ import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequ
 import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
+import kr.co.littleriders.backend.application.dto.response.BeaconResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
@@ -38,6 +39,15 @@ public class AcademyChildController {
         AcademyChildDetailResponse academyChildDetailResponse = academyChildFacade.getAcademyChildDetail(academyId, academyChildId);
 
         return ResponseEntity.ok().body(academyChildDetailResponse);
+    }
+
+    @GetMapping("/beacon")
+    public ResponseEntity<List<BeaconResponse>> getAcademyBeacon(@Auth AuthAcademy authAcademy) {
+
+        Long academyId = authAcademy.getId();
+        List<BeaconResponse> beaconList = academyChildFacade.getBeaconList(academyId);
+
+        return ResponseEntity.ok().body(beaconList);
     }
 
     @PostMapping

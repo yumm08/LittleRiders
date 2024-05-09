@@ -31,6 +31,8 @@ public class CreateAcademyChildRequest {
     @NotBlank
     private String gender;
 
+    private Long beaconId;
+
     @NotBlank
     private String familyName;
 
