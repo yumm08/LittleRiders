@@ -32,5 +32,6 @@ spring:
       enabled: true
       path: /h2-console
 
-
+  resource:
+    directory: C:/
 

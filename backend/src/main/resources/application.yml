@@ -17,3 +17,6 @@ spring:
   naver:
     key: ${NAVER_KEY}
     secret: ${NAVER_SECRET}
+
+  resource:
+    directory: .
