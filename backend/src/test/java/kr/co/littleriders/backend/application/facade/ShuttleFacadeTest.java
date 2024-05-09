@@ -5,10 +5,7 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
 import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
-import kr.co.littleriders.backend.common.fixture.AcademyFixture;
-import kr.co.littleriders.backend.common.fixture.DriverFixture;
-import kr.co.littleriders.backend.common.fixture.ShuttleFixture;
-import kr.co.littleriders.backend.common.fixture.TeacherFixture;
+import kr.co.littleriders.backend.common.fixture.*;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.*;
@@ -174,20 +171,40 @@ public class ShuttleFacadeTest {
 
 
     @Nested
-    @DisplayName("운행 시작")
-    class startDrive {
+    @DisplayName("운행 시작 테스트")
+    class startDriveTest {
 
         @Test
         @DisplayName("성공")
         void whenSuccess() throws Exception {
-            Route route = Route.of(academy, "등원A", "board");
+            AcademyFixture academyFixture = AcademyFixture.BOXING;
+            Academy academy = academyFixture.toAcademy();
+            TerminalFixture terminalFixture = TerminalFixture.A;
+            Terminal terminal = terminalFixture.toTerminal(academy);
+            ShuttleFixture shuttleFixture = ShuttleFixture.HO_01;
+            Shuttle shuttle = shuttleFixture.toShuttle(academy, ShuttleStatus.USE);
+            AuthTerminal authTerminal = AuthTerminal.of(terminal, shuttle);
+
+            RouteFixture routeFixture = RouteFixture.A;
+            Route route = routeFixture.toRoute(academy, "board");
             routeService.save(route);
-            Driver driver = Driver.of("이름", "010-1111-1111", academy, DriverStatus.WORK);
+            DriverFixture driverFixture = DriverFixture.YOON;
+            Driver driver = driverFixture.toDriver(academy, DriverStatus.WORK);
             driverService.save(driver);
-            Teacher teacher = Teacher.of("이름", "010-2222-2222", academy, TeacherStatus.WORK);
+            TeacherFixture teacherFixture = TeacherFixture.CHA;
+            Teacher teacher = teacherFixture.toTeacher(academy, TeacherStatus.WORK);
             teacherService.save(teacher);
+
             ShuttleStartRequest shuttleStartRequest = new ShuttleStartRequest(route.getId(), driver.getId(), teacher.getId());
             shuttleFacade.startDrive(authTerminal, shuttleStartRequest);
+
+
+            //TODO - 이수현 - 탑승할 원생 리스트 테스트
+//            AcademyChildFixture academyChildFixture1 = AcademyChildFixture.CHOI;
+//            AcademyChildFixture academyChildFixture2 = AcademyChildFixture.KANG;
+//            AcademyChildFixture academyChildFixture3 = AcademyChildFixture.KIM;
+//            AcademyChildFixture academyChildFixture4 = AcademyChildFixture.PARK;
+
         }
     }
 
