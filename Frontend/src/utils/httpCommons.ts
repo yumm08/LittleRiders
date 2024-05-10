@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    if (error.response.status === HttpStatusCode.BadRequest) {
+    if (error.response.status === HttpStatusCode.Unauthorized) {
       originalRequest._retry = true
 
       try {
