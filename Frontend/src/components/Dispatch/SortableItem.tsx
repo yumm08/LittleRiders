@@ -35,7 +35,7 @@ export default function SortableItem({
   const [isClicked, setIsClicked] = useState<boolean>(false)
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false)
   const [childCount, setChildCount] = useState<number | undefined>(
-    childList?.length,
+    childList ? childList.length : 0,
   )
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id })
@@ -77,7 +77,7 @@ export default function SortableItem({
   }
 
   useEffect(() => {
-    setChildCount(childList?.length)
+    setChildCount(childList ? childList.length : 0)
   }, [childList])
 
   useEffect(() => {

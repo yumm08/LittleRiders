@@ -140,10 +140,10 @@ export default function RouteDetailSlide({
         visitOrder: k,
       })
       const academyChildIdList: number[] = []
-      if (selectedStationListTemp[k].childList) {
-        for (let s = 0; s < selectedStationListTemp[k].childList!.length; s++) {
+      if (selectedStationListTemp[k].academyChildList) {
+        for (let s = 0; s < selectedStationListTemp[k].academyChildList!.length; s++) {
           academyChildIdList.push(
-            selectedStationListTemp[k].childList![s].academyChildId,
+            selectedStationListTemp[k].academyChildList![s].academyChildId,
           )
         }
       }
@@ -175,11 +175,11 @@ export default function RouteDetailSlide({
       const temp = stationItems.selectedStationList.find(
         (station) => station.id === selectedStation,
       )
-      if (temp && temp.childList) {
+      if (temp && temp.academyChildList) {
         setChildDragDisabled(false)
         setChildItems((prev) => ({
           ...prev,
-          selectedChildList: [...temp.childList!],
+          selectedChildList: [...temp.academyChildList!],
         }))
       } else {
         setChildDragDisabled(true)
@@ -221,7 +221,8 @@ export default function RouteDetailSlide({
             let isSame = false
             routeDetail.stationList.forEach((station: Station) => {
               if (
-                station.childList!.some(
+                station.academyChildList &&
+                station.academyChildList.some(
                   (stationChild) =>
                     stationChild.academyChildId === child.academyChildId,
                 )
@@ -263,7 +264,7 @@ export default function RouteDetailSlide({
     setStationItems((prev) => {
       prev.selectedStationList?.forEach((station: Station) => {
         if (station.id === selectedStation) {
-          station.childList = [...childItems['selectedChildList']]
+          station.academyChildList = [...childItems['selectedChildList']]
         }
       })
       return { ...prev }
