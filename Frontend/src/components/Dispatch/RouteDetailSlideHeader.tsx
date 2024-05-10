@@ -13,8 +13,8 @@ export default function RouteDetailSlideHeader({
   handleAddButton,
 }: Props) {
   return (
-    <div className="flex h-16 items-center justify-between">
-      <div className="m-2 mx-6 flex flex-row items-center text-2xl">
+    <div className="flex h-20 items-center justify-between">
+      <div className="m-2 mx-6 mt-4 flex flex-row items-center text-2xl">
         <FaRoute className="me-5" size={30} />
         <p className=" w-80 truncate font-bold">
           {selectedRouteName ? selectedRouteName : '노선 정보'}

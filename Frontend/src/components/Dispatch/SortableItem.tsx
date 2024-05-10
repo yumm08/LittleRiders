@@ -108,7 +108,7 @@ export default function SortableItem({
       <div className="flex items-center justify-start">
         {sortIcon(type)}
         <div className="flex w-full items-center justify-between">
-          <p className="ms-2 text-center">{name}</p>
+          <p className=" ms-2 w-32 truncate text-left">{name}</p>
           {stationTailIcon(type)}
         </div>
       </div>

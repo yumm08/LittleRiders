@@ -47,29 +47,31 @@ export default function RouteListItem({
         onRouteClick(id)
       }}
     >
-      <div>
+      <div className="w-8">
         <FaRoute className="me-2" size={25} />
       </div>
-      <div className="flex items-center text-xl">
-        <p className="w-36 truncate">{name} </p>
-        {type === 'board' ? (
-          <div className="mx-1 w-8 rounded-sm bg-darkgreen text-center text-xs text-white">
-            등원
-          </div>
-        ) : (
-          <div className="mx-1 w-8 rounded-sm bg-red bg-opacity-70 text-center text-xs text-white">
-            하원
-          </div>
-        )}{' '}
-      </div>
-      <div className="flex justify-end gap-3">
-        <FaPencilAlt />
-        <FaTrashAlt
-          className="hover:scale-125 hover:text-red active:scale-150 active:text-red"
-          onClick={(e) => {
-            handleRemoveClick(e)
-          }}
-        />
+      <div className="flex w-[calc(100%-36px)] flex-row items-center justify-between">
+        <div className="flex w-[calc(100%-40px)] items-center text-xl">
+          <p className="flex max-w-[calc(100%-50px)] truncate">{name} </p>
+          {type === 'board' ? (
+            <div className="mx-1 w-8 rounded-sm bg-darkgreen text-center text-xs text-white">
+              등원
+            </div>
+          ) : (
+            <div className="mx-1 w-8 rounded-sm bg-red bg-opacity-70 text-center text-xs text-white">
+              하원
+            </div>
+          )}{' '}
+        </div>
+        <div className="flex justify-end gap-3">
+          <FaPencilAlt />
+          <FaTrashAlt
+            className="hover:scale-125 hover:text-red active:scale-150 active:text-red"
+            onClick={(e) => {
+              handleRemoveClick(e)
+            }}
+          />
+        </div>
       </div>
     </div>
   )
