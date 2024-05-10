@@ -42,6 +42,9 @@ export default function RealTimeMap({
 
   useEffect(() => {
     initRealTimeMap()
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'))
+    }, 500)
   }, [])
 
   useEffect(() => {
