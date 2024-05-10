@@ -49,4 +49,9 @@ class ShuttleBoardServiceImpl implements ShuttleBoardService {
     public void save(ShuttleBoard shuttleBoard) {
         shuttleBoardRepository.save(shuttleBoard);
     }
+
+    @Override
+    public boolean notExistsByAcademyChildId(long academyChildId) {
+        return !shuttleBoardRepository.existsById(academyChildId);
+    }
 }

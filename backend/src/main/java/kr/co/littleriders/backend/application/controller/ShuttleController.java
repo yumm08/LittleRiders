@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.controller;
 
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
+import kr.co.littleriders.backend.application.dto.request.ShuttleChildDropRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.*;
@@ -67,6 +68,12 @@ public class ShuttleController {
     @PostMapping("/child/board")
     public ResponseEntity<ShuttleChildBoardResponse> recordChildBoard(@Auth AuthTerminal authTerminal, @RequestBody ShuttleChildBoardRequest boardRequest) {
         return ResponseEntity.ok().body(shuttleFacade.recordChildBoard(authTerminal, boardRequest));
+    }
+
+    // 원생 하차
+    @PostMapping("/child/drop")
+    public ResponseEntity<ShuttleChildDropResponse> recordChildDrop(@Auth AuthTerminal authTerminal, @RequestBody ShuttleChildDropRequest dropRequest) {
+        return ResponseEntity.ok().body(shuttleFacade.recordChildDrop(authTerminal, dropRequest));
     }
 
     // 위도 경도 업로드
