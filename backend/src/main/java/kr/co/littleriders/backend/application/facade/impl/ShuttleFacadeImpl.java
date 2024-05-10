@@ -283,9 +283,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         Driver driver = driverService.findById(shuttleDrive.getDriverId());
         ShuttleBoard shuttleBoard = shuttleBoardService.findByAcademyChildId(academyChildId);
 
-        //TODO: mongoDB에 저장
-        // uuid, shuttle, driver, teacher, 승차 위도 경도(승차테이블) 시간, 하차 위도 경도(request) 시간
-
+        // mongoDB에 저장
         ShuttleBoardDropHistory shuttleBoardDropHistory = ShuttleBoardDropHistory.of(
                 uuid,
                 shuttle,
@@ -294,7 +292,6 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                 shuttleBoard,
                 shuttleDrop
         );
-
         shuttleBoardDropHistoryService.save(shuttleBoardDropHistory);
 
         // 하차 sms 전송
