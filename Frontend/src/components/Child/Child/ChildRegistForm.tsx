@@ -22,7 +22,7 @@ export default function ChildRegistForm() {
   return (
     <FormProvider {...methodList}>
       <form
-        className="flex flex-col gap-4"
+        className="mb-16 flex flex-col gap-4"
         onSubmit={methodList.handleSubmit(onSubmit)}
       >
         <ChildRegistFormBody />
