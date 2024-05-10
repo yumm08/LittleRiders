@@ -244,7 +244,7 @@ export default function RouteDetailSlide({
 
   // 초기 ChildList 구현
   useEffect(() => {
-    if (!isChildListLoading) {
+    if (!isChildListLoading && childList) {
       setChildItems({
         childList: [...childList],
         selectedChildList: [],

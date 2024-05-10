@@ -29,10 +29,11 @@ export default function ChildList() {
       />
       {toggleForm && <ChildRegistForm />}
 
-      {childList.length === 0 && (
+      {!childList || childList?.length === 0 ? (
         <NoContentText text="등록된 원생이 없습니다" />
+      ) : (
+        <ChildCardList childList={childList} />
       )}
-      <ChildCardList childList={childList} />
     </>
   )
 }
