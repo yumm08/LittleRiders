@@ -68,7 +68,7 @@ export default function SortableContainer({
       items={data}
       strategy={verticalListSortingStrategy}
     >
-      <div className=" mx-5 h-1/2 max-h-96 flex-row p-1">
+      <div className=" mx-5 h-1/2 flex-row p-1">
         <p className="m-1 text-xl font-bold">
           {subject ? subject : '임시 제목'}
         </p>

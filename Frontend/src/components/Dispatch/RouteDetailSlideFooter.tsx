@@ -11,7 +11,7 @@ export default function RouteDetailSlideFooter({
   handleCancelClick,
 }: Props) {
   return (
-    <div className="flex h-20 self-center ">
+    <div className="mb-4 flex h-20 self-center ">
       <div className="flex">
         <div className="m-1">
           <Button
