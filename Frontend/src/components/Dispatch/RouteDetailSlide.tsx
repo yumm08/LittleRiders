@@ -167,7 +167,7 @@ export default function RouteDetailSlide({
     setSelectedRouteId(-1)
     setTimeout(function () {
       window.dispatchEvent(new Event('resize'))
-    }, 50)
+    }, 550)
   }
 
   useEffect(() => {
@@ -282,8 +282,8 @@ export default function RouteDetailSlide({
         selectedRouteName={selectedRouteName}
         handleAddButton={handleAddButton}
       />
-      <div className="flex grow">
-        <div className="flex-col">
+      <div className="flex h-[calc(100%-120px)]">
+        <div className="">
           <RouteDetailStation
             sensors={sensors}
             stationItems={stationItems}
@@ -301,7 +301,7 @@ export default function RouteDetailSlide({
             handleStationItemHover={handleStationItemHover}
           />
         </div>
-        <div className="h-full flex-row">
+        <div className="">
           <RouteDetailChild
             sensors={sensors}
             childItems={childItems}
