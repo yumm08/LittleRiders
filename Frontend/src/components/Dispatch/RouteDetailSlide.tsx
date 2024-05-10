@@ -11,7 +11,8 @@ import { useFetchChildList } from '@hooks/child'
 import {
   useDeleteStation,
   useGetRouteDetail,
-  useGetStationList, // usePostRouteChild,
+  useGetStationList,
+  usePostRouteChild,
   usePostRouteStation, // usePutRoute,
 } from '@hooks/dispatch'
 import '@hooks/map'
@@ -71,8 +72,8 @@ export default function RouteDetailSlide({
   const { stationList, isLoading: isStationListLoading } = useGetStationList()
   const { childList, isLoading: isChildListLoading } = useFetchChildList()
   const { removeStation } = useDeleteStation()
-  // const { modifyRouteChild } = usePostRouteChild()
-  const { modifyRouteStation } = usePostRouteStation()
+  const { modifyRouteChild } = usePostRouteChild()
+  const { mutateAsync: asyncModifyRouteStation } = usePostRouteStation()
 
   const { drawRoute, initPolyLine, drawRouteMarkers, deleteMarkers, moveMap } =
     MapHook(mapRef)
@@ -129,7 +130,7 @@ export default function RouteDetailSlide({
 
   const handleStationItemHover = () => {}
 
-  const handleModifyClick = () => {
+  const handleModifyClick = async () => {
     const stationListTemp: Station[] = []
     const stationListChildListTemp: ChildtoStationArgType[] = []
     const selectedStationListTemp = stationItems.selectedStationList
@@ -152,15 +153,14 @@ export default function RouteDetailSlide({
       })
     }
 
-    modifyRouteStation({
+    await asyncModifyRouteStation({
       routeId: Number(selectedRouteId.toString()),
       stationList: stationListTemp,
     })
-
-    // modifyRouteChild({
-    //   routeId: Number(selectedRouteId.toString()),
-    //   stationList: stationListChildListTemp,
-    // })
+    modifyRouteChild({
+      routeId: Number(selectedRouteId.toString()),
+      stationList: stationListChildListTemp,
+    })
   }
 
   const handleCancelClick = () => {

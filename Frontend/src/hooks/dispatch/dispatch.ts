@@ -65,7 +65,6 @@ export const usePostRoute = () => {
   return { addRoute, ...rest }
 }
 export const usePostRouteStation = () => {
-  const queryClient = useQueryClient()
   const { mutate: modifyRouteStation, ...rest } = useMutation({
     mutationFn: ({
       routeId,
@@ -74,9 +73,7 @@ export const usePostRouteStation = () => {
       routeId: number
       stationList: Station[]
     }) => postRouteStation(routeId, stationList),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['routeDetail'] })
-    },
+    onSuccess: async () => {},
     onError: () => {
       showErrorAlert({ text: '오류가 발생했습니다.' })
     },

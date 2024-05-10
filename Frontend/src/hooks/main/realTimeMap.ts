@@ -57,7 +57,7 @@ export const useSetRealTimeMap = () => {
     }
 
     if (realTimeMarker) {
-      const content = `<div id="marker" style="transform:translate(-25px, -25px);width:50px;height:50px"><img src="/src/assets/image/bus.svg" style="width:50px; height:50px; transform:rotate(${rotateDegree + 90}deg);" /></div>`
+      const content = `<div id="marker" style="transform:translate(-25px, -25px);width:50px;height:50px"><img src="/bus.svg" style="width:50px; height:50px; transform:rotate(${rotateDegree + 90}deg);" /></div>`
       realTimeMarker.setIcon({
         content,
       })
@@ -91,7 +91,7 @@ export const useSetRealTimeMap = () => {
         position,
         map: realTimeMap,
         icon: {
-          content: `<div id="marker" style="transform:translate(-25px, -25px);width:50px;height:50px"><img src="/src/assets/image/bus.svg" style="width:50px; height:50px;" /></div>`,
+          content: `<div id="marker" style="transform:translate(-25px, -25px);width:50px;height:50px"><img src="/bus.svg" style="width:50px; height:50px;" /></div>`,
         },
       })
 

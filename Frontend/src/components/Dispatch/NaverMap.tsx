@@ -45,7 +45,7 @@ export default function NaverMap({
         <>
           <img
             className="absolute z-10 mb-8 self-center transition-all ease-in-out hover:mb-12 hover:size-14"
-            src="/src/assets/image/map-center-icon.svg"
+            src="/map-center-icon.svg"
             width={40}
             onClick={handleAddButton}
           />
