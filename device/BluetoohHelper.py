@@ -59,7 +59,7 @@ class BluetoothHelper():
         if(self.scanner == None):
             self.scanner = BleakScanner(self._deviceFound)
         await self.scanner.start()
-        await asyncio.sleep(5.0)
+        await asyncio.sleep(7.0)
         await self.scanner.stop()
         return self.beaconList
 
