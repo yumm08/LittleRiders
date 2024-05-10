@@ -68,12 +68,19 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         Academy academy = academyService.findById(academyId);
         MultipartFile image = createAcademyChildRequest.getImage();
         String imagePath = imageUtil.saveImage(image);
-        Beacon beacon = beaconServcie.findById(createAcademyChildRequest.getBeaconId());
+        Long beaconId = createAcademyChildRequest.getBeaconId();
+        Long insertChildId;
+        if (beaconId != null) {
+            Beacon beacon = beaconServcie.findById(beaconId);
+            AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, beacon, imagePath, AcademyChildStatus.ATTENDING);
+            insertChildId = academyChildService.save(academyChild);
+            beacon.updateAcademyChild(academyChild);
+            beaconServcie.save(beacon);
+        } else {
+            AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, null, imagePath, AcademyChildStatus.ATTENDING);
+            insertChildId = academyChildService.save(academyChild);
+        }
 
-        AcademyChild academyChild = createAcademyChildRequest.toAcademyChild(academy, beacon, imagePath, AcademyChildStatus.ATTENDING);
-        Long insertChildId = academyChildService.save(academyChild);
-        beacon.updateAcademyChild(academyChild);
-        beaconServcie.save(beacon);
 
         return insertChildId;
     }
@@ -100,7 +107,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         }
 
         AcademyChildStatus childStatus = AcademyChildStatus.valueOf(status);
-        if (academyChild.isAttending() && !childStatus.equals(AcademyChildStatus.ATTENDING)) {
+        if (academyChild.isAttending() && !childStatus.equals(AcademyChildStatus.ATTENDING) && academyChild.getBeacon() != null) {
             Beacon beacon = academyChild.getBeacon();
             beacon.updateAcademyChild(null);
             beaconServcie.save(beacon);
