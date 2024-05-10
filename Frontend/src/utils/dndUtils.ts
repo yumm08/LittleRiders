@@ -53,9 +53,10 @@ export const handleStationDragStart = (
     for (const key of Object.keys(stationItems)) {
       const foundItem = stationItems[key].find((item) => item.id === id)
       if (foundItem) {
-        return foundItem.name
+        return foundItem.name as string
       }
     }
+
     return '선택한 정류장'
   })
 }
