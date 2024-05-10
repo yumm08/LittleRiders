@@ -129,7 +129,7 @@ public class ShuttleDriveHistory {
     private static class ChildBoardDrop { // 들어가야 함
         private long id;
         private String name;
-        private String address;
+        private String address; // 제외
         private double latitude;
         private double longitude;
         private LocalDateTime time;

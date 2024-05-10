@@ -177,6 +177,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
 
         //실시간 어린이 승하차 내역
+        // TODO-이윤지-수정필요
         List<ChildBoardDropDto> shuttleBoardList = shuttleBoardService.findByShuttleId(shuttleId).stream()
                                                         .map(shuttleBoard -> {
                                                             AcademyChild academyChild = academyChildService.findById(shuttleBoard.getAcademyChildId());
@@ -220,19 +221,18 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
             shuttleLocationList);
 
         //TODO - 김도현 - 어린이 저장 및 정상 종료 여부 확인하기
-        // mongoDB 에 저장
-       shuttleDriveHistoryService.save(shuttleDriveHistory);
+        // 정상 종료 서버 탑승 기록이 있지만 하차 기록이 없는 경우 비정상 종료로 간주
+        // 승하차 정보가 매칭이 안되는 경우
+        shuttleDriveHistoryService.save(shuttleDriveHistory);
 
-        // redis에 저장된 정보 삭제 필요
         shuttleDriveService.delete(shuttleDrive);
         shuttleLocationService.deleteAllByShuttleId(shuttleId);
         shuttleDropService.deleteAllByShuttleId(shuttleId);
         shuttleBoardService.deleteAllByShuttleId(shuttleId);
         driveUniqueKeyService.deleteAllByShuttleId(shuttleId);
 
-
         //TODO - 김도현 : 운행종료 노티 모두 던지기 - sse로 학원쪽에 알림 주기
-
+        // 모르겠음
     }
 
     @Override
