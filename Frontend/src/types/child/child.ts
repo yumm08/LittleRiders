@@ -29,3 +29,18 @@ export type ChildDetailInfo = ChildInfo & {
   familyName: string
   familyPhoneNumber: string
 }
+
+export type ChildRegistInfo = {
+  name: string
+  birthDate: string
+  gender: string
+  familyName: string
+  phoneNumber: string
+  address: string
+  beaconId: number
+  image: File | null
+  memo: string | null
+}
+export type ChildRegistFormInfo = ChildRegistInfo & {
+  image: File[] | null
+}
