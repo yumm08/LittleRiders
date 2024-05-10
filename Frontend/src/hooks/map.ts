@@ -110,7 +110,7 @@ export function MapHook(
           map: mapRef!.current!,
           icon: {
             content: [
-              `<img src="/src/assets/image/${markerImg}" style="width:30px; height:30px"/>`,
+              `<img src="/${markerImg}" style="width:30px; height:30px"/>`,
             ].join(''),
             size,
             anchor,
