@@ -15,7 +15,6 @@ export const useAddNewDevice = () => {
     },
 
     onSuccess: async () => {
-      alert('단말기 추가 완료')
       changeModalState('addTerminalModal')
       await queryClient.invalidateQueries({ queryKey: ['addNewDevice'] })
     },

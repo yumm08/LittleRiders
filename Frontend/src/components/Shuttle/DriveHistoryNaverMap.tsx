@@ -49,7 +49,7 @@ export default function DriveHistoryNaverMap({
       className="relative h-[450px] w-screen rounded-md max-2xl:w-full"
     >
       <RouteLogDropDown
-        driveInfoByDayList={driveInfoByDayList as DriveInfoByDay[]}
+        driveInfoByDayList={driveInfoByDayList}
         onClickHistoryId={onClickHistoryId}
         historyId={historyId}
       />

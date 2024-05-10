@@ -19,7 +19,6 @@ export const useAddNewDriver = () => {
     },
 
     onSuccess: async () => {
-      alert('기사 추가 완료')
       changeModalState('addDriverModal')
       await queryClient.invalidateQueries({ queryKey: ['getDriverList'] })
     },

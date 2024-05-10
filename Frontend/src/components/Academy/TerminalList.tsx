@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import CardCarousel from '@pages/OperatePage/CardCarousel'
 import CardListContainer from '@pages/OperatePage/CardListContainer'
@@ -18,9 +18,9 @@ export default function TerminalList({ show }: Props) {
     (state) => state.modalController.addTerminalModal,
   )
   const changeModalState = modalStore((state) => state.changeModalState)
-  const openAddTerminalModal = () => {
+  const openAddTerminalModal = useCallback(() => {
     changeModalState('addTerminalModal')
-  }
+  }, [])
 
   useEffect(() => {
     function preloading(imageArray: string[]) {

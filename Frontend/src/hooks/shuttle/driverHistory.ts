@@ -4,7 +4,11 @@ import { getDriveDetailInfoByHistory } from '@apis/shuttle/getDriveDetailInfoByH
 import { getDriveHistoryList } from '@apis/shuttle/getDriveHistory'
 import { getDriveInfoByDayList } from '@apis/shuttle/getDriveInfoByDayList'
 
-import { DriveDetailInfoByHistory, DriveHistoryType } from '@types'
+import {
+  DriveDetailInfoByHistory,
+  DriveHistoryType,
+  DriveInfoByDay,
+} from '@types'
 
 /**
  * @summary 차량ID를 넘겨 차량별 운행 날짜 리스트를 받아오는 훅
@@ -38,7 +42,7 @@ export const useFetchDriveInfoByDayList = (
     queryFn: () => getDriveInfoByDayList(shuttleId, driveHistoryList, dateId),
     enabled: driveHistoryList !== undefined,
     select: (data) => {
-      const driveInfoByDayList: any[] = data?.data
+      const driveInfoByDayList: DriveInfoByDay[] = data?.data
       return driveInfoByDayList
     },
   })
@@ -50,14 +54,19 @@ export const useFetchDriveInfoByDayList = (
  * @param id 노선 id
  * @returns
  */
-export const useFetchDriveDetailInfoByHistory = (id: number) => {
+
+export const useFetchDriveDetailInfoByHistory = (
+  id: number,
+  driveInfoByDayList: DriveInfoByDay[] | undefined,
+) => {
   const { data: driveDetailInfoByHistory, ...rest } = useQuery({
     queryKey: ['getDriveInfoByRouteList', id],
-    queryFn: () => getDriveDetailInfoByHistory(id),
+    queryFn: () => getDriveDetailInfoByHistory(id, driveInfoByDayList),
     select: (data) => {
-      const driveDetailInfoByHistory: DriveDetailInfoByHistory = data.data
+      const driveDetailInfoByHistory: DriveDetailInfoByHistory = data?.data
       return driveDetailInfoByHistory
     },
+    enabled: driveInfoByDayList !== undefined,
   })
 
   return { driveDetailInfoByHistory, ...rest }
