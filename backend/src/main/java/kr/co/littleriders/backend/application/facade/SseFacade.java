@@ -5,8 +5,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface SseFacade {
 
+    SseEmitter createSmsUserSseConnectionByUuid(String uuid);
 
-    SseEmitter subscribeShuttle(long shuttleId);
+    SseEmitter createAcademySseConnectionByAcademyId(long academyId);
 
-    void broadcastShuttleLocation(long shuttleId, ShuttleLocationRequest shuttleLocationRequest);
+    void broadcastShuttleLocationByShuttleId(long shuttleId, ShuttleLocationRequest shuttleLocationRequest);
 }

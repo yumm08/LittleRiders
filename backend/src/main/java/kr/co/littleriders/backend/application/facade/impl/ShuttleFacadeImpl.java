@@ -3,7 +3,6 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.client.SmsFetchAPI;
 import kr.co.littleriders.backend.application.client.SmsSendClientRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
-import kr.co.littleriders.backend.application.dto.request.ShuttleChildDropRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.*;
@@ -24,19 +23,9 @@ import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
-import kr.co.littleriders.backend.domain.shuttle.DriveUniqueKeyService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
-import kr.co.littleriders.backend.domain.shuttle.entity.DriveUniqueKey;
-import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrive;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.shuttle.*;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
-import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleBoardErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
-import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleBoardException;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
@@ -44,8 +33,6 @@ import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
 import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherException;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -273,7 +260,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         }
 
         shuttleLocationHistoryService.save(locationHistory);*/
-        sseFacade.broadcastShuttleLocation(shuttleId,locationRequest);
+        sseFacade.broadcastShuttleLocationByShuttleId(shuttleId,locationRequest);
 
     }
 

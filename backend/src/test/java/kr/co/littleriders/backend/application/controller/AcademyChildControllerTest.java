@@ -5,11 +5,14 @@ import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.facade.AcademyChildFacade;
 import kr.co.littleriders.backend.common.fixture.AcademyChildFixture;
 import kr.co.littleriders.backend.common.fixture.AcademyFixture;
+import kr.co.littleriders.backend.common.fixture.BeaconFixture;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
 import kr.co.littleriders.backend.domain.academy.AcademyService;
 import kr.co.littleriders.backend.domain.academy.entity.Academy;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChild;
 import kr.co.littleriders.backend.domain.academy.entity.AcademyChildStatus;
+import kr.co.littleriders.backend.domain.beacon.BeaconServcie;
+import kr.co.littleriders.backend.domain.beacon.entity.Beacon;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -41,6 +44,9 @@ class AcademyChildControllerTest {
 	@Autowired
 	AcademyChildFacade academyChildFacade;
 
+	@Autowired
+	BeaconServcie beaconServcie;
+
 
 
 	@Autowired
@@ -63,10 +69,16 @@ class AcademyChildControllerTest {
 			Academy academy = AcademyFixture.BASEBALL.toAcademy();
 			academyService.save(academy);
 
-			AcademyChild academyChild = AcademyChildFixture.KANG.toAcademyChild(academy,AcademyChildStatus.ATTENDING);
-			AcademyChild academyChild1 = AcademyChildFixture.CHOI.toAcademyChild(academy,AcademyChildStatus.ATTENDING);
+			Beacon beacon_A = BeaconFixture.A.toBeacon(academy);
+			Beacon beacon_B = BeaconFixture.B.toBeacon(academy);
+			Beacon beacon_C = BeaconFixture.C.toBeacon(academy);
+			beaconServcie.save(beacon_A);
+			beaconServcie.save(beacon_B);
+			beaconServcie.save(beacon_C);
 
-			AcademyChild academyChild2 = AcademyChildFixture.PARK.toAcademyChild(academy,AcademyChildStatus.GRADUATE);
+			AcademyChild academyChild = AcademyChildFixture.KANG.toAcademyChild(academy,beacon_A,AcademyChildStatus.ATTENDING);
+			AcademyChild academyChild1 = AcademyChildFixture.CHOI.toAcademyChild(academy,beacon_B,AcademyChildStatus.ATTENDING);
+			AcademyChild academyChild2 = AcademyChildFixture.PARK.toAcademyChild(academy,beacon_C,AcademyChildStatus.GRADUATE);
 			academyChildService.save(academyChild);
 			academyChildService.save(academyChild1);
 			academyChildService.save(academyChild2);

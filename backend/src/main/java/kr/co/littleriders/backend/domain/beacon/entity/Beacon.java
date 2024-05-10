@@ -42,4 +42,12 @@ public class Beacon {
 	public void updateAcademyChild(AcademyChild academyChild) {
 		this.academyChild = academyChild;
 	}
+
+	private Beacon(String uuid, Academy academy){
+		this.uuid = uuid;
+		this.academy = academy;
+	}
+	public static Beacon of(String uuid, Academy academy){
+		return new Beacon(uuid,academy);
+	}
 }

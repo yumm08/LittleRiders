@@ -9,4 +9,6 @@ public interface ShuttleDriveService {
     ShuttleDrive findByShuttleId(long shuttleId);
 
     void delete(ShuttleDrive shuttleDrive);
+
+    boolean existsByShuttleId(Long shuttleId);
 }

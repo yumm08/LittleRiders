@@ -49,10 +49,10 @@ class SmsFetchAPITest {
         academyChildFixture2.setPhoneNumber("           ");
         academyChildFixture3.setPhoneNumber("           ");
         academyChildFixture4.setPhoneNumber("           ");
-        academyChildList.add(academyChildFixture1.toAcademyChild(academy,AcademyChildStatus.ATTENDING));
-        academyChildList.add(academyChildFixture2.toAcademyChild(academy,AcademyChildStatus.ATTENDING));
-        academyChildList.add(academyChildFixture3.toAcademyChild(academy,AcademyChildStatus.ATTENDING));
-        academyChildList.add(academyChildFixture4.toAcademyChild(academy,AcademyChildStatus.ATTENDING));
+        academyChildList.add(academyChildFixture1.toAcademyChild(academy,null,AcademyChildStatus.ATTENDING));
+        academyChildList.add(academyChildFixture2.toAcademyChild(academy,null,AcademyChildStatus.ATTENDING));
+        academyChildList.add(academyChildFixture3.toAcademyChild(academy,null,AcademyChildStatus.ATTENDING));
+        academyChildList.add(academyChildFixture4.toAcademyChild(academy,null,AcademyChildStatus.ATTENDING));
 
         List<SmsSendClientRequest> smsSendClientRequestList = new ArrayList<>();
         for(AcademyChild academyChild : academyChildList){

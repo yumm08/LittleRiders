@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShuttleLocationResponse {
+
+    private long shuttleId;
     private double latitude;
     private double longitude;
     private int speed;
 
-    public static ShuttleLocationResponse of(double latitude, double longitude, int speed) {
-        return new ShuttleLocationResponse(latitude,longitude,speed);
-    }
 
-    public static ShuttleLocationResponse from(ShuttleLocationRequest shuttleLocationRequest) {
-        return ShuttleLocationResponse.of(shuttleLocationRequest.getLatitude() ,shuttleLocationRequest.getLongitude(),shuttleLocationRequest.getSpeed());
+
+    public static ShuttleLocationResponse of(long shuttleId, ShuttleLocationRequest shuttleLocationRequest) {
+        return new ShuttleLocationResponse(shuttleId,shuttleLocationRequest.getLatitude(),shuttleLocationRequest.getLongitude(), shuttleLocationRequest.getSpeed());
     }
 }
