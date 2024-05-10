@@ -4,14 +4,21 @@ import { getChild, getChildList, postChild, putChild } from '@apis/child'
 
 import { showErrorAlert, showSuccessAlert } from '@utils/alertUtils'
 
-import { ChildRegistInfo, ChildStatus } from '@types'
+import { ChildInfo, ChildRegistInfo, ChildStatus } from '@types'
 
 export const useFetchChildList = () => {
   const { data: childList, ...rest } = useQuery({
     queryKey: ['getChildList'],
     queryFn: getChildList,
     select: (data) => {
-      const childList = data.data
+      let childList: ChildInfo[] = data.data
+
+      childList = childList.map((child) => {
+        const imagePath = '/api/content/' + child.imagePath
+
+        return { ...child, imagePath }
+      })
+
       return childList
     },
   })
@@ -25,8 +32,9 @@ export const useFetchChild = (academyChildId: number) => {
     queryFn: () => getChild(academyChildId),
     select: (data) => {
       const childDetailInfo = data.data
+      const imagePath = '/api/content/' + childDetailInfo.imagePath
 
-      return childDetailInfo
+      return { ...childDetailInfo, imagePath }
     },
   })
 
@@ -80,8 +88,6 @@ export const usePostChild = () => {
       if (memo) {
         formData.append('memo', memo)
       }
-
-      console.log(formData.entries())
 
       return postChild(formData)
     },
