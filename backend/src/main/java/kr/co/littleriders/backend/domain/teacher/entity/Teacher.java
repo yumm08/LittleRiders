@@ -59,6 +59,16 @@ public class Teacher {
                         , generateCode());
 	}
 
+
+    public static Teacher of(String name, String phoneNumber, Academy academy, String imagePath,TeacherStatus status) {
+        return new Teacher(academy
+                , name
+                , phoneNumber
+                , status
+                , imagePath
+                , generateCode());
+    }
+
     private static String generateCode() {
         return UUID.randomUUID().toString();
     }

@@ -59,6 +59,15 @@ public class Driver {
                         , generateCode());
     }
 
+    public static Driver of(String name, String phoneNumber, Academy academy,String imagePath, DriverStatus driverStatus) {
+        return new Driver(academy
+                , name
+                , phoneNumber
+                , driverStatus
+                , imagePath
+                , generateCode());
+    }
+
     private static String generateCode() {
         return UUID.randomUUID().toString();
     }
