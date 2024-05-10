@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.controller;
 import jakarta.validation.Valid;
 import kr.co.littleriders.backend.application.dto.request.CreateAcademyChildRequest;
 import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildRequest;
+import kr.co.littleriders.backend.application.dto.request.UpdateAcademyChildStatusRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildDetailResponse;
 import kr.co.littleriders.backend.application.dto.response.AcademyChildResponse;
 import kr.co.littleriders.backend.application.dto.response.BeaconResponse;
@@ -62,10 +63,10 @@ public class AcademyChildController {
     @PutMapping("/{academyChildId}/status")
     public ResponseEntity<Long> editAcademyChildStatus(@Auth AuthAcademy authAcademy,
                                                      @PathVariable(value = "academyChildId") Long academyChildId,
-                                                     @RequestBody String status) {
+                                                     @RequestBody UpdateAcademyChildStatusRequest status) {
 
         Long academyId = authAcademy.getId();
-        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, status);
+        Long updateChildId = academyChildFacade.updateAcademyChildStatus(academyId, academyChildId, status.getStatus());
 
         return ResponseEntity.ok().body(updateChildId);
     }

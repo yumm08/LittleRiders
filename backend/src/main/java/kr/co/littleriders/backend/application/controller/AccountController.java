@@ -29,7 +29,7 @@ public class AccountController {
     private final AccountFacade accountFacade;
 
     @GetMapping("/sign-up/validate")
-    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam @NotBlank String email) { //TODO : 변경필요
+    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam(name = "email") @NotBlank String email) { //TODO : 변경필요
         accountFacade.sendSignUpEmail(email);
         return ResponseEntity.ok().build();
     }
