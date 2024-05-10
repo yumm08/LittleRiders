@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 import kr.co.littleriders.backend.application.client.SmsFetchAPI;
 import kr.co.littleriders.backend.application.client.SmsSendClientRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
+import kr.co.littleriders.backend.application.dto.request.ShuttleChildDropRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
 import kr.co.littleriders.backend.application.dto.response.*;
@@ -17,15 +18,27 @@ import kr.co.littleriders.backend.domain.driver.DriverService;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
+import kr.co.littleriders.backend.domain.history.ShuttleBoardDropHistoryService;
 import kr.co.littleriders.backend.domain.history.ShuttleDriveHistoryService;
+import kr.co.littleriders.backend.domain.history.entity.ShuttleBoardDropHistory;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
+import kr.co.littleriders.backend.domain.shuttle.DriveUniqueKeyService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
+import kr.co.littleriders.backend.domain.shuttle.entity.DriveUniqueKey;
+import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrive;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.shuttle.*;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
+import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleBoardErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleBoardException;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
@@ -54,11 +67,13 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
     private final ShuttleLocationService shuttleLocationService;
     private final ShuttleDriveService shuttleDriveService;
+    private final ShuttleDropService shuttleDropService;
     private final DriveUniqueKeyService driveUniqueKeyService;
     private final ShuttleBoardService shuttleBoardService;
     private final SseFacade sseFacade;
     private final SmsFetchAPI smsFetchAPI;
     private final BeaconServcie beaconServcie;
+    private final ShuttleBoardDropHistoryService shuttleBoardDropHistoryService;
 
 
     private final ShuttleDriveHistoryService shuttleDriveHistoryService;
@@ -237,6 +252,59 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         return ShuttleChildBoardResponse.from(academyChild);
     }
+
+    @Override
+    public ShuttleChildDropResponse recordChildDrop(AuthTerminal authTerminal, ShuttleChildDropRequest dropRequest) {
+
+        long shuttleId = authTerminal.getShuttleId();
+        Shuttle shuttle = shuttleService.findById(shuttleId);
+        Academy academy = shuttle.getAcademy();
+
+        String uuid = dropRequest.getBeaconUUID();
+        Beacon beacon = beaconServcie.findByUuid(uuid);
+        long academyChildId = beacon.getAcademyChild().getId();
+        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId);
+
+        // 승차 기록이 없으면 예외 발생
+        if(shuttleBoardService.notExistsByAcademyChildId(academyChildId)) {
+            throw ShuttleBoardException.from(ShuttleBoardErrorCode.NOT_FOUND);
+        }
+
+        // redis에 하차 기록 저장
+        ShuttleDrop shuttleDrop = dropRequest.toShuttleDrop(driveUniqueKey, academy.getId());
+        shuttleDropService.save(shuttleDrop);
+
+        // redis에서 해당 driveUniqueKey 삭제
+        driveUniqueKeyService.delete(driveUniqueKey);
+
+        ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
+        AcademyChild academyChild = academyChildService.findById(driveUniqueKey.getAcademyChildId());
+        Teacher teacher = teacherService.findById(shuttleDrive.getTeacherId());
+        Driver driver = driverService.findById(shuttleDrive.getDriverId());
+        ShuttleBoard shuttleBoard = shuttleBoardService.findByAcademyChildId(academyChildId);
+
+        //TODO: mongoDB에 저장
+        // uuid, shuttle, driver, teacher, 승차 위도 경도(승차테이블) 시간, 하차 위도 경도(request) 시간
+
+        ShuttleBoardDropHistory shuttleBoardDropHistory = ShuttleBoardDropHistory.of(
+                uuid,
+                shuttle,
+                driver,
+                teacher,
+                shuttleBoard,
+                shuttleDrop
+        );
+
+        shuttleBoardDropHistoryService.save(shuttleBoardDropHistory);
+
+        // 하차 sms 전송
+        SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toDropMessage(uuid, academyChild, teacher, driver, shuttle);
+        smsFetchAPI.sendLMS(smsSendClientRequest);
+
+        return ShuttleChildDropResponse.from(academyChild);
+    }
+
+
 
     @Override
     public void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest) {

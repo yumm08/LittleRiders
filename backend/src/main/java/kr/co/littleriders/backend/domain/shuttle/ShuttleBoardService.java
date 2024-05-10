@@ -19,4 +19,6 @@ public interface ShuttleBoardService {
 	void delete(ShuttleBoard shuttleBoard);
 
 	void save(ShuttleBoard shuttleBoard);
+
+	boolean notExistsByAcademyChildId(long academyChildId);
 }

@@ -19,6 +19,8 @@ public interface ShuttleFacade {
 
     ShuttleChildBoardResponse recordChildBoard(AuthTerminal authTerminal, ShuttleChildBoardRequest boardRequest);
 
+    ShuttleChildDropResponse recordChildDrop(AuthTerminal authTerminal, ShuttleChildDropRequest dropRequest);
+
     void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest);
 
     DriverInfoResponse getDriverInfoByCardNumber(AuthTerminal authTerminal, String cardNumber);
