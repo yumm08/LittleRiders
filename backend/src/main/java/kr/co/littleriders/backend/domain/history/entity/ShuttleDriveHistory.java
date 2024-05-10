@@ -2,7 +2,9 @@ package kr.co.littleriders.backend.domain.history.entity;
 
 
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
+import kr.co.littleriders.backend.domain.shuttle.ChildBoardDropDto;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Document("shuttle_drive_history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,35 +29,45 @@ public class ShuttleDriveHistory {
     private DriverInShuttleDriveHistory driver;
     private TeacherInShuttleDriveHistory teacher;
     private List<LocationInShuttleDriveHistory> locationList;
+    private List<ChildBoardDrop> childBoardList;
+    private List<ChildBoardDrop> childDropList;
 
+    private String routeName;
     private LocalDateTime start;
     private LocalDateTime end;
 
     private ShuttleDriveHistory(
             LocalDateTime start,
             LocalDateTime end,
+            String routeName,
             ShuttleInShuttleDriveHistory shuttleDriveHistory,
-                                DriverInShuttleDriveHistory driverInShuttleDriveHistory,
-                                TeacherInShuttleDriveHistory teacherInShuttleDriveHistory,
-                                List<LocationInShuttleDriveHistory> locationList
+            DriverInShuttleDriveHistory driverInShuttleDriveHistory,
+            TeacherInShuttleDriveHistory teacherInShuttleDriveHistory,
+            List<ChildBoardDrop> boardList,
+            List<ChildBoardDrop> dropList,
+            List<LocationInShuttleDriveHistory> locationList
                                 ) {
+        this.start = start;
+        this.end = end;
+        this.routeName = routeName;
         this.shuttle = shuttleDriveHistory;
         this.driver = driverInShuttleDriveHistory;
         this.teacher = teacherInShuttleDriveHistory;
+        this.childBoardList = boardList;
+        this.childDropList = dropList;
         this.locationList = locationList;
-        this.start = start;
-        this.end = end;
     }
 
-    //주석처리 - 김도현
-//    public static ShuttleDriveHistory of(LocalDateTime start, LocalDateTime end,Shuttle shuttle, Driver driver, Teacher teacher, List<ShuttleLocationDTO> shuttleLocationDTOList) {
-//
-//        ShuttleInShuttleDriveHistory shuttleInShuttleDriveHistory = ShuttleInShuttleDriveHistory.from(shuttle);
-//        DriverInShuttleDriveHistory driverInShuttleDriveHistory = DriverInShuttleDriveHistory.from(driver);
-//        TeacherInShuttleDriveHistory teacherInShuttleDriveHistory = TeacherInShuttleDriveHistory.from(teacher);
-//        List<LocationInShuttleDriveHistory> locationInShuttleDriveHistoryList = shuttleLocationDTOList.stream().map(LocationInShuttleDriveHistory::from).toList();
-//        return new ShuttleDriveHistory(start,end,shuttleInShuttleDriveHistory, driverInShuttleDriveHistory, teacherInShuttleDriveHistory, locationInShuttleDriveHistoryList);
-//    }
+   public static ShuttleDriveHistory of(LocalDateTime start, LocalDateTime end, String routeName, Shuttle shuttle, Driver driver, Teacher teacher, List<ChildBoardDropDto> boardList, List<ChildBoardDropDto> dropList, List<ShuttleLocation> shuttleLocationList) {
+
+       ShuttleInShuttleDriveHistory shuttleInShuttleDriveHistory = ShuttleInShuttleDriveHistory.from(shuttle);
+       DriverInShuttleDriveHistory driverInShuttleDriveHistory = DriverInShuttleDriveHistory.from(driver);
+       TeacherInShuttleDriveHistory teacherInShuttleDriveHistory = TeacherInShuttleDriveHistory.from(teacher);
+       List<ChildBoardDrop> childBoardList = boardList.stream().map(ChildBoardDrop::from).collect(Collectors.toList());
+       List<ChildBoardDrop> childDropList = dropList.stream().map(ChildBoardDrop::from).collect(Collectors.toList());
+       List<LocationInShuttleDriveHistory> locationInShuttleDriveHistoryList = shuttleLocationList.stream().map(LocationInShuttleDriveHistory::from).toList();
+       return new ShuttleDriveHistory(start, end, routeName, shuttleInShuttleDriveHistory, driverInShuttleDriveHistory, teacherInShuttleDriveHistory, childBoardList, childDropList, locationInShuttleDriveHistoryList);
+   }
 
 
     @Getter
@@ -113,15 +126,17 @@ public class ShuttleDriveHistory {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class ChildBoard {
-        private long childId;
-        private long academyChildId;
+    private static class ChildBoardDrop { // 들어가야 함
+        private long id;
         private String name;
         private String address;
         private double latitude;
         private double longitude;
         private LocalDateTime time;
 
+        public static ChildBoardDrop from(ChildBoardDropDto childBoardDropDto) {
+            return new ChildBoardDrop();
+        }
     }
 
     @Getter
@@ -130,14 +145,16 @@ public class ShuttleDriveHistory {
     public static class LocationInShuttleDriveHistory {
         private double latitude;
         private double longitude;
+        private int speed;
         private LocalDateTime time;
 
-//        private static LocationInShuttleDriveHistory from(ShuttleLocationDTO shuttleLocationDTO) {//주석처리 - 김도현
-//            double latitude = shuttleLocationDTO.getLatitude();
-//            double longitude = shuttleLocationDTO.getLongitude();
-//            LocalDateTime time = shuttleLocationDTO.getTime();
-//            return new LocationInShuttleDriveHistory(latitude, longitude, time);
-//        }
+       private static LocationInShuttleDriveHistory from(ShuttleLocation shuttleLocationList) {//주석처리 - 김도현
+           double latitude = shuttleLocationList.getLatitude();
+           double longitude = shuttleLocationList.getLongitude();
+           int speed = shuttleLocationList.getSpeed();
+           LocalDateTime time = shuttleLocationList.getTime();
+           return new LocationInShuttleDriveHistory(latitude, longitude, speed, time);
+       }
     }
 
 
