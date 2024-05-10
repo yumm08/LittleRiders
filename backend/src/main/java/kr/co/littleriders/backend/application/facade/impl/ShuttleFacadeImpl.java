@@ -46,6 +46,7 @@ import kr.co.littleriders.backend.domain.teacher.error.code.TeacherErrorCode;
 import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherException;
 import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -57,6 +58,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShuttleFacadeImpl implements ShuttleFacade {
 
     private final ShuttleService shuttleService;
@@ -158,7 +160,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         academyChildList.forEach(academyChild -> {
             String uuid = UUID.randomUUID().toString();
-            long academyChildId = academyChild.getAcademy().getId();
+            long academyChildId = academyChild.getId();
             DriveUniqueKey driveUniqueKey = DriveUniqueKey.of(uuid, shuttleId, academyChildId);
             driveUniqueKeyService.save(driveUniqueKey);
 
