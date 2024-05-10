@@ -34,7 +34,7 @@ export const getChild = async (academyChildId: number) => {
  */
 export const putChild = async (academyChildId: number, status: ChildStatus) => {
   const response = await axiosInstance.put(
-    `${BASE_URL}/child/${academyChildId}`,
+    `${BASE_URL}/child/${academyChildId}/status`,
     { status },
   )
 
@@ -47,7 +47,7 @@ export const putChild = async (academyChildId: number, status: ChildStatus) => {
  * @param formData 원생 등록 데이터
  */
 export const postChild = async (formData: FormData) => {
-  const response = await axiosInstance.post(`${BASE_URL}/child`, {
+  const response = await axiosInstance.post(`${BASE_URL}/child`, formData, {
     method: 'post',
     data: formData,
     headers: {
