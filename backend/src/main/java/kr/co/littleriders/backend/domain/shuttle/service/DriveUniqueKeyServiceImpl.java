@@ -2,6 +2,8 @@ package kr.co.littleriders.backend.domain.shuttle.service;
 
 import kr.co.littleriders.backend.domain.shuttle.DriveUniqueKeyService;
 import kr.co.littleriders.backend.domain.shuttle.entity.DriveUniqueKey;
+import kr.co.littleriders.backend.domain.shuttle.error.code.DriveUniqueKeyErrorCode;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.DriveUniqueKeyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,8 @@ class DriveUniqueKeyServiceImpl implements DriveUniqueKeyService {
 
     @Override
     public DriveUniqueKey findByUuid(String uuid) {
-        return driveUniqueKeyRepository.findById(uuid).orElseThrow();
+        return driveUniqueKeyRepository.findById(uuid).orElseThrow(
+                () -> DriveUniqueKeyException.from(DriveUniqueKeyErrorCode.NOT_FOUND));
     }
 
     @Override

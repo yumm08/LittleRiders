@@ -6,7 +6,10 @@ import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardReque
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildDropRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleStartRequest;
-import kr.co.littleriders.backend.application.dto.response.*;
+import kr.co.littleriders.backend.application.dto.response.DriverInfoResponse;
+import kr.co.littleriders.backend.application.dto.response.RouteDetailResponse;
+import kr.co.littleriders.backend.application.dto.response.RouteResponse;
+import kr.co.littleriders.backend.application.dto.response.TeacherInfoResponse;
 import kr.co.littleriders.backend.application.facade.ShuttleFacade;
 import kr.co.littleriders.backend.application.facade.SseFacade;
 import kr.co.littleriders.backend.domain.academy.AcademyChildService;
@@ -273,7 +276,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         }
 
         shuttleLocationHistoryService.save(locationHistory);*/
-        sseFacade.broadcastShuttleLocation(shuttleId,locationRequest);
+        sseFacade.broadcastShuttleLocationByShuttleId(shuttleId,locationRequest);
 
     }
 

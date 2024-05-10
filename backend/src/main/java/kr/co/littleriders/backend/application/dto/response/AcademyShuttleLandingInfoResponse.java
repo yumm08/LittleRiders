@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ShuttleLandingInfoResponse {
+public class AcademyShuttleLandingInfoResponse {
 
 
     private final long shuttleId;
@@ -25,11 +25,11 @@ public class ShuttleLandingInfoResponse {
     private final List<BoardDropInfo> dropList;
 
 
-    public static ShuttleLandingInfoResponse of(long shuttleId, long driverId, long teacherId, long routeId, List<ShuttleLocation> shuttleLocationList,
-                                                List<BoardDropInfo> boardList, List<BoardDropInfo> dropList) {
+    public static AcademyShuttleLandingInfoResponse of(long shuttleId, long driverId, long teacherId, long routeId, List<ShuttleLocation> shuttleLocationList,
+                                                       List<BoardDropInfo> boardList, List<BoardDropInfo> dropList) {
 
         List<Location> locationList = shuttleLocationList.stream().map(Location::from).toList();
-        return new ShuttleLandingInfoResponse(shuttleId, driverId, teacherId, routeId, locationList,boardList,dropList);
+        return new AcademyShuttleLandingInfoResponse(shuttleId, driverId, teacherId, routeId, locationList,boardList,dropList);
     }
 
 
