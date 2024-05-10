@@ -130,24 +130,29 @@ export default function ChildRegistFormBody() {
         )}
       </div>
 
+      <span className="font-bold">[ 사용할 비콘 UUID ]</span>
       <select
         {...register('beaconId')}
         className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
-        defaultValue={undefined}
+        defaultValue={
+          beaconList && beaconList.length > 0 ? beaconList[0].id : ''
+        }
       >
-        <option disabled hidden selected>
+        <option disabled hidden>
           사용할 비콘 UUID
         </option>
         {beaconList &&
-          beaconList.map((beacon: Beacon) => (
-            <option value={beacon.id}>{beacon.uuid}</option>
+          beaconList.map(({ id, uuid }: Beacon) => (
+            <option key={id} value={id}>
+              {uuid}
+            </option>
           ))}
       </select>
 
       <textarea
         placeholder="특이사항 혹은 메모를 입력하세요"
         className="bg-lightblue text-md w-full resize-none rounded-md border border-lightgray p-3"
-        rows={10}
+        rows={5}
       />
     </>
   )
