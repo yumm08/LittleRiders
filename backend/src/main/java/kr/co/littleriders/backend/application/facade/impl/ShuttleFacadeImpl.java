@@ -265,11 +265,14 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         String uuid = boardRequest.getBeaconUUID();
         Beacon beacon = beaconServcie.findByUuid(uuid);
         long academyChildId = beacon.getAcademyChild().getId();
-        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId);
+        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId); //DriveUniqueKey 를 못 찾은 경우 오류터짐
 
         ShuttleBoard shuttleBoard = boardRequest.toShuttleBoard(driveUniqueKey, academy.getId());
 
-        //TODO - 김도현 - 승차기록이 있다면 재승차임. 그럴경우 exception 터트려야함
+        //TODO - 김도현 - 승차기록이 있다면 재승차임. 또는  그럴경우 exception 터트려야함
+        if(shuttleBoardService.existsByAcademyChildId(academyChildId)){
+            throw ShuttleBoardException.from(ShuttleBoardErrorCode.ALREADY_BOARD);
+        }
 
         // redis에 승차 기록 저장
         shuttleBoardService.save(shuttleBoard);
@@ -300,7 +303,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         String uuid = dropRequest.getBeaconUUID();
         Beacon beacon = beaconServcie.findByUuid(uuid);
         long academyChildId = beacon.getAcademyChild().getId();
-        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId);
+        DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId); //운행정보가 없는데 하차 시도시에도 예외
         String driveUniqueKeyUuid = driveUniqueKey.getUuid();
 
         // 승차 기록이 없으면 예외 발생
