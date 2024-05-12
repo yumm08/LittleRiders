@@ -248,6 +248,10 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         Teacher teacher = teacherService.findById(shuttleDrive.getTeacherId());
         Driver driver = driverService.findById(shuttleDrive.getDriverId());
 
+
+        //구독하고있는 학원과 viewer 에 승차정보 전송
+        sseFacade.broadcastBoardByAcademyIdAndViewerId(academy.getId(),driveUniqueKey.getUuid(),academyChild, boardRequest.getLatitude(), boardRequest.getLongitude());
+
         // 승차 sms 전송
         SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toBoardMessage(uuid, academyChild, teacher, driver, shuttle);
         smsFetchAPI.sendLMS(smsSendClientRequest);
@@ -266,6 +270,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         Beacon beacon = beaconServcie.findByUuid(uuid);
         long academyChildId = beacon.getAcademyChild().getId();
         DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId);
+        String driveUniqueKeyUuid = driveUniqueKey.getUuid();
 
         // 승차 기록이 없으면 예외 발생
         if(shuttleBoardService.notExistsByAcademyChildId(academyChildId)) {
@@ -295,6 +300,10 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                 shuttleDrop
         );
         shuttleBoardDropHistoryService.save(shuttleBoardDropHistory);
+
+        //구독하고있는 학원과 viewer 에 하차정보 전송
+        sseFacade.broadcastDropByAcademyIdAndViewerId(academy.getId(),driveUniqueKeyUuid,academyChild, dropRequest.getLatitude(), dropRequest.getLongitude());
+
 
         // 하차 sms 전송
         SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toDropMessage(uuid, academyChild, teacher, driver, shuttle);
