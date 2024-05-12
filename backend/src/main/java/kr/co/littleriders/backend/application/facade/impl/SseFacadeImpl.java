@@ -3,6 +3,7 @@ package kr.co.littleriders.backend.application.facade.impl;
 
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleLandingInfoResponse;
+import kr.co.littleriders.backend.application.dto.response.ShuttleEndDriveSseResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleLocationResponse;
 import kr.co.littleriders.backend.application.dto.response.SmsUserShuttleLandingInfoResponse;
 import kr.co.littleriders.backend.application.facade.SseFacade;
@@ -101,6 +102,29 @@ public class SseFacadeImpl implements SseFacade {
                 sseEmitter.send(event);
             } catch (Exception ignored) {
             }
+        });
+    }
+
+    @Override
+    public void broadcastEndDriveByShuttleId(long shuttleId) {
+        if(!subscribeMapByShuttleId.containsKey(shuttleId)){
+            return;
+        }
+
+        ShuttleEndDriveSseResponse shuttleEndDriveSseResponse = ShuttleEndDriveSseResponse.from(shuttleId);
+        subscribeMapByShuttleId.get(shuttleId).forEach(sseEmitter -> {
+            try {
+                SseEmitter.SseEventBuilder event = SseEmitter.event()
+                        //event 명 (event: event example)
+                        .name("end")
+                        //event id (id: id-1) - 재연결시 클라이언트에서 `Last-Event-ID` 헤더에 마지막 event id 를 설정
+                        .id(String.valueOf("end"))
+                        //event data payload (data: SSE connected)
+                        .data(shuttleEndDriveSseResponse)
+                        //SSE 연결이 끊어진 경우 재접속 하기까지 대기 시간 (retry: <RECONNECTION_TIMEOUT>)
+                        .reconnectTime(RECONNECTION_TIMEOUT);
+                sseEmitter.send(event);
+            }catch (Exception ignored){}
         });
     }
 

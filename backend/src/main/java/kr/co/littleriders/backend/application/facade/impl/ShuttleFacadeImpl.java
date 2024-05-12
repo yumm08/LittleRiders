@@ -224,6 +224,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         //TODO - 김도현 : 운행종료 노티 모두 던지기
 
+        sseFacade.broadcastEndDriveByShuttleId(shuttleId);
+
     }
 
     @Override

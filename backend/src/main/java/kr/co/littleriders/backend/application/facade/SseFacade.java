@@ -18,4 +18,6 @@ public interface SseFacade {
     void broadcastDropByAcademyIdAndViewerId(long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude);
 
     void broadcastStartDriveByAcademyId(long academyId, ShuttleDrive shuttleDrive);
+
+    void broadcastEndDriveByShuttleId(long shuttleId);
 }
