@@ -75,6 +75,34 @@ public class SseFacadeImpl implements SseFacade {
         broadcastBoardDropByAcademyIdAndViewerId(academyId,viewerUuid,academyChild,latitude,longitude,"drop");
     }
 
+    @Override
+    public void broadcastStartDriveByAcademyId(long academyId,ShuttleDrive shuttleDrive) {
+        long teacherId = shuttleDrive.getTeacherId();
+        long driverId = shuttleDrive.getDriverId();
+        long routeId = shuttleDrive.getRouteId();
+        long shuttleId = shuttleDrive.getShuttleId();
+
+        if(!subscribeMapByAcademyId.containsKey(academyId)){
+            return;
+        }
+        AcademyShuttleLandingInfoResponse academyShuttleLandingInfoResponse = AcademyShuttleLandingInfoResponse.of(shuttleId, teacherId, driverId, routeId, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        subscribeMapByAcademyId.get(academyId).forEach(sseEmitter -> {
+            try {
+                SseEmitter.SseEventBuilder event = SseEmitter.event()
+                        //event 명 (event: event example)
+                        .name("init")
+                        //event id (id: id-1) - 재연결시 클라이언트에서 `Last-Event-ID` 헤더에 마지막 event id 를 설정
+                        .id(String.valueOf("init"))
+                        //event data payload (data: SSE connected)
+                        .data(academyShuttleLandingInfoResponse)
+                        //SSE 연결이 끊어진 경우 재접속 하기까지 대기 시간 (retry: <RECONNECTION_TIMEOUT>)
+                        .reconnectTime(RECONNECTION_TIMEOUT);
+                sseEmitter.send(event);
+            } catch (Exception ignored) {
+            }
+        });
+    }
+
 
     @Override
     public SseEmitter createSmsUserSseConnectionByUuid(String uuid) {
@@ -142,7 +170,6 @@ public class SseFacadeImpl implements SseFacade {
 
             if (shuttleDriveService.existsByShuttleId(shuttleId)) {
                 //TODO - 김도현 - repository 에서 shuttelId 로 셔틀 운행 시작 정보를 가져와야함
-
                 ShuttleDrive shuttleDrive = shuttleDriveService.findByShuttleId(shuttleId);
 
                 long teacherId = shuttleDrive.getTeacherId();
@@ -194,6 +221,7 @@ public class SseFacadeImpl implements SseFacade {
                     sseEmitter.send(event);
                 } catch (Exception ignored) {
                 }
+
             }
 
 
@@ -256,6 +284,7 @@ public class SseFacadeImpl implements SseFacade {
             });
         }
     }
+
 
 
 }

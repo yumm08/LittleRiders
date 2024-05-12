@@ -169,6 +169,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
             ));
         });
 
+        sseFacade.broadcastStartDriveByAcademyId(shuttle.getAcademy().getId(),shuttleDrive); //운행시작 알림
+
         // 운행 시작 sms 발송
         smsFetchAPI.sendLMS(smsSendClientRequestList);
     }
