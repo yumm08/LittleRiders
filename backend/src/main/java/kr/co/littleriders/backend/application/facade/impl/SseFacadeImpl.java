@@ -77,6 +77,7 @@ public class SseFacadeImpl implements SseFacade {
 
     @Override
     public void broadcastStartDriveByAcademyId(long academyId,ShuttleDrive shuttleDrive) {
+        //shuttleId 로 바꿔도 상관없을거같음.
         long teacherId = shuttleDrive.getTeacherId();
         long driverId = shuttleDrive.getDriverId();
         long routeId = shuttleDrive.getRouteId();
@@ -259,6 +260,7 @@ public class SseFacadeImpl implements SseFacade {
         AcademyShuttleLandingInfoResponse.BoardDropInfo response = AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, latitude, longitude, LocalDateTime.now());
 
 
+        //내 아이를 보고있는 사람에게만 전송
         if (subscribeMapByViewerUuid.containsKey(viewerUuid)) {
             subscribeMapByViewerUuid.get(viewerUuid).forEach(sseEmitter -> {
                 try {
@@ -271,6 +273,7 @@ public class SseFacadeImpl implements SseFacade {
                 }
             });
         }
+        //학원에게 전송
         if (subscribeMapByAcademyId.containsKey(academyId)) {
             subscribeMapByAcademyId.get(academyId).forEach(sseEmitter -> {
                 try {
