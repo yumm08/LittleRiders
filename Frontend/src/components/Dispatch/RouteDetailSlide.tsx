@@ -140,10 +140,10 @@ export default function RouteDetailSlide({
         visitOrder: k,
       })
       const academyChildIdList: number[] = []
-      if (selectedStationListTemp[k].academyChildList) {
-        for (let s = 0; s < selectedStationListTemp[k].academyChildList!.length; s++) {
+      if (selectedStationListTemp[k].childList) {
+        for (let s = 0; s < selectedStationListTemp[k].childList!.length; s++) {
           academyChildIdList.push(
-            selectedStationListTemp[k].academyChildList![s].academyChildId,
+            selectedStationListTemp[k].childList![s].academyChildId,
           )
         }
       }
@@ -175,11 +175,12 @@ export default function RouteDetailSlide({
       const temp = stationItems.selectedStationList.find(
         (station) => station.id === selectedStation,
       )
-      if (temp && temp.academyChildList) {
+
+      if (temp && temp.childList) {
         setChildDragDisabled(false)
         setChildItems((prev) => ({
           ...prev,
-          selectedChildList: [...temp.academyChildList!],
+          selectedChildList: [...temp.childList!],
         }))
       } else {
         setChildDragDisabled(true)
@@ -189,7 +190,6 @@ export default function RouteDetailSlide({
         }))
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStation])
   /**
@@ -221,8 +221,8 @@ export default function RouteDetailSlide({
             let isSame = false
             routeDetail.stationList.forEach((station: Station) => {
               if (
-                station.academyChildList &&
-                station.academyChildList.some(
+                station.childList &&
+                station.childList.some(
                   (stationChild) =>
                     stationChild.academyChildId === child.academyChildId,
                 )
@@ -264,7 +264,7 @@ export default function RouteDetailSlide({
     setStationItems((prev) => {
       prev.selectedStationList?.forEach((station: Station) => {
         if (station.id === selectedStation) {
-          station.academyChildList = [...childItems['selectedChildList']]
+          station.childList = [...childItems['selectedChildList']]
         }
       })
       return { ...prev }

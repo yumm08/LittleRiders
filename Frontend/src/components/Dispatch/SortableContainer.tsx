@@ -83,7 +83,7 @@ export default function SortableContainer({
                   key={item.name!}
                   id={item.id!}
                   selectedStation={selectedStation}
-                  childList={item.academyChildList}
+                  childList={item.childList}
                   name={item.name!}
                   type={id}
                   index={index}

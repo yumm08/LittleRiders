@@ -89,7 +89,7 @@ export default function RouteDetailChild({
       />
       {createPortal(
         <DragOverlay>
-          <SortableItem id={activeChildId!} name={activeChildName} index={0} />
+          <SortableItem id={activeChildId!} name={activeChildName} index={-1} />
         </DragOverlay>,
         document.getElementById('root')!,
       )}

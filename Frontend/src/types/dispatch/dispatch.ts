@@ -6,7 +6,7 @@ export type Station = {
   latitude?: number
   longitude?: number
   visitOrder?: number
-  academyChildList?: ChildInfo[]
+  childList?: ChildInfo[]
 }
 
 export type Route = {
