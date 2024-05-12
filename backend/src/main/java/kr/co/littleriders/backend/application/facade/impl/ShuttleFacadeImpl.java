@@ -37,8 +37,10 @@ import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.shuttle.*;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleBoardErrorCode;
+import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleDriveErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleBoardException;
+import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleDriveException;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import kr.co.littleriders.backend.domain.teacher.TeacherService;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
@@ -123,7 +125,14 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     @Override
     public void startDrive(AuthTerminal authTerminal, ShuttleStartRequest startRequest) {
 
+
+
         long shuttleId = authTerminal.getShuttleId();
+
+        //셔틀이 운행중이면 에러
+        if(shuttleDriveService.existsByShuttleId(shuttleId)){
+            throw ShuttleDriveException.from(ShuttleDriveErrorCode.ALREADY_DRIVE);
+        }
 
         if (routeService.notExistsById(startRequest.getRouteId())) {
             throw RouteException.from(RouteErrorCode.NOT_FOUND);
@@ -170,7 +179,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         });
 
         sseFacade.broadcastStartDriveByAcademyId(shuttle.getAcademy().getId(),shuttleDrive); //운행시작 알림
-
+        log.info("size = {}",smsSendClientRequestList.size());
         // 운행 시작 sms 발송
         smsFetchAPI.sendLMS(smsSendClientRequestList);
     }
@@ -231,6 +240,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     @Override
     public ShuttleChildBoardResponse recordChildBoard(AuthTerminal authTerminal, ShuttleChildBoardRequest boardRequest) {
 
+
+
         // TODO: 졸업을 한 아이에 대한 valid check 추가
 
         long shuttleId = authTerminal.getShuttleId();
@@ -243,6 +254,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         DriveUniqueKey driveUniqueKey = driveUniqueKeyService.findByAcademyChildId(academyChildId);
 
         ShuttleBoard shuttleBoard = boardRequest.toShuttleBoard(driveUniqueKey, academy.getId());
+
+        //TODO - 김도현 - 승차기록이 있다면 재승차임. 그럴경우 exception 터트려야함
 
         // redis에 승차 기록 저장
         shuttleBoardService.save(shuttleBoard);
@@ -321,25 +334,12 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     @Override
     public void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest) {
 
+        //TODO - 김도현 - 무작정 업로드가 아닌 Shuttle 이 운행중인지 확인 후 upload 해야함
         long shuttleId = authTerminal.getShuttleId();
 
         ShuttleLocation location = locationRequest.toShuttleLocation(shuttleId);
         shuttleLocationService.save(location);
 
-        /* //주석처리 - 김도현
-        ShuttleLocationHistory locationHistory;
-
-        if (shuttleLocationHistoryService.existsByShuttleId(shuttleId)) {
-            locationHistory = shuttleLocationHistoryService.findByShuttleId(shuttleId);
-            double latitude = locationRequest.getLatitude();
-            double longitude = locationRequest.getLongitude();
-            int speed = locationRequest.getSpeed();
-            locationHistory.addLocation(latitude, longitude, speed);
-        } else {
-            locationHistory = locationRequest.toShuttleLocationHistory(shuttleId);
-        }
-
-        shuttleLocationHistoryService.save(locationHistory);*/
         sseFacade.broadcastShuttleLocationByShuttleId(shuttleId,locationRequest);
 
     }
