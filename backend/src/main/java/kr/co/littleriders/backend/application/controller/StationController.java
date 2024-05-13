@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/station")
+@RequestMapping("/academy/station")
 @RequiredArgsConstructor
 public class StationController {
     private final StationFacade stationFacade;
