@@ -57,18 +57,4 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 		return teacherList;
 	}
 
-	@Override
-	public Map<String, Object> readTeacherImage(Long academyId, Long teacherId) {
-
-		Academy academy = academyService.findById(academyId);
-		Teacher teacher = teacherService.findById(teacherId);
-		if (!teacher.equalsAcademy(academy)) {
-			throw TeacherException.from(TeacherErrorCode.ILLEGAL_ACCESS);
-		}
-
-		String imagePath = teacher.getImagePath();
-		Map<String, Object> result = imageUtil.getImage(imagePath);
-
-		return result;
-	}
 }
