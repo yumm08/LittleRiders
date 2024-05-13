@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
 
+import jakarta.transaction.Transactional;
 import kr.co.littleriders.backend.application.dto.request.ShuttleLocationRequest;
 import kr.co.littleriders.backend.application.dto.response.AcademyShuttleLandingInfoResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleEndDriveSseResponse;
@@ -180,6 +181,8 @@ public class SseFacadeImpl implements SseFacade {
     }
 
 
+
+    @Transactional
     @Override
     public SseEmitter createAcademySseConnectionByAcademyId(long academyId) {
 

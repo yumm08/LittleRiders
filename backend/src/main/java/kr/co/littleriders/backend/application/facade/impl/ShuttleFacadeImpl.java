@@ -1,5 +1,6 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
+import jakarta.transaction.Transactional;
 import kr.co.littleriders.backend.application.client.SmsFetchAPI;
 import kr.co.littleriders.backend.application.client.SmsSendClientRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
@@ -124,6 +125,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
+    @Transactional
     public void startDrive(AuthTerminal authTerminal, ShuttleStartRequest startRequest) {
 
 
@@ -182,7 +184,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         sseFacade.broadcastStartDriveByAcademyId(shuttle.getAcademy().getId(),shuttleDrive); //운행시작 알림
         log.info("size = {}",smsSendClientRequestList.size());
         // 운행 시작 sms 발송
-        smsFetchAPI.sendLMS(smsSendClientRequestList);
+//        smsFetchAPI.sendLMS(smsSendClientRequestList);
     }
 
     @Override
@@ -288,7 +290,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         // 승차 sms 전송
         SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toBoardMessage(uuid, academyChild, teacher, driver, shuttle);
-        smsFetchAPI.sendLMS(smsSendClientRequest);
+//        smsFetchAPI.sendLMS(smsSendClientRequest);
 
         return ShuttleChildBoardResponse.from(academyChild);
     }
@@ -341,7 +343,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         // 하차 sms 전송
         SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toDropMessage(uuid, academyChild, teacher, driver, shuttle);
-        smsFetchAPI.sendLMS(smsSendClientRequest);
+//        smsFetchAPI.sendLMS(smsSendClientRequest);
 
         return ShuttleChildDropResponse.from(academyChild);
     }
