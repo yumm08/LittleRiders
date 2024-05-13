@@ -159,6 +159,9 @@ public class SseFacadeImpl implements SseFacade {
             subscribeMapByViewerUuid.put(uuid, new ArrayList<>());
         }
         subscribeMapByViewerUuid.get(uuid).add(sseEmitter);
+        if(!subscribeMapByShuttleId.containsKey(shuttleId)){
+            subscribeMapByShuttleId.put(shuttleId,new ArrayList<>());
+        }
         subscribeMapByShuttleId.get(shuttleId).add(sseEmitter);
 
 
