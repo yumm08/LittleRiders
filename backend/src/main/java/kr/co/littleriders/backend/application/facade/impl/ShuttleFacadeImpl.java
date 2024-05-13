@@ -254,6 +254,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
+    @Transactional
     public ShuttleChildBoardResponse recordChildBoard(AuthTerminal authTerminal, ShuttleChildBoardRequest boardRequest) {
 
 
@@ -296,6 +297,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
+    @Transactional
     public ShuttleChildDropResponse recordChildDrop(AuthTerminal authTerminal, ShuttleChildDropRequest dropRequest) {
 
         long shuttleId = authTerminal.getShuttleId();
