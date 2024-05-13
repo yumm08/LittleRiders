@@ -4,6 +4,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { getShuttle } from '@apis/shuttle/getShuttle'
 
+import { InitData, LocationInfo } from '@types'
+import { EventSourcePolyfill } from 'event-source-polyfill'
+
 export const useFetchShuttleList = () => {
   const { data: shuttleList, ...rest } = useQuery({
     queryKey: ['getShuttleList'],
@@ -17,32 +20,44 @@ export const useFetchShuttleList = () => {
   return { shuttleList, ...rest }
 }
 
-export const useFetchRealTimeShuttleInfo = (shuttleId: number) => {
+export const useFetchRealTimeShuttleInfo = () => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    // SSE URL
-    // const eventSourceUrl = `/api/family/shuttle/${shuttleId}/location`
-    const eventSourceUrl = `/api/family/shuttle/1/location`
+    const eventSourceUrl = `/api/academy/connection`
 
-    // Create Event Source
-    const eventSource = new EventSource(eventSourceUrl, {
+    const eventSource = new EventSourcePolyfill(eventSourceUrl, {
+      headers: {
+        Authorization: sessionStorage.getItem('accessToken') as string,
+      },
       withCredentials: true,
+      heartbeatTimeout: 86400000,
     })
 
-    // Recieve Message
-    const handleMessage = (event: MessageEvent) => {
-      const newData = JSON.parse(event.data)
-      queryClient.setQueryData(['realTimeShuttleInfo', shuttleId], newData)
+    const handleInit = (event: MessageEvent) => {
+      const initData: InitData = JSON.parse(event.data)
+      const shuttleId = initData.shuttleId
+
+      queryClient.setQueryData(['initData', shuttleId], initData)
     }
 
-    // Add Receiving Message Event Handler
-    eventSource.addEventListener('location', handleMessage)
+    const handleLocation = (event: MessageEvent) => {
+      const locationInfo: LocationInfo = JSON.parse(event.data)
+      const shuttleId = locationInfo.shuttleId
 
-    // Close Event Source When Unmount Component
+      queryClient.setQueryData(['locationInfo', shuttleId], locationInfo)
+    }
+
+    eventSource.addEventListener('init', handleInit)
+    eventSource.addEventListener('location', handleLocation)
+
     return () => {
-      eventSource.removeEventListener('location', handleMessage)
+      eventSource.removeEventListener('init', () => console.log('init close'))
+      eventSource.removeEventListener('location', () =>
+        console.log('location close'),
+      )
+
       eventSource.close()
     }
-  }, [queryClient, shuttleId])
+  }, [])
 }
