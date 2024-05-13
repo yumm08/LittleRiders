@@ -73,8 +73,8 @@ export default function RouteDetailChild({
     >
       <SortableContainer
         subject="모든 어린이"
-        id="childList"
-        items={childItems['childList']}
+        id="academyChildList"
+        items={childItems['academyChildList']}
         isDisabled={childDragDisabled}
         isLoading={isRouteDetailLoading}
         isPending={isRouteDetailPending}

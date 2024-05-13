@@ -52,7 +52,7 @@ export default function SortableItem({
       return <p className="w-8 text-center text-xl font-bold">{index}</p>
     if (type === 'stationList')
       return <img src="/bus-stop-icon.svg" className="w-8" />
-    if (type.includes('childList')) return <></>
+    if (type.includes('academyChildList')) return <></>
   }
 
   const stationTailIcon = (type: string | undefined) => {

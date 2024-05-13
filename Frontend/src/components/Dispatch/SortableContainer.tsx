@@ -37,6 +37,7 @@ export default function SortableContainer({
   selectedStation,
   handleStationRemoveClick,
 }: Props) {
+  console.log(subject, isDisabled)
   const { setNodeRef } = useDroppable({ disabled: isDisabled, id })
   if (isLoading || isPending || !items) {
     return (
@@ -83,7 +84,7 @@ export default function SortableContainer({
                   key={item.name!}
                   id={item.id!}
                   selectedStation={selectedStation}
-                  childList={item.childList}
+                  childList={item.academyChildList}
                   name={item.name!}
                   type={id}
                   index={index}
