@@ -9,7 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 @RedisHash(value = "verification")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,8 +46,7 @@ public final class Verification {
     }
 
     private static String generateCode() {
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
+        SecureRandom random = new SecureRandom();
         return String.format("%06d", random.nextInt(100000, 1000000));
     }
 
