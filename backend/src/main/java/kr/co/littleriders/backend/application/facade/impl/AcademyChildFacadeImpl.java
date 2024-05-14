@@ -41,9 +41,9 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
         Academy academy = academyService.findById(academyId);
         return academy.getAcademyChildList()
                 .stream()
-                .sorted(Comparator.comparing(academyChild -> {
-                    return academyChild.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1;
-                }))
+                .sorted(Comparator.comparing(academyChild ->
+                    academyChild.getStatus() == AcademyChildStatus.ATTENDING ? 0 : 1
+                ))
                 .map(AcademyChildResponse::from)
                 .collect(Collectors.toList());
     }
