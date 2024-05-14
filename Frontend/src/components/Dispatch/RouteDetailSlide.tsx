@@ -180,21 +180,21 @@ export default function RouteDetailSlide({
         (station) => station.id === selectedStation,
       )
       if (temp) {
+        console.log(temp)
         setChildDragDisabled(false)
-        if (!temp.academyChildList) {
-          setChildItems((prev) => {
-            if (!temp.academyChildList) {
-              return {
-                ...prev,
-                selectedChildList: [],
-              }
-            }
+        console.log(temp.academyChildList)
+        setChildItems((prev) => {
+          if (!temp.academyChildList) {
             return {
               ...prev,
-              selectedChildList: [...temp.academyChildList],
+              selectedChildList: [],
             }
-          })
-        }
+          }
+          return {
+            ...prev,
+            selectedChildList: [...temp.academyChildList],
+          }
+        })
       } else {
         setChildDragDisabled(true)
         setChildItems((prev) => ({
@@ -204,7 +204,7 @@ export default function RouteDetailSlide({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStation])
+  }, [selectedStation, stationItems['selectedStationList']])
   /**
    * st      ationList, routeList 가 변경되었을 때 stationItems(모아둔 꾸러미) 내부 변경
    */
