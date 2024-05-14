@@ -57,6 +57,7 @@ export default function RealTimeMap({
           key={shuttle.shuttleId}
           shuttleId={shuttle.shuttleId}
           realTimeMap={realTimeMap}
+          isSelected={Object.is(selectedShuttle, shuttle)}
         />
       ))}
     </>
