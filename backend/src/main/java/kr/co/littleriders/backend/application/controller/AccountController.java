@@ -35,14 +35,14 @@ public class AccountController {
     }
 
     @PostMapping("/sign-up/validate")
-    public ResponseEntity<?> validateEmailWithCode(@Valid @RequestBody ValidateEmailRequest validateEmailRequest, HttpServletResponse response) {
+    public ResponseEntity<Void> validateEmailWithCode(@Valid @RequestBody ValidateEmailRequest validateEmailRequest, HttpServletResponse response) {
         log.info("validateEmailWithCode: call");
         String email = validateEmailRequest.getEmail();
         String code = validateEmailRequest.getCode();
         String signUpToken = accountFacade.getSignUpToken(email, code);
         Cookie cookie = new Cookie("signup-token", signUpToken);
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(60*30);
+        cookie.setMaxAge(60 * 30);
         cookie.setPath("/");
         response.addCookie(cookie);
         return ResponseEntity.ok().build();
@@ -50,8 +50,8 @@ public class AccountController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<Void> signUp(@Valid @RequestBody AcademySignUpRequest academySignUpRequest, @CookieValue("signup-token") String token) {
-        log.info("signup-token = [{}]",token);
-        accountFacade.signUp(academySignUpRequest,token);
+        log.info("signup-token = [{}]", token);
+        accountFacade.signUp(academySignUpRequest, token);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -121,8 +121,8 @@ public class AccountController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@Auth AuthDTO authDTO, @RequestBody ChangePasswordRequest changePasswordRequest){
-        accountFacade.changePassword(authDTO,changePasswordRequest.getPassword());
+    public ResponseEntity<Void> changePassword(@Auth AuthDTO authDTO, @RequestBody ChangePasswordRequest changePasswordRequest) {
+        accountFacade.changePassword(authDTO, changePasswordRequest.getPassword());
         return ResponseEntity.ok().build();
     }
 
