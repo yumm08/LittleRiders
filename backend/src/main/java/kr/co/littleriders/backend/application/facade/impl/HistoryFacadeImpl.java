@@ -61,9 +61,8 @@ public class HistoryFacadeImpl implements HistoryFacade {
 	}
 
 	@Override
-	public ShuttleDetailHistoryResponse readShuttleDetailHistory(Long academyId, String historyId) {
+	public ShuttleDetailHistoryResponse readShuttleDetailHistory(String historyId) {
 
-		Academy academy = academyService.findById(academyId);
 		ShuttleDriveHistory shuttleDriveHistory = shuttleDriveHistoryService.findById(historyId);
 		ShuttleDetailHistoryResponse shuttleDetailHistory = ShuttleDetailHistoryResponse.from(shuttleDriveHistory);
 
