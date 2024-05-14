@@ -1,3 +1,5 @@
+import { Gender } from '@types'
+
 export type LocationInfo = {
   shuttleId: number
   latitude: number
@@ -5,12 +7,32 @@ export type LocationInfo = {
   speed: number
 }
 
+export type InitDataLocationInfo = Omit<LocationInfo, 'shuttleId'> & {
+  time: string
+}
+
 export type InitData = {
   shuttleId: number
   driverId: number
   teacherId: number
   routeId: number
-  locationList: LocationInfo[]
-  boardList: []
-  dropList: []
+  locationList: InitDataLocationInfo[]
+  boardList: BoardInfo[]
+  dropList: DropInfo[]
 }
+
+export type BoardChildInfo = {
+  academyChildId: number
+  name: string
+  gender: Gender
+  imagePath: string
+}
+export type BoardInfo = {
+  child: BoardChildInfo
+  latitude: number
+  longitude: number
+  time: string
+}
+
+export type DropChildInfo = BoardChildInfo
+export type DropInfo = BoardInfo
