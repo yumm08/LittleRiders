@@ -1,6 +1,5 @@
 package kr.co.littleriders.backend.application.facade.impl;
 
-import jakarta.transaction.Transactional;
 import kr.co.littleriders.backend.application.client.SmsFetchAPI;
 import kr.co.littleriders.backend.application.client.SmsSendClientRequest;
 import kr.co.littleriders.backend.application.dto.request.ShuttleChildBoardRequest;
@@ -52,6 +51,7 @@ import kr.co.littleriders.backend.global.auth.dto.AuthTerminal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -64,6 +64,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class ShuttleFacadeImpl implements ShuttleFacade {
 
     private final ShuttleService shuttleService;
@@ -189,6 +190,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
     }
 
     @Override
+    @Transactional
     public void endDrive(long shuttleId) {
 
 
@@ -355,6 +357,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
 
     @Override
+    @Transactional
     public void uploadLocation(AuthTerminal authTerminal, ShuttleLocationRequest locationRequest) {
 
 

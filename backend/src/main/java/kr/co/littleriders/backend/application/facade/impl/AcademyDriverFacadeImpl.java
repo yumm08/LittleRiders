@@ -10,6 +10,7 @@ import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.DriverRegistRequest;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 
 	private final DriverService driverService;
@@ -29,6 +31,7 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 	private final ImageUtil imageUtil;
 
 	@Override
+	@Transactional
 	public Long insertDriver(DriverRegistRequest driverRegistRequest, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);

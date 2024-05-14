@@ -12,6 +12,7 @@ import kr.co.littleriders.backend.domain.teacher.error.exception.TeacherExceptio
 import kr.co.littleriders.backend.global.utils.ImageUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.TeacherRegistRequest;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 
 	private final TeacherService teacherService;
@@ -31,6 +33,7 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 	private final ImageUtil imageUtil;
 
 	@Override
+	@Transactional
 	public Long insertTeacher(TeacherRegistRequest teacherRegistRequest, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);

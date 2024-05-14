@@ -11,9 +11,11 @@ import kr.co.littleriders.backend.domain.terminal.error.code.TerminalErrorCode;
 import kr.co.littleriders.backend.domain.terminal.error.exception.TerminalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class AcademyTerminalFacadeImpl implements AcademyTerminalFacade {
 
     private final TerminalService terminalService;
@@ -21,6 +23,7 @@ class AcademyTerminalFacadeImpl implements AcademyTerminalFacade {
 
 
     @Override
+    @Transactional
     public void registerTerminal(long academyId, AcademyTerminalRegisterRequest academyTerminalRegisterRequest) {
 
         String terminalNumber = academyTerminalRegisterRequest.getTerminalNumber();

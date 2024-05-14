@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class HistoryFacadeImpl implements HistoryFacade {
 
 	private final ShuttleDriveHistoryService shuttleDriveHistoryService;
@@ -29,7 +30,6 @@ public class HistoryFacadeImpl implements HistoryFacade {
 	private final AcademyService academyService;
 
 	@Override
-	@Transactional
 	public List<LocalDateTime> readShuttleDateList(Long shuttleId, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);
@@ -42,7 +42,6 @@ public class HistoryFacadeImpl implements HistoryFacade {
 	}
 
 	@Override
-	@Transactional
 	public List<ShuttleDailyHistoryResponse> readShuttleDailyHistory(Long academyId, Long shuttleId, LocalDate date) {
 
 		Academy academy = academyService.findById(academyId);
@@ -62,7 +61,6 @@ public class HistoryFacadeImpl implements HistoryFacade {
 	}
 
 	@Override
-	@Transactional
 	public ShuttleDetailHistoryResponse readShuttleDetailHistory(Long academyId, String historyId) {
 
 		Academy academy = academyService.findById(academyId);

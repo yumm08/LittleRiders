@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
     private final AcademyService academyService;
@@ -98,6 +99,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
     }
 
     @Override
+    @Transactional
     public Long updateAcademyChildStatus(Long academyId, Long academyChildId, String status) {
 
         Academy academy = academyService.findById(academyId);
@@ -122,6 +124,7 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
 
     //TODO - HOTFIX-이윤지 수정 필요 - status 만 업데이트 할게 아닌 다른 정보도 업데이트 해야함 Attending 상관없음 (김도현)
     @Override
+    @Transactional
     public Long updateAcademyChild(Long academyId, Long academyChildId, UpdateAcademyChildRequest updateAcademyChildRequest) {
 
 

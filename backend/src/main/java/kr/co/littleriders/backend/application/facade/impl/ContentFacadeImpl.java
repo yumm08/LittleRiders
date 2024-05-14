@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import kr.co.littleriders.backend.application.facade.ContentFacade;
 import kr.co.littleriders.backend.global.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ContentFacadeImpl implements ContentFacade {
 
 	private final ImageUtil imageUtil;

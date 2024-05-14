@@ -33,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class SseFacadeImpl implements SseFacade {
 
 

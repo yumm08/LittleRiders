@@ -43,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class AccountFacadeImpl implements AccountFacade {
 
     private final RefreshTokenService refreshTokenService;
@@ -65,6 +66,7 @@ class AccountFacadeImpl implements AccountFacade {
     private final AddressConvertFetchAPI addressConvertFetchAPI;
 
     @Override
+    @Transactional
     public JwtToken tokenReIssue(final String token) {
         RefreshToken refreshToken = refreshTokenService.findByToken(token);
         refreshTokenService.delete(refreshToken);
@@ -93,12 +95,14 @@ class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
+    @Transactional
     public void signOut(String requestRefreshToken) {
         RefreshToken refreshToken = refreshTokenService.findByToken(requestRefreshToken);
         refreshTokenService.delete(refreshToken);
     }
 
     @Override
+    @Transactional
     public JwtToken signIn(String email, String password) { //리팩토링이 될거같음
 
         Academy academy = academyService.findByEmail(email);
@@ -138,6 +142,7 @@ class AccountFacadeImpl implements AccountFacade {
 
 
     @Override
+    @Transactional
     public JwtToken signInByTerminalNumber(String terminalNumber) {
         Terminal terminal = terminalService.findByTerminalNumber(terminalNumber);
         if (terminal.getShuttleTerminalAttach() == null) {
@@ -150,6 +155,7 @@ class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
+    @Transactional
     public void sendChangePasswordEmail(String email) {
         Academy academy = academyService.findByEmail(email);
 
@@ -162,6 +168,7 @@ class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
+    @Transactional
     public JwtToken signInByEmailAndVerificationCode(String email, String code) {
         Verification verification = verificationService.findByEmail(email);
         VerificationType verificationType = verification.getType();
@@ -177,6 +184,7 @@ class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
+    @Transactional
     public void changePassword(AuthDTO authDTO, String password) {
         String encrypted = passwordUtil.encrypt(password);
         if (authDTO instanceof AuthAcademy authAcademy) {
@@ -189,6 +197,7 @@ class AccountFacadeImpl implements AccountFacade {
     }
 
     @Override
+    @Transactional
     public String sendSignUpEmail(final String email) {
         if ( academyService.existsByEmail(email)) {
             throw MemberException.from(MemberErrorCode.ALREADY_EMAIL_EXIST);
@@ -203,6 +212,7 @@ class AccountFacadeImpl implements AccountFacade {
 
 
     @Override
+    @Transactional
     public String getSignUpToken(String email, String code) {
         Verification verification = verificationService.findAcademySignUpByEmailAndCode(email, code);
         verificationService.delete(verification);

@@ -10,6 +10,7 @@ import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleErrorCode;
 import kr.co.littleriders.backend.domain.shuttle.error.exception.ShuttleException;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.littleriders.backend.application.dto.request.ShuttleRegistRequest;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 
 	private final ShuttleService shuttleService;
@@ -31,6 +33,7 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 	private final ImageUtil imageUtil;
 
 	@Override
+	@Transactional
 	public Long insertShuttle(ShuttleRegistRequest shuttleRegistRequest, Long academyId) {
 
 		Academy academy = academyService.findById(academyId);

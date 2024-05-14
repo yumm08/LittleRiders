@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class RouteFacadeImpl implements RouteFacade {
 
     private final RouteService routeService;
@@ -38,6 +39,7 @@ class RouteFacadeImpl implements RouteFacade {
     private final AcademyChildService academyChildService;
 
     @Override
+    @Transactional
     public long createRoute(long academyId, RouteRequest routeRequest) {
         Academy academy = academyService.findById(academyId);
 
@@ -51,8 +53,8 @@ class RouteFacadeImpl implements RouteFacade {
         return routeService.save(route);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void addRouteStation(long academyId, long routeId, List<RouteStationRequest> requestList) {
         Academy academy = academyService.findById(academyId);
         Route route = routeService.findById(routeId);
@@ -98,8 +100,8 @@ class RouteFacadeImpl implements RouteFacade {
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void addAcademyChildToRouteStation(long academyId, long routeId, List<RouteStationAcademyChildRequest> requestList) {
         Academy academy = academyService.findById(academyId);
 
@@ -143,6 +145,7 @@ class RouteFacadeImpl implements RouteFacade {
 
 
     @Override
+    @Transactional
     public void updateRoute(long academyId, long routeId, RouteRequest routeRequest) {
         Route route = routeService.findById(routeId);
 
@@ -153,6 +156,7 @@ class RouteFacadeImpl implements RouteFacade {
     }
 
     @Override
+    @Transactional
     public void deleteRoute(long academyId, long routeId) {
         Route route = routeService.findById(routeId);
 

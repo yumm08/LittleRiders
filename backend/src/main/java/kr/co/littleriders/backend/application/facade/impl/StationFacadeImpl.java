@@ -18,13 +18,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class StationFacadeImpl implements StationFacade {
 
     private final StationService stationService;
     private final AcademyService academyService;
 
-    @Transactional
     @Override
+    @Transactional
     public void createStation(long academyId, StationRequest stationRequest) {
         Academy academy = academyService.findById(academyId);
 
@@ -37,6 +38,7 @@ class StationFacadeImpl implements StationFacade {
     }
 
     @Override
+    @Transactional
     public List<StationResponse> searchByName(String name, long academyId) {
         List<Station> stationList = stationService.findAllByAcademyIdAndName(academyId, name);
         return stationList.stream()
@@ -45,6 +47,7 @@ class StationFacadeImpl implements StationFacade {
     }
 
     @Override
+    @Transactional
     public void updateStation(long academyId, long stationId, StationRequest stationRequest) {
         Station station = stationService.findById(stationId);
 
@@ -55,6 +58,7 @@ class StationFacadeImpl implements StationFacade {
     }
 
     @Override
+    @Transactional
     public void deleteStation(long academyId, long stationId) {
         Station station = stationService.findById(stationId);
 
