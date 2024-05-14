@@ -176,15 +176,10 @@ export default function RouteDetailSlide({
 
   useEffect(() => {
     if (stationItems.selectedStationList) {
-      console.log(stationItems.selectedStationList)
-
       const temp = stationItems.selectedStationList.find(
         (station) => station.id === selectedStation,
       )
-      console.log(selectedStation, temp)
-      console.log(temp?.academyChildList?.length)
       if (temp) {
-        console.log('set child DragDisabled false')
         setChildDragDisabled(false)
         if (!temp.academyChildList) {
           setChildItems((prev) => {
@@ -201,7 +196,6 @@ export default function RouteDetailSlide({
           })
         }
       } else {
-        console.log('set child DragDisabled true')
         setChildDragDisabled(true)
         setChildItems((prev) => ({
           ...prev,
@@ -235,7 +229,6 @@ export default function RouteDetailSlide({
         })
       }
       setChildItems(() => {
-        console.log('setChildItem -> selectRouteid')
         const tempChildList: ChildInfo[] = []
         if (childList) {
           childList.forEach((child: ChildInfo) => {
@@ -253,8 +246,6 @@ export default function RouteDetailSlide({
             })
             if (!isSame) tempChildList.push(child)
           })
-          console.log(tempChildList)
-          console.log(routeDetail.stationList)
           return {
             academyChildList: [...tempChildList],
             selectedChildList: [],
@@ -269,7 +260,6 @@ export default function RouteDetailSlide({
   // 초기 ChildList 구현
   useEffect(() => {
     if (!isChildListLoading && childList) {
-      console.log('setChildItem -> childListLoading')
       setChildItems({
         academyChildList: [...childList],
         selectedChildList: [],

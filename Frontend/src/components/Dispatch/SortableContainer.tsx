@@ -37,7 +37,6 @@ export default function SortableContainer({
   selectedStation,
   handleStationRemoveClick,
 }: Props) {
-  console.log(subject, isDisabled)
   const { setNodeRef } = useDroppable({ disabled: isDisabled, id })
   if (isLoading || isPending || !items) {
     return (
