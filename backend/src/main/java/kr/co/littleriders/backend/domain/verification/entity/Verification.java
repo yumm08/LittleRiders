@@ -41,7 +41,7 @@ public final class Verification {
         }
         this.email = email;
         this.code = code;
-        this.ttl = 60 * 3;
+        this.ttl = 3 * 60L;
         this.type = verificationType;
     }
 
