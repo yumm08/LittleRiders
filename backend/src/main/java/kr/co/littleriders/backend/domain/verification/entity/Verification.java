@@ -9,6 +9,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
+import java.util.Random;
+
 @RedisHash(value = "verification")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -44,9 +46,9 @@ public final class Verification {
     }
 
     private static String generateCode() {
-        java.util.Random generator = new java.util.Random();
-        generator.setSeed(System.currentTimeMillis());
-        return String.format("%06d", generator.nextInt(100000, 1000000));
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        return String.format("%06d", random.nextInt(100000, 1000000));
     }
 
     public static Verification of(final String email, final VerificationType type) {
