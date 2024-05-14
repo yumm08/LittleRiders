@@ -51,21 +51,20 @@ public class HistoryFacadeImpl implements HistoryFacade {
 			throw ShuttleException.from(ShuttleErrorCode.FORBIDDEN);
 		}
 
-		List<ShuttleDailyHistoryResponse> shuttleDailyHistoryList = shuttleDriveHistoryService.findByShuttleIdAndStartAt(shuttleId,
-																								date.getYear(), date.getMonthValue(),
-																								date.getDayOfMonth()).stream()
-																								.map(ShuttleDailyHistoryResponse::from)
-																								.toList();
+		return shuttleDriveHistoryService.findByShuttleIdAndStartAt(shuttleId,
+																	date.getYear(),
+																	date.getMonthValue(),
+																	date.getDayOfMonth())
+										 .stream()
+										 .map(ShuttleDailyHistoryResponse::from)
+										 .toList();
 
-		return shuttleDailyHistoryList;
 	}
 
 	@Override
 	public ShuttleDetailHistoryResponse readShuttleDetailHistory(String historyId) {
 
 		ShuttleDriveHistory shuttleDriveHistory = shuttleDriveHistoryService.findById(historyId);
-		ShuttleDetailHistoryResponse shuttleDetailHistory = ShuttleDetailHistoryResponse.from(shuttleDriveHistory);
-
-		return shuttleDetailHistory;
+		return ShuttleDetailHistoryResponse.from(shuttleDriveHistory);
 	}
 }

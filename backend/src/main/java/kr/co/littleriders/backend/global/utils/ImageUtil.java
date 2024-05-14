@@ -26,7 +26,7 @@ import kr.co.littleriders.backend.global.error.exception.ImageException;
 public class ImageUtil {
 	private final String BASE_PATH;
 	// TODO-이윤지-default image 설정 필요
-	private final String defaultImage = "default.jpg";
+	private static final String defaultImage = "default.jpg";
 
 	public ImageUtil(@Value("${spring.resource.directory}") String basePath) {
 		BASE_PATH = basePath;
@@ -75,8 +75,7 @@ public class ImageUtil {
 		}
 
 		switch (extension.toLowerCase()) {
-			case "jpeg":
-			case "jpg":
+			case "jpeg", "jpg":
 				return MediaType.IMAGE_JPEG;
 			case "png":
 				return MediaType.IMAGE_PNG;
@@ -104,7 +103,7 @@ public class ImageUtil {
 
 	public Map<String, Object> getImageByUUID(String uuid) {
 
-		String imagePath = BASE_PATH + "/" + uuid;
-		return getImage(imagePath);
+		Path imagePath = Paths.get(BASE_PATH, uuid);
+		return getImage(imagePath.toString());
 	}
 }
