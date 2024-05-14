@@ -1,15 +1,24 @@
-import profile from '@assets/Mock/Logo.webp'
+import { memo } from 'react'
+
+import { SSE_DriverInfo } from '@types'
 import { IoCallSharp } from 'react-icons/io5'
 
-export default function TeacherSmallCard() {
+interface Props {
+  data: SSE_DriverInfo
+}
+export default memo(function TeacherSmallCard({ data }: Props) {
   return (
     <div className="border-ligtgray relative flex h-[100%] w-[43%]  flex-col items-center justify-center rounded-xl  border-[1px] border-lightgray p-[2%] ">
       {/* 직원 사진 */}
-      <img src={profile} alt="" className="h-[25%] w-[25%] rounded-full" />
+      <img
+        src={`api/content/${data.image}`}
+        alt=""
+        className="h-[25%] w-[25%] rounded-full"
+      />
       {/* 직원 정보 */}
       <div className=" ml-[3%] flex flex-col items-center">
-        <strong className="text-[80%]">김광수 기사님</strong>
-        <span className="text-[70%] text-darkgray">010-5872-1232</span>
+        <strong className="text-[80%]">{data.name} 기사님</strong>
+        <span className="text-[70%] text-darkgray">{data.phoneNumber}</span>
       </div>
       <a
         href="tel:01092124492"
@@ -19,4 +28,4 @@ export default function TeacherSmallCard() {
       </a>
     </div>
   )
-}
+})

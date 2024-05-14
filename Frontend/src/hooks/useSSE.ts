@@ -5,7 +5,7 @@ type Props = {
 }
 
 export default function useSSE({ url }: Props) {
-  const [eventSource, setEventSource] = useState<EventSource | null>(null)
+  const [eventSource, setEventSource] = useState<EventSource>()
   useEffect(() => {
     const temp = new EventSource(url, {
       withCredentials: true,
