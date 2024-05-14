@@ -35,7 +35,7 @@ public class SignUpToken {
         this.email = email;
         this.token = UUID.randomUUID().toString();
         this.type = type;
-        this.ttl = 30 * 60;
+        this.ttl = 30 * 60L;
     }
 
     public static SignUpToken of(String email, SignUpTokenType type) {
