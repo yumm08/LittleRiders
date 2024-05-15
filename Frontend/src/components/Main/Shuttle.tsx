@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
 
+import { showInitShuttleAlert } from '@utils/alertUtils'
+
 import {
   AcademyShuttle,
   BoardInfo,
@@ -48,6 +50,14 @@ export default function Shuttle({
     queryKey: ['boardInfo', shuttleId],
   })
 
+  useEffect(() => {
+    if (initData) {
+      const shuttleName = shuttleInfo.name
+
+      showInitShuttleAlert(shuttleName)
+    }
+  }, [initData])
+
   // init 데이터가 있다면, polyline을 그린다
   useEffect(() => {
     if (initData) {
@@ -60,7 +70,7 @@ export default function Shuttle({
 
         const lastLocationInfo = locationList.at(-1) as InitDataLocationInfo
         curLocationInfo.current = lastLocationInfo
-        drawRealTimeMarker(lastLocationInfo, realTimeMap)
+        drawRealTimeMarker(lastLocationInfo, shuttleInfo, realTimeMap)
       }
 
       initPolyline(realTimeMap)

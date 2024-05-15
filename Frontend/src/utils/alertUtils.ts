@@ -37,3 +37,17 @@ export const showErrorAlert = (optionList: SweetAlertOptions) => {
     ...optionList,
   })
 }
+
+export const showInitShuttleAlert = (shuttleName: string) => {
+  const defaultOptionList: SweetAlertOptions = {
+    text: `${shuttleName}가 출발했습니다.`,
+    backdrop: false,
+    position: 'bottom',
+    timer: 2000,
+    timerProgressBar: true,
+  }
+
+  return Swal.fire({
+    ...defaultOptionList,
+  })
+}
