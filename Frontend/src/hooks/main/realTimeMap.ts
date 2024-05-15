@@ -1,5 +1,9 @@
 import { useRef, useState } from 'react'
 
+import { useRealTimeStore } from '@stores/realTimeStore'
+
+import { showSuccessAlert } from '@utils/alertUtils'
+
 import {
   AcademyShuttle,
   BoardInfo,
@@ -20,6 +24,8 @@ export const useSetRealTimeMap = () => {
   const [realTimeMarker, setRealTimeMarker] = useState<naver.maps.Marker>()
   const polyline = useRef<naver.maps.Polyline>()
   const latLngList = useRef<naver.maps.LatLng[]>([])
+
+  const { realTimeInfo, addRealTimeInfo } = useRealTimeStore()
 
   /**
    * 맵 초기화 하는 함수
@@ -176,36 +182,35 @@ export const useSetRealTimeMap = () => {
 
     const position = new naver.maps.LatLng(latitude, longitude)
 
-    const BOARD_MARKER_OPTIONS = {
+    const BOARD_MARKER_OPTIONS: naver.maps.MarkerOptions = {
       map,
       position,
+      zIndex: 50,
     }
 
     const boardMarker = new naver.maps.Marker(BOARD_MARKER_OPTIONS)
+    boardMarker.addListener('click', () => {
+      const key = `${latitude}-${longitude}`
+      const content = realTimeInfo[key].map((info) => {
+        return `<div class='w-full p-4 flex border-b-2 justify-around'>
+          <img src='/api/content/${info.child.imagePath}' class='w-1/3 aspect-square object-cover'/>
+          <div class='flex flex-col justify-between'>
+            <div class='flex items-center gap-2'>
+              <p class='text-4xl'>${info.child.name}</p>
+              <p class='text-2xl'>(${info.child.gender === 'MALE' ? '남' : '여'})</p>
+            </div>
+            <p>${new Date(info.time).toLocaleTimeString()}</p>
+            <p>${info.status === 'BOARD' ? '승차' : '하차'}</p>
+          </div>
+        </div>`
+      })
 
-    const content = `
-      <div class=' w-36'>
-        <img class='w-10 h-10' src='/api/content/${imagePath}' alt='이미지 없음' />
-      </div>
-    `
-    const infoWindow = new naver.maps.InfoWindow({
-      content,
-      maxWidth: 140,
-      backgroundColor: '#EEEEEE',
-      borderColor: '#111111',
-      borderWidth: 1,
-      anchorSize: new naver.maps.Size(5, 5),
-      anchorSkew: true,
-      anchorColor: '#EEEEEE',
-      pixelOffset: new naver.maps.Point(10, -5),
-    })
-
-    naver.maps.Event.addListener(boardMarker, 'mouseover', () => {
-      infoWindow.open(map, boardMarker)
-    })
-
-    naver.maps.Event.addListener(boardMarker, 'mouseout', () => {
-      infoWindow.close()
+      showSuccessAlert({
+        html: content.join(''),
+        icon: undefined,
+        allowOutsideClick: true,
+        backdrop: false,
+      })
     })
 
     return boardMarker
@@ -221,7 +226,9 @@ export const useSetRealTimeMap = () => {
       position,
     }
 
-    return new naver.maps.Marker(DROP_MARKER_OPTIONS)
+    const marker = new naver.maps.Marker(DROP_MARKER_OPTIONS)
+
+    return marker
   }
 
   return {
