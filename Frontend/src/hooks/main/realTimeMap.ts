@@ -1,6 +1,12 @@
 import { useRef, useState } from 'react'
 
-import { BoardInfo, DropInfo, InitDataLocationInfo, LocationInfo } from '@types'
+import {
+  AcademyShuttle,
+  BoardInfo,
+  DropInfo,
+  InitDataLocationInfo,
+  LocationInfo,
+} from '@types'
 
 const DEFAULT_OPTIONS = {
   zoom: 18,
@@ -66,10 +72,12 @@ export const useSetRealTimeMap = () => {
    * 현재 위치에 기반해서 실시간으로 마커를 찍는 함수
    *
    * @param curLocationInfo 현재 위치 정보
+   * @param shuttleInfo 셔틀 정보
    * @param map 현재 생성된 맵 객체
    */
   const drawRealTimeMarker = (
     curLocationInfo: LocationInfo | InitDataLocationInfo,
+    shuttleInfo: AcademyShuttle,
     map: naver.maps.Map,
   ) => {
     if (!realTimeMap) {
@@ -95,6 +103,27 @@ export const useSetRealTimeMap = () => {
         icon: {
           content: `<div class="marker" style="transform:translate(-25px, -25px);width:50px;height:50px"><img src="/bus.svg" style="width:50px; height:50px;" /></div>`,
         },
+      })
+
+      const content = `<div classname='p-4 rounded-md'>${shuttleInfo.name}</div>`
+      const infoWindow = new naver.maps.InfoWindow({
+        content,
+        maxWidth: 140,
+        backgroundColor: 'white',
+        borderColor: '#111111',
+        borderWidth: 1,
+        anchorSize: new naver.maps.Size(5, 5),
+        anchorSkew: true,
+        anchorColor: '#EEEEEE',
+        pixelOffset: new naver.maps.Point(10, -5),
+      })
+
+      naver.maps.Event.addListener(marker, 'mouseover', () => {
+        infoWindow.open(map, marker)
+      })
+
+      naver.maps.Event.addListener(marker, 'mouseout', () => {
+        infoWindow.close()
       })
 
       setRealTimeMarker(marker)

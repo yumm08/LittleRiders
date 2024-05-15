@@ -4,15 +4,27 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
 
-import { BoardInfo, InitData, InitDataLocationInfo, LocationInfo } from '@types'
+import {
+  AcademyShuttle,
+  BoardInfo,
+  InitData,
+  InitDataLocationInfo,
+  LocationInfo,
+} from '@types'
 
 interface Props {
   shuttleId: number
+  shuttleInfo: AcademyShuttle
   realTimeMap: naver.maps.Map
   isSelected: boolean
 }
 
-export default function Shuttle({ shuttleId, realTimeMap, isSelected }: Props) {
+export default function Shuttle({
+  shuttleId,
+  shuttleInfo,
+  realTimeMap,
+  isSelected,
+}: Props) {
   const curLocationInfo = useRef<LocationInfo | InitDataLocationInfo>()
 
   const {
@@ -84,7 +96,7 @@ export default function Shuttle({ shuttleId, realTimeMap, isSelected }: Props) {
   // 위치 정보가 변화하고 있다면, 실시간으로 마커를 찍는다
   useEffect(() => {
     if (locationInfo) {
-      drawRealTimeMarker(locationInfo, realTimeMap)
+      drawRealTimeMarker(locationInfo, shuttleInfo, realTimeMap)
 
       if (curLocationInfo.current) {
         setDirection(curLocationInfo.current, locationInfo)
