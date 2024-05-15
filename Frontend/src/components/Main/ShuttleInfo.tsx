@@ -45,15 +45,18 @@ export default function ShuttleInfo({ selectedShuttle }: Props) {
   })
 
   return (
-    <div className={`relative h-full ${toggle ? 'w-1/6' : 'w-0'}`}>
+    <div
+      className={`transtition-all z-10 h-full bg-white duration-200 ease-in-out ${toggle ? 'w-1/6 translate-x-0' : 'w-0 -translate-x-full'}`}
+    >
       <button
         className="absolute -right-5 top-1/2 z-50 flex h-9 w-9 items-center justify-center rounded-full border bg-white"
         onClick={() => setToggle((prev) => !prev)}
       >
         {toggle ? <ArrowLeft /> : <ArrowRight />}
       </button>
+
       {selectedShuttle && (
-        <div className="flex flex-col justify-between">
+        <div className={`flex flex-col justify-between ${!toggle && 'hidden'}`}>
           <div className="flex items-center border-b-2 p-4 ">
             <ShuttleStatusLabel status={initData ? 'USE' : 'NOT_USE'} />
             <p className="mx-auto text-xl font-bold">{selectedShuttle.name}</p>
