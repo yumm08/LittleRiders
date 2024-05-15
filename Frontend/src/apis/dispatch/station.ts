@@ -9,13 +9,13 @@ const BASE_URL = 'admin/station'
  */
 export const postStation = async (
   name: string,
-  longitude: number,
   latitude: number,
+  longitude: number,
 ) => {
   const response = await axiosInstance.post(`/${BASE_URL}`, {
     name,
-    longitude,
     latitude,
+    longitude,
   })
   return response
 }

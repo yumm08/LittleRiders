@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
 import { useFetchRealTimeShuttleInfo } from '@hooks/shuttle'
 
-import { AcademyShuttle } from '@types'
+import { AcademyShuttle, LocationInfo } from '@types'
 
 const SHUTTLE_BUTTON_STYLE = {
   SELECT: 'bg-yellow shadow-inner shadow-darkgray',
@@ -18,59 +18,50 @@ interface Props {
   onSelect: (shuttle: AcademyShuttle) => void
 }
 
-type Position = {
-  latitude: number
-  longitude: number
-}
-
-type RealTimeShuttleInfo = {
-  latitude: number
-  longitude: number
-  speed: number
-}
-
 export default function RealTimeMap({
   shuttleList,
   selectedShuttle,
   onSelect,
 }: Props) {
-  const { shuttleId } = selectedShuttle
-  const curPosition = useRef<Position>(null!)
-  const { initRealTimeMap, drawRealTimeMarker, drawPolyLine } =
-    useSetRealTimeMap()
+  const shuttleId = selectedShuttle?.shuttleId || 0
+  const curLocationInfo = useRef<LocationInfo>(null!)
+  const {
+    initRealTimeMap,
+    drawRealTimeMarker,
+    drawPolylineWithList,
+    setDirection,
+  } = useSetRealTimeMap()
 
   // shuttleId로 실시간 셔틀 위치 SSE 요청
   useFetchRealTimeShuttleInfo(shuttleId)
 
-  // React Query를 사용하여 쿼리 데이터 가져오기
-  const { data: realTimeShuttleInfo } = useQuery<RealTimeShuttleInfo>({
+  // Tanstack Query를 사용하여 쿼리 데이터 가져오기
+  const { data: realTimeShuttleInfo } = useQuery<LocationInfo>({
     queryKey: ['realTimeShuttleInfo', shuttleId],
   })
 
   useEffect(() => {
     initRealTimeMap()
-  }, [shuttleId])
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'))
+    }, 500)
+  }, [])
 
   useEffect(() => {
     if (realTimeShuttleInfo) {
-      console.log(realTimeShuttleInfo)
-      const { latitude, longitude } = realTimeShuttleInfo
-      const position = { latitude, longitude }
+      drawRealTimeMarker(realTimeShuttleInfo)
 
-      drawRealTimeMarker(position)
+      if (curLocationInfo.current) {
+        setDirection(curLocationInfo.current, realTimeShuttleInfo)
+      }
+
+      curLocationInfo.current = realTimeShuttleInfo
     }
   }, [realTimeShuttleInfo])
 
   useEffect(() => {
     if (realTimeShuttleInfo) {
-      const { latitude, longitude } = realTimeShuttleInfo
-      const position = { latitude, longitude }
-
-      if (curPosition.current) {
-        drawPolyLine(curPosition.current, position)
-      }
-
-      curPosition.current = position
+      drawPolylineWithList(realTimeShuttleInfo)
     }
   }, [realTimeShuttleInfo])
 

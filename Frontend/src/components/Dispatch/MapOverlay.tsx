@@ -55,8 +55,6 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
         )
       }
     })
-    console.log(fullAddress)
-    console.log(data)
   }
 
   const handleAddStation = () => {
@@ -68,21 +66,19 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
       if (centerLatLng) {
         addStation({
           name: input,
-          latitude: centerLatLng.lat(),
-          longitude: centerLatLng.lng(),
+          latitude: centerLatLng.y,
+          longitude: centerLatLng.x,
         })
-
-        setAddress('')
-        setInput('')
-        setOpenAddressSearchModal(false)
       }
     }
+    setAddress('')
+    setInput('')
+    setOpenAddressSearchModal(false)
   }
 
   useEffect(() => {
     naver.maps.Event.addListener(mapRef.current, 'dragend', () => {
       const latLng = mapRef.current!.getCenter()
-      console.log(latLng)
       if (latLng) {
         setCenterLatLng(new naver.maps.LatLng(latLng.y, latLng.x))
         naver.maps.Service.reverseGeocode(
@@ -99,11 +95,26 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
         moveMap(new naver.maps.LatLng(latLng.y, latLng.x))
       }
     })
+    const latLng = mapRef.current!.getCenter()
+    if (latLng) {
+      setCenterLatLng(new naver.maps.LatLng(latLng.y, latLng.x))
+      naver.maps.Service.reverseGeocode(
+        {
+          coords: new naver.maps.LatLng(latLng.y, latLng.x),
+          orders: 'roadaddr',
+        },
+        (status, response) => {
+          if (status === 200) {
+            setAddress(response.v2.address.roadAddress)
+          }
+        },
+      )
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <div className="absolute bottom-5 z-40 h-36 w-10/12 flex-row rounded-md bg-white shadow-md transition ease-in-out">
+    <div className="absolute bottom-5 z-40 h-36 w-11/12 flex-row rounded-md bg-white shadow-md transition ease-in-out">
       <div className="m-2 mx-4 flex items-center justify-between">
         <p className=" text-lg font-semibold">🚏 정류장 추가하기</p>
         <p className="w-2/3 truncate text-right text-gray-500">
@@ -129,7 +140,10 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
           주소로 검색
         </Button>
         {openAddressSearchModal && (
-          <Modal modalSwitch={searchAddressClickHandler} modalTitle="">
+          <Modal
+            modalSwitch={searchAddressClickHandler}
+            modalTitle="주소로 검색하기"
+          >
             <DaumPostcode onComplete={handleComplete} />
           </Modal>
         )}

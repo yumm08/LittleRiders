@@ -9,10 +9,11 @@ async function enableMocking() {
     return
   }
 
-  // const { worker } = await import('@mocks/browser')
-
-  // return worker.start()
   return
+
+  const { worker } = await import('@mocks/browser')
+
+  return worker.start()
 }
 
 enableMocking().then(() => {

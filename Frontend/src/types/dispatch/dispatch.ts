@@ -2,16 +2,21 @@ import { ChildInfo } from '@types'
 
 export type Station = {
   id: number
-  name: string
+  name?: string
   latitude?: number
   longitude?: number
   visitOrder?: number
-  childList?: ChildInfo[]
+  academyChildList?: ChildInfo[]
 }
 
 export type Route = {
   id?: number
-  name: string
+  name?: string
   type?: string
   stationList?: Station[]
+}
+
+export type ChildtoStationArgType = {
+  stationId: number
+  academyChildIdList: number[]
 }
