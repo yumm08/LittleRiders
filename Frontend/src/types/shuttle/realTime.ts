@@ -32,6 +32,7 @@ export type BoardInfo = {
   latitude: number
   longitude: number
   time: string
+  shuttleId: number
 }
 
 export type DropChildInfo = BoardChildInfo
