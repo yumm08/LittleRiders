@@ -16,6 +16,7 @@ export default function Shuttle({ shuttleId, realTimeMap, isSelected }: Props) {
   const curLocationInfo = useRef<LocationInfo | InitDataLocationInfo>()
 
   const {
+    polyline,
     drawRealTimeMarker,
     drawPolylineWithList,
     setDirection,
@@ -29,6 +30,10 @@ export default function Shuttle({ shuttleId, realTimeMap, isSelected }: Props) {
 
   const { data: initData } = useQuery<InitData>({
     queryKey: ['initData', shuttleId],
+  })
+
+  const { data: boardInfo } = useQuery<BoardInfo>({
+    queryKey: ['boardInfo', shuttleId],
   })
 
   // init 데이터가 있다면, polyline을 그린다
@@ -91,10 +96,20 @@ export default function Shuttle({ shuttleId, realTimeMap, isSelected }: Props) {
 
   // 위치 정보가 변화하고 있다면, 실시간으로 polyline을 그린다
   useEffect(() => {
+    if (!polyline.current) {
+      initPolyline(realTimeMap)
+    }
     if (locationInfo) {
       drawPolylineWithList(locationInfo, realTimeMap)
     }
   }, [locationInfo])
+
+  // 승차 정보가 있다면, 마커를 찍는다
+  useEffect(() => {
+    if (boardInfo) {
+      drawBoardMarker(boardInfo, realTimeMap)
+    }
+  }, [boardInfo])
 
   // 선택한 호차의 위치를 맵의 중심으로 한다
   useEffect(() => {
