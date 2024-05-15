@@ -50,11 +50,14 @@ export default function Shuttle({
     queryKey: ['boardInfo', shuttleId],
   })
 
+  // shuttle 출발 시 알림 발송
   useEffect(() => {
     if (initData) {
       const shuttleName = shuttleInfo.name
 
-      showInitShuttleAlert(shuttleName)
+      if (initData.locationList.length === 0) {
+        showInitShuttleAlert(shuttleName)
+      }
     }
   }, [initData])
 
