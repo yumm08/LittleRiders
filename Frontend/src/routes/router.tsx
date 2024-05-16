@@ -2,7 +2,6 @@ import ChildPage from '@pages/ChildPage'
 import DispatchPage from '@pages/DispatchPage'
 import DriveHistoryPage from '@pages/DriveHistoryPage'
 import MainPage from '@pages/MainPage'
-import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
 import SignInPage from '@pages/SignInPage'
 import SignUpPage from '@pages/SignUpPage'
@@ -55,10 +54,6 @@ const router = createBrowserRouter([
                 element: <DriveHistoryPage />,
               },
             ],
-          },
-          {
-            path: 'mypage',
-            element: <MyPage />,
           },
         ],
       },
