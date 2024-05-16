@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getShuttle } from '@apis/shuttle/getShuttle'
 
 import { BoardInfo, DropInfo, EndInfo, InitData, LocationInfo } from '@types'
-import { EventSourcePolyfill } from 'event-source-polyfill'
+import { EventListener, EventSourcePolyfill } from 'event-source-polyfill'
 
 export const useFetchShuttleList = () => {
   const { data: shuttleList, ...rest } = useQuery({
@@ -34,53 +34,56 @@ export const useFetchRealTimeShuttleInfo = () => {
       heartbeatTimeout: 86400000,
     })
 
-    const handleInit = async (event: MessageEvent) => {
-      const initData: InitData = await JSON.parse(event.data)
+    const handleInit = (event: MessageEvent) => {
+      const initData: InitData = JSON.parse(event.data)
       const shuttleId = initData.shuttleId
 
       queryClient.setQueryData(['initData', shuttleId], initData)
     }
 
-    const handleLocation = async (event: MessageEvent) => {
-      const locationInfo: LocationInfo = await JSON.parse(event.data)
+    const handleLocation = (event: MessageEvent) => {
+      const locationInfo: LocationInfo = JSON.parse(event.data)
       const shuttleId = locationInfo.shuttleId
 
       queryClient.setQueryData(['locationInfo', shuttleId], locationInfo)
     }
 
-    const handleBoard = async (event: MessageEvent) => {
-      const boardInfo: BoardInfo = await JSON.parse(event.data)
+    const handleBoard = (event: MessageEvent) => {
+      const boardInfo: BoardInfo = JSON.parse(event.data)
       const shuttleId = boardInfo.shuttleId
 
       queryClient.setQueryData(['boardInfo', shuttleId], boardInfo)
     }
 
-    const handleDrop = async (event: MessageEvent) => {
-      const dropInfo: DropInfo = await JSON.parse(event.data)
+    const handleDrop = (event: MessageEvent) => {
+      const dropInfo: DropInfo = JSON.parse(event.data)
       const shuttleId = dropInfo.shuttleId
 
       queryClient.setQueryData(['dropInfo', shuttleId], dropInfo)
     }
 
-    const handleEnd = async (event: MessageEvent) => {
-      const endInfo: EndInfo = await JSON.parse(event.data)
+    const handleEnd = (event: MessageEvent) => {
+      const endInfo: EndInfo = JSON.parse(event.data)
       const shuttleId = endInfo.shuttleId
 
       queryClient.setQueryData(['endInfo', shuttleId], endInfo)
     }
 
-    eventSource.addEventListener('init', () => handleInit)
-    eventSource.addEventListener('location', () => handleLocation)
-    eventSource.addEventListener('board', () => handleBoard)
-    eventSource.addEventListener('drop', () => handleDrop)
-    eventSource.addEventListener('end', () => handleEnd)
+    eventSource.addEventListener('init', handleInit as EventListener)
+    eventSource.addEventListener('location', handleLocation as EventListener)
+    eventSource.addEventListener('board', handleBoard as EventListener)
+    eventSource.addEventListener('drop', handleDrop as EventListener)
+    eventSource.addEventListener('end', handleEnd as EventListener)
 
     return () => {
-      eventSource.removeEventListener('init', () => handleInit)
-      eventSource.removeEventListener('location', () => handleLocation)
-      eventSource.removeEventListener('board', () => handleBoard)
-      eventSource.removeEventListener('drop', () => handleDrop)
-      eventSource.removeEventListener('end', () => handleEnd)
+      eventSource.removeEventListener('init', handleInit as EventListener)
+      eventSource.removeEventListener(
+        'location',
+        handleLocation as EventListener,
+      )
+      eventSource.removeEventListener('board', handleBoard as EventListener)
+      eventSource.removeEventListener('drop', handleDrop as EventListener)
+      eventSource.removeEventListener('end', handleEnd as EventListener)
 
       eventSource.close()
     }
