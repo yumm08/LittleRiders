@@ -14,8 +14,8 @@ const SHUTTLE_BUTTON_STYLE = {
 
 interface Props {
   shuttleList: AcademyShuttle[]
-  selectedShuttle: AcademyShuttle
-  onSelect: (shuttle: AcademyShuttle) => void
+  selectedShuttle: AcademyShuttle | null
+  onSelect: (shuttle: AcademyShuttle | null) => void
 }
 
 export default function RealTimeMap({
@@ -40,6 +40,12 @@ export default function RealTimeMap({
     <>
       <div id="realtime-map" className="relative h-full w-full">
         <div className="t-0 absolute z-10 flex h-11 w-full gap-2 p-2">
+          <button
+            className={`rounded-xl px-4 ${selectedShuttle ? SHUTTLE_BUTTON_STYLE.NON_SELECT : SHUTTLE_BUTTON_STYLE.SELECT}`}
+            onClick={() => onSelect(null)}
+          >
+            <span className="font-bold">전체 보기</span>
+          </button>
           {shuttleList.map((shuttle) => (
             <button
               key={shuttle.shuttleId}

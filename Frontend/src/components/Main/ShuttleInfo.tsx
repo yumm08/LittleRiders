@@ -16,7 +16,7 @@ import {
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 interface Props {
-  selectedShuttle: AcademyShuttle
+  selectedShuttle: AcademyShuttle | null
 }
 
 export default function ShuttleInfo({ selectedShuttle }: Props) {
