@@ -46,7 +46,7 @@ export default function SortableContainer({
         </p>
         <div
           ref={setNodeRef}
-          className="flex h-1/2 w-72 items-center justify-center overflow-y-scroll rounded-md border bg-white p-1 shadow-md"
+          className="flex h-5/6 w-72 flex-row items-center overflow-y-scroll rounded-md border bg-white p-1 shadow-md"
         >
           <p>선택된 노선이 없습니다.</p>
         </div>
