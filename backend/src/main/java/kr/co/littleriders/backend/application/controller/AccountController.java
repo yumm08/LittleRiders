@@ -28,6 +28,9 @@ public class AccountController {
 
     private final AccountFacade accountFacade;
 
+    private final String REFRESH_TOKEN = "refresh-token";
+    private final String AUTHORIZATION = "Authorization";
+
     @GetMapping("/sign-up/validate")
     public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam(name = "email") @NotBlank String email) { //TODO : 변경필요
         accountFacade.sendSignUpEmail(email);
@@ -61,8 +64,8 @@ public class AccountController {
         String accessToken = jwtToken.getAccessToken();
         String refreshToken = jwtToken.getRefreshToken();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        Cookie cookie = new Cookie("refresh-token", refreshToken);
+        headers.add(AUTHORIZATION, "Bearer " + accessToken);
+        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
@@ -78,8 +81,8 @@ public class AccountController {
         String accessToken = jwtToken.getAccessToken();
         String refreshToken = jwtToken.getRefreshToken();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        Cookie cookie = new Cookie("refresh-token", refreshToken);
+        headers.add(AUTHORIZATION, "Bearer " + accessToken);
+        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
@@ -90,7 +93,7 @@ public class AccountController {
     @GetMapping("/sign-out")
     public ResponseEntity<Void> signOut(@CookieValue("refresh-token") String requestRefreshToken, HttpServletResponse response) {
         accountFacade.signOut(requestRefreshToken);
-        Cookie cookie = new Cookie("refresh-token", null);
+        Cookie cookie = new Cookie(REFRESH_TOKEN, null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
@@ -111,8 +114,8 @@ public class AccountController {
         String accessToken = jwtToken.getAccessToken();
         String refreshToken = jwtToken.getRefreshToken();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        Cookie cookie = new Cookie("refresh-token", refreshToken);
+        headers.add(AUTHORIZATION, "Bearer " + accessToken);
+        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
