@@ -1,17 +1,16 @@
 package kr.co.littleriders.backend.application.facade;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
 import kr.co.littleriders.backend.application.dto.response.ShuttleDailyHistoryResponse;
 import kr.co.littleriders.backend.application.dto.response.ShuttleDetailHistoryResponse;
+import kr.co.littleriders.backend.application.dto.response.ShuttleHistoryDateResponse;
+
+import java.util.List;
 
 public interface HistoryFacade {
 
-	List<LocalDateTime> readShuttleDateList(Long shuttleId, Long academyId);
+	List<ShuttleHistoryDateResponse> readShuttleDateList(Long shuttleId, Long academyId);
 
-	List<ShuttleDailyHistoryResponse> readShuttleDailyHistory(Long academyId, Long shuttleId, LocalDate date);
+	List<ShuttleDailyHistoryResponse> readShuttleDailyHistory(Long academyId, Long shuttleId, int year, int month, int day);
 
 	ShuttleDetailHistoryResponse readShuttleDetailHistory(String historyId);
 }
