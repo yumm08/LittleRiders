@@ -32,7 +32,6 @@ export default function ShuttleCard({ data }: Props) {
       {data.terminalNumber === null ? (
         <Button
           color="bg-white border-[1px] border-lightgreen"
-          full
           onClick={() => {}}
         >
           <span className="text-xs font-bold text-lightgreen">단말기 등록</span>
@@ -40,11 +39,12 @@ export default function ShuttleCard({ data }: Props) {
       ) : (
         <span className=" text-xs text-white">S10J12Ap312</span>
       )}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center pt-2">
         <div className="flex flex-col">
-          <strong className="text-xm">{data.type}</strong>
-          <span className="text-xm text-darkgray">{data.licenseNumber}</span>
+          <strong className="text-xs">{data.type}</strong>
+          <span className="text-xs text-darkgray">{data.licenseNumber}</span>
         </div>
+        <Spacing style="w-8" />
         <Button onClick={handleShuttleCardClick}>
           <span className=" text-xs text-white">운행기록</span>
         </Button>
