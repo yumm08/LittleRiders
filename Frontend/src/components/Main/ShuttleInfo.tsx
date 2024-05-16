@@ -29,9 +29,9 @@ export default function ShuttleInfo({ selectedShuttle }: Props) {
 
   const { data: driverInfo } = useQuery({
     queryKey: ['getDriverInfo', initData?.driverId],
-    queryFn: () => getDriver(initData?.driverId),
+    queryFn: () => initData && getDriver(initData.driverId),
     select: (data) => {
-      const driverInfo: DriverDetailInfo = data.data
+      const driverInfo: DriverDetailInfo = data?.data
 
       return driverInfo
     },
@@ -40,9 +40,9 @@ export default function ShuttleInfo({ selectedShuttle }: Props) {
 
   const { data: teacherInfo } = useQuery({
     queryKey: ['getTeacherInfo', initData?.teacherId],
-    queryFn: () => getTeacher(initData?.teacherId),
+    queryFn: () => initData && getTeacher(initData.teacherId),
     select: (data) => {
-      const teacherInfo: TeacherDetailInfo = data.data
+      const teacherInfo: TeacherDetailInfo = data?.data
 
       return teacherInfo
     },
