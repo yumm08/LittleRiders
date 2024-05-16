@@ -28,11 +28,12 @@ public class AccountController {
 
     private final AccountFacade accountFacade;
 
-    private final String REFRESH_TOKEN = "refresh-token";
-    private final String AUTHORIZATION = "Authorization";
+    private static final String REFRESH_TOKEN = "refresh-token";
+    private static final String SIGNUP_TOKEN = "signup-token";
+    private static final String AUTHORIZATION = "Authorization";
 
     @GetMapping("/sign-up/validate")
-    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam(name = "email") @NotBlank String email) { //TODO : 변경필요
+    public ResponseEntity<Void> sendSignUpVerificationMail(@RequestParam(name = "email") @NotBlank String email) {
         accountFacade.sendSignUpEmail(email);
         return ResponseEntity.ok().build();
     }
@@ -43,7 +44,7 @@ public class AccountController {
         String email = validateEmailRequest.getEmail();
         String code = validateEmailRequest.getCode();
         String signUpToken = accountFacade.getSignUpToken(email, code);
-        Cookie cookie = new Cookie("signup-token", signUpToken);
+        Cookie cookie = new Cookie(SIGNUP_TOKEN, signUpToken);
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60 * 30);
@@ -53,14 +54,13 @@ public class AccountController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Void> signUp(@Valid @RequestBody AcademySignUpRequest academySignUpRequest, @CookieValue("signup-token") String token) {
-        log.info("signup-token = [{}]", token);
+    public ResponseEntity<Void> signUp(@Valid @RequestBody AcademySignUpRequest academySignUpRequest, @CookieValue(SIGNUP_TOKEN) String token) {
         accountFacade.signUp(academySignUpRequest, token);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/re-issue")
-    public ResponseEntity<Void> reIssueTokenByRefresh(@CookieValue("refresh-token") String requestRefreshToken, HttpServletResponse response) {
+    public ResponseEntity<Void> reIssueTokenByRefresh(@CookieValue(REFRESH_TOKEN) String requestRefreshToken, HttpServletResponse response) {
         JwtToken jwtToken = accountFacade.tokenReIssue(requestRefreshToken);
         String accessToken = jwtToken.getAccessToken();
         String refreshToken = jwtToken.getRefreshToken();
@@ -94,7 +94,7 @@ public class AccountController {
     }
 
     @GetMapping("/sign-out")
-    public ResponseEntity<Void> signOut(@CookieValue("refresh-token") String requestRefreshToken, HttpServletResponse response) {
+    public ResponseEntity<Void> signOut(@CookieValue(REFRESH_TOKEN) String requestRefreshToken, HttpServletResponse response) {
         accountFacade.signOut(requestRefreshToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN, null);
         cookie.setSecure(true);
