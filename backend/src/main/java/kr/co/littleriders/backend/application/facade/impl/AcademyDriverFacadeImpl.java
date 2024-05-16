@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import jakarta.annotation.Resource;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
+import kr.co.littleriders.backend.application.dto.response.DriverDetailResponse;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import kr.co.littleriders.backend.domain.driver.error.code.DriverErrorCode;
 import kr.co.littleriders.backend.domain.driver.error.exception.DriverException;
@@ -56,6 +57,18 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 							.map(AcademyDriverResponse::from)
 							.collect(Collectors.toList());
 
+	}
+
+	@Override
+	public DriverDetailResponse readDriverDetail(Long academyId, Long driverId) {
+
+		Academy academy = academyService.findById(academyId);
+		Driver driver = driverService.findById(driverId);
+		if (!driver.equalsAcademy(academy)) {
+			throw DriverException.from(DriverErrorCode.ILLEGAL_ACCESS);
+		}
+
+		return DriverDetailResponse.from(driver);
 	}
 
 }

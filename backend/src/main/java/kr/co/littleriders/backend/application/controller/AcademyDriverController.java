@@ -1,6 +1,7 @@
 package kr.co.littleriders.backend.application.controller;
 
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
+import kr.co.littleriders.backend.application.dto.response.DriverDetailResponse;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
 import org.springframework.core.io.Resource;
@@ -44,6 +45,17 @@ public class AcademyDriverController {
 		List<AcademyDriverResponse> driverList = academyDriverFacade.readDriverList(academyId);
 
 		return ResponseEntity.ok().body(driverList);
+	}
+
+	@GetMapping("/{driverId}")
+	public ResponseEntity<DriverDetailResponse> getDriverDetail(@Auth AuthAcademy authAcademy,
+																@PathVariable(value = "driverId") Long driverId){
+
+		Long academyId = authAcademy.getId();
+
+		DriverDetailResponse driverDetail = academyDriverFacade.readDriverDetail(academyId, driverId);
+
+		return ResponseEntity.ok().body(driverDetail);
 	}
 
 }
