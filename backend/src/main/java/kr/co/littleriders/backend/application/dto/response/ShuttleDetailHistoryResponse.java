@@ -41,12 +41,14 @@ public class ShuttleDetailHistoryResponse {
 	public static class Location {
 		private Double latitude;
 		private Double longitude;
+		private Integer speed;
 		private LocalDateTime time;
 
-		private Location(double latitude, double longitude, LocalDateTime time) {
+		private Location(double latitude, double longitude, LocalDateTime time, int speed) {
 			this.latitude = latitude;
 			this.longitude = longitude;
 			this.time = time;
+			this.speed = speed;
 		}
 	}
 
@@ -91,7 +93,7 @@ public class ShuttleDetailHistoryResponse {
 			new WorkerInfo(driver.getId(), driver.getName(), driver.getPhoneNumber()),
 			new ShuttleInfo(shuttle.getId(), shuttle.getName(), shuttle.getType(), shuttle.getLicenseNumber()),
 			shuttleDriveHistory.getLocationList().stream()
-				.map(location -> new Location(location.getLatitude(), location.getLongitude(), location.getTime()))
+				.map(location -> new Location(location.getLatitude(), location.getLongitude(), location.getTime(), location.getSpeed()))
 				.collect(Collectors.toList()),
 			shuttleDriveHistory.getStart(), shuttleDriveHistory.getEnd());
 	}

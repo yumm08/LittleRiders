@@ -135,11 +135,14 @@ public class ShuttleDriveHistory {
         private double latitude;
         private double longitude;
         private LocalDateTime time;
+        private int speed;
+
         private static LocationInShuttleDriveHistory from(ShuttleLocation shuttleLocation) {//주석처리 - 김도현
             double latitude = shuttleLocation.getLatitude();
             double longitude = shuttleLocation.getLongitude();
             LocalDateTime time = shuttleLocation.getTime();
-            return new LocationInShuttleDriveHistory(latitude, longitude, time);
+            int speed = shuttleLocation.getSpeed();
+            return new LocationInShuttleDriveHistory(latitude, longitude, time, speed);
         }
     }
 
