@@ -38,7 +38,7 @@ export default function RealTimeMap({
 
   return (
     <>
-      <div id="realtime-map" className="relative h-full w-5/6">
+      <div id="realtime-map" className="relative h-full w-full">
         <div className="t-0 absolute z-10 flex h-11 w-full gap-2 p-2">
           {shuttleList.map((shuttle) => (
             <button
@@ -56,6 +56,7 @@ export default function RealTimeMap({
         <Shuttle
           key={shuttle.shuttleId}
           shuttleId={shuttle.shuttleId}
+          shuttleInfo={shuttle}
           realTimeMap={realTimeMap}
           isSelected={Object.is(selectedShuttle, shuttle)}
         />

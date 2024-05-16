@@ -31,10 +31,10 @@ export default function MainPage() {
       <Spacing style="h-[120px]" />
 
       <div className="flex h-[calc(100%-120px)] w-full border-b-2">
-        {<ShuttleInfo selectedShuttle={selectedShuttle} />}
+        <ShuttleInfo selectedShuttle={selectedShuttle} />
 
         <RealTimeMap
-          shuttleList={shuttleList}
+          shuttleList={shuttleList || []}
           selectedShuttle={selectedShuttle}
           onSelect={handleShuttleButtonClick}
         />
