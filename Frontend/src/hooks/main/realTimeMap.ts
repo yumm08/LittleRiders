@@ -224,14 +224,42 @@ export const useSetRealTimeMap = () => {
 
     const position = new naver.maps.LatLng(latitude, longitude)
 
-    const DROP_MARKER_OPTIONS = {
+    const DROP_MARKER_OPTIONS: naver.maps.MarkerOptions = {
       map,
       position,
+      zIndex: 50,
+      icon: {
+        content: '<img class="w-12 h-12" src="/child-icon.svg" />',
+        anchor: new naver.maps.Point(15, 15),
+      },
     }
+    const dropMarker = new naver.maps.Marker(DROP_MARKER_OPTIONS)
+    dropMarker.addListener('click', () => {
+      const key = `${latitude}-${longitude}`
+      const content = realTimeInfo[key].map((info) => {
+        return `<div class='w-full p-4 flex border-b-2 justify-between'>
+          <img src='/api/content/${info.child.imagePath}' class='w-1/3 aspect-square object-cover'/>
+          <div class='flex flex-col justify-between'>
+            <div class='flex items-center gap-2'>
+              <p class='text-4xl'>${info.child.name}</p>
+              <img src="${info.child.gender === 'MALE' ? '/son.svg' : '/daughter.svg'}" class='w-8'/>
+            </div>
+            <p>${new Date(info.time).toLocaleTimeString()}</p>
+            <p class="text-xl${info.status === 'BOARD' ? ' text-darkgreen">승차' : ' text-red-700">하차'}</p>
+          </div>
+        </div>`
+      })
 
-    const marker = new naver.maps.Marker(DROP_MARKER_OPTIONS)
+      showSuccessAlert({
+        html: content.join(''),
+        icon: undefined,
+        allowOutsideClick: true,
+        backdrop: false,
+        width: 400,
+      })
+    })
 
-    return marker
+    return dropMarker
   }
 
   return {
