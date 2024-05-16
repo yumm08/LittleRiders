@@ -1,11 +1,12 @@
 package kr.co.littleriders.backend.domain.history.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
 import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleBoard;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrop;
+import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.teacher.entity.Teacher;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Document("board_drop_history")
@@ -30,29 +32,35 @@ public class ShuttleBoardDropHistory {
     private TeacherInBoardDropHistory teacher;
     private BoardInBoardDropHistory board;
     private DropInBoardDropHistory drop;
+    private List<LocationInBoardDropHistory> locationList;
 
     private ShuttleBoardDropHistory(String uuid,
-                             ShuttleInBoardDropHistory shuttleInBoardDropHistory,
-                             DriverInBoardDropHistory driverInBoardDropHistory,
-                             TeacherInBoardDropHistory teacherInBoardDropHistory,
-                             BoardInBoardDropHistory boardInBoardDropHistory,
-                             DropInBoardDropHistory dropInBoardDropHistory) {
+                                    ShuttleInBoardDropHistory shuttleInBoardDropHistory,
+                                    DriverInBoardDropHistory driverInBoardDropHistory,
+                                    TeacherInBoardDropHistory teacherInBoardDropHistory,
+                                    BoardInBoardDropHistory boardInBoardDropHistory,
+                                    DropInBoardDropHistory dropInBoardDropHistory,
+                                    List<LocationInBoardDropHistory> locationList) {
         this.uuid = uuid;
         this.shuttle = shuttleInBoardDropHistory;
         this.driver = driverInBoardDropHistory;
         this.teacher = teacherInBoardDropHistory;
         this.board = boardInBoardDropHistory;
         this.drop = dropInBoardDropHistory;
+        this.locationList = locationList;
     }
 
-    public static ShuttleBoardDropHistory of(String uuid, Shuttle shuttle, Driver driver, Teacher teacher, ShuttleBoard shuttleBoard, ShuttleDrop shuttleDrop) {
+    public static ShuttleBoardDropHistory of(String uuid, Shuttle shuttle, Driver driver, Teacher teacher, ShuttleBoard shuttleBoard, ShuttleDrop shuttleDrop, List<ShuttleLocation> shuttleLocationList) {
         ShuttleInBoardDropHistory shuttleInBoardDropHistory = ShuttleInBoardDropHistory.from(shuttle);
         DriverInBoardDropHistory driverInBoardDropHistory = DriverInBoardDropHistory.from(driver);
         TeacherInBoardDropHistory teacherInBoardDropHistory = TeacherInBoardDropHistory.from(teacher);
         BoardInBoardDropHistory boardInBoardDropHistory = BoardInBoardDropHistory.from(shuttleBoard);
         DropInBoardDropHistory dropInBoardDropHistory = DropInBoardDropHistory.from(shuttleDrop);
 
-        return new ShuttleBoardDropHistory(uuid, shuttleInBoardDropHistory, driverInBoardDropHistory, teacherInBoardDropHistory, boardInBoardDropHistory, dropInBoardDropHistory);
+        List<LocationInBoardDropHistory> locationInBoardDropHistoryList = shuttleLocationList.stream().map(LocationInBoardDropHistory::from)
+                .toList();
+
+        return new ShuttleBoardDropHistory(uuid, shuttleInBoardDropHistory, driverInBoardDropHistory, teacherInBoardDropHistory, boardInBoardDropHistory, dropInBoardDropHistory,locationInBoardDropHistoryList);
     }
 
 
@@ -142,6 +150,25 @@ public class ShuttleBoardDropHistory {
             LocalDateTime time = shuttleDrop.getTime();
 
             return new ShuttleBoardDropHistory.DropInBoardDropHistory(latitude, longitude, time);
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class LocationInBoardDropHistory {
+
+        private double latitude;
+        private double longitude;
+        private int speed;
+        private LocalDateTime time;
+
+        private static LocationInBoardDropHistory from(ShuttleLocation shuttleLocation) {
+            double latitude = shuttleLocation.getLatitude();
+            double longitude = shuttleLocation.getLongitude();
+            int speed = shuttleLocation.getSpeed();
+            LocalDateTime time = shuttleLocation.getTime();
+            return new LocationInBoardDropHistory(latitude, longitude, speed, time);
         }
     }
 }
