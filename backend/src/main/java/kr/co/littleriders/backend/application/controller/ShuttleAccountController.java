@@ -24,7 +24,7 @@ public class ShuttleAccountController {
 
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Void> signIn(@Valid @RequestBody TerminalSignInRequest signInRequest, HttpServletResponse response){
+    public ResponseEntity<Void> signIn(@Valid @RequestBody TerminalSignInRequest signInRequest, HttpServletResponse response) {
         String terminalNumber = signInRequest.getTerminalNumber();
         JwtToken jwtToken = accountFacade.signInByTerminalNumber(terminalNumber);
         String accessToken = jwtToken.getAccessToken();
@@ -32,6 +32,7 @@ public class ShuttleAccountController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         Cookie cookie = new Cookie("refresh-token", refreshToken);
+        cookie.setSecure(true);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
