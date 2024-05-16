@@ -51,7 +51,7 @@ export default function SortableItem({
       )
     }
     if (type === 'selectedStationList')
-      return <p className="w-8 text-center text-xl font-bold">{index}</p>
+      return <p className="w-8 text-center text-xl font-bold">{index + 1}</p>
     if (type === 'stationList')
       return <img src="/bus-stop-icon.svg" className="w-8" />
     if (type.includes('academyChildList'))
