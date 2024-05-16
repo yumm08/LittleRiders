@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import DriverSmallCard from '@components/Academy/DriverSmallCard'
 import TeacherSmallCard from '@components/Academy/TeacherSmallCard'
 import BottomSheet from '@components/Shared/BottomSheet'
+import Loading from '@components/Shared/Loading'
 
 import {
   useDrawChildMarkerParentMap,
@@ -16,12 +17,16 @@ import './ParentViewPage.css'
 import { DriveLocation, SSE_DriverInfo, SSE_TeacherInfo } from '@types'
 import { MdAutorenew } from 'react-icons/md'
 
-export default function RealTimeParentView() {
+interface Props {
+  uuid: string | undefined
+}
+export default function RealTimeParentView({ uuid }: Props) {
   // 버스 데이터  state로 관리
   const [driveLocationInfo, setDriveLocationInfo] = useState<DriveLocation[]>(
     [],
   )
   const [isLoading, setIsLoading] = useState(true)
+  const [isError, setIsError] = useState(false)
   const [teacherInfo, setTeacherInfo] = useState<SSE_TeacherInfo>({
     name: '',
     image: '',
@@ -40,9 +45,7 @@ export default function RealTimeParentView() {
 
   // SSE
   useEffect(() => {
-    const eventSource = new EventSource(
-      '/api/viewer/connection/fcc78eb8-0982-48eb-b8ba-8f7b5d47676d',
-    )
+    const eventSource = new EventSource(`/api/viewer/connection/${uuid}`)
 
     eventSource.addEventListener('init', async (event) => {
       const data = await JSON.parse(event.data)
@@ -56,7 +59,6 @@ export default function RealTimeParentView() {
       setTeacherInfo(data.teacher)
       setDriverInfo(data.driver)
       setIsLoading(false)
-      console.log(data)
     })
 
     eventSource.addEventListener('location', async (event) => {
@@ -69,7 +71,6 @@ export default function RealTimeParentView() {
 
     eventSource.addEventListener('board', async (event) => {
       const data = await JSON.parse(event.data)
-      console.log(data)
       setBoardChild(data)
     })
 
@@ -81,7 +82,8 @@ export default function RealTimeParentView() {
     eventSource.onerror = (e: any) => {
       // 종료 또는 에러 발생 시 할 일
       eventSource.close()
-
+      setIsLoading(false)
+      setIsError(true)
       if (e.error) {
         // 에러 발생 시 할 일
       }
@@ -93,7 +95,7 @@ export default function RealTimeParentView() {
   }, [])
 
   // 맵 초기 설정
-  const { naverMap: parentMap } = useSetParentMap(isLoading)
+  const { naverMap: parentMap } = useSetParentMap(isLoading, isError)
   // 데이터 변경에 따라 폴리라인,마커 찍기, 중심 좌표
   useRedrawPolyLineParentMap({
     naverMap: parentMap,
@@ -113,7 +115,19 @@ export default function RealTimeParentView() {
   const renewPage = () => {
     window.location.reload()
   }
-  if (isLoading) return <div>isLoading</div>
+  if (isLoading)
+    return (
+      <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center justify-center bg-white">
+        <Loading />
+      </div>
+    )
+  if (isError)
+    return (
+      <div className=" flex h-[100vh] w-[100vw] flex-col items-center justify-center bg-lightgreen text-white">
+        <strong className="text-2xl">차량의 운행 기록이 없습니다!</strong>
+      </div>
+    )
+
   return (
     <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center bg-white">
       {/* 카카오맵 위치는 여기 */}

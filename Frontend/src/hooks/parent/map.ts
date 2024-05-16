@@ -12,7 +12,7 @@ type UseRedrawPolyLineProps = {
  *
  * @summary 학부모 뷰 맵 최초 세팅
  */
-export function useSetParentMap(isLoading: boolean) {
+export function useSetParentMap(isLoading: boolean, isError: boolean) {
   const [naverMap, setNaverMap] = useState<naver.maps.Map>()
 
   const options = {
@@ -24,10 +24,10 @@ export function useSetParentMap(isLoading: boolean) {
   }
 
   useEffect(() => {
-    if (isLoading) return
+    if (isLoading || isError) return
     const map = new naver.maps.Map('parentMap', options)
     setNaverMap(map)
-  }, [isLoading])
+  }, [isLoading, isError])
   return { naverMap }
 }
 
@@ -130,8 +130,8 @@ export function useDrawChildMarkerParentMap({
   useEffect(() => {
     if (!dropChild) return
     const location = new naver.maps.LatLng(
-      boardChild.latitude,
-      boardChild.longitude,
+      dropChild.latitude,
+      dropChild.longitude,
     )
 
     const marker = new naver.maps.Marker({

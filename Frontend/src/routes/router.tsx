@@ -13,7 +13,7 @@ import App from 'App'
 import { createBrowserRouter } from 'react-router-dom'
 
 const router = createBrowserRouter([
-  { path: '/parent-view', element: <ParentViewPage /> },
+  { path: '/parent-view/:uuid', element: <ParentViewPage /> },
   {
     path: '/',
     element: <App />,
