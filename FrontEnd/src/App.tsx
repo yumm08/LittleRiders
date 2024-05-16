@@ -7,8 +7,9 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      this is App
-      <Outlet />
+      <div className="h-[400px] w-[800px]">
+        <Outlet />
+      </div>
     </QueryClientProvider>
   )
 }
