@@ -44,6 +44,7 @@ public class AccountController {
         String code = validateEmailRequest.getCode();
         String signUpToken = accountFacade.getSignUpToken(email, code);
         Cookie cookie = new Cookie("signup-token", signUpToken);
+        cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60 * 30);
         cookie.setPath("/");
@@ -66,6 +67,7 @@ public class AccountController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION, "Bearer " + accessToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
+        cookie.setSecure(true);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
@@ -83,6 +85,7 @@ public class AccountController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION, "Bearer " + accessToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
+        cookie.setSecure(true);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
@@ -94,6 +97,7 @@ public class AccountController {
     public ResponseEntity<Void> signOut(@CookieValue("refresh-token") String requestRefreshToken, HttpServletResponse response) {
         accountFacade.signOut(requestRefreshToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN, null);
+        cookie.setSecure(true);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
@@ -116,6 +120,7 @@ public class AccountController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION, "Bearer " + accessToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
+        cookie.setSecure(true);
         cookie.setMaxAge(jwtToken.getRefreshTokenExpTimeToSecond());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
