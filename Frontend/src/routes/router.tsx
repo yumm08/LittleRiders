@@ -1,8 +1,10 @@
 import ChildPage from '@pages/ChildPage'
 import DispatchPage from '@pages/DispatchPage'
 import DriveHistoryPage from '@pages/DriveHistoryPage'
+import Error404Page from '@pages/ErrorPage'
 import MainPage from '@pages/MainPage'
 import OperatePage from '@pages/OperatePage'
+import ParentViewPage from '@pages/ParentViewPage'
 import SignInPage from '@pages/SignInPage'
 import SignUpPage from '@pages/SignUpPage'
 
@@ -11,6 +13,7 @@ import App from 'App'
 import { createBrowserRouter } from 'react-router-dom'
 
 const router = createBrowserRouter([
+  { path: '/parent-view/:uuid', element: <ParentViewPage /> },
   {
     path: '/',
     element: <App />,
@@ -58,6 +61,10 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: '/*',
+    element: <Error404Page />,
   },
 ])
 

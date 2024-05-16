@@ -1,6 +1,6 @@
 import axiosInstance from '@utils/httpCommons'
 
-const BASE_URL = 'admin/station'
+const BASE_URL = 'academy/station'
 
 /**
  * post Station to Server, Axios call

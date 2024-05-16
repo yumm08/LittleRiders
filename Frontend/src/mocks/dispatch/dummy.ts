@@ -25,7 +25,7 @@ export const routeDetail: Route = {
       latitude: 37.5021259,
       longitude: 127.042259,
       visitOrder: 1,
-      childList: [
+      academyChildList: [
         {
           academyChildId: 1,
           name: '김민준1',
@@ -52,7 +52,7 @@ export const routeDetail: Route = {
       latitude: 37.504858,
       longitude: 127.041869,
       visitOrder: 2,
-      childList: [],
+      academyChildList: [],
     },
     {
       id: 3,
@@ -60,7 +60,7 @@ export const routeDetail: Route = {
       latitude: 37.508435,
       longitude: 127.038947,
       visitOrder: 3,
-      childList: [
+      academyChildList: [
         {
           academyChildId: 5,
           name: '김민준5',
@@ -78,7 +78,7 @@ export const routeDetail: Route = {
       latitude: 37.507503,
       longitude: 127.0342544,
       visitOrder: 4,
-      childList: [
+      academyChildList: [
         {
           academyChildId: 7,
           name: '김민준7',
@@ -105,7 +105,7 @@ export const routeDetail: Route = {
       latitude: 37.4999198,
       longitude: 127.0377596,
       visitOrder: 5,
-      childList: [
+      academyChildList: [
         {
           academyChildId: 13,
           name: '김민준13',

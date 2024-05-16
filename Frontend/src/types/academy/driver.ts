@@ -14,3 +14,14 @@ export interface DriverCardType {
 export interface DriverDetailInfo extends DriverCardType {
   uuid: string
 }
+
+export interface SSE_DriverInfo {
+  name: string
+  image: string
+  phoneNumber: string
+}
+export interface SSE_TeacherInfo {
+  name: string
+  image: string
+  phoneNumber: string
+}
