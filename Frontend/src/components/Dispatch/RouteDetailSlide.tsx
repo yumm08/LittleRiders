@@ -75,8 +75,14 @@ export default function RouteDetailSlide({
   const { modifyRouteChild } = usePostRouteChild()
   const { mutateAsync: asyncModifyRouteStation } = usePostRouteStation()
 
-  const { drawRoute, initPolyLine, drawRouteMarkers, deleteMarkers, moveMap } =
-    MapHook(mapRef)
+  const {
+    drawRoute,
+    initPolyLine,
+    drawRouteMarkers,
+    deleteMarkers,
+    moveMap,
+    deletePolyLines,
+  } = MapHook(mapRef)
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -169,6 +175,8 @@ export default function RouteDetailSlide({
 
   const handleCancelClick = () => {
     setSelectedRouteId(-1)
+    deleteMarkers(markerList, setMarkerList)
+    deletePolyLines()
     setTimeout(function () {
       window.dispatchEvent(new Event('resize'))
     }, 550)
