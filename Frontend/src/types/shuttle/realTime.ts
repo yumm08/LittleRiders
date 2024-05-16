@@ -37,3 +37,7 @@ export type BoardInfo = {
 
 export type DropChildInfo = BoardChildInfo
 export type DropInfo = BoardInfo
+
+export type EndInfo = {
+  shuttleId: number
+}
