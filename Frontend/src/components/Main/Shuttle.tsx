@@ -6,11 +6,13 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
 
-import { showInitShuttleAlert } from '@utils/alertUtils'
+import { showEndShuttleAlert, showInitShuttleAlert } from '@utils/alertUtils'
 
 import {
   AcademyShuttle,
   BoardInfo,
+  DropInfo,
+  EndInfo,
   InitData,
   InitDataLocationInfo,
   LocationInfo,
@@ -42,6 +44,7 @@ export default function Shuttle({
     setDirection,
     initPolyline,
     drawBoardMarker,
+    drawDropMarker,
   } = useSetRealTimeMap()
 
   const { data: locationInfo } = useQuery<LocationInfo>({
@@ -54,6 +57,14 @@ export default function Shuttle({
 
   const { data: boardInfo } = useQuery<BoardInfo>({
     queryKey: ['boardInfo', shuttleId],
+  })
+
+  const { data: dropInfo } = useQuery<DropInfo>({
+    queryKey: ['dropInfo', shuttleId],
+  })
+
+  const { data: endInfo } = useQuery<EndInfo>({
+    queryKey: ['endInfo', shuttleId],
   })
 
   // shuttle 출발 시 알림 발송
@@ -160,6 +171,14 @@ export default function Shuttle({
     }
   }, [boardInfo, realTimeInfo])
 
+  // 하차 정보가 있다면, 마커를 찍는다
+  useEffect(() => {
+    if (dropInfo) {
+      addRealTimeInfo({ ...dropInfo, status: 'DROP' })
+      drawDropMarker(dropInfo, realTimeMap)
+    }
+  }, [dropInfo, realTimeInfo])
+
   // 선택한 호차의 위치를 맵의 중심으로 한다
   useEffect(() => {
     if (isSelected && curLocationInfo.current) {
@@ -170,6 +189,15 @@ export default function Shuttle({
       }
     }
   }, [isSelected])
+
+  // shuttle 운행 종료 시 알림 발송
+  useEffect(() => {
+    if (endInfo) {
+      const shuttleName = shuttleInfo.name
+
+      showEndShuttleAlert(shuttleName)
+    }
+  }, [endInfo])
 
   return null
 }
