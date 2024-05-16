@@ -345,7 +345,8 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                 teacher,
                 shuttleBoard,
                 shuttleDrop,
-                shuttleLocationList
+                shuttleLocationList,
+                academyChild
         );
         shuttleBoardDropHistoryService.save(shuttleBoardDropHistory);
 
