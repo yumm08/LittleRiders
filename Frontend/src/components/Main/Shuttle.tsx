@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 
+import { useRealTimeStore } from '@stores/realTimeStore'
+
 import { useQuery } from '@tanstack/react-query'
 
 import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
@@ -28,6 +30,10 @@ export default function Shuttle({
   isSelected,
 }: Props) {
   const curLocationInfo = useRef<LocationInfo | InitDataLocationInfo>()
+  const saveLocation = useRef(false)
+
+  const addRealTimeInfo = useRealTimeStore((state) => state.addRealTimeInfo)
+  const realTimeInfo = useRealTimeStore((state) => state.realTimeInfo)
 
   const {
     polyline,
@@ -61,6 +67,23 @@ export default function Shuttle({
     }
   }, [initData])
 
+  // init 데이터가 있다면, 전역 실시간 데이터 업데이트
+  useEffect(() => {
+    if (initData) {
+      const { boardList, dropList } = initData
+
+      boardList.forEach((boardInfo) => {
+        addRealTimeInfo({ ...boardInfo, status: 'BOARD' })
+      })
+
+      dropList.forEach((dropInfo) => {
+        addRealTimeInfo({ ...dropInfo, status: 'DROP' })
+      })
+
+      saveLocation.current = true
+    }
+  }, [initData])
+
   // init 데이터가 있다면, polyline을 그린다
   useEffect(() => {
     if (initData) {
@@ -86,14 +109,14 @@ export default function Shuttle({
 
   // init 데이터가 있다면, board marker를 그린다
   useEffect(() => {
-    if (initData) {
+    if (initData && saveLocation.current) {
       const boardList = initData.boardList
 
       boardList.forEach((boardInfo: BoardInfo) => {
         drawBoardMarker(boardInfo, realTimeMap)
       })
     }
-  }, [initData])
+  }, [initData, saveLocation.current])
 
   // init 데이터가 있다면, drop marker를 그린다
   useEffect(() => {
@@ -132,9 +155,10 @@ export default function Shuttle({
   // 승차 정보가 있다면, 마커를 찍는다
   useEffect(() => {
     if (boardInfo) {
+      addRealTimeInfo({ ...boardInfo, status: 'BOARD' })
       drawBoardMarker(boardInfo, realTimeMap)
     }
-  }, [boardInfo])
+  }, [boardInfo, realTimeInfo])
 
   // 선택한 호차의 위치를 맵의 중심으로 한다
   useEffect(() => {
