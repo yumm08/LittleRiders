@@ -68,14 +68,14 @@ public class SseFacadeImpl implements SseFacade {
     }
 
     @Override
-    public void broadcastBoardByAcademyIdAndViewerId(long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude) {
-        broadcastBoardDropByAcademyIdAndViewerId(academyId,viewerUuid,academyChild,latitude,longitude,"board");
+    public void broadcastBoardByAcademyIdAndViewerId(long shuttleId, long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude) {
+        broadcastBoardDropByAcademyIdAndViewerId(shuttleId, academyId,viewerUuid,academyChild,latitude,longitude,"board");
     }
 
 
     @Override
-    public void broadcastDropByAcademyIdAndViewerId(long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude) {
-        broadcastBoardDropByAcademyIdAndViewerId(academyId,viewerUuid,academyChild,latitude,longitude,"drop");
+    public void broadcastDropByAcademyIdAndViewerId(long shuttleId, long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude) {
+        broadcastBoardDropByAcademyIdAndViewerId(shuttleId, academyId,viewerUuid,academyChild,latitude,longitude,"drop");
     }
 
     @Override
@@ -223,7 +223,7 @@ public class SseFacadeImpl implements SseFacade {
                     LocalDateTime time = shuttleDrop.getTime();
 
                     AcademyShuttleLandingInfoResponse.Child child = AcademyShuttleLandingInfoResponse.Child.from(academyChild);
-                    dropInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, latitude, longitude, time));
+                    dropInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, shuttleId,latitude, longitude, time));
 
                 }
 
@@ -236,7 +236,7 @@ public class SseFacadeImpl implements SseFacade {
                     LocalDateTime time = shuttleBoard.getTime();
 
                     AcademyShuttleLandingInfoResponse.Child child = AcademyShuttleLandingInfoResponse.Child.from(academyChild);
-                    boardInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, latitude, longitude, time));
+                    boardInfoList.add(AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, shuttleId,latitude, longitude, time));
                 }
 
 
@@ -285,9 +285,9 @@ public class SseFacadeImpl implements SseFacade {
     }
 
 
-    private void broadcastBoardDropByAcademyIdAndViewerId(long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude,String type){
+    private void broadcastBoardDropByAcademyIdAndViewerId(long shuttleId, long academyId, String viewerUuid, AcademyChild academyChild, double latitude, double longitude,String type){
         AcademyShuttleLandingInfoResponse.Child child = AcademyShuttleLandingInfoResponse.Child.from(academyChild);
-        AcademyShuttleLandingInfoResponse.BoardDropInfo response = AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, latitude, longitude, LocalDateTime.now());
+        AcademyShuttleLandingInfoResponse.BoardDropInfo response = AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, shuttleId,latitude, longitude, LocalDateTime.now());
 
 
         //내 아이를 보고있는 사람에게만 전송
