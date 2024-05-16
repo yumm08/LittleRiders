@@ -98,6 +98,7 @@ public class AccountController {
         accountFacade.signOut(requestRefreshToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN, null);
         cookie.setSecure(true);
+        cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
