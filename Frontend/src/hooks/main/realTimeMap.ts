@@ -245,7 +245,7 @@ export const useSetRealTimeMap = () => {
               <img src="${info.child.gender === 'MALE' ? '/son.svg' : '/daughter.svg'}" class='w-8'/>
             </div>
             <p>${new Date(info.time).toLocaleTimeString()}</p>
-            <p class="text-xl${info.status === 'BOARD' ? ' text-darkgreen">승차' : ' text-red-700">하차'}</p>
+            <p class="text-xl${info.status === 'BOARD' ? ' text-darkgreen">승차' : ' text-red">하차'}</p>
           </div>
         </div>`
       })
