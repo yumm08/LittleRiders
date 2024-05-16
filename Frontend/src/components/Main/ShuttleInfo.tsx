@@ -7,7 +7,12 @@ import { useQuery } from '@tanstack/react-query'
 import { getDriver } from '@apis/academy'
 import { getTeacher } from '@apis/academy/getTeacherList'
 
-import { AcademyShuttle, InitData } from '@types'
+import {
+  AcademyShuttle,
+  DriverDetailInfo,
+  InitData,
+  TeacherDetailInfo,
+} from '@types'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 interface Props {
@@ -26,7 +31,7 @@ export default function ShuttleInfo({ selectedShuttle }: Props) {
     queryKey: ['getDriverInfo', initData?.driverId],
     queryFn: () => getDriver(initData?.driverId),
     select: (data) => {
-      const driverInfo = data.data
+      const driverInfo: DriverDetailInfo = data.data
 
       return driverInfo
     },
@@ -37,7 +42,7 @@ export default function ShuttleInfo({ selectedShuttle }: Props) {
     queryKey: ['getTeacherInfo', initData?.teacherId],
     queryFn: () => getTeacher(initData?.teacherId),
     select: (data) => {
-      const teacherInfo = data.data
+      const teacherInfo: TeacherDetailInfo = data.data
 
       return teacherInfo
     },
@@ -85,10 +90,34 @@ export default function ShuttleInfo({ selectedShuttle }: Props) {
           </div>
 
           {/* 기사 정보 */}
-          <div className="h-full border-b-2"></div>
+          {driverInfo && (
+            <div className="h-full border-b-2">
+              <div className="flex h-full flex-col items-center gap-2">
+                <img
+                  src={`/api/content/${driverInfo.imagePath}`}
+                  className="aspect-square h-2/3"
+                />
+
+                <p className="text-3xl">{driverInfo.name} 기사님</p>
+                <p>{driverInfo.phoneNumber}</p>
+              </div>
+            </div>
+          )}
 
           {/* 선탑자 정보 */}
-          <div className="h-full border-b-2"></div>
+          {teacherInfo && (
+            <div className="h-full border-b-2">
+              <div className="flex h-full flex-col items-center gap-2">
+                <img
+                  src={`/api/content/${teacherInfo.imagePath}`}
+                  className="aspect-square h-2/3"
+                />
+
+                <p className="text-3xl">{teacherInfo.name} 선생님</p>
+                <p>{teacherInfo.phoneNumber}</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
       {!selectedShuttle && (

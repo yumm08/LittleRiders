@@ -10,3 +10,7 @@ export interface DriverCardType {
   imagePath: string
   status: string
 }
+
+export interface DriverDetailInfo extends DriverCardType {
+  uuid: string
+}
