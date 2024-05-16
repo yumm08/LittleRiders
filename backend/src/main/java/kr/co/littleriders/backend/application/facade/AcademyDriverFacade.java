@@ -5,7 +5,6 @@ import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse
 import kr.co.littleriders.backend.application.dto.response.DriverDetailResponse;
 
 import java.util.List;
-import java.util.Map;
 
 public interface AcademyDriverFacade {
 	Long insertDriver(DriverRegistRequest driverRegistRequest, Long academyId);

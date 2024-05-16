@@ -13,7 +13,6 @@ import kr.co.littleriders.backend.application.facade.AcademyTeacherFacade;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/academy/teacher")

@@ -4,9 +4,6 @@ import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse
 import kr.co.littleriders.backend.application.dto.response.DriverDetailResponse;
 import kr.co.littleriders.backend.global.auth.annotation.Auth;
 import kr.co.littleriders.backend.global.auth.dto.AuthAcademy;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

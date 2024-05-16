@@ -3,7 +3,6 @@ package kr.co.littleriders.backend.application.facade.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import jakarta.annotation.Resource;
 import kr.co.littleriders.backend.application.dto.response.AcademyDriverResponse;
 import kr.co.littleriders.backend.application.dto.response.DriverDetailResponse;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
