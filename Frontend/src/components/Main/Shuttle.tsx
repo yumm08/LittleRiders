@@ -131,14 +131,14 @@ export default function Shuttle({
 
   // init 데이터가 있다면, drop marker를 그린다
   useEffect(() => {
-    if (initData) {
-      const boardList = initData.boardList
+    if (initData && saveLocation.current) {
+      const dropList = initData.dropList
 
-      boardList.forEach((boardInfo: BoardInfo) => {
-        drawBoardMarker(boardInfo, realTimeMap)
+      dropList.forEach((dropInfo: DropInfo) => {
+        drawDropMarker(dropInfo, realTimeMap)
       })
     }
-  }, [initData])
+  }, [initData, saveLocation.current])
 
   // 위치 정보가 변화하고 있다면, 실시간으로 마커를 찍는다
   useEffect(() => {
