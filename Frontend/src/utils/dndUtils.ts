@@ -100,7 +100,6 @@ export const handleStationDragOver = (
 
   const stationItem = stationItems['selectedStationList'].find(
     (station: Station) => {
-      console.log(station.id, Number(id.toString()))
       return station.id === Number(id.toString())
     },
   )
@@ -174,15 +173,11 @@ export const handleStationDragEnd = (
 
   const activeContainer = findStationContainer(id, stationItems)
   const overContainer = findStationContainer(overId, stationItems)
-  console.log(stationItems)
-  console.log(activeContainer, overContainer)
-  console.log(id)
   if (!activeContainer || !overContainer || activeContainer !== overContainer) {
     return
   }
 
   const stationItem = stationItems['stationList'].find((station: Station) => {
-    console.log(station.id, Number(id.toString()))
     return station.id === Number(id.toString())
   })
   if (
@@ -198,7 +193,6 @@ export const handleStationDragEnd = (
   const overIndex = stationItems[activeContainer].findIndex(
     (item) => item.id === overId,
   )
-  console.log(activeIndex, overIndex)
   if (activeIndex !== overIndex) {
     setStationItems((items) => ({
       ...items,

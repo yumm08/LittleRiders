@@ -188,9 +188,7 @@ export default function RouteDetailSlide({
         (station) => station.id === selectedStation,
       )
       if (temp) {
-        console.log(temp)
         setChildDragDisabled(false)
-        console.log(temp.academyChildList)
         setChildItems((prev) => {
           if (!temp.academyChildList) {
             return {

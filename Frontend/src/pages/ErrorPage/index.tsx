@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom'
 export default function Error404Page() {
   const navigate = useNavigate()
   const handleClick = () => {
-    console.log('wow')
     navigate(-1)
   }
 

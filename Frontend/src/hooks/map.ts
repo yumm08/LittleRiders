@@ -130,9 +130,7 @@ export function MapHook(
    */
   const drawPolyLines = (newPathList: naver.maps.LatLng[]) => {
     if (polyline) {
-      console.log(newPathList)
       polyline.setPath(newPathList)
-      console.log(polyline)
     }
   }
 
