@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { getShuttle } from '@apis/shuttle/getShuttle'
 
-import { BoardInfo, DropInfo, InitData, LocationInfo } from '@types'
+import { BoardInfo, DropInfo, EndInfo, InitData, LocationInfo } from '@types'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 
 export const useFetchShuttleList = () => {
@@ -62,16 +62,25 @@ export const useFetchRealTimeShuttleInfo = () => {
       queryClient.setQueryData(['dropInfo', shuttleId], dropInfo)
     }
 
+    const handleEnd = async (event: MessageEvent) => {
+      const endInfo: EndInfo = await JSON.parse(event.data)
+      const shuttleId = endInfo.shuttleId
+
+      queryClient.setQueryData(['endInfo', shuttleId], endInfo)
+    }
+
     eventSource.addEventListener('init', () => handleInit)
     eventSource.addEventListener('location', () => handleLocation)
     eventSource.addEventListener('board', () => handleBoard)
     eventSource.addEventListener('drop', () => handleDrop)
+    eventSource.addEventListener('end', () => handleEnd)
 
     return () => {
       eventSource.removeEventListener('init', () => handleInit)
       eventSource.removeEventListener('location', () => handleLocation)
       eventSource.removeEventListener('board', () => handleBoard)
       eventSource.removeEventListener('drop', () => handleDrop)
+      eventSource.removeEventListener('end', () => handleEnd)
 
       eventSource.close()
     }
