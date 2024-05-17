@@ -1,5 +1,8 @@
 import { memo } from 'react'
 
+import { formatStringToPhoneNumber } from '@utils/formatUtils'
+
+import mock from '@assets/Mock/짱구아빠기사.png'
 import { SSE_DriverInfo } from '@types'
 import { IoCallSharp } from 'react-icons/io5'
 
@@ -11,14 +14,17 @@ export default memo(function DriverSmallCard({ data }: Props) {
     <div className="border-ligtgray relative flex h-[100%] w-[43%]  flex-col items-center justify-center rounded-xl  border-[1px] border-lightgray p-[2%] ">
       {/* 직원 사진 */}
       <img
-        src={`/api/content/${data.image}`}
+        // src={`/api/content/${data.image}`}
+        src={mock}
         alt=""
-        className="h-[25%] w-[25%] rounded-full"
+        className="h-[25%] w-[25%] rounded-full border-[1px] border-lightgreen"
       />
       {/* 직원 정보 */}
       <div className=" ml-[3%] flex flex-col items-center">
         <strong className="text-[80%]">{data.name} 기사님</strong>
-        <span className="text-[70%] text-darkgray">{`${data.phoneNumber.substring(0, 3)}-${data.phoneNumber.substring(3, 7)}-${data.phoneNumber.substring(7, 11)}`}</span>
+        <span className="text-[70%] text-darkgray">
+          {formatStringToPhoneNumber(data.phoneNumber)}
+        </span>
       </div>
       <a
         href={`tel:${data.phoneNumber}`}

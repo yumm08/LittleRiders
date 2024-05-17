@@ -22,6 +22,7 @@ export default function useRealTimeParentSSE({ uuid }: Props) {
     image: '',
     phoneNumber: '',
   })
+  const [isInit, setIsInit] = useState(true)
   // const [shuttleInfo, setShuttleInfo] = useState({
   //   name: '',
   //   type: '',
@@ -55,6 +56,7 @@ export default function useRealTimeParentSSE({ uuid }: Props) {
         return [...prev, data]
       })
       if (driveStatus !== 'driving') setDriveStatus('driving')
+      if (isInit) setIsInit(false)
     }
 
     const boardEvent = async (event: MessageEvent) => {
@@ -121,6 +123,7 @@ export default function useRealTimeParentSSE({ uuid }: Props) {
     teacherInfo,
     driverInfo,
     // shuttleInfo,
+    isInit,
     driveStatus,
     boardChild,
     dropChild,
