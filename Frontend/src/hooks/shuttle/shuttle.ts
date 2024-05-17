@@ -4,7 +4,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { getShuttle } from '@apis/shuttle/getShuttle'
 
-import { BoardInfo, DropInfo, EndInfo, InitData, LocationInfo } from '@types'
+import {
+  AcademyShuttle,
+  BoardInfo,
+  DropInfo,
+  EndInfo,
+  InitData,
+  LocationInfo,
+} from '@types'
 import { EventListener, EventSourcePolyfill } from 'event-source-polyfill'
 
 export const useFetchShuttleList = () => {
@@ -12,7 +19,9 @@ export const useFetchShuttleList = () => {
     queryKey: ['getShuttleList'],
     queryFn: getShuttle,
     select: (data) => {
-      const shuttleList = data.data
+      const shuttleList: AcademyShuttle[] = data.data
+      shuttleList.sort((a, b) => a.shuttleId - b.shuttleId)
+
       return shuttleList
     },
   })
