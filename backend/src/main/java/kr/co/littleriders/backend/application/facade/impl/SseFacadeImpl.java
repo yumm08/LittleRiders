@@ -333,6 +333,7 @@ public class SseFacadeImpl implements SseFacade {
         return sseEmitter;
     }
 
+
     @Override
     public void broadcastShuttleLocationByShuttleId(long shuttleId, ShuttleLocationRequest shuttleLocationRequest) {
         if (!subscribeMapByShuttleId.containsKey(shuttleId)) {
