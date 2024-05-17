@@ -4,6 +4,7 @@ import DriverSmallCard from '@components/Academy/DriverSmallCard'
 import TeacherSmallCard from '@components/Academy/TeacherSmallCard'
 import BottomSheet from '@components/Shared/BottomSheet'
 import Button from '@components/Shared/Button'
+import Loading from '@components/Shared/Loading'
 
 import {
   useDrawChildMarkerParentMap,
@@ -53,23 +54,23 @@ export default function RealTimeParentView({ uuid }: Props) {
   const renewPage = () => {
     window.location.reload()
   }
-  // if (isLoading)
-  //   return (
-  //     <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center justify-center bg-white">
-  //       <Loading />
-  //     </div>
-  //   )
-  // if (isError)
-  //   return (
-  //     <div className=" flex h-[100vh] w-[100vw] flex-col items-center justify-center bg-lightgreen text-white">
-  //       <strong className="text-2xl">차량의 운행 기록이 없습니다!</strong>
-  //     </div>
-  //   )
+  if (isLoading)
+    return (
+      <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center justify-center bg-white">
+        <Loading />
+      </div>
+    )
+  if (isError)
+    return (
+      <div className=" flex h-[100vh] w-[100vw] flex-col items-center justify-center bg-lightgreen text-white">
+        <strong className="text-2xl">차량의 운행 기록이 없습니다!</strong>
+      </div>
+    )
 
   return (
     <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center bg-white">
       {/* 카카오맵 위치는 여기 */}
-      {/* <div id="parentMap" className="h-full w-full "></div> */}
+      <div id="parentMap" className="h-full w-full "></div>
       <header className=" absolute mt-[4%] flex h-[6%] w-[95%] items-center justify-center rounded-md border-[2px] border-lightgreen bg-white  text-lg  text-black">
         <span className="font-bold">운행 현황</span>
         <div
