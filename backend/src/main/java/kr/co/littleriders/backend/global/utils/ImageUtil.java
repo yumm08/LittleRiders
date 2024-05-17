@@ -34,7 +34,7 @@ public class ImageUtil {
 
 	public String saveImage(MultipartFile file)  {
 
-		if (file.isEmpty()) {
+		if (file == null || file.isEmpty()) {
 			return defaultImage;
 		}
 

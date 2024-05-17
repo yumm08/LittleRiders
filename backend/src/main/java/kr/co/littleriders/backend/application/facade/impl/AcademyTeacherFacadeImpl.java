@@ -39,10 +39,8 @@ class AcademyTeacherFacadeImpl implements AcademyTeacherFacade {
 		Teacher teacher = teacherRegistRequest.toEntity(academy);
 
 		MultipartFile image = teacherRegistRequest.getImage();
-		if (image != null) {
-			String imagePath = imageUtil.saveImage(image);
-			teacher.setImagePath(imagePath);
-		}
+		String imagePath = imageUtil.saveImage(image);
+		teacher.setImagePath(imagePath);
 
 		return teacherService.save(teacher);
 	}

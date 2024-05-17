@@ -36,10 +36,8 @@ class AcademyShuttleFacadeImpl implements AcademyShuttleFacade {
 		Shuttle shuttle = shuttleRegistRequest.toEntity(academy);
 
 		MultipartFile image = shuttleRegistRequest.getImage();
-		if(image != null){
-			String imagePath = imageUtil.saveImage(image);
-			shuttle.setImagePath(imagePath);
-		}
+		String imagePath = imageUtil.saveImage(image);
+		shuttle.setImagePath(imagePath);
 
 		return shuttleService.save(shuttle);
 	}

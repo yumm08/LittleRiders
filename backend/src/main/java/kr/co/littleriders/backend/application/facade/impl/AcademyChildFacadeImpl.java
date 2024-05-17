@@ -80,7 +80,6 @@ public class AcademyChildFacadeImpl implements AcademyChildFacade {
             insertChildId = academyChildService.save(academyChild);
         }
 
-
         return insertChildId;
     }
 

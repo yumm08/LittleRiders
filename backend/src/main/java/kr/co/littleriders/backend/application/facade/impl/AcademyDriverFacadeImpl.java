@@ -38,10 +38,8 @@ class AcademyDriverFacadeImpl implements AcademyDriverFacade {
 		Driver driver = driverRegistRequest.toEntity(academy);
 
 		MultipartFile image = driverRegistRequest.getImage();
-		if(image != null){
-			String imagePath = imageUtil.saveImage(image);
-			driver.setImagePath(imagePath);
-		}
+		String imagePath = imageUtil.saveImage(image);
+		driver.setImagePath(imagePath);
 
 		return driverService.save(driver);
 	}
