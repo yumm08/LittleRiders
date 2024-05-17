@@ -1,3 +1,4 @@
+import DrivingPage from '@pages/DrivingPage'
 import Landing from '@pages/Landing'
 import QrCodePage from '@pages/QrCodePage'
 
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: 'qrcode',
         element: <QrCodePage />,
+      },
+      {
+        path: 'driving',
+        element: <DrivingPage />,
       },
     ],
   },
