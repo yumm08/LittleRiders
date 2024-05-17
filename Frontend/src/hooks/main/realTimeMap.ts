@@ -97,7 +97,7 @@ export const useSetRealTimeMap = () => {
           curLocationInfo.latitude,
           curLocationInfo.longitude,
         ),
-      )
+      ) // TODO: 제거하고 새로 생성?
     } else {
       const position = new naver.maps.LatLng(
         curLocationInfo.latitude,
@@ -196,7 +196,7 @@ export const useSetRealTimeMap = () => {
       const key = `${latitude}-${longitude}`
       const content = realTimeInfo[key].map((info) => {
         return `<div class='w-full p-4 flex border-b-2 justify-between'>
-          <img src='/api/content/${info.child.imagePath}' class='w-1/3 aspect-square object-cover'/>
+          <img src='/api/content/${info.child.image}' class='w-1/3 aspect-square object-cover'/>
           <div class='flex flex-col justify-between'>
             <div class='flex items-center gap-2'>
               <p class='text-4xl'>${info.child.name}</p>
@@ -239,7 +239,7 @@ export const useSetRealTimeMap = () => {
       const key = `${latitude}-${longitude}`
       const content = realTimeInfo[key].map((info) => {
         return `<div class='w-full p-4 flex border-b-2 justify-between'>
-          <img src='/api/content/${info.child.imagePath}' class='w-1/3 aspect-square object-cover'/>
+          <img src='/api/content/${info.child.image}' class='w-1/3 aspect-square object-cover'/>
           <div class='flex flex-col justify-between'>
             <div class='flex items-center gap-2'>
               <p class='text-4xl'>${info.child.name}</p>

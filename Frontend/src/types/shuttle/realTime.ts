@@ -25,7 +25,7 @@ export type BoardChildInfo = {
   academyChildId: number
   name: string
   gender: Gender
-  imagePath: string
+  image: string
 }
 export type BoardInfo = {
   child: BoardChildInfo
