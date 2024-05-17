@@ -26,6 +26,8 @@ public interface ShuttleFacade {
     DriverInfoResponse getDriverInfoByCardNumber(AuthTerminal authTerminal, String cardNumber);
 
     TeacherInfoResponse getTeacherInfoByCardNumber(AuthTerminal authTerminal, String cardNumber);
+
+    ShuttleInfoResponse getShuttleInfoByShuttleId(long shuttleId);
 }
 
 

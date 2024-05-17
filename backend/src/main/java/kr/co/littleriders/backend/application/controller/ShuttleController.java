@@ -21,6 +21,12 @@ import java.util.List;
 public class ShuttleController {
     private final ShuttleFacade shuttleFacade;
 
+    @GetMapping()
+    public ResponseEntity<ShuttleInfoResponse> getShuttleInfo(@Auth AuthTerminal authTerminal){
+        ShuttleInfoResponse shuttleInfoResponse = shuttleFacade.getShuttleInfoByShuttleId(authTerminal.getShuttleId());
+        return ResponseEntity.ok().body(shuttleInfoResponse);
+    }
+
     @GetMapping("/tag/driver/{cardNumber}")
     public ResponseEntity<DriverInfoResponse> getDriverInfoByQrCode(@Auth AuthTerminal authTerminal, @PathVariable(name = "cardNumber") String cardNumber){
         DriverInfoResponse driverInfoResponse = shuttleFacade.getDriverInfoByCardNumber(authTerminal,cardNumber);

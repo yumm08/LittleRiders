@@ -414,5 +414,11 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
     }
 
+    @Override
+    public ShuttleInfoResponse getShuttleInfoByShuttleId(long shuttleId) {
+        Shuttle shuttle = shuttleService.findById(shuttleId);
+        return ShuttleInfoResponse.from(shuttle);
+    }
+
 
 }
