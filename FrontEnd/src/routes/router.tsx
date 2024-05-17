@@ -1,5 +1,5 @@
 import Landing from '@pages/Landing'
-import QrCodePage from '@pages/QrCodePage'
+import Route from '@pages/Route'
 
 import App from 'App'
 import { createBrowserRouter } from 'react-router-dom'
@@ -10,12 +10,13 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        index: true,
         path: '',
         element: <Landing />,
       },
       {
-        path: 'qrcode',
-        element: <QrCodePage />,
+        path: '/route',
+        element: <Route />,
       },
     ],
   },
