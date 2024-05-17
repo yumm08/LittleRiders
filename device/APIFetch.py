@@ -94,8 +94,7 @@ class APIFetcher:
         if(response.status_code == 401):
             self._reIssue()
             return self.getEndDrive()
-        return response.json()
-    
+
 
     def getStartDrive(self,routeId,driverId,teacherId):
         url = f"{self.BASE_URL}/shuttle/start"

@@ -482,9 +482,11 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
+            apiFetcher.getEndDrive()
             postionThread.detach(self)
             postionThread.detach(bluetoothThread)
             bluetoothThread.stop()
+            
             self.close()
         else:
             print("NO")
