@@ -186,7 +186,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         sseFacade.broadcastStartDriveByAcademyId(shuttle.getAcademy().getId(),shuttleDrive); //운행시작 알림
         log.info("size = {}",smsSendClientRequestList.size());
         // 운행 시작 sms 발송
-//        smsFetchAPI.sendLMS(smsSendClientRequestList);
+        smsFetchAPI.sendLMS(smsSendClientRequestList);
     }
 
     @Override
@@ -297,7 +297,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         log.info("BOARD = {}",driveUniqueKey.getUuid());
         // 승차 sms 전송
         SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toBoardMessage(driveUniqueKey.getUuid(), academyChild, teacher, driver, shuttle);
-//        smsFetchAPI.sendLMS(smsSendClientRequest);
+        smsFetchAPI.sendLMS(smsSendClientRequest);
 
         return ShuttleChildBoardResponse.from(academyChild);
     }
@@ -358,7 +358,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         log.info("DROP = {}",driveUniqueKeyUuid);
         // 하차 sms 전송
         SmsSendClientRequest smsSendClientRequest = SmsSendClientRequest.toDropMessage(driveUniqueKeyUuid, academyChild, teacher, driver, shuttle);
-//        smsFetchAPI.sendLMS(smsSendClientRequest);
+        smsFetchAPI.sendLMS(smsSendClientRequest);
 
         return ShuttleChildDropResponse.from(academyChild);
     }
