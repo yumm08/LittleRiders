@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import Shuttle from '@components/Main/Shuttle'
 
@@ -6,6 +6,7 @@ import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
 import { useFetchRealTimeShuttleInfo } from '@hooks/shuttle'
 
 import { AcademyShuttle } from '@types'
+import { CameraIcon, CameraOffIcon } from 'lucide-react'
 
 const SHUTTLE_BUTTON_STYLE = {
   SELECT: 'bg-yellow shadow-inner shadow-darkgray',
@@ -24,9 +25,14 @@ export default function RealTimeMap({
   onSelect,
 }: Props) {
   const { initRealTimeMap, realTimeMap } = useSetRealTimeMap()
+  const [isViewFix, setIsViewFix] = useState(false)
 
   // 실시간 셔틀 위치 SSE 요청
   useFetchRealTimeShuttleInfo()
+
+  const handleViewFixButtonClick = () => {
+    setIsViewFix((prev) => !prev)
+  }
 
   // 맵 초기화
   useEffect(() => {
@@ -56,6 +62,14 @@ export default function RealTimeMap({
             </button>
           ))}
         </div>
+        <button
+          className={`absolute right-0 z-10 mt-1 flex items-center justify-center gap-2 rounded-xl border px-4 ${isViewFix ? 'bg-yellow' : 'bg-white'} p-2 font-bold`}
+          onClick={handleViewFixButtonClick}
+        >
+          {isViewFix ? <CameraIcon /> : <CameraOffIcon />}
+          {isViewFix && <span>시점 고정 해제하기</span>}
+          {!isViewFix && <span>선택 셔틀 시점 고정하기</span>}
+        </button>
       </div>
 
       {shuttleList.map((shuttle) => (
@@ -65,6 +79,7 @@ export default function RealTimeMap({
           shuttleInfo={shuttle}
           realTimeMap={realTimeMap}
           isSelected={Object.is(selectedShuttle, shuttle)}
+          isViewFix={isViewFix}
         />
       ))}
     </>

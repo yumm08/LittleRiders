@@ -23,6 +23,7 @@ interface Props {
   shuttleInfo: AcademyShuttle
   realTimeMap: naver.maps.Map
   isSelected: boolean
+  isViewFix: boolean
 }
 
 export default function Shuttle({
@@ -30,6 +31,7 @@ export default function Shuttle({
   shuttleInfo,
   realTimeMap,
   isSelected,
+  isViewFix,
 }: Props) {
   const curLocationInfo = useRef<LocationInfo | InitDataLocationInfo>()
   const saveLocation = useRef(false)
@@ -97,7 +99,7 @@ export default function Shuttle({
 
   // init 데이터가 있다면, polyline을 그린다
   useEffect(() => {
-    if (initData) {
+    if (initData && realTimeMap) {
       const locationList = initData.locationList
 
       if (locationList.length > 0) {
@@ -142,7 +144,8 @@ export default function Shuttle({
 
   // 위치 정보가 변화하고 있다면, 실시간으로 마커를 찍는다
   useEffect(() => {
-    if (locationInfo) {
+    if (locationInfo && realTimeMap) {
+      console.log(realTimeMap)
       drawRealTimeMarker(locationInfo, shuttleInfo, realTimeMap)
 
       if (curLocationInfo.current) {
@@ -198,6 +201,17 @@ export default function Shuttle({
       showEndShuttleAlert(shuttleName)
     }
   }, [endInfo])
+
+  // 시점 고정을 하면 셔틀의 위치를 맵 중앙으로 고정한다
+  useEffect(() => {
+    if (isSelected && curLocationInfo.current) {
+      if (isViewFix) {
+        const { latitude, longitude } = curLocationInfo.current
+        const latLng = new naver.maps.LatLng(latitude, longitude)
+        realTimeMap.setCenter(latLng)
+      }
+    }
+  }, [isSelected, locationInfo, isViewFix])
 
   return null
 }
