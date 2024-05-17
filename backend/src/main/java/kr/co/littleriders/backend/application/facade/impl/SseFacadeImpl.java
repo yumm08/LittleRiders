@@ -216,7 +216,7 @@ public class SseFacadeImpl implements SseFacade {
 
             AcademyChild academyChild = academyChildService.findById(academyChildId);
             AcademyShuttleLandingInfoResponse.Child child = AcademyShuttleLandingInfoResponse.Child.from(academyChild);
-            AcademyShuttleLandingInfoResponse.BoardDropInfo boardResponse = AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child, shuttleBoard.getLatitude(), shuttleBoard.getLongitude(), LocalDateTime.now());
+            AcademyShuttleLandingInfoResponse.BoardDropInfo boardResponse = AcademyShuttleLandingInfoResponse.BoardDropInfo.of(child,shuttleId, shuttleBoard.getLatitude(), shuttleBoard.getLongitude(), LocalDateTime.now());
             try {
 
                 SseEmitter.SseEventBuilder event = SseEmitter.event()
