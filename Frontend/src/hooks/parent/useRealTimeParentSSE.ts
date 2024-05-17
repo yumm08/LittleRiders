@@ -75,7 +75,9 @@ export default function useRealTimeParentSSE({ uuid }: Props) {
       setDriverInfo(data.driver)
       setBoardChild(data.board)
       setDropChild(data.drop)
+      setDriveLocationInfo(data.locationList)
       setIsLoading(false)
+      setDriveStatus('end')
       eventSource.close()
     }
 
