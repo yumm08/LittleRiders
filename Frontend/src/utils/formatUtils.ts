@@ -85,10 +85,12 @@ export const formatDateTime = (dateTime: string) => {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
-    timeZone: 'UTC',
+    timeZone: 'Asia/Seoul',
   })
 
   const date = new Date(dateTime)
+  date.setHours(date.getHours() + 9)
+
   const result = formatter.format(date)
 
   return result
