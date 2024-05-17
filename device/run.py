@@ -523,6 +523,8 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
 
             beaconUUIDSet = set(list(beaconUUIDList.keys()))
 
+            print(beaconUUIDSet)
+
             boardUuidSet =  (self.beaconUUIDSet | beaconUUIDSet) - self.beaconUUIDSet
             
             dropUuidSet = (self.beaconUUIDSet | beaconUUIDSet) - beaconUUIDSet

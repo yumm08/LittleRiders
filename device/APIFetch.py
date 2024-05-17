@@ -137,7 +137,7 @@ class APIFetcher:
         print(response)
         if(response.status_code == 401):
             self._reIssue()
-            return self.getBoard(beaconUUID,latitude,longitude)
+            return self.getDrop(beaconUUID,latitude,longitude)
 
 if __name__ == "__main__":
     apiFetcher = APIFetcher("")
