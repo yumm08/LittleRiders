@@ -70,3 +70,26 @@ export const formatStringToPhoneNumber = (string: string) => {
 
   return formattedPhoneNumber
 }
+
+/**
+ * @example
+ * ```ts
+ * const dateTime = "2024-03-28T10:53:00.000+00:00";
+ *
+ * // 오전 10:53
+ * // console.log(formatDateWithYear(dateTime))
+ * ```
+ */
+export const formatDateTime = (dateTime: string) => {
+  const formatter = new Intl.DateTimeFormat('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'UTC',
+  })
+
+  const date = new Date(dateTime)
+  const result = formatter.format(date)
+
+  return result
+}

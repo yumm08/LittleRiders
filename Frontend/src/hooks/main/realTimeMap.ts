@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { useRealTimeStore } from '@stores/realTimeStore'
 
 import { showSuccessAlert } from '@utils/alertUtils'
+import { formatDateTime } from '@utils/formatUtils'
 
 import {
   AcademyShuttle,
@@ -201,7 +202,7 @@ export const useSetRealTimeMap = () => {
               <p class='text-4xl'>${info.child.name}</p>
               <img src="${info.child.gender === 'MALE' ? '/son.svg' : '/daughter.svg'}" class='w-8'/>
             </div>
-            <p>${new Date(info.time).toLocaleTimeString()}</p>
+            <p>${formatDateTime(info.time)}</p>
             <p class="text-xl${info.status === 'BOARD' ? ' text-darkgreen">승차' : ' text-red-700">하차'}</p>
           </div>
         </div>`
