@@ -96,19 +96,17 @@ class BluetoothThread(QThread,Provider,ObserverInterface):
 
 
     async def async_run(self):
-        while True:
-            if(self.speed <=3):
-                print("haha")
-                latitude = self.latitude
-                longitude = self.longitude
-                await asyncio.sleep(3.0)
-                beaconUUIDList = await self.bluetoothHelper.getBeaconUUIDList()
-                beaconUUIDListWithLatitudeLongitude = {
-                    "latitude" : latitude,
-                    "longitude" : longitude,
-                    "beaconUUIDList" : beaconUUIDList
-                }
-                self.notifyAll(beaconUUIDListWithLatitudeLongitude=beaconUUIDListWithLatitudeLongitude)
+        
+        print("scan")
+        latitude = self.latitude
+        longitude = self.longitude
+        beaconUUIDList = await self.bluetoothHelper.getBeaconUUIDList()
+        beaconUUIDListWithLatitudeLongitude = {
+            "latitude" : latitude,
+            "longitude" : longitude,
+            "beaconUUIDList" : beaconUUIDList
+        }
+        self.notifyAll(beaconUUIDListWithLatitudeLongitude=beaconUUIDListWithLatitudeLongitude)
  
 
 
