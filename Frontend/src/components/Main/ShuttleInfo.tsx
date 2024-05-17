@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function ShuttleInfo({ selectedShuttle }: Props) {
-  const [toggle, setToggle] = useState(false)
+  const [toggle, setToggle] = useState(true)
 
   const { data: initData } = useQuery<InitData>({
     queryKey: ['initData', selectedShuttle?.shuttleId],
@@ -53,7 +53,7 @@ export default function ShuttleInfo({ selectedShuttle }: Props) {
 
   return (
     <div
-      className={`transtition-all z-10 h-full bg-white duration-200 ease-in-out ${toggle ? 'w-1/6 translate-x-0' : 'w-0 -translate-x-full'}`}
+      className={`transtition-all z-10 h-full bg-white duration-200 ease-in-out ${toggle ? 'w-1/6 translate-x-0' : 'w-0 -translate-x-full'} border-r-2`}
     >
       <button
         className="absolute -right-5 top-1/2 z-50 flex h-9 w-9 items-center justify-center rounded-full border bg-white"
