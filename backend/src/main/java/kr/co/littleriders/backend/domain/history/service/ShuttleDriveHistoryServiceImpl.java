@@ -45,8 +45,11 @@ class ShuttleDriveHistoryServiceImpl implements ShuttleDriveHistoryService {
     @Override
     public List<LocalDateTime> findDistinctYearAndMonthAndDayListByShuttleId(long shuttleId) {
 
+
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<String> dateStringList = shuttleDriveHistoryRepository.findDistinctDateListWithStringByShuttleId(shuttleId);
+        log.info("dateStringList = {}",dateStringList);
         return dateStringList.stream()
                 .map(str -> LocalDate.parse(str, formatter).atStartOfDay()) // 각 문자열을 LocalDateTime으로 파싱
                 .collect(Collectors.toList()); // 파싱된 LocalDateTime 객체들을 리스트로 수집

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
@@ -33,9 +34,23 @@ public class AcademyShuttleLandingInfoResponse {
     }
 
 
-    public record Location(double latitude, double longitude, int speed,LocalDateTime time) {
+    public static AcademyShuttleLandingInfoResponse of(long shuttleId, long driverId, long teacherId, long routeId, List<ShuttleLocationResponse> shuttleLocationList,
+                                                       List<BoardDropInfo> boardList, List<BoardDropInfo> dropList,boolean a) {
+
+        List<Location> locationList = shuttleLocationList.stream().map(Location::from).toList();
+        return new AcademyShuttleLandingInfoResponse(shuttleId, driverId, teacherId, routeId, locationList,boardList,dropList);
+    }
+
+
+    public record Location(double latitude, double longitude, int speed,String time) {
         public static Location from(ShuttleLocation shuttleLocation) {
-            return new Location(shuttleLocation.getLatitude(), shuttleLocation.getLongitude(), shuttleLocation.getSpeed(), shuttleLocation.getTime());
+            String dateTimeString = shuttleLocation.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"));
+
+            return new Location(shuttleLocation.getLatitude(), shuttleLocation.getLongitude(), shuttleLocation.getSpeed(), dateTimeString);
+        }
+        public static Location from(ShuttleLocationResponse shuttleLocationResponse){
+            String dateTimeString = shuttleLocationResponse.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"));
+            return new Location(shuttleLocationResponse.getLatitude(), shuttleLocationResponse.getLongitude(), shuttleLocationResponse.getSpeed(), dateTimeString);
         }
     }
 
