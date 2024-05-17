@@ -1,8 +1,8 @@
 import ChildPage from '@pages/ChildPage'
 import DispatchPage from '@pages/DispatchPage'
 import DriveHistoryPage from '@pages/DriveHistoryPage'
+import Error404Page from '@pages/ErrorPage'
 import MainPage from '@pages/MainPage'
-import MyPage from '@pages/MyPage'
 import OperatePage from '@pages/OperatePage'
 import ParentViewPage from '@pages/ParentViewPage'
 import SignInPage from '@pages/SignInPage'
@@ -58,13 +58,13 @@ const router = createBrowserRouter([
               },
             ],
           },
-          {
-            path: 'mypage',
-            element: <MyPage />,
-          },
         ],
       },
     ],
+  },
+  {
+    path: '/*',
+    element: <Error404Page />,
   },
 ])
 
