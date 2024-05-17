@@ -57,6 +57,9 @@ public class SmsFetchAPI {
         }
         final String authorization = generateAuthorization();
         final String BASE_URL = "/send-many/detail";
+        if(true){
+            return "hi";
+        }
 
         return webClient
                 .method(HttpMethod.POST)
