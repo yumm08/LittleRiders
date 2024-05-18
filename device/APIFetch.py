@@ -24,6 +24,15 @@ class APIFetcher:
         self.headers = {"Authorization" : response.headers["Authorization"]}
         self.cookies = {'refresh-token': response.cookies["refresh-token"]}
 
+
+    def getShuttleInfo(self):
+        url = f"{self.BASE_URL}/shuttle"
+        response = requests.get(url,headers=self.headers)
+        if(response.status_code == 401):
+            self._reIssue()
+            return self.getRouteList()
+        return response.json()   
+
         
     
     def _reIssue(self):
@@ -141,6 +150,5 @@ class APIFetcher:
 
 if __name__ == "__main__":
     apiFetcher = APIFetcher("")
-
 
 
