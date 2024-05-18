@@ -81,10 +81,10 @@ class BluetoothThread(QThread,Provider,ObserverInterface):
         self.speed = 100
         self.latitude = 10000
         self.longitude = 10000
-        self.start = True
+        self.canRun = True
 
     def run(self):
-        self.start = True
+        self.canRun = True
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(self.async_run())
@@ -98,11 +98,11 @@ class BluetoothThread(QThread,Provider,ObserverInterface):
         self.speed = position.getSpeed()
 
     def stop(self):
-        self.start = False
+        self.canRun = False
         self.terminate()
 
     async def async_run(self):
-        while self.start:
+        while self.canRun:
             if(self.latitude < 1000):
                 latitude = self.latitude
                 longitude = self.longitude
@@ -139,7 +139,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.setupUi(self)
         # self.exitButton.clicked.connect(self.close)
         self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("https://device2.littleriders.co.kr"))
+        self.webview.setUrl(QUrl("http://192.168.1.20:5173"))
         self.mapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
         # self.serialNumberText.setText(f"{terminalNumber}")
@@ -158,10 +158,14 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
 
         self.onDrive = False
 
+        self.beaconUUIDSet = set([])
+        self.boardChildList = []
+        self.readyChildList = []
         self.showMaximized()
 
         
         self.webview.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # self.startDrive()
 
     def show_current_url(self,url):
         self.url = url.toString()
@@ -203,9 +207,31 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
     
     @pyqtSlot()
     def startDrive(self):
-        print(self.routeId)
-        print(self.driverInfo["id"])
-        print(self.teacherInfo["id"])
+        print("이거받음")
+        self.onDrive = True
+
+        self.beaconUUIDSet = set([])
+        self.boardChildList = []
+        self.readyChildList = []
+        positionThread.register(bluetoothThread)
+        positionThread.register(self)
+        positionThread.start()
+        bluetoothThread.start()
+        bluetoothThread.register(self)
+
+        apiFetcher.getStartDrive(self.routeId,self.driverInfo["id"],self.teacherInfo["id"])
+
+        arr = apiFetcher.getRouteDetail(self.routeId)
+
+        for station in arr['stationList']:
+            for child in station['academyChildList']:
+                self.readyChildList.append(child)
+
+        command = f"""readyState.setInfo({self.readyChildList})"""
+        self.webview.page().runJavaScript(command)
+        
+
+        
     
 
     def keyPressEvent(self, e):
@@ -240,27 +266,29 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
     def renderDriverByUuid(self,uuid):
         if(not self.url.endswith("qr")):
             return
-        self.driverInfo = apiFetcher.getDriverInfo(uuid)
-        print(self.driverInfo)
-        command = "driverState.setInfo({name:'%s 기사님', phoneNumber :'%s', image: 'https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo['image']) #,phoneNumber:'%s',image='https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo["image"])
-        self.webview.page().runJavaScript(command)
+        try:
+            temp = apiFetcher.getDriverInfo(uuid)
+            command = "driverState.setInfo({name:'%s 기사님', phoneNumber :'%s', image: 'https://littleriders.co.kr/api/content/%s'})"%(temp["name"],temp["phoneNumber"],temp['image']) #,phoneNumber:'%s',image='https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo["image"])
+            self.webview.page().runJavaScript(command)
+            self.driverInfo = temp
+        except:
+            pass
 
     def renderTeacherByUuid(self,uuid):
         if(not self.url.endswith("qr")):
             return
-        
-        self.teacherInfo = apiFetcher.getTeacherInfo(uuid)
-        print(self.teacherInfo)
-        command = "teacherState.setInfo({name:'%s 선생님', phoneNumber :'%s', image: 'https://littleriders.co.kr/api/content/%s'})"%(self.teacherInfo["name"],self.teacherInfo["phoneNumber"],self.teacherInfo['image']) #,phoneNumber:'%s',image='https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo["image"])
-        self.webview.page().runJavaScript(command)
+        try:
+            temp= apiFetcher.getTeacherInfo(uuid)
+            print(self.teacherInfo)
+            command = "teacherState.setInfo({name:'%s 선생님', phoneNumber :'%s', image: 'https://littleriders.co.kr/api/content/%s'})"%(temp["name"],temp["phoneNumber"],temp['image']) #,phoneNumber:'%s',image='https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo["image"])
+            self.webview.page().runJavaScript(command)
+            self.teacherInfo  = temp
+        except:
+            
+            pass
 
     
-    def startDrive(self):
-        self.onDriver = True
-        postionThread.register(bluetoothThread)
-        postionThread.register(self)
-        bluetoothThread.start()
-        bluetoothThread.register(self)
+   
         
 
 
@@ -268,11 +296,16 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
     def notify(self,*args,**kwargs):
         position = kwargs.get("position",None)
         beaconUUIDListWithLatitudeLongitude = kwargs.get("beaconUUIDListWithLatitudeLongitude",None)
+        if(position):
+            pass
+            # print(position)
         if(position and self.onDrive):
-            apiFetcher.uploadPosition(position)
+            pass
+            # print(apiFetcher.uploadPosition(position))
 
         
         if(beaconUUIDListWithLatitudeLongitude and self.onDrive):
+            print(beaconUUIDListWithLatitudeLongitude)
             latitude = beaconUUIDListWithLatitudeLongitude["latitude"]
             longitude = beaconUUIDListWithLatitudeLongitude["longitude"]
             beaconUUIDList = beaconUUIDListWithLatitudeLongitude["beaconUUIDList"]
@@ -282,9 +315,38 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
             dropUuidSet = (self.beaconUUIDSet | beaconUUIDSet) - beaconUUIDSet
             self.beaconUUIDSet = beaconUUIDSet
             for uuid in dropUuidSet:
-                apiFetcher.getDrop(uuid,latitude,longitude)
+                print("dropUUID" ,uuid)
+                response = apiFetcher.getDrop(uuid,latitude,longitude)
+                if(response.status_code == 200):
+                    
+                    data = response.json()
+                    del data["phoneNumber"]
+                    try:
+                        self.boardChildList.remove(data)
+                    except:
+                        pass
+                    #자바스크립트 훅 호출
+
             for uuid in boardUuidSet:
-                apiFetcher.getBoard(uuid,latitude,longitude)
+                print("boardUUID" ,uuid)
+                response = apiFetcher.getBoard(uuid,latitude,longitude)
+                print(response.text)
+                if(response.status_code == 200):
+                    data = response.json()
+                    del data["phoneNumber"]
+                    try:
+                        self.boardChildList.append(data)
+                        self.readyChildList.remove(data)
+                    except:
+                        pass
+
+            print("board!!" , self.boardChildList)
+            command = f"""boardState.setInfo({self.boardChildList})"""
+            self.webview.page().runJavaScript(command)
+
+            command = f"""readyState.setInfo({self.readyChildList})"""
+            self.webview.page().runJavaScript(command)
+                    #그 후 승하차 대기 현황에서 이 정보 제거
 
 
 
@@ -302,8 +364,8 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
         self.webview.loadFinished.connect(self.on_load_finished)
         self.mapLoad = False
 
-        postionThread.register(bluetoothThread)
-        postionThread.register(self)
+        positionThread.register(bluetoothThread)
+        positionThread.register(self)
         bluetoothThread.start()
         bluetoothThread.register(self)
 
@@ -320,8 +382,8 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
 
         if reply == QMessageBox.Yes:
             apiFetcher.getEndDrive()
-            postionThread.detach(self)
-            postionThread.detach(bluetoothThread)
+            positionThread.detach(self)
+            positionThread.detach(bluetoothThread)
             bluetoothThread.stop()
             
             self.close()
@@ -367,14 +429,14 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    win = MainWindow()
+    
     
     positionSaver = PositionSaver()
-    postionThread = PositionThread()
-    postionThread.register(positionSaver)
-
+    positionThread = PositionThread()
+    positionThread.register(positionSaver)    
     bluetoothThread = BluetoothThread()
 
-    
+
+    win = MainWindow()
     win.show()
     app.exec()
