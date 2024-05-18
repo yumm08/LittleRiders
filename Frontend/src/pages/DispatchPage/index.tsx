@@ -43,7 +43,7 @@ export default function DispatchPage() {
 
   return (
     <div
-      className={`flex h-screen w-screen justify-center pt-[120px] transition-all max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row `}
+      className={`flex h-screen w-screen justify-center pt-[120px] transition-all max-2xl:w-screen max-2xl:flex-row `}
     >
       <RouteList
         routeList={routeList}

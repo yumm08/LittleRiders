@@ -308,7 +308,7 @@ export default function RouteDetailSlide({
   }, [])
 
   return (
-    <div className="mx-auto mt-[120px] flex h-[calc(100%-120px)] flex-col justify-evenly max-2xl:mx-10 max-2xl:w-full max-2xl:flex-row">
+    <div className="mx-auto mt-[120px] flex h-[calc(100%-120px)] flex-col justify-evenly">
       <RouteDetailSlideHeader
         selectedRouteName={selectedRouteName}
         handleAddButton={handleAddButton}
