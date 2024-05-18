@@ -81,8 +81,10 @@ class BluetoothThread(QThread,Provider,ObserverInterface):
         self.speed = 100
         self.latitude = 10000
         self.longitude = 10000
+        self.start = True
 
     def run(self):
+        self.start = True
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(self.async_run())
@@ -96,16 +98,15 @@ class BluetoothThread(QThread,Provider,ObserverInterface):
         self.speed = position.getSpeed()
 
     def stop(self):
+        self.start = False
         self.terminate()
 
     async def async_run(self):
-        while True:
+        while self.start:
             if(self.latitude < 1000):
-
-                print("haha")
                 latitude = self.latitude
                 longitude = self.longitude
-                await asyncio.sleep(3.0)
+                await asyncio.sleep(4.0)
                 beaconUUIDList = await self.bluetoothHelper.getBeaconUUIDList()
                 beaconUUIDListWithLatitudeLongitude = {
                     "latitude" : latitude,
@@ -114,29 +115,6 @@ class BluetoothThread(QThread,Provider,ObserverInterface):
                 }
                 self.notifyAll(beaconUUIDListWithLatitudeLongitude=beaconUUIDListWithLatitudeLongitude)
 
-
-    
-        
-
-"""
-    async def async_run(self):
-        
-        print("scan")
-        while True:
-            try:
-
-                latitude = self.latitude
-                longitude = self.longitude
-                beaconUUIDList = await self.bluetoothHelper.getBeaconUUIDList()
-                beaconUUIDListWithLatitudeLongitude = {
-                    "latitude" : latitude,
-                    "longitude" : longitude,
-                    "beaconUUIDList" : beaconUUIDList
-                }
-                self.notifyAll(beaconUUIDListWithLatitudeLongitude=beaconUUIDListWithLatitudeLongitude)
-            except:
-                pass
-"""
 
 class PositionSaver(ObserverInterface):
     def __init__(self):
@@ -161,7 +139,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.setupUi(self)
         # self.exitButton.clicked.connect(self.close)
         self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("http://192.168.1.20:5173"))
+        self.webview.setUrl(QUrl("https://device2.littleriders.co.kr"))
         self.mapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
         # self.serialNumberText.setText(f"{terminalNumber}")
@@ -177,6 +155,8 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.teacherInfo = None
 
         self.barcode = ""
+
+        self.onDrive = False
 
         self.showMaximized()
 
@@ -274,318 +254,39 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         command = "teacherState.setInfo({name:'%s 선생님', phoneNumber :'%s', image: 'https://littleriders.co.kr/api/content/%s'})"%(self.teacherInfo["name"],self.teacherInfo["phoneNumber"],self.teacherInfo['image']) #,phoneNumber:'%s',image='https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo["image"])
         self.webview.page().runJavaScript(command)
 
-    def startDriveButtonEvent(self):
-
-        # self.hide()
-        # self.second = BarcodeScanView()
-        # self.second.exec()
-
-        buzzerHelper.beep()
-        self.hide()
-        self.second = ChoiceRouteview()
-        self.second.exec()
-        self.show()
+    
+    def startDrive(self):
+        self.onDriver = True
+        postionThread.register(bluetoothThread)
+        postionThread.register(self)
+        bluetoothThread.start()
+        bluetoothThread.register(self)
         
 
-    def courseInfoButtonEvent(self):
-        buzzerHelper.beep()
-        self.hide()
-        self.second = RouteInfoWindow()
-        self.second.exec()
-        self.show()
-        #routeList = apiFetcher.getRouteList()
-        #self.uuidText.setText(json.dumps(routeList,ensure_ascii=False,indent=4))
+
 
     def notify(self,*args,**kwargs):
-
-        return
         position = kwargs.get("position",None)
-        if(not position):
-            return
-        position = kwargs["position"]
-        latitude = position.getLatitude()
-        longitude = position.getLongitude()
-        speed = position.getSpeed()
-        if(self.mapLoad):
-            self.webview.page().runJavaScript(f'change({latitude},{longitude})')
-    
+        beaconUUIDListWithLatitudeLongitude = kwargs.get("beaconUUIDListWithLatitudeLongitude",None)
+        if(position and self.onDrive):
+            apiFetcher.uploadPosition(position)
 
-
-class RouteInfoListWidget(QListWidgetItem):
-    def __init__(self,data=None,parent=None):
-        super().__init__("",parent)
-    
-        self.id = data["id"]
-        self.name = data["name"]
-        self.stationList = data["stationList"]
-        self.setText(self.name)
-        self.setFont(QFont("Arial",23))
-        # su.__init__(parent)
-
-    def getId(self):
-        return self.id
-    
-    def getStationList(self):
-        return self.stationList
-
-class RouteInfoWindow(QDialog,QWidget,formRounteInfoClass):
-
-    def __init__(self):
-        super(RouteInfoWindow,self).__init__()
-        self.setupUi(self)
-
-        self.routeList = apiFetcher.getRouteList()
-        for i in self.routeList:
-            self.addItem(i)
         
-        self.exitButton.clicked.connect(self.closeWindow)
-        self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("https://device.littleriders.co.kr/route"))
-        self.stationMapLayout.addWidget(self.webview)
-        self.webview.loadFinished.connect(self.on_load_finished)
-        self.titleName.setText("등록된 코스 목록")
-        self.mapLoad = False
-        self.nextButton.setVisible(False)
-        self.show()
-    
-
-    def addItem(self,data):
-        item = RouteInfoListWidget(data=data)
-        self.courseListWidget.addItem(item)
-
-    def clickItem(self,items):
-        buzzerHelper.beep()
-        #stationList = apiFetcher.getStationListByRouteId(items.getId())
-        stationList = items.getStationList()
-        self.webview.page().runJavaScript(f"reChangePostion({stationList})")
-
-    def doubleClickItem(self,items):
-        pass
-
-    def closeWindow(self):
-        buzzerHelper.beep()
-        self.close()
-
-    def on_load_finished(self, success):
-        if success:
-            self.mapLoad = True
-            if(len(self.routeList) >0):
-                self.webview.page().runJavaScript(f'reChangePostion({self.routeList[0]["stationList"]})')
-
-    def nextButtonEvent(self):
-        print("hihi")
+        if(beaconUUIDListWithLatitudeLongitude and self.onDrive):
+            latitude = beaconUUIDListWithLatitudeLongitude["latitude"]
+            longitude = beaconUUIDListWithLatitudeLongitude["longitude"]
+            beaconUUIDList = beaconUUIDListWithLatitudeLongitude["beaconUUIDList"]
+            beaconUUIDSet = set(list(beaconUUIDList.keys()))
+            boardUuidSet =  (self.beaconUUIDSet | beaconUUIDSet) - self.beaconUUIDSet
+            
+            dropUuidSet = (self.beaconUUIDSet | beaconUUIDSet) - beaconUUIDSet
+            self.beaconUUIDSet = beaconUUIDSet
+            for uuid in dropUuidSet:
+                apiFetcher.getDrop(uuid,latitude,longitude)
+            for uuid in boardUuidSet:
+                apiFetcher.getBoard(uuid,latitude,longitude)
 
 
-class ChoiceRouteview(QDialog,QWidget,formRounteInfoClass):
-
-    def __init__(self):
-        super(ChoiceRouteview,self).__init__()
-        self.setupUi(self)
-
-        self.routeList = apiFetcher.getRouteList()
-        for i in self.routeList:
-            self.addItem(i)
-        
-        self.exitButton.clicked.connect(self.closeWindow)
-        self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("https://device.littleriders.co.kr/route"))
-        self.stationMapLayout.addWidget(self.webview)
-        self.webview.loadFinished.connect(self.on_load_finished)
-        self.titleName.setText("코스를 선택하세요")
-        self.mapLoad = False
-        self.clicked = None
-        self.show()
-    
-
-    def addItem(self,data):
-        item = RouteInfoListWidget(data=data)
-        self.courseListWidget.addItem(item)
-
-    def clickItem(self,items):
-        buzzerHelper.beep()
-        #stationList = apiFetcher.getStationListByRouteId(items.getId())
-        stationList = items.getStationList()
-        self.webview.page().runJavaScript(f"reChangePostion({stationList})")
-        self.clicked = items
-
-    def closeWindow(self):
-        buzzerHelper.beep()
-        self.close()
-
-    def on_load_finished(self, success):
-        if success:
-            self.mapLoad = True
-            if(len(self.routeList) >0):
-                self.webview.page().runJavaScript(f'reChangePostion({self.routeList[0]["stationList"]})')
-
-    def nextButtonEvent(self):
-        if(not self.clicked):
-            buzzerHelper.beep()
-            buzzerHelper.beep()
-            QMessageBox.about(self,'운행 오류!','코스를 선택해주세요!')
-            return
-        
-
-        buzzerHelper.beep()
-        self.hide()
-        self.close()
-        self.second = BarcodeScanView(routeId=self.clicked.getId())
-        self.second.exec()
-        
-
-        # self.hide()
-        # self.second = ChoiceRouteview()
-        # self.second.exec()
-        
-
-
-
-
-
-
-class BarcodeScanView(QDialog,QWidget,formScanBarcodeClass):
-
-    def __init__(self,routeId):
-        super(BarcodeScanView,self).__init__()
-        self.setupUi(self)
-        # self.exitButton.clicked.connect(self.closeWindow)
-
-        self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("http://192.168.1.20:5173/qr"))
-
-        self.webLayout.addWidget(self.webview)
-        self.barcode = ""
-
-        self.webLoad = False
-
-        self.webview.loadFinished.connect(self.on_load_finished)
-        self.driverInfo = None
-        self.teacherInfo = None
-
-        self.routeId = routeId
-
-        self.channel = QWebChannel()
-        self.channel.registerObject('barcodeHandler', self)
-        self.webview.page().setWebChannel(self.channel)
-
-
-    def on_load_finished(self, success):
-        if success:
-            self.webLoad = True
-            self.webview.page().runJavaScript(f'console.log("hello world")')
-
-
-    
-
-
-
-
-
-    def keyPressEvent(self, e):
-        self.endScanButton.setFocus(True)
-        
-        if(e.key()==Qt.Key_Return):
-            if(self.barcode.startswith("DRIVER")):
-                self.renderDriverByUuid(self.barcode.lstrip("DRIVER_"))
-            elif(self.barcode.startswith("TEACHER")):
-                self.renderTeacherByUuid(self.barcode.lstrip("TEACHER_"))
-            else:
-                buzzerHelper.beep()
-                buzzerHelper.beep()
-            self.barcode = ""
-            return
-        try:
-            # print(chr(e.key()))
-            self.barcode += chr(e.key())  
-        except:
-            pass
-
-    def endScanButtonEvent(self):
-        if(self.barcode.startswith("DRIVER")):
-            self.renderDriverByUuid(self.barcode.replace("DRIVER_",""))
-        elif(self.barcode.startswith("TEACHER")):
-            self.renderTeacherByUuid(self.barcode.replace("TEACHER_",""))
-        else:
-            buzzerHelper.beep()
-            buzzerHelper.beep()
-        self.barcode = ""
-    
-
-        #print(chr(e.key()),end="")
-
-    def renderDriverByUuid(self,uuid):
-        if(not self.webLoad):
-            return
-
-        self.driverInfo = apiFetcher.getDriverInfo(uuid)
-        command = "driverState.setInfo({name:'%s 기사님', phoneNumber :'%s', image: 'https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo['image']) #,phoneNumber:'%s',image='https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo["image"])
-        self.webview.page().runJavaScript(command)
-
-
-    def renderTeacherByUuid(self,uuid):
-        if(not self.webLoad):
-            return
-
-        self.teacherInfo = apiFetcher.getTeacherInfo(uuid)
-
-        command = "teacherState.setInfo({name:'%s 선생님', phoneNumber :'%s', image: 'https://littleriders.co.kr/api/content/%s'})"%(self.teacherInfo["name"],self.teacherInfo["phoneNumber"],self.teacherInfo['image']) #,phoneNumber:'%s',image='https://littleriders.co.kr/api/content/%s'})"%(self.driverInfo["name"],self.driverInfo["phoneNumber"],self.driverInfo["image"])
-        self.webview.page().runJavaScript(command)
-
-
-    
-    @pyqtSlot()
-    def nextButtonEvent(self):
-        
-        if(self.driverInfo == None and self.teacherInfo == None):
-            buzzerHelper.beep()
-            buzzerHelper.beep()
-            QMessageBox.critical(self,'운행 오류','기사님과 선생님 QR을 스캔해주세요.')
-            return
-        if(self.driverInfo == None):
-            buzzerHelper.beep()
-            buzzerHelper.beep()
-            QMessageBox.critical(self,'운행 오류','기사님 QR을 스캔해주세요.')
-            return
-
-        if(self.teacherInfo == None):
-            buzzerHelper.beep()
-            buzzerHelper.beep()
-            QMessageBox.critical(self,'운행 오류','선생님 QR을 스캔해주세요.')
-            return
-        
-        apiFetcher.getStartDrive(routeId=self.routeId,driverId=self.driverInfo["id"],teacherId=self.teacherInfo["id"])
-        buzzerHelper.beep()
-        self.hide()
-        self.close()
-        self.second = StartDriveForm()
-        self.second.exec()
-        return
-        # QMessageBox.about(self,'운행을 시작했습니다!',f'운행시작!! \nriverid={self.driverInfo["id"]}\n,routeId={self.routeId},\nteacherId={self.teacherInfo["id"]}')
-
-
-    def closeWindow(self):
-        buzzerHelper.beep()
-        self.close()
-    
-
-
-
-
-class BoardChildListWidget(QListWidgetItem):
-    def __init__(self,data=None,parent=None):
-        super().__init__("",parent)
-    
-        self.id = data["id"]
-        self.name = data["name"]
-        self.setText(self.name)
-        self.setFont(QFont("Arial",23))
-        # su.__init__(parent)
-
-    def getId(self):
-        return self.id
-    
-    def getStationList(self):
-        return self.stationList
 
 
 class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
@@ -609,10 +310,7 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
         self.beaconUUIDSet = set()
 
 
-    def addItem(self,data):
-        item = BoardChildListWidget(data=data)
-        self.courseListWidget.addItem(item)
-
+    
 
     def endDriveButtonEvent(self):
 
@@ -630,17 +328,6 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
         else:
             print("NO")
        
-
-    def on_load_finished(self, success):
-        if success:
-            self.mapLoad = True
-            position = positionRepository.findLastPosition()
-            if(not position):
-                self.webview.page().runJavaScript(f'console.log("hello world")')
-
-                return
-            self.webview.page().runJavaScript(f'change({position.latitude},{position.longitude})')
-
 
     
     def notify(self,*args,**kwargs):
@@ -677,20 +364,6 @@ class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
 
 
 
-class WebViewHandler(QObject):
-
-
-    @pyqtSlot(result=QVariant)
-    def test(self):
-        print('call received')
-        return QVariant({"abc": "def", "ab": 22})
-    
-    # take an argument from javascript - JS:  handler.test1('hello!')
-    @pyqtSlot(QVariant, result=QVariant)
-    def test1(self, args):
-      print('i got')
-      print(args)
-      return "ok"
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -698,8 +371,6 @@ if __name__ == "__main__":
     
     positionSaver = PositionSaver()
     postionThread = PositionThread()
-    postionThread.start()
-    postionThread.register(win)
     postionThread.register(positionSaver)
 
     bluetoothThread = BluetoothThread()
