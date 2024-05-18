@@ -45,7 +45,7 @@ public class AcademyShuttleLandingInfoResponse {
         }
     }
 
-    public record Child (long academyChildId, String name, Gender gender,String imagePath){
+    public record Child (long academyChildId, String name, Gender gender,String image){
         public static Child from(AcademyChild academyChild){
             return new Child(academyChild.getId(), academyChild.getName(), academyChild.getGender(), academyChild.getImagePath());
         }
