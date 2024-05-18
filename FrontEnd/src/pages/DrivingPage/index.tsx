@@ -31,8 +31,8 @@ window.stationState = {
   setInfo: () => { }
 }
 export default function DrivingPage() {
-  const [boardChildList, setBoardChildList] = useState(["김민준","김도현"])
-  const [readyChildList, setReadyChildList] = useState(["김관우", "박희준"])
+  const [boardChildList, setBoardChildList] = useState([])
+  const [readyChildList, setReadyChildList] = useState([])
 
   
   const [station, setStation] = useState({
@@ -75,7 +75,7 @@ export default function DrivingPage() {
           <ul className="flex h-[100%] w-full flex-col overflow-y-auto">
             {boardChildList.map((item) => {
               return <li className=" flex w-full justify-center border-b-2 border-lightyellow">
-                {item}
+                {item.name}
               </li>
             })}
           </ul>
@@ -87,7 +87,7 @@ export default function DrivingPage() {
           <ul className="flex h-[100%] w-full flex-col overflow-y-auto">
           {readyChildList.map((item) => {
               return   <li className=" flex w-full justify-center border-b-2 border-lightyellow">
-              {item}
+              {item.name}
             </li>
             })}
           

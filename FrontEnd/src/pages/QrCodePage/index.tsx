@@ -81,7 +81,11 @@ export default function QrCodePage() {
       <button
         className="flex w-full justify-center rounded-[10px]   bg-yellow p-2 font-bold"
         onClick={async () => { 
-          await window.mainHandler.canMoveStartDrivePage() ? navigate("/driving") : ""
+          if (await window.mainHandler.canMoveStartDrivePage()) {
+            console.error("jsjsjs")
+            window.mainHandler.startDrive()
+            navigate("/driving")
+          } 
 
          }}
       >
