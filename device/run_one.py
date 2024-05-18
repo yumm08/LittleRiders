@@ -166,13 +166,6 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.webview.loadFinished.connect(self.on_load_finished)
         # self.serialNumberText.setText(f"{terminalNumber}")
         self.shuttleInfo = apiFetcher.getShuttleInfo()
-
-
-        # central_widget = QWidget()
-        # self.setCentralWidget(central_widget)
-        
-        # layout = QVBoxLayout(central_widget)
-        # layout.addWidget(self.webview)
         self.url = ""
 
         self.channel = QWebChannel()
@@ -219,6 +212,10 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
     @pyqtSlot(result=QVariant)
     def canMoveTagBarcodePage(self):
         return self.routeId != None
+    
+    @pyqtSlot()
+    def beep(self):
+        buzzerHelper.beep()
     
     @pyqtSlot(result=QVariant)
     def canMoveStartDrivePage(self):
