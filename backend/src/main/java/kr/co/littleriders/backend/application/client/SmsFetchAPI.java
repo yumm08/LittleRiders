@@ -27,13 +27,16 @@ public class SmsFetchAPI {
 
     private final String FROM;
 
-    public SmsFetchAPI(@Value("${spring.sms.key}") String SMS_KEY, @Value("${spring.sms.secret}") String SMS_SECRET, @Value("${spring.sms.sender}") String from) {
+    private final boolean onTest;
+
+    public SmsFetchAPI(@Value("${spring.sms.key}") String SMS_KEY, @Value("${spring.sms.secret}") String SMS_SECRET, @Value("${spring.sms.sender}") String from, @Value("${spring.sms.test}") boolean onTest) {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.solapi.com/messages/v4")
                 .build();
         this.SMS_KEY = SMS_KEY;
         this.SMS_SECRET = SMS_SECRET;
         this.FROM = from;
+        this.onTest = onTest;
     }
 
 
@@ -57,6 +60,10 @@ public class SmsFetchAPI {
         }
         final String authorization = generateAuthorization();
         final String BASE_URL = "/send-many/detail";
+
+        if(onTest){
+            return "test";
+        }
 
         return webClient
                 .method(HttpMethod.POST)
