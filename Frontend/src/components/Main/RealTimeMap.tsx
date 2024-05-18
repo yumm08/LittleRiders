@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import Shuttle from '@components/Main/Shuttle'
 
+import { useFetchAcademyLocation } from '@hooks/academy/useFetchAcademyAddress'
 import { useSetRealTimeMap } from '@hooks/main/realTimeMap'
 import { useFetchRealTimeShuttleInfo } from '@hooks/shuttle'
 
@@ -24,8 +25,11 @@ export default function RealTimeMap({
   selectedShuttle,
   onSelect,
 }: Props) {
-  const { initRealTimeMap, realTimeMap } = useSetRealTimeMap()
   const [isViewFix, setIsViewFix] = useState(false)
+
+  const { initRealTimeMap, realTimeMap } = useSetRealTimeMap()
+  const { academyLocation, isLoading: locationFetchLoading } =
+    useFetchAcademyLocation()
 
   // 실시간 셔틀 위치 SSE 요청
   useFetchRealTimeShuttleInfo()
@@ -41,6 +45,16 @@ export default function RealTimeMap({
       window.dispatchEvent(new Event('resize'))
     }, 500)
   }, [])
+
+  // 맵 위치 초기화
+  useEffect(() => {
+    if (!locationFetchLoading && realTimeMap) {
+      const { latitude, longitude } = academyLocation
+      const latlng = new naver.maps.LatLng(latitude, longitude)
+
+      realTimeMap.setCenter(latlng)
+    }
+  }, [locationFetchLoading, realTimeMap])
 
   return (
     <>
