@@ -131,10 +131,11 @@ class APIFetcher:
         }
         url = f"{self.BASE_URL}/shuttle/child/board"
         response = requests.post(url,headers=self.headers,json=data)
-        print(response)
         if(response.status_code == 401):
             self._reIssue()
             return self.getBoard(beaconUUID,latitude,longitude)
+        
+        return response
         
     def getDrop(self,beaconUUID,latitude,longitude):
         data ={
@@ -144,10 +145,11 @@ class APIFetcher:
         }
         url = f"{self.BASE_URL}/shuttle/child/drop"
         response = requests.post(url,headers=self.headers,json=data)
-        print(response)
         if(response.status_code == 401):
             self._reIssue()
             return self.getDrop(beaconUUID,latitude,longitude)
+        
+        return response
 
 if __name__ == "__main__":
     apiFetcher = APIFetcher("")
