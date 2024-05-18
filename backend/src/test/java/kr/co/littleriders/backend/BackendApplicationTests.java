@@ -13,6 +13,8 @@ import kr.co.littleriders.backend.domain.driver.entity.Driver;
 import kr.co.littleriders.backend.domain.driver.entity.DriverStatus;
 import kr.co.littleriders.backend.domain.route.RouteService;
 import kr.co.littleriders.backend.domain.route.entity.Route;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleBoardService;
+import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
 import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
 import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
 import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleStatus;
@@ -54,6 +56,25 @@ class BackendApplicationTests {
 
     @Autowired
     AcademyChildService academyChildService;
+
+
+    @Autowired
+    ShuttleLocationService shuttleLocationService;
+
+    @Autowired
+    ShuttleBoardService shuttleBoardService;
+
+    @Test
+    void removeAllShuttleLocation(){
+        shuttleLocationService.deleteAllByShuttleId(1);
+        try {
+            shuttleBoardService.deleteAllByShuttleId(1);
+        }
+        catch (Exception e){
+
+        }
+
+    }
 
 
     @Test
