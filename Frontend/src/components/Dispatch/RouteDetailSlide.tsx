@@ -27,13 +27,14 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { ChildInfo, ChildtoStationArgType, Station } from '@types'
+import { ChildInfo, ChildtoStationArgType, Location, Station } from '@types'
 
 interface Props {
   selectedRouteId: number
   selectedRouteName: string
   setSelectedRouteId: React.Dispatch<React.SetStateAction<number>>
   selectedRouteType: string | undefined
+  academyLocation: Location
   mapRef: RefObject<naver.maps.Map>
   handleAddButton: () => void
 }
@@ -44,6 +45,7 @@ export default function RouteDetailSlide({
   selectedRouteId,
   selectedRouteName,
   selectedRouteType,
+  academyLocation,
   setSelectedRouteId,
   handleAddButton,
 }: Props) {
@@ -277,7 +279,13 @@ export default function RouteDetailSlide({
   }, [isChildListLoading])
 
   useEffect(() => {
-    drawRoute(stationItems['selectedStationList'], markerList, setMarkerList)
+    drawRoute(
+      academyLocation.latitude,
+      academyLocation.longitude,
+      stationItems['selectedStationList'],
+      markerList,
+      setMarkerList,
+    )
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stationItems['selectedStationList']])

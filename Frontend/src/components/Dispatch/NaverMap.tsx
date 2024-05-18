@@ -5,10 +5,12 @@ import { MapOverlay } from '@components/Dispatch'
 import { MapHook } from '@hooks/map'
 
 import { BASE_LAT, BASE_LNG } from '@constants'
+import { Location } from '@types'
 
 interface Props {
   mapRef: React.RefObject<naver.maps.Map>
   mapDiv: React.RefObject<HTMLDivElement>
+  academyLocation: Location
   selectedRouteId: number
   isOverlayOpen: boolean
   handleAddButton: () => void
@@ -18,6 +20,7 @@ interface Props {
 export default function NaverMap({
   mapDiv,
   mapRef,
+  academyLocation,
   selectedRouteId,
   isOverlayOpen,
   handleAddButton,
@@ -26,7 +29,10 @@ export default function NaverMap({
   const { initMap } = MapHook(mapRef)
   useEffect(() => {
     initMap(mapDiv, {
-      center: new naver.maps.LatLng(BASE_LAT, BASE_LNG),
+      center: new naver.maps.LatLng(
+        academyLocation.latitude ?? BASE_LAT,
+        academyLocation.longitude ?? BASE_LNG,
+      ),
       zoom: 15,
       minZoom: 7,
       zoomControl: false,

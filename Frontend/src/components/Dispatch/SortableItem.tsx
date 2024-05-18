@@ -54,7 +54,7 @@ export default function SortableItem({
       return <p className="w-8 text-center text-xl font-bold">{index + 1}</p>
     if (type === 'stationList')
       return <img src="/bus-stop-icon.svg" className="w-8" />
-    if (type.includes('academyChildList'))
+    if (type.includes('childList'))
       return gender === 'FEMALE' ? (
         <img src="/daughter.svg" className="w-8" />
       ) : (
