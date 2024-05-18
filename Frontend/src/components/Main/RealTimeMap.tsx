@@ -11,7 +11,7 @@ import { CameraIcon, CameraOffIcon } from 'lucide-react'
 
 const SHUTTLE_BUTTON_STYLE = {
   SELECT: 'bg-yellow shadow-inner shadow-darkgray',
-  NON_SELECT: 'bg-white',
+  NON_SELECT: 'bg-white shadow',
 }
 
 interface Props {
