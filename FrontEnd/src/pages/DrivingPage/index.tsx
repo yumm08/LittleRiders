@@ -31,8 +31,8 @@ window.stationState = {
   setInfo: () => { }
 }
 export default function DrivingPage() {
-  const [boardChildList, setBoardChildList] = useState([])
-  const [readyChildList, setReadyChildList] = useState([])
+  const [boardChildList, setBoardChildList] = useState<any[]>([])
+  const [readyChildList, setReadyChildList] = useState<any[]>([])
 
   
   const [station, setStation] = useState({
