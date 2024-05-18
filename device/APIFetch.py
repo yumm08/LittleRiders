@@ -72,6 +72,7 @@ class APIFetcher:
         if(response.status_code == 401):
             self._reIssue()
             return self.uploadPosition(position=position)
+        return response
         # return response.json()
         
     def getImage(self,imagePath):
