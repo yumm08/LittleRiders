@@ -139,7 +139,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.setupUi(self)
         # self.exitButton.clicked.connect(self.close)
         self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("http://192.168.1.20:5173"))
+        self.webview.setUrl(QUrl("https://device2.littleriders.co.kr"))
         self.mapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
         # self.serialNumberText.setText(f"{terminalNumber}")
