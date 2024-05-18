@@ -26,6 +26,14 @@ spring:
       host: ${REDIS_URL}
       port: ${REDIS_PORT}
 
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    from: ${MAIL_FROM}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+
+
   resource:
     directory: /app/data
 
