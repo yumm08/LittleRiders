@@ -159,7 +159,7 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
           현재 위치 추가하기
         </Button>
         <Button
-          color="rounded text-gray-500 py-1 transition ease-in-out hover:bg-gray-100 bg-white active:bg-gray-300"
+          color="rounded text-gray-500 w-auto transition ease-in-out hover:bg-gray-100 bg-white active:bg-gray-300"
           onClick={handleCloseButton}
         >
           취소하기
