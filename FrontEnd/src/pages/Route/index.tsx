@@ -1,39 +1,22 @@
-import { useEffect, useState } from 'react'
+import {useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
-const makeRouteList = (count: number) => {
-  const routeList: any[] = []
 
-  for (let i = 0; i < count; i++) {
-    const randomValue = Math.random()
-    let routeInfo: any = {
-      id: i,
-      name: `노선 ${String.fromCharCode(65 + i)}`,
-      type: randomValue < 0.5 ? 'board' : 'drop',
-    }
-    const stationList = []
-    for (let j = 0; j < count; j++) {
-      const data = {
-        stationId: j,
-        stationName: `정류장 ${String.fromCharCode(65 + j)}`,
-        latitude: Math.random() * 10,
-        longitude: Math.random() * 10,
-        visitOrder: j + 1,
-        academyChildList: [
-          {
-            id: 1,
-            name: '누군가',
-          },
-        ],
-      }
-      stationList.push(data)
-    }
-    routeInfo = { ...routeInfo, stationList: stationList }
-    routeList.push(routeInfo)
+declare global {
+  interface Window {
+    routeState: {
+      setInfo: any;
+    };
+    mainHandler: any;
   }
-  return routeList
 }
+
+window.routeState = {
+  setInfo: () => { },
+};
+
+
 
 export default function Route() {
   const [routeList, setRouteList] = useState<any>()
@@ -44,22 +27,29 @@ export default function Route() {
   const handlePrevButtonClick = () => {
     navigate('/')
   }
-
-  useEffect(() => {
-    const exampleRouteList = makeRouteList(15)
-    setRouteList(exampleRouteList)
-  }, [])
+  window.routeState.setInfo  = setRouteList
 
   return (
     <div className="box-border h-full p-1">
       <div className="flex h-[50px] justify-between">
         <button
           className="flex items-center justify-center rounded bg-lightgreen p-2 px-10 font-bold"
-          onClick={handlePrevButtonClick}
+          onClick={() => {
+            window.mainHandler.choiceRouteId(null);
+            window.mainHandler.rerenderShuttleInfo();
+            handlePrevButtonClick();
+
+          }
+            
+          }
         >
           이전
         </button>
-        <button className="flex items-center justify-center rounded bg-lightgreen p-2 px-10 font-bold">
+        <button className="flex items-center justify-center rounded bg-lightgreen p-2 px-10 font-bold"
+          onClick={async() => {
+            await window.mainHandler.canMoveTagBarcodePage() ? navigate("/qr") : ""
+          }}
+        >
           다음
         </button>
       </div>
@@ -76,7 +66,13 @@ export default function Route() {
                 <div
                   key={route.id}
                   className={`cursor-pointer p-2 text-3xl ${route.id === selectedRoute?.id && 'bg-yellow'}`}
-                  onClick={() => setSelectedRoute(() => route)}
+                  onClick={() =>{
+                    setSelectedRoute(() => route)
+                    window.mainHandler.choiceRouteId(route.id);
+                    // console.log(route.id)
+                  }
+                    
+                    }
                 >
                   {route.name}
                 </div>
@@ -91,8 +87,8 @@ export default function Route() {
             {selectedRoute && (
               <div className="flex h-[300px] flex-col divide-y-2 overflow-auto">
                 {selectedRoute.stationList.map((station: any) => (
-                  <div key={station.stationId} className="p-2 text-2xl">
-                    {station.stationName}
+                  <div key={station.id} className="p-2 text-2xl">
+                    {station.name}
                   </div>
                 ))}
               </div>

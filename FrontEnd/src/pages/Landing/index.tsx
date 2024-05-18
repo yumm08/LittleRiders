@@ -1,12 +1,45 @@
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+
+declare global {
+  interface Window {
+    shuttleState: {
+
+      setInfo: any;
+    };
+  }
+}
+
+
+window.shuttleState = {
+
+  setInfo: () => { }
+};
+
+
 
 export default function Landing() {
   const navigate = useNavigate()
+  // const [name, setName] = useState("");
+  // const [image, setImage] = useState("/default.png");
+  // const [licenseNumber, setLicenseNumber] = useState("")
+  // const [type, setType] = useState("")
+
+  const [shuttleInfo, setShuttleInfo] = useState({
+    name: "",
+    image: "https://littleriders.co.kr/api/content/default.jpg",
+    licenseNumber: "",
+    type: ""
+  });
+
+  window.shuttleState.setInfo = setShuttleInfo
+
+
   return (
     <div className="flex h-full w-full flex-row border p-4">
       <div className="flex w-1/2 flex-col items-center justify-center ">
         <div className="m-2 h-1/2 w-5/6">
-          <img className="h-full" src="/default.png"></img>
+          <img className="h-full" src={shuttleInfo.image}></img>
         </div>
         <div className="flex h-1/2 w-5/6 flex-col divide-y-[1px] rounded border ">
           <div className="flex h-full w-full">
@@ -14,7 +47,7 @@ export default function Landing() {
               호차
             </div>
             <div className="flex w-1/2 items-center justify-center p-2 text-center text-2xl">
-              2호차
+              {shuttleInfo.name}
             </div>
           </div>
           <div className="flex h-full w-full">
@@ -22,7 +55,7 @@ export default function Landing() {
               차량
             </div>
             <div className="flex w-1/2 items-center justify-center p-2 text-center text-2xl">
-              스타렉크스
+              {shuttleInfo.type}
             </div>
           </div>
           <div className="flex h-full w-full">
@@ -30,7 +63,7 @@ export default function Landing() {
               번호판
             </div>
             <div className="flex w-1/2 items-center justify-center p-2 text-center text-2xl">
-              29-1923차
+            {shuttleInfo.licenseNumber}
             </div>
           </div>
         </div>
@@ -40,6 +73,7 @@ export default function Landing() {
           className=" m-2 h-1/2 w-5/6 rounded border-4 border-lightgreen p-3 text-2xl font-bold transition-colors ease-in-out active:bg-lightgreen active:text-slate-100"
           onClick={() => {
             navigate('/route')
+            window.mainHandler.renderRouteListRequest()
           }}
         >
           <div className="flex h-full w-full items-center justify-between text-3xl font-extrabold">
