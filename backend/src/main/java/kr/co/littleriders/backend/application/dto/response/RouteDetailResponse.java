@@ -33,7 +33,7 @@ public class RouteDetailResponse {
                         routeStation.getStation().getLongitude(),
                         routeStation.getVisitOrder(),
                         routeStation.getChildBoardInfoList().stream()
-                                .map(info -> new StationInfo.ChildInfo(info.getAcademyChild().getId(), info.getAcademyChild().getName()))
+                                .map(info -> new StationInfo.ChildInfo(info.getAcademyChild().getId(), info.getAcademyChild().getName(),info.getAcademyChild().getPhoneNumber(),info.getAcademyChild().getImagePath()))
                                 .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
@@ -55,6 +55,8 @@ public class RouteDetailResponse {
         public static class ChildInfo {
             private Long academyChildId;
             private String name;
+            private String phoneNumber;
+            private String image;
         }
     }
 }
