@@ -148,6 +148,37 @@ class PositionSaver(ObserverInterface):
 
 
 
+
+
+class ImageWindow(QDialog):
+    def __init__(self, image, name,phoneNumber, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("아이 정보 보기")
+        
+        layout = QVBoxLayout()
+        
+        # 이미지를 표시하는 QLabel 위젯 생성
+
+
+        pixMap = QPixmap()
+        pixMap.loadFromData(image)
+        pixMap = pixMap.scaled(180, 180, Qt.KeepAspectRatio)
+        image_label = QLabel()
+        image_label.setPixmap(pixMap)
+        layout.addWidget(image_label)
+        # 텍스트를 표시하는 QLabel 위젯 생성
+        name_label = QLabel(f"이름 : {name}")
+        layout.addWidget(name_label)
+
+        phone_label = QLabel(f"연락처 : {phoneNumber}")
+        layout.addWidget(phone_label)
+
+        button = QPushButton("닫기")
+        
+        button.clicked.connect(self.close)
+        layout.addWidget(button)
+        self.setLayout(layout)
+
 class MainWindow(QMainWindow, form_class,ObserverInterface):
     def __init__(self):
         super().__init__()
@@ -203,9 +234,35 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
 
     @pyqtSlot()
     def renderRouteListRequest(self):
+        print("call here?")
         self.routeList = apiFetcher.getRouteList()
+        print(self.routeList)
         command = f"routeState.setInfo({self.routeList})"
         self.webview.page().runJavaScript(command)
+
+
+        
+
+
+    @pyqtSlot(QVariant)
+    def showChildInfo(self,item):
+        # messagebox = QMessageBox(QMessageBox.Warning, "Title text", "body text", buttons = QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel | QtGui.QMessageBox.Ok, parent=self)
+        # messagebox.setIconPixmap(QPixmap(":/images/image_file))
+
+        name  = item["name"]
+        phoneNumber = item["phoneNumber"]
+        image = item["image"]
+
+        imageRaw = apiFetcher.getImage(image)
+        imageWindow = ImageWindow(imageRaw, name,phoneNumber)
+        imageWindow.exec_()
+        
+        # a = QMessageBox.about(self,'아이 정보 안내',f'이름 : {name}\n학부모 연락처 : {phoneNumber}')
+        
+        
+
+        
+        
 
     @pyqtSlot(QVariant)
     def choiceRouteId(self,routeId):
@@ -223,6 +280,29 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
     @pyqtSlot(result=QVariant)
     def canMoveStartDrivePage(self):
         return self.routeId != None and self.driverInfo != None and self.teacherInfo != None
+    
+    @pyqtSlot(result=QVariant)
+    def endDrive(self):
+        if( len(self.boardChildList) > 0):
+            QMessageBox.warning(self,"운행 종료 불가","아이가 남아있습니다.")
+            return False
+
+        reply = QMessageBox.question(self, '운행종료', '정말로 운행을 종료할까요?',
+                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+
+            apiFetcher.getEndDrive()
+            positionThread.detach(self)
+            positionThread.detach(bluetoothThread)
+            bluetoothThread.stop()
+            positionThread.stop()
+
+            return True
+            
+
+    
+        return False
     
     @pyqtSlot()
     def startDrive(self):
@@ -383,7 +463,6 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
                 if(response.status_code == 200):
                     
                     data = response.json()
-                    del data["phoneNumber"]
                     try:
                         self.boardChildList.remove(data)
                     except:
@@ -396,7 +475,6 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
                 print(response.text)
                 if(response.status_code == 200):
                     data = response.json()
-                    del data["phoneNumber"]
                     try:
                         self.boardChildList.append(data)
                         self.readyChildList.remove(data)

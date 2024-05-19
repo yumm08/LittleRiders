@@ -153,5 +153,3 @@ class APIFetcher:
 
 if __name__ == "__main__":
     apiFetcher = APIFetcher("")
-
-
