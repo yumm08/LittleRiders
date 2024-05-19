@@ -20,6 +20,7 @@ from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtCore import pyqtSlot,QObject,QVariant
 
 import urllib.request
+from geopy.distance import geodesic
 
 
 form_class = uic.loadUiType("untitled_single.ui")[0]
@@ -163,6 +164,8 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.readyChildList = []
         self.showMaximized()
 
+        self.stationInfoIndex = 0
+
         
         self.webview.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         # self.startDrive()
@@ -223,11 +226,32 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
 
         arr = apiFetcher.getRouteDetail(self.routeId)
 
+        self.stationList = []
+   
+
         for station in arr['stationList']:
             for child in station['academyChildList']:
                 self.readyChildList.append(child)
+            self.stationList
+
+            del station['academyChildList']
+
+            self.stationList.append(station)
+
+        
 
         command = f"""readyState.setInfo({self.readyChildList})"""
+        self.webview.page().runJavaScript(command)
+
+        self.stationInfo = {"before" : "", "now" : self.stationList[0]["name"]}
+        try:
+            self.stationInfo["after"] =  self.stationInfo[1]["name"]
+        except:
+            self.stationInfo["after"] = ""
+
+        
+
+        command = f"""stationState.setInfo({self.stationInfo})"""
         self.webview.page().runJavaScript(command)
         
 
@@ -296,12 +320,29 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
     def notify(self,*args,**kwargs):
         position = kwargs.get("position",None)
         beaconUUIDListWithLatitudeLongitude = kwargs.get("beaconUUIDListWithLatitudeLongitude",None)
-        if(position):
-            pass
-            # print(position)
+        #현재 정류소랑 근접한가 확인. 반경 20미터 이내면 갱신 필요
+
         if(position and self.onDrive):
-            pass
-            # print(apiFetcher.uploadPosition(position))
+
+            if(self.stationInfoIndex < len(self.stationList)):
+                compareStation = self.stationList[self.stationInfoIndex]
+                base_location = (compareStation["latitude"],compareStation["longitude"])
+                point = (position.getLatitude(),position.getLongitude())
+                distance = geodesic(base_location,point).meters
+                if(distance < 50):
+                    self.stationInfoIndex +=1
+                    self.stationInfo["before"] =self.stationInfo["now"]
+                    self.stationInfo["now"] = self.stationInfo["after"]
+                    try:
+                        self.stationInfo["after"] = self.stationList[self.stationInfoIndex]["name"]
+                    except:
+                        self.stationInfo["after"] = ""
+
+                    command = f"""stationState.setInfo({self.stationInfo})"""
+                    self.webview.page().runJavaScript(command)
+        
+
+            apiFetcher.uploadPosition(position)
 
         
         if(beaconUUIDListWithLatitudeLongitude and self.onDrive):
