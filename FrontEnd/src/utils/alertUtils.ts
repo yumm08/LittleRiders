@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2'
+import Swal, { SweetAlertOptions } from 'sweetalert2'
 
 type ChildInfo = {
   image: string
@@ -20,5 +20,16 @@ export const showChildInfoAlert = (childInfo: ChildInfo) => {
     icon: undefined,
     confirmButtonText: '확인',
     html,
+  })
+}
+
+export const showErrorAlert = (optionList: SweetAlertOptions) => {
+  const defaultOptionList: SweetAlertOptions = {
+    icon: 'error',
+    allowOutsideClick: false,
+  }
+  return Swal.fire({
+    ...defaultOptionList,
+    ...optionList,
   })
 }
