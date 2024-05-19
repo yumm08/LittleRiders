@@ -37,6 +37,7 @@ export default function Route() {
           onClick={() => {
             window.mainHandler.choiceRouteId(null);
             window.mainHandler.rerenderShuttleInfo();
+            window.mainHandler.beep()
             handlePrevButtonClick();
 
           }
@@ -47,7 +48,14 @@ export default function Route() {
         </button>
         <button className="flex items-center justify-center rounded bg-lightgreen p-2 px-10 font-bold"
           onClick={async() => {
-            await window.mainHandler.canMoveTagBarcodePage() ? navigate("/qr") : ""
+            if (await window.mainHandler.canMoveTagBarcodePage()) {
+              navigate("/qr")
+              window.mainHandler.beep()
+            }
+            else {
+              window.mainHandler.beep()
+              window.mainHandler.beep()
+            }
           }}
         >
           다음
@@ -69,6 +77,7 @@ export default function Route() {
                   onClick={() =>{
                     setSelectedRoute(() => route)
                     window.mainHandler.choiceRouteId(route.id);
+                    window.mainHandler.beep();
                     // console.log(route.id)
                   }
                     

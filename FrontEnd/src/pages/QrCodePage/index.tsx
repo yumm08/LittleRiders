@@ -82,10 +82,14 @@ export default function QrCodePage() {
         className="flex w-full justify-center rounded-[10px]   bg-yellow p-2 font-bold"
         onClick={async () => { 
           if (await window.mainHandler.canMoveStartDrivePage()) {
-            console.error("jsjsjs")
             window.mainHandler.startDrive()
+            window.mainHandler.beep()
             navigate("/driving")
-          } 
+          }
+          else {
+            window.mainHandler.beep()
+            window.mainHandler.beep()
+          }
 
          }}
       >
