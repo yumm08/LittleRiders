@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { showChildInfoAlert } from '@utils/alertUtils'
+
 import Title from './Title'
 
 declare global {
@@ -85,7 +87,10 @@ export default function DrivingPage() {
           <ul className="flex h-[100%] w-full flex-col overflow-y-auto">
             {boardChildList.map((item) => {
               return (
-                <li className=" flex w-full justify-center border-b-2 border-lightyellow">
+                <li
+                  className=" flex w-full justify-center border-b-2 border-lightyellow"
+                  onClick={() => showChildInfoAlert(item)}
+                >
                   {item.name}
                 </li>
               )
