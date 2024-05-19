@@ -335,7 +335,17 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
         ShuttleBoard shuttleBoard = shuttleBoardService.findByAcademyChildId(academyChildId);
 
         List<ShuttleLocation> shuttleLocationList = shuttleLocationService.findByShuttleId(shuttleId);
-        shuttleLocationList.sort(Comparator.comparing(ShuttleLocation::getTime));
+
+        LocalDateTime startTime = shuttleDrive.getTime();
+        List<ShuttleLocation> shuttleLocationListAfterStartTime = new ArrayList<>();
+        for(ShuttleLocation shuttleLocation : shuttleLocationList){
+            if(shuttleLocation.getTime().isAfter(startTime)){
+                shuttleLocationListAfterStartTime.add(shuttleLocation);
+            }
+        }
+
+
+        shuttleLocationListAfterStartTime.sort(Comparator.comparing(ShuttleLocation::getTime));
 
         // mongoDB에 저장
         ShuttleBoardDropHistory shuttleBoardDropHistory = ShuttleBoardDropHistory.of(
@@ -345,7 +355,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                 teacher,
                 shuttleBoard,
                 shuttleDrop,
-                shuttleLocationList,
+                shuttleLocationListAfterStartTime,
                 academyChild
         );
         shuttleBoardDropHistoryService.save(shuttleBoardDropHistory);
