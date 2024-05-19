@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import DriverSmallCard from '@components/Academy/DriverSmallCard'
 import TeacherSmallCard from '@components/Academy/TeacherSmallCard'
@@ -84,17 +84,19 @@ export default function RealTimeParentView({ uuid }: Props) {
     parentMap?.panTo(location)
   }
 
-  useEffect(() => {
-    if (!driverInfo) return
-    const img = new Image()
-    img.src = `/api/content/${driverInfo.image}`
-  }, [driverInfo])
+  // useEffect(() => {
+  //   if (!driverInfo) return
+  //   const img = new Image()
+  //   img.src = `/api/content/${driverInfo.image}`
+  // }, [driverInfo])
 
-  useEffect(() => {
-    if (!teacherInfo) return
-    const img = new Image()
-    img.src = `/api/content/${teacherInfo.image}`
-  }, [teacherInfo])
+  // useEffect(() => {
+  //   if (!teacherInfo) return
+  //   const img = new Image()
+  //   img.src = `/api/content/${teacherInfo.image}`
+  // }, [teacherInfo])
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   if (isLoading)
     return (
@@ -110,7 +112,10 @@ export default function RealTimeParentView({ uuid }: Props) {
   //   )
 
   return (
-    <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center bg-white">
+    <div
+      id={isMobile ? 'mobile' : ''}
+      className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center bg-white"
+    >
       {/* 카카오맵 위치는 여기 */}
 
       <ParentNaverMap />
