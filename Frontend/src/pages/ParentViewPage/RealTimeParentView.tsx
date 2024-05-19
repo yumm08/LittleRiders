@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import DriverSmallCard from '@components/Academy/DriverSmallCard'
 import TeacherSmallCard from '@components/Academy/TeacherSmallCard'
@@ -83,6 +83,18 @@ export default function RealTimeParentView({ uuid }: Props) {
     const location = new naver.maps.LatLng(recent.latitude, recent.longitude)
     parentMap?.panTo(location)
   }
+
+  useEffect(() => {
+    if (!driverInfo) return
+    const img = new Image()
+    img.src = `/api/content/${driverInfo.image}`
+  }, [driverInfo])
+
+  useEffect(() => {
+    if (!teacherInfo) return
+    const img = new Image()
+    img.src = `/api/content/${teacherInfo.image}`
+  }, [teacherInfo])
 
   if (isLoading)
     return (
