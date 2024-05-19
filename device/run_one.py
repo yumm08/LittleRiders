@@ -21,6 +21,11 @@ from PyQt5.QtCore import pyqtSlot,QObject,QVariant
 
 import urllib.request
 from geopy.distance import geodesic
+from gtts import gTTS
+import pygame
+
+from threading import Thread
+
 
 
 form_class = uic.loadUiType("untitled_single.ui")[0]
@@ -74,6 +79,15 @@ class PositionThread(QThread,Provider):
 
     def stop(self):
         self.terminate()
+
+class SoundPlayThread(QThread):
+
+    def run(self):
+        pygame.mixer.init()
+        pygame.mixer.music.load("voice.mp3")
+        pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy() == True:
+            continue
 
 class BluetoothThread(QThread,Provider,ObserverInterface):
     def __init__(self):
@@ -163,6 +177,8 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.boardChildList = []
         self.readyChildList = []
         self.showMaximized()
+
+        self.soundPlayThread = SoundPlayThread()
 
         self.stationInfoIndex = 0
 
@@ -331,6 +347,12 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
                 distance = geodesic(base_location,point).meters
                 if(distance < 50):
                     self.stationInfoIndex +=1
+                    if (self.stationInfo["now"]):
+                        txt = f"친구들 곧 {self.stationInfo['now']}에 도착해! 미리 준비해볼까?"
+                        tts_kr = gTTS(text=txt, lang='ko', slow=False)
+                        tts_kr.save("voice.mp3")
+                        self.soundPlayThread.start()
+                        
                     self.stationInfo["before"] =self.stationInfo["now"]
                     self.stationInfo["now"] = self.stationInfo["after"]
                     try:
