@@ -28,8 +28,21 @@ window.stationState = {
   setInfo: () => {},
 }
 export default function DrivingPage() {
-  const [boardChildList, setBoardChildList] = useState<any[]>([])
-  const [readyChildList, setReadyChildList] = useState<any[]>([])
+  const [boardChildList, setBoardChildList] = useState<any[]>([
+    { name: '차차차' },
+    { name: '차차차' },
+    { name: '차차차' },
+    { name: '차차차' },
+  ])
+  const [readyChildList, setReadyChildList] = useState<any[]>([
+    { name: '차차차' },
+    { name: '차차차' },
+    { name: '차차차' },
+    { name: '차차차' },
+    { name: '차차차' },
+    { name: '차차차' },
+    { name: '차차차' },
+  ])
 
   const [station, setStation] = useState({
     before: '역삼역',
@@ -44,14 +57,16 @@ export default function DrivingPage() {
   return (
     <div className="flex h-full w-full flex-col items-center  bg-lightgreen p-2">
       {/* 제목 부분 */}
-      <Title />
-      <button
-        className="transition-color absolute right-[10%] top-[15%]  bg-yellow p-1 px-8 text-lg active:bg-lightgreen"
-        onClick={() => {}}
-      >
-        운 행 종 료
-      </button>
-      <div className="h-[30px]"></div>
+      <div className="flex w-full flex-row justify-between px-4">
+        <Title />
+        <button
+          className="transition-color rounded bg-yellow p-1 px-8 text-lg active:bg-white"
+          onClick={() => {}}
+        >
+          운 행 종 료
+        </button>
+      </div>
+      <div className="h-[20px]"></div>
       {/* 기사, 선탑자 카드 부분 */}
       <div className="flex h-[80%] w-full justify-around">
         <div className="relative flex h-[300px] w-[50%] justify-center rounded-[5px] border-[1px] bg-white font-bold text-black">
@@ -85,7 +100,7 @@ export default function DrivingPage() {
           <ul className="flex h-[100%] w-full flex-col overflow-y-auto">
             {boardChildList.map((item) => {
               return (
-                <li className=" flex w-full justify-center border-b-2 border-lightyellow">
+                <li className=" flex w-full justify-center border-b-2 border-yellow p-3 ps-5 tracking-[0.4em]">
                   {item.name}
                 </li>
               )
@@ -99,7 +114,7 @@ export default function DrivingPage() {
           <ul className="flex h-[100%] w-full flex-col overflow-y-auto">
             {readyChildList.map((item) => {
               return (
-                <li className="flex w-full justify-center border-b-2 border-lightyellow">
+                <li className="flex w-full items-center justify-evenly border-b-2 border-yellow p-3 ps-5 tracking-[0.4em]">
                   {item.name}
                 </li>
               )
