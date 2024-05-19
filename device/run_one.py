@@ -14,34 +14,23 @@ import sys
 import asyncio
 from datetime import datetime
 from BuzzerHelper import BuzzerHelper
-from PyQt5.QtCore import Qt,QEvent
+from PyQt5.QtCore import Qt
 from PyQt5.QtWebChannel import QWebChannel
 
-from PyQt5.QtCore import pyqtSlot,QObject,QVariant
-
-import urllib.request
+from PyQt5.QtCore import pyqtSlot,QVariant
 from geopy.distance import geodesic
 from gtts import gTTS
 import pygame
 
-from threading import Thread
 
 
-
-form_class = uic.loadUiType("untitled_single.ui")[0]
-formRounteInfoClass = uic.loadUiType("untitled2.ui")[0]
-formScanBarcodeClass = uic.loadUiType("untitled3_copy.ui")[0]
-
-formStartDriveClass = uic.loadUiType("untitled4.ui")[0]
-
+form_class = uic.loadUiType("main.ui")[0]
 modelHelper = ModelHelper()
 buzzerHelper = BuzzerHelper()
 terminalRepository =TerminalRepository(modelHelper=modelHelper)
 positionRepository = PositionRepository(modelHelper=modelHelper)
 terminalNumber = terminalRepository.findById(1).getTerminalNumber()
 apiFetcher = APIFetcher(terminalNumber)
-print(terminalNumber)
-
 speed = 100
 class ObserverInterface():
     def notify(self,*args,**kwargs):
@@ -212,6 +201,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.soundPlayThread = SoundPlayThread()
 
         self.stationInfoIndex = 0
+        self.stationList = []
 
         
         self.webview.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -488,84 +478,6 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
             command = f"""readyState.setInfo({self.readyChildList})"""
             self.webview.page().runJavaScript(command)
                     #그 후 승하차 대기 현황에서 이 정보 제거
-
-
-
-
-class StartDriveForm(QDialog,QWidget,formStartDriveClass,ObserverInterface):
-
-    def __init__(self):
-        super(StartDriveForm,self).__init__()
-        self.setupUi(self)
-        self.endDriveButton.clicked.connect(self.endDriveButtonEvent)
-
-        self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("https://device.littleriders.co.kr"))
-        self.mapLayout.addWidget(self.webview)
-        self.webview.loadFinished.connect(self.on_load_finished)
-        self.mapLoad = False
-
-        positionThread.register(bluetoothThread)
-        positionThread.register(self)
-        bluetoothThread.start()
-        bluetoothThread.register(self)
-
-        self.beaconUUIDSet = set()
-
-
-    
-
-    def endDriveButtonEvent(self):
-
-
-        reply = QMessageBox.question(self, '운행종료', '정말로 운행을 종료할까요?',
-                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-
-        if reply == QMessageBox.Yes:
-            apiFetcher.getEndDrive()
-            positionThread.detach(self)
-            positionThread.detach(bluetoothThread)
-            bluetoothThread.stop()
-            
-            self.close()
-        else:
-            print("NO")
-       
-
-    
-    def notify(self,*args,**kwargs):
-        position = kwargs.get("position",None)
-        beaconUUIDListWithLatitudeLongitude = kwargs.get("beaconUUIDListWithLatitudeLongitude",None)
-        if(position):
-            latitude = position.getLatitude()
-            longitude = position.getLongitude()
-            speed = position.getSpeed()
-            apiFetcher.uploadPosition(position)
-            if(self.mapLoad):
-                self.webview.page().runJavaScript(f'change({latitude},{longitude})')
-
-        
-        if(beaconUUIDListWithLatitudeLongitude):
-            latitude = beaconUUIDListWithLatitudeLongitude["latitude"]
-            longitude = beaconUUIDListWithLatitudeLongitude["longitude"]
-            beaconUUIDList = beaconUUIDListWithLatitudeLongitude["beaconUUIDList"]
-
-            beaconUUIDSet = set(list(beaconUUIDList.keys()))
-
-            print(beaconUUIDSet)
-
-            boardUuidSet =  (self.beaconUUIDSet | beaconUUIDSet) - self.beaconUUIDSet
-            
-            dropUuidSet = (self.beaconUUIDSet | beaconUUIDSet) - beaconUUIDSet
-            self.beaconUUIDSet = beaconUUIDSet
-            for uuid in dropUuidSet:
-                apiFetcher.getDrop(uuid,latitude,longitude)
-            for uuid in boardUuidSet:
-                apiFetcher.getBoard(uuid,latitude,longitude)
-
-
-
-
 
 
 if __name__ == "__main__":

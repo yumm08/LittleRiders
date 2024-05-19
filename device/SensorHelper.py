@@ -2,7 +2,7 @@ import pynmea2
 from Model import RMCPosition
 import platform
 import time
-
+import random
 
 class _SensorInterFace:
     def getPosition(self):
@@ -50,8 +50,9 @@ class _MockSensorReceiver(_SensorInterFace):
     def __init__(self):
         cls = type(self)
         
-        if not hasattr(cls, "_init"):  
-            with open("sensor_log/log2.txt","r",encoding="utf8") as f:
+        if not hasattr(cls, "_init"): 
+            file_index = random.randint(1,4) 
+            with open("sensor_log/log{file_index}.txt","r",encoding="utf8") as f:
                 self.positionList = []
                 for line in f.readlines():
                     try:
