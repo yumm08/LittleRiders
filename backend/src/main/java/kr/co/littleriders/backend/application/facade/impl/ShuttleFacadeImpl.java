@@ -27,14 +27,6 @@ import kr.co.littleriders.backend.domain.route.entity.Route;
 import kr.co.littleriders.backend.domain.route.error.code.RouteErrorCode;
 import kr.co.littleriders.backend.domain.route.error.exception.RouteException;
 import kr.co.littleriders.backend.domain.routeinfo.entity.ChildBoardDropInfo;
-import kr.co.littleriders.backend.domain.shuttle.DriveUniqueKeyService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleDriveService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleLocationService;
-import kr.co.littleriders.backend.domain.shuttle.ShuttleService;
-import kr.co.littleriders.backend.domain.shuttle.entity.DriveUniqueKey;
-import kr.co.littleriders.backend.domain.shuttle.entity.Shuttle;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleDrive;
-import kr.co.littleriders.backend.domain.shuttle.entity.ShuttleLocation;
 import kr.co.littleriders.backend.domain.shuttle.*;
 import kr.co.littleriders.backend.domain.shuttle.entity.*;
 import kr.co.littleriders.backend.domain.shuttle.error.code.ShuttleBoardErrorCode;
@@ -54,11 +46,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -222,7 +210,16 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
 
         //지나왔던길 모두 가져오기
         List<ShuttleLocation> shuttleLocationList = shuttleLocationService.findByShuttleId(shuttleId);
-        shuttleLocationList.sort(Comparator.comparing(ShuttleLocation::getTime));
+
+        LocalDateTime startTime  = shuttleDrive.getTime();
+        List<ShuttleLocation> shuttleLocationListAfterStartTime = new ArrayList<>();
+        for(ShuttleLocation shuttleLocation : shuttleLocationList){
+            if(shuttleLocation.getTime().isAfter(startTime)){
+                shuttleLocationListAfterStartTime.add(shuttleLocation);
+            }
+        }
+
+        shuttleLocationListAfterStartTime.sort(Comparator.comparing(ShuttleLocation::getTime));
 
         //TODO - 김도현 - 승차 하차정보 모두 저장해야함.
 
@@ -244,7 +241,7 @@ public class ShuttleFacadeImpl implements ShuttleFacade {
                     shuttleDrop.getTime()));
         }
 
-        ShuttleDriveHistory shuttleDriveHistory = ShuttleDriveHistory.of(route.getName(),start,end,shuttle,driver,teacher,shuttleLocationList,boardList,dropList);
+        ShuttleDriveHistory shuttleDriveHistory = ShuttleDriveHistory.of(route.getName(),start,end,shuttle,driver,teacher,shuttleLocationListAfterStartTime,boardList,dropList);
         shuttleDriveHistoryService.save(shuttleDriveHistory);
 
         shuttleDriveService.delete(shuttleDrive);
