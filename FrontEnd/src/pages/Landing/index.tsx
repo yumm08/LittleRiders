@@ -71,6 +71,7 @@ export default function Landing() {
           className=" m-2 h-1/2 w-5/6 rounded border-4 border-lightgreen p-3 text-2xl font-bold transition-colors ease-in-out active:bg-lightgreen active:text-slate-100"
           onClick={() => {
             navigate('/route')
+            window.mainHandler.beep()
             window.mainHandler.renderRouteListRequest()
           }}
         >

@@ -76,11 +76,24 @@ export default function QrCodePage() {
         className="flex w-full justify-center rounded-[10px] bg-yellow p-2 font-bold transition-all active:bg-lightyellow"
         onClick={async () => {
           if (await window.mainHandler.canMoveStartDrivePage()) {
+<<<<<<< dcc5743fcd95c1dcf8950ad4457512d66bf367ee
             console.error('jsjsjs')
             window.mainHandler.startDrive()
             navigate('/driving')
           }
         }}
+=======
+            window.mainHandler.startDrive()
+            window.mainHandler.beep()
+            navigate("/driving")
+          }
+          else {
+            window.mainHandler.beep()
+            window.mainHandler.beep()
+          }
+
+         }}
+>>>>>>> cf0b845f2bee97625bece2d35b1027267512b325
       >
         운행 시작
       </button>

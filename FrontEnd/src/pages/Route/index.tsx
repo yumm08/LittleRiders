@@ -32,20 +32,27 @@ export default function Route() {
         <button
           className="flex items-center justify-center rounded border-2 border-lightgreen bg-lightgreen p-2 px-10 font-bold transition-all active:bg-white"
           onClick={() => {
-            window.mainHandler.choiceRouteId(null)
-            window.mainHandler.rerenderShuttleInfo()
-            handlePrevButtonClick()
-          }}
+            window.mainHandler.choiceRouteId(null);
+            window.mainHandler.rerenderShuttleInfo();
+            window.mainHandler.beep()
+            handlePrevButtonClick();
+
+          }
+            
+          }
         >
           이전
         </button>
-        <button
-          className="flex items-center justify-center rounded border-2 border-lightgreen bg-lightgreen p-2 px-10 font-bold transition-all active:bg-white"
-          onClick={async () => {
-            // eslint-disable-next-line no-extra-semi
-            ;(await window.mainHandler.canMoveTagBarcodePage())
-              ? navigate('/qr')
-              : ''
+        <button className="flex items-center justify-center rounded bg-lightgreen p-2 px-10 font-bold"
+          onClick={async() => {
+            if (await window.mainHandler.canMoveTagBarcodePage()) {
+              navigate("/qr")
+              window.mainHandler.beep()
+            }
+            else {
+              window.mainHandler.beep()
+              window.mainHandler.beep()
+            }
           }}
         >
           다음
@@ -66,7 +73,8 @@ export default function Route() {
                   className={`cursor-pointer p-2 text-3xl ${route.id === selectedRoute?.id && 'bg-yellow'}`}
                   onClick={() => {
                     setSelectedRoute(() => route)
-                    window.mainHandler.choiceRouteId(route.id)
+                    window.mainHandler.choiceRouteId(route.id);
+                    window.mainHandler.beep();
                     // console.log(route.id)
                   }}
                 >
