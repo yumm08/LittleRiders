@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import ChildQR from '@components/Child/Child/ChildQR'
 import BackDrop from '@components/Shared/BackDrop'
 import GenderIcon from '@components/Shared/GenderIcon'
 import ModalPortal from '@components/Shared/ModalPortal'
@@ -33,7 +32,7 @@ export default function ChildDetailModal({
   useModal()
 
   if (isLoading) {
-    return <div>loading</div>
+    return null
   }
 
   const {
@@ -44,8 +43,6 @@ export default function ChildDetailModal({
     familyName,
     familyPhoneNumber,
     address,
-    cardType,
-    cardNumber,
   }: ChildDetailInfo = childDetailInfo
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -108,10 +105,10 @@ export default function ChildDetailModal({
 
             <Spacing style="my-10" />
 
-            <div className="flex flex-col items-center">
-              <Title text="부모 정보" />
+            <div className="flex w-full flex-col items-center">
+              <Title text="보호자 정보" />
 
-              <div className="mt-2 flex flex-col items-start gap-4 border-y-2 py-4 text-lg">
+              <div className="mt-2 flex w-full flex-col items-start gap-4 border-y-2 py-4 text-lg">
                 <p>
                   <span className="font-bold">이름 : </span>
                   {familyName}
@@ -124,18 +121,6 @@ export default function ChildDetailModal({
                   <span className="font-bold">주소 : </span>
                   <span className="">{address}</span>
                 </p>
-              </div>
-            </div>
-
-            <Spacing style="my-2" />
-
-            <div className="flex w-full justify-center">
-              <div className="flex aspect-square w-40 flex-col items-center rounded-md border p-2">
-                <div className="flex w-full items-center justify-center border-b">
-                  <span className="font-bold">{cardType}</span>
-                </div>
-                {cardType === 'BARCODE' && <ChildQR value={cardNumber} />}
-                {cardType === 'BEACON' && <div>{cardNumber}</div>}
               </div>
             </div>
           </div>

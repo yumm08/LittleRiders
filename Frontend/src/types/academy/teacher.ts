@@ -4,7 +4,13 @@ export interface TeacherInfo {
   image: File | null
 }
 export interface TeacherCardType {
+  id: number
   name: string
   phoneNumber: string
-  image: string
+  imagePath: string
+  status: string
+}
+
+export interface TeacherDetailInfo extends TeacherCardType {
+  uuid: string
 }

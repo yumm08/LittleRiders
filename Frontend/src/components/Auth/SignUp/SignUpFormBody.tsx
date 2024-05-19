@@ -170,13 +170,9 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
 
           <input
             {...register('name', {
-              required: '이름은 필수 입력 항목입니다.',
-              pattern: {
-                value: VALIDATE_REGEX.NAME,
-                message: '이름은 한글로만 입력해 주세요.',
-              },
+              required: '학원 이름은 필수 입력 항목입니다.',
             })}
-            placeholder="이름을 입력해주세요"
+            placeholder="학원 이름을 입력해주세요"
             type="text"
             className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
             required
@@ -186,9 +182,9 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
           <div className="flex gap-2">
             <input
               {...register('address', {
-                required: '주소는 필수 입력 항목입니다.',
+                required: '학원 주소는 필수 입력 항목입니다.',
               })}
-              placeholder="주소를 입력해주세요"
+              placeholder="학원 주소를 입력해주세요"
               type="text"
               className="bg-lightblue text-md pointer-events-none w-full rounded-md border border-lightgray p-3"
               required
@@ -200,7 +196,6 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
             >
               <p className="w-20 font-bold text-white">주소 검색</p>
             </Button>
-            {/* // TODO: 주소 검색 필요 */}
             {openAddressSearchModal && (
               <SearchAddressModal onModalToggle={modalToggleHandler} />
             )}
@@ -214,11 +209,10 @@ export default function SignUpFormBody({ validate, validateSuccess }: Props) {
               required: '전화번호는 필수 입력 항목입니다.',
               pattern: {
                 value: VALIDATE_REGEX.PHONE_NUMBER,
-                message:
-                  '전화번호 형식이 올바르지 않습니다. (예: 010-0000-0000)',
+                message: '전화번호 형식이 올바르지 않습니다. (예: 02-000-0000)',
               },
             })}
-            placeholder="전화번호를 입력해주세요 (ex. 010-0000-0000)"
+            placeholder="전화번호를 입력해주세요 (ex. 02-000-0000)"
             type="tel"
             className="bg-lightblue text-md w-full rounded-md border border-lightgray p-3"
           />

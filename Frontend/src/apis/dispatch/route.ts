@@ -1,8 +1,8 @@
 import axiosInstance from '@utils/httpCommons'
 
-import { Route } from '@types'
+import { ChildtoStationArgType, Route, Station } from '@types'
 
-const BASE_URL = 'route'
+const BASE_URL = 'academy/route'
 
 /**
  * get Route List Axios Call
@@ -36,14 +36,30 @@ export const postRoute = async (route: Route) => {
 /**
  * put, Modify Route Detail to Server, Axios Call
  * @param routeId : number
- * @param route: Route
+ * @param stationList: Route
  * @returns response
  */
-export const putRoute = async (routeId: number, route: Route) => {
-  const response = await axiosInstance.put(`/${BASE_URL}/${routeId}`, route)
+export const postRouteStation = async (
+  routeId: number,
+  stationList: Station[],
+) => {
+  const response = await axiosInstance.post(
+    `/${BASE_URL}/${routeId}`,
+    stationList,
+  )
   return response
 }
 
+export const postRouteChild = async (
+  routeId: number,
+  stationList: ChildtoStationArgType[],
+) => {
+  const response = await axiosInstance.post(
+    `/${BASE_URL}/${routeId}/child`,
+    stationList,
+  )
+  return response
+}
 /**
  * delete Route Axios Call
  * @param routeId : number
@@ -51,15 +67,5 @@ export const putRoute = async (routeId: number, route: Route) => {
  */
 export const deleteRoute = async (routeId: number) => {
   const response = await axiosInstance.delete(`/${BASE_URL}/${routeId}`)
-  return response
-}
-
-// TODO 원생 노선 추가 (원생 Type 지정, API 작성 대기)
-/**
- *
- * @returns
- */
-export const postRouteChild = async () => {
-  const response = await axiosInstance.get(`/${BASE_URL}/child`)
   return response
 }

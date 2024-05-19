@@ -10,9 +10,12 @@ export const getDriveInfoByDayList = async (
   dateId: number,
 ) => {
   if (!driveHistoryList) return
-  return await axiosInstance.get(`${BASE_URL}/history/shuttle/${shuttleId}`, {
+  return await axiosInstance.get(`${BASE_URL}/history/shuttle`, {
     params: {
-      date: driveHistoryList[dateId].time,
+      shuttleId: shuttleId,
+      year: driveHistoryList[dateId].year,
+      month: driveHistoryList[dateId].month,
+      day: driveHistoryList[dateId].day,
     },
   })
 }

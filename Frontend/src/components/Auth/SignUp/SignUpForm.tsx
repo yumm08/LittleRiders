@@ -15,7 +15,9 @@ export default function SignUpForm() {
   const { validate, isSuccess: validateSuccess } = useValidate()
 
   const onSubmit: SubmitHandler<SignUpInfo> = (signUpInfo: SignUpInfo) => {
-    signUp(signUpInfo)
+    const formattedPhoneNumber = signUpInfo.phoneNumber.replace(/-/g, '')
+
+    signUp({ ...signUpInfo, phoneNumber: formattedPhoneNumber })
   }
 
   return (

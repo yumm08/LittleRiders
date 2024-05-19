@@ -36,7 +36,9 @@ export interface Teacher {
 }
 
 export interface DriveLocation {
+  shuttleId?: number
   latitude: number
   longitude: number
   time: string
+  speed: number
 }

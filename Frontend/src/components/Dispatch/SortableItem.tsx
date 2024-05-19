@@ -4,7 +4,7 @@ import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ChildInfo } from '@types'
-import { FaChild } from 'react-icons/fa'
+import { FaChild, FaTrashAlt } from 'react-icons/fa'
 import { MdDragHandle } from 'react-icons/md'
 
 interface Props {
@@ -12,33 +12,35 @@ interface Props {
   selectedStation?: number
   name: string
   type?: string
+  gender?: string
   index: number
   childList?: ChildInfo[]
   onClick?: (id: number) => void
   onHover?: () => void
+  handleStationRemoveClick?: (
+    e: React.MouseEvent<SVGElement, MouseEvent>,
+    id: UniqueIdentifier,
+  ) => void
 }
 
-export function SortableItem({
+export default function SortableItem({
   id,
   selectedStation,
   name,
+  gender,
   type,
   index,
   childList,
   onClick,
+  handleStationRemoveClick,
 }: Props) {
   const [isClicked, setIsClicked] = useState<boolean>(false)
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false)
   const [childCount, setChildCount] = useState<number | undefined>(
-    childList?.length,
+    childList ? childList.length : 0,
   )
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id })
-
-  if (childList) {
-    console.log(id)
-    console.log(childList)
-  }
 
   const sortIcon = (type: string | undefined) => {
     if (!type) {
@@ -49,13 +51,18 @@ export function SortableItem({
       )
     }
     if (type === 'selectedStationList')
-      return <p className="w-8 text-center text-xl font-bold">{index}</p>
+      return <p className="w-8 text-center text-xl font-bold">{index + 1}</p>
     if (type === 'stationList')
-      return <img src="/src/assets/image/bus-stop-icon.svg" className="w-8" />
-    if (type.includes('childList')) return <></>
+      return <img src="/bus-stop-icon.svg" className="w-8" />
+    if (type.includes('academyChildList'))
+      return gender === 'FEMALE' ? (
+        <img src="/daughter.svg" className="w-8" />
+      ) : (
+        <img src="/son.svg" className="w-8" />
+      )
   }
 
-  const childrenNumberIcon = (type: string | undefined) => {
+  const stationTailIcon = (type: string | undefined) => {
     if (type === 'selectedStationList')
       return (
         <div className="flex items-center justify-center text-gray-500">
@@ -63,15 +70,27 @@ export function SortableItem({
           <p className="w-8 text-center text-xl font-bold">{childCount}</p>
         </div>
       )
+    else if (type === 'stationList') {
+      return (
+        <FaTrashAlt
+          className="hover:scale-125 hover:text-red active:scale-150 active:text-red"
+          onClick={(e) => {
+            if (handleStationRemoveClick) handleStationRemoveClick(e, id)
+          }}
+        />
+      )
+    }
     return <></>
   }
 
   useEffect(() => {
-    setChildCount(childList?.length)
+    setChildCount(childList ? childList.length : 0)
   }, [childList])
 
   useEffect(() => {
-    setIsClicked(selectedStation === Number(id.toString()))
+    if (id) {
+      setIsClicked(selectedStation === Number(id.toString()))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStation])
   return (
@@ -80,11 +99,10 @@ export function SortableItem({
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className={`m-3 h-auto w-[270px] rounded-md border-2  p-3 shadow-md transition ${isClicked ? 'border-lightgreen bg-lightgreen text-white' : isMouseOver ? 'border-lightgreen bg-white' : 'bg-white'}`}
+      className={`m-2 h-auto w-60 rounded-sm border-2 p-3 shadow-sm transition-colors ${isClicked ? ' border-lightgreen bg-lightgreen text-white' : isMouseOver ? 'border-lightgreen bg-white' : 'bg-white'} `}
       onClick={() => {
         if (onClick) {
           onClick(Number(id.toString()))
-          console.log('clicked!')
         }
       }}
       onMouseOver={() => {
@@ -96,9 +114,9 @@ export function SortableItem({
     >
       <div className="flex items-center justify-start">
         {sortIcon(type)}
-        <div className="flex w-full justify-between">
-          <p className="ms-2 text-center">{name}</p>
-          {childrenNumberIcon(type)}
+        <div className="flex w-full items-center justify-between">
+          <p className=" ms-2 w-32 truncate text-left">{name}</p>
+          {stationTailIcon(type)}
         </div>
       </div>
     </div>

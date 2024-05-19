@@ -3,15 +3,17 @@ import { RefObject, SetStateAction, useState } from 'react'
 import { BASE_LAT, BASE_LNG } from '@constants'
 import { Station } from '@types'
 
-const DEFAULT_OPTION = {
+const DEFAULT_OPTION: naver.maps.MapOptions = {
   center: new naver.maps.LatLng(BASE_LAT, BASE_LNG),
   zoom: 15,
   minZoom: 7,
-  ZoomControl: true,
+  zoomControl: true,
   disableKineticPan: false,
 }
 
-export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
+export function MapHook(
+  mapRef?: React.MutableRefObject<naver.maps.Map | null>,
+) {
   // const [markerList, setMarkerList] = useState<naver.maps.Marker[]>([])
   const [polyline, setPolyline] = useState<naver.maps.Polyline>()
   //const [circleList, setCircleList] = useState<naver.maps.Circle[]>([])
@@ -25,19 +27,17 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     mapDiv: RefObject<HTMLDivElement>,
     options = DEFAULT_OPTION,
   ) => {
-    console.log('initMap')
-    if (mapRef.current) return
-    mapRef.current = new naver.maps.Map(mapDiv.current!, options)
+    if (mapRef!.current) return
+    mapRef!.current = new naver.maps.Map(mapDiv.current!, options)
   }
 
   /**
    * 초기 Polyline Overlay 생성
    */
   const initPolyLine = () => {
-    console.log('initPolyline')
     setPolyline(
       new naver.maps.Polyline({
-        map: mapRef.current!,
+        map: mapRef!.current!,
         path: [],
         strokeWeight: 3,
         strokeColor: '#007F73',
@@ -51,7 +51,6 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
    * @param marker 대상이 되는 Marker
    */
   const addInfoWindow = async (marker: naver.maps.Marker, content: string) => {
-    console.log('addInfoWindow')
     const infoWindow = new naver.maps.InfoWindow({
       content: content,
       maxWidth: 140,
@@ -64,15 +63,13 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
       pixelOffset: new naver.maps.Point(10, -5),
     })
     naver.maps.Event.addListener(marker, 'mouseover', () => {
-      console.log('mouseon')
-      if (mapRef.current) {
-        infoWindow.open(mapRef.current, marker)
+      if (mapRef!.current) {
+        infoWindow.open(mapRef!.current, marker)
       }
     })
 
     naver.maps.Event.addListener(marker, 'mouseout', () => {
-      console.log('mouseout')
-      if (mapRef.current) infoWindow.close()
+      if (mapRef!.current) infoWindow.close()
     })
   }
 
@@ -83,8 +80,6 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
       (arg0: never[]): void
     },
   ) => {
-    console.log('deleteMarkers')
-    console.log(markerList)
     for (let k = 0; k < markerList.length; k++) {
       markerList[k].setMap(null)
     }
@@ -112,10 +107,10 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
       tmpMarkerList.push(
         new naver.maps.Marker({
           position: newPathList[k],
-          map: mapRef.current!,
+          map: mapRef!.current!,
           icon: {
             content: [
-              `<img src="/src/assets/image/${markerImg}" style="width:30px; height:30px"/>`,
+              `<img src="/${markerImg}" style="width:30px; height:30px"/>`,
             ].join(''),
             size,
             anchor,
@@ -134,8 +129,9 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
    * draw polylines to represent the route
    */
   const drawPolyLines = (newPathList: naver.maps.LatLng[]) => {
-    console.log('drawPolyLines')
-    if (polyline) polyline.setPath(newPathList)
+    if (polyline) {
+      polyline.setPath(newPathList)
+    }
   }
 
   // TODO 학원 좌표 arg로 받아야함
@@ -193,10 +189,12 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     drawPolyLines(newPathList)
   }
 
-  // const drawCircleList = () => {}
+  const deletePolyLines = () => {
+    polyline?.setMap(null)
+  }
 
   const moveMap = (latLng: naver.maps.LatLng) => {
-    mapRef.current?.setCenter(latLng)
+    mapRef!.current?.setCenter(latLng)
   }
 
   return {
@@ -209,6 +207,7 @@ export function MapHook(mapRef: React.MutableRefObject<naver.maps.Map | null>) {
     drawPolyLines,
     drawRoute,
     drawRouteMarkers,
+    deletePolyLines,
     moveMap,
   }
 }
