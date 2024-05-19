@@ -184,18 +184,29 @@ public class SseFacadeImpl implements SseFacade {
         long teacherId = shuttleDrive.getTeacherId();
         long driverId = shuttleDrive.getDriverId();
         long routeId = shuttleDrive.getRouteId();
+
+        LocalDateTime startTime = shuttleDrive.getTime();
+
         List<ShuttleLocation> shuttleLocationList = shuttleLocationService.findByShuttleId(shuttleId);
 
+        List<ShuttleLocation> shuttleLocationListAfterStartTime = new ArrayList<>();
+        for(ShuttleLocation shuttleLocation : shuttleLocationList){
+            if(shuttleLocation.getTime().isAfter(startTime)){
+                shuttleLocationListAfterStartTime.add(shuttleLocation);
+            }
+        }
 
         Teacher teacher = teacherService.findById(teacherId);
         Driver driver = driverService.findById(driverId);
         Shuttle shuttle = shuttleService.findById(shuttleId);
 
+
+
         //TODO - 김도현 Teacher to dto
         //driver to dto
         //shuttle to dto
 
-        SmsUserShuttleLandingInfoResponse smsUserShuttleLandingInfoResponse = SmsUserShuttleLandingInfoResponse.of(teacher, driver, shuttle, shuttleLocationList);
+        SmsUserShuttleLandingInfoResponse smsUserShuttleLandingInfoResponse = SmsUserShuttleLandingInfoResponse.of(teacher, driver, shuttle, shuttleLocationListAfterStartTime);
 
 
 
