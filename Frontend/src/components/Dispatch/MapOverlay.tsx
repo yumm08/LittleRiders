@@ -150,7 +150,7 @@ export default function MapOverlay({ handleCloseButton, mapRef }: Props) {
       </div>
       <div className="mt-2 flex items-center justify-end self-end px-3">
         <p className=" me-3 text-sm text-rose-600">
-          정류장 추가 전, 반드시 수정사항을 저장해주세요!
+          정류장 추가 전, 수정사항을 저장해주세요!
         </p>
         <Button
           color="rounded w-20 text-darkgreen transition ease-in-out hover:bg-gray-100 bg-white active:bg-darkgreen active:bg-opacity-40"
