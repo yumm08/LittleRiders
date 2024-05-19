@@ -1,8 +1,10 @@
 import { useState } from 'react'
 
-import { showChildInfoAlert } from '@utils/alertUtils'
+
 
 import Title from './Title'
+
+import { useNavigate } from 'react-router-dom'
 
 declare global {
   interface Window {
@@ -30,20 +32,11 @@ window.stationState = {
   setInfo: () => {},
 }
 export default function DrivingPage() {
+
+  const navigate = useNavigate()
   const [boardChildList, setBoardChildList] = useState<any[]>([
-    { name: '차차차' },
-    { name: '차차차' },
-    { name: '차차차' },
-    { name: '차차차' },
   ])
   const [readyChildList, setReadyChildList] = useState<any[]>([
-    { name: '차차차' },
-    { name: '차차차' },
-    { name: '차차차' },
-    { name: '차차차' },
-    { name: '차차차' },
-    { name: '차차차' },
-    { name: '차차차' },
   ])
 
   const [station, setStation] = useState({
@@ -63,7 +56,13 @@ export default function DrivingPage() {
         <Title />
         <button
           className="transition-color rounded bg-yellow p-1 px-8 text-lg active:bg-white"
-          onClick={() => {}}
+          onClick={async () => {
+            if (await window.mainHandler.endDrive()) {
+              navigate("/")
+              window.mainHandler.rerenderShuttleInfo()
+            }
+
+          }}
         >
           운 행 종 료
         </button>
@@ -105,7 +104,10 @@ export default function DrivingPage() {
                 <li
                   key={index}
                   className=" flex w-full justify-center border-b-2 border-yellow p-3 ps-5 tracking-[0.4em]"
-                  onClick={() => showChildInfoAlert(item)}
+                  onClick={() => {
+                    window.mainHandler.beep()
+                    window.mainHandler.showChildInfo(item)
+                  }}
                 >
                   {item.name}
                 </li>
@@ -123,7 +125,10 @@ export default function DrivingPage() {
                 <li
                   key={index}
                   className="flex w-full items-center justify-evenly border-b-2 border-yellow p-3 ps-5 tracking-[0.4em]"
-                  onClick={() => showChildInfoAlert(item)}
+                  onClick={() => {
+                    window.mainHandler.beep()
+                    window.mainHandler.showChildInfo(item)
+                  }}
                 >
                   {item.name}
                 </li>

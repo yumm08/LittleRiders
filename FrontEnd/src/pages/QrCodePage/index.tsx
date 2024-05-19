@@ -38,8 +38,6 @@ export default function QrCodePage() {
     phoneNumber: '연락처',
     image: null,
   })
-  // const [driverName, setDriverName] = useState("짱구 씨발럼");
-  // const [driverImage, setDriverImage]
 
   window.driverState.setInfo = setDriverInfo
   window.teacherState.setInfo = setTeacherInfo
@@ -51,7 +49,9 @@ export default function QrCodePage() {
       <button
         className=" absolute left-20 me-3 flex rounded-[10px] border-2 border-yellow bg-white p-2 font-bold transition-all ease-in-out active:bg-lightyellow"
         onClick={() => {
-          navigate('/')
+          navigate('/route')
+          window.mainHandler.beep()
+          window.mainHandler.renderRouteListRequest()
         }}
       >
         뒤로가기
@@ -76,13 +76,6 @@ export default function QrCodePage() {
         className="flex w-full justify-center rounded-[10px] bg-yellow p-2 font-bold transition-all active:bg-lightyellow"
         onClick={async () => {
           if (await window.mainHandler.canMoveStartDrivePage()) {
-<<<<<<< dcc5743fcd95c1dcf8950ad4457512d66bf367ee
-            console.error('jsjsjs')
-            window.mainHandler.startDrive()
-            navigate('/driving')
-          }
-        }}
-=======
             window.mainHandler.startDrive()
             window.mainHandler.beep()
             navigate("/driving")
@@ -93,7 +86,6 @@ export default function QrCodePage() {
           }
 
          }}
->>>>>>> cf0b845f2bee97625bece2d35b1027267512b325
       >
         운행 시작
       </button>

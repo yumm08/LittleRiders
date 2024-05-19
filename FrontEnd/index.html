@@ -21,11 +21,27 @@
     />
     <meta name="format-detection" content="telephone=no" />
 
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+
     <title>리틀라이더즈 학부모</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <script language="JavaScript">
+      new QWebChannel(qt.webChannelTransport, function (channel) {
+        // window.barcodeHandler = channel.objects.barcodeHandler;
+        window.mainHandler = channel.objects.mainHandler;
+        // console.error(window.handler)
+        // console.error("sibal")
+        // handler.test(function(retVal) {
+        //   // console.error as console.log message don't show up in the python console
+        //   console.error(JSON.stringify(retVal));
+        // })
+
+      });
+      </script>
 
     <!-- pwa sw.js 정보 줄러오는 스크립트 추가 -->
     <script>
