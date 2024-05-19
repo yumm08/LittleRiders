@@ -109,7 +109,7 @@ export default function RealTimeParentView({ uuid }: Props) {
       {bottomsheetState === true ? (
         <>
           <BottomSheet
-            title={`운행 정보${dir}`}
+            title={`운행 정보`}
             visibleHandler={changeBottomSheetState}
           >
             <div
