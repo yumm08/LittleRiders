@@ -166,6 +166,10 @@ export const useSetRealTimeMap = () => {
    * polyline 객체를 초기화 하는 함수
    */
   const initPolyline = (map: naver.maps.Map) => {
+    if (polyline.current) {
+      polyline.current.setMap(null)
+    }
+
     const newPolyline = new naver.maps.Polyline({
       map,
       path: [],
@@ -187,7 +191,9 @@ export const useSetRealTimeMap = () => {
       position,
       zIndex: 50,
       icon: {
-        content: '<img class="w-12 h-12" src="/child-icon.svg" />',
+        size: new naver.maps.Size(48, 48),
+        content:
+          '<div class="w-12 h-12"><img src="/child-icon.svg" class="w-full h-full" /></div>',
         anchor: new naver.maps.Point(15, 15),
       },
     }
@@ -230,7 +236,8 @@ export const useSetRealTimeMap = () => {
       position,
       zIndex: 50,
       icon: {
-        content: '<img class="w-12 h-12" src="/child-icon.svg" />',
+        content:
+          '<div class="w-12 h-12"><img src="/child-icon.svg" class="w-full h-full" /></div>',
         anchor: new naver.maps.Point(15, 15),
       },
     }
@@ -245,7 +252,7 @@ export const useSetRealTimeMap = () => {
               <p class='text-4xl'>${info.child.name}</p>
               <img src="${info.child.gender === 'MALE' ? '/son.svg' : '/daughter.svg'}" class='w-8'/>
             </div>
-            <p>${new Date(info.time).toLocaleTimeString()}</p>
+            <p>${formatDateTime(info.time)}</p>
             <p class="text-xl${info.status === 'BOARD' ? ' text-darkgreen">승차' : ' text-red">하차'}</p>
           </div>
         </div>`
@@ -265,11 +272,13 @@ export const useSetRealTimeMap = () => {
 
   return {
     realTimeMap,
+    realTimeMarker,
     polyline,
     drawRealTimeMarker,
     initRealTimeMap,
     drawPolylineWithList,
     setDirection,
+    setRealTimeMarker,
     initPolyline,
     drawBoardMarker,
     drawDropMarker,

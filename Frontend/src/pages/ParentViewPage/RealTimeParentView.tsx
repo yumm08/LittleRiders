@@ -10,20 +10,27 @@ import {
   useRedrawPolyLineParentMap,
   useSetParentMap,
 } from '@hooks/parent/map'
+import useDrawCurrentLocationMarker from '@hooks/parent/useDrawCurrentLocationMarker'
+import useGeoLocation from '@hooks/parent/useGeoLocation'
 import useRealTimeParentSSE from '@hooks/parent/useRealTimeParentSSE'
 
 import CenterWidget from './CenterWidget'
+import CenterWidget2 from './CenterWidget2'
 import ParentNaverMap from './ParentNaverMap'
 import ParentViewHeader from './ParentViewHeader'
 import './ParentViewPage.css'
 import ShowDetailButton from './ShowDetailButton'
 
-import COLOR_PALETTE from '@style/ColorPalette'
-import { AiOutlineAim } from 'react-icons/ai'
-
 interface Props {
   uuid: string | undefined
 }
+
+const geolocationOptions = {
+  enableHighAccuracy: true,
+  timeout: Infinity,
+  maximumAge: 1000 * 3600 * 24,
+}
+
 export default function RealTimeParentView({ uuid }: Props) {
   // SSE + 관련 데이터들 state로 관리
   const {
@@ -43,6 +50,11 @@ export default function RealTimeParentView({ uuid }: Props) {
     isError,
     driveLocationInfo,
   )
+  // 디바이스 GPS 위치 좌표
+  const { location, dir } = useGeoLocation(geolocationOptions)
+  //  좌표 받아서 디바이스 마커 찍기
+  useDrawCurrentLocationMarker({ location, naverMap: parentMap, dir })
+
   // 데이터 변경에 따라 폴리라인,마커 찍기, 중심 좌표 이동
   useRedrawPolyLineParentMap({
     naverMap: parentMap,
@@ -57,17 +69,35 @@ export default function RealTimeParentView({ uuid }: Props) {
   })
   // bottomSheet
   const [bottomsheetState, setBottomSheetState] = useState(false)
+
   const changeBottomSheetState = useCallback(() => {
     setBottomSheetState(!bottomsheetState)
   }, [bottomsheetState])
+
   const renewPage = useCallback(() => {
     window.location.reload()
   }, [])
+
   const goCenter = () => {
     const recent = driveLocationInfo[driveLocationInfo.length - 1]
     const location = new naver.maps.LatLng(recent.latitude, recent.longitude)
     parentMap?.panTo(location)
   }
+
+  // useEffect(() => {
+  //   if (!driverInfo) return
+  //   const img = new Image()
+  //   img.src = `/api/content/${driverInfo.image}`
+  // }, [driverInfo])
+
+  // useEffect(() => {
+  //   if (!teacherInfo) return
+  //   const img = new Image()
+  //   img.src = `/api/content/${teacherInfo.image}`
+  // }, [teacherInfo])
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
   if (isLoading)
     return (
       <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center justify-center bg-white">
@@ -82,7 +112,10 @@ export default function RealTimeParentView({ uuid }: Props) {
   //   )
 
   return (
-    <div className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center bg-white">
+    <div
+      id={isMobile ? 'mobile' : ''}
+      className=" relative mx-auto my-0 flex h-[100dvh] min-w-[360px] max-w-[768px] touch-none flex-col items-center bg-white"
+    >
       {/* 카카오맵 위치는 여기 */}
 
       <ParentNaverMap />
@@ -91,18 +124,10 @@ export default function RealTimeParentView({ uuid }: Props) {
       {bottomsheetState === true ? (
         <>
           <BottomSheet
-            title="운행 정보"
+            title={`운행 정보`}
             visibleHandler={changeBottomSheetState}
           >
-            <div
-              onClick={goCenter}
-              className="absolute -top-[30%] right-[2.5%] z-50 rounded-full bg-white p-3 text-white shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
-            >
-              <AiOutlineAim
-                color={COLOR_PALETTE['lightgreen']}
-                className=" text-[20px]"
-              />
-            </div>
+            <CenterWidget2 goCenter={goCenter} />
             <div className="mx-[3%] mb-[5%] flex w-[100%] justify-around ">
               <DriverSmallCard data={driverInfo} />
               <TeacherSmallCard data={teacherInfo} />

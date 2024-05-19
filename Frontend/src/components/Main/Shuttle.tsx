@@ -109,7 +109,6 @@ export default function Shuttle({
 
         const lastLocationInfo = locationList.at(-1) as InitDataLocationInfo
         curLocationInfo.current = lastLocationInfo
-        drawRealTimeMarker(lastLocationInfo, shuttleInfo, realTimeMap)
       }
 
       initPolyline(realTimeMap)
@@ -122,7 +121,7 @@ export default function Shuttle({
 
   // init 데이터가 있다면, board marker를 그린다
   useEffect(() => {
-    if (initData && saveLocation.current) {
+    if (realTimeMap && initData && saveLocation.current) {
       const boardList = initData.boardList
 
       boardList.forEach((boardInfo: BoardInfo) => {
@@ -167,7 +166,7 @@ export default function Shuttle({
 
   // 승차 정보가 있다면, 마커를 찍는다
   useEffect(() => {
-    if (boardInfo) {
+    if (boardInfo && realTimeMap) {
       addRealTimeInfo({ ...boardInfo, status: 'BOARD' })
       drawBoardMarker(boardInfo, realTimeMap)
     }
@@ -175,7 +174,7 @@ export default function Shuttle({
 
   // 하차 정보가 있다면, 마커를 찍는다
   useEffect(() => {
-    if (dropInfo) {
+    if (dropInfo && realTimeMap) {
       addRealTimeInfo({ ...dropInfo, status: 'DROP' })
       drawDropMarker(dropInfo, realTimeMap)
     }
