@@ -100,9 +100,10 @@ export default function DrivingPage() {
             원생 탑승 현황
           </div>
           <ul className="flex h-[100%] w-full flex-col overflow-y-auto">
-            {boardChildList.map((item) => {
+            {boardChildList.map((item, index) => {
               return (
                 <li
+                  key={index}
                   className=" flex w-full justify-center border-b-2 border-yellow p-3 ps-5 tracking-[0.4em]"
                   onClick={() => showChildInfoAlert(item)}
                 >
@@ -117,9 +118,10 @@ export default function DrivingPage() {
             승/하차 대기 현황
           </div>
           <ul className="flex h-[100%] w-full flex-col overflow-y-auto">
-            {readyChildList.map((item) => {
+            {readyChildList.map((item, index) => {
               return (
                 <li
+                  key={index}
                   className="flex w-full items-center justify-evenly border-b-2 border-yellow p-3 ps-5 tracking-[0.4em]"
                   onClick={() => showChildInfoAlert(item)}
                 >
