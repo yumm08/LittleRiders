@@ -43,11 +43,11 @@ export default function QrCodePage() {
   window.teacherState.setInfo = setTeacherInfo
 
   return (
-    <div className="flex h-full w-full flex-col items-center  bg-lightgreen p-2">
+    <div className="flex h-full w-full flex-col items-center  bg-gradient-to-r from-green-400 to-blue-500 p-2">
       {/* 제목 부분 */}
       <Title />
       <button
-        className=" absolute left-20 me-3 flex rounded-[10px] border-2 border-yellow bg-white p-2 font-bold transition-all ease-in-out active:bg-lightyellow"
+        className="absolute left-2 me-3 flex rounded-[10px] border-2 border-yellow bg-white p-2 font-bold transition-all ease-in-out active:bg-lightyellow"
         onClick={() => {
           navigate('/route')
           window.mainHandler.beep()
@@ -78,14 +78,12 @@ export default function QrCodePage() {
           if (await window.mainHandler.canMoveStartDrivePage()) {
             window.mainHandler.startDrive()
             window.mainHandler.beep()
-            navigate("/driving")
-          }
-          else {
+            navigate('/driving')
+          } else {
             window.mainHandler.beep()
             window.mainHandler.beep()
           }
-
-         }}
+        }}
       >
         운행 시작
       </button>
