@@ -39,9 +39,9 @@ export default function Landing() {
             src={shuttleInfo.image}
           ></img>
         </div>
-        <div className="flex h-1/2 w-5/6 flex-col divide-y-[1px] rounded border ">
+        <div className="flex h-1/2 w-5/6 flex-col divide-y-2 divide-darkgray rounded border-2 border-darkgray">
           <div className="flex h-full w-full">
-            <div className="flex w-1/2 items-center justify-center bg-yellow p-2 text-center text-2xl font-bold">
+            <div className="flex w-1/2 items-center justify-center border-r-2 border-r-darkgray bg-yellow p-2 text-center text-2xl font-bold">
               호차
             </div>
             <div className="flex w-1/2 items-center justify-center p-2 text-center text-2xl">
@@ -49,7 +49,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="flex h-full w-full">
-            <div className="flex w-1/2 items-center justify-center bg-yellow p-2 text-center text-2xl font-bold">
+            <div className="flex w-1/2 items-center justify-center border-r-2 border-r-darkgray bg-yellow p-2 text-center text-2xl font-bold">
               차량
             </div>
             <div className="flex w-1/2 items-center justify-center p-2 text-center text-2xl">
@@ -57,7 +57,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="flex h-full w-full">
-            <div className="flex w-1/2 items-center justify-center bg-yellow p-2 text-center text-2xl font-bold">
+            <div className="flex w-1/2 items-center justify-center border-r-2 border-r-darkgray bg-yellow p-2 text-center text-2xl font-bold">
               번호판
             </div>
             <div className="flex w-1/2 items-center justify-center p-2 text-center text-2xl">

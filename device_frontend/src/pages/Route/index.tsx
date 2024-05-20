@@ -32,24 +32,21 @@ export default function Route() {
         <button
           className="flex items-center justify-center rounded border-2 border-lightgreen bg-lightgreen p-2 px-10 font-bold transition-all active:bg-white"
           onClick={() => {
-            window.mainHandler.choiceRouteId(null);
-            window.mainHandler.rerenderShuttleInfo();
+            window.mainHandler.choiceRouteId(null)
+            window.mainHandler.rerenderShuttleInfo()
             window.mainHandler.beep()
-            handlePrevButtonClick();
-
-          }
-            
-          }
+            handlePrevButtonClick()
+          }}
         >
           이전
         </button>
-        <button className="flex items-center justify-center rounded bg-lightgreen p-2 px-10 font-bold"
-          onClick={async() => {
+        <button
+          className="flex items-center justify-center rounded bg-lightgreen p-2 px-10 font-bold"
+          onClick={async () => {
             if (await window.mainHandler.canMoveTagBarcodePage()) {
-              navigate("/qr")
+              navigate('/qr')
               window.mainHandler.beep()
-            }
-            else {
+            } else {
               window.mainHandler.beep()
               window.mainHandler.beep()
             }
@@ -61,21 +58,20 @@ export default function Route() {
 
       {routeList && (
         <div className="grid h-5/6 w-full grid-cols-12">
-          <div className="col-span-5 h-full border-r-2">
+          <div className="col-span-5 h-full border-r-2 border-darkgray">
             <p className="h-[50px] border-b-2 py-2 text-center text-3xl font-bold">
               노선 목록
             </p>
 
-            <div className="flex h-[300px] flex-col divide-y-2 overflow-auto">
+            <div className="flex h-[300px] flex-col divide-y-2 divide-darkgray overflow-auto">
               {routeList.map((route: any) => (
                 <div
                   key={route.id}
                   className={`cursor-pointer p-2 text-3xl ${route.id === selectedRoute?.id && 'bg-yellow'}`}
                   onClick={() => {
                     setSelectedRoute(() => route)
-                    window.mainHandler.choiceRouteId(route.id);
-                    window.mainHandler.beep();
-                    // console.log(route.id)
+                    window.mainHandler.choiceRouteId(route.id)
+                    window.mainHandler.beep()
                   }}
                 >
                   {route.name}
@@ -84,12 +80,12 @@ export default function Route() {
             </div>
           </div>
           <div className="col-span-7">
-            <p className="h-[50px] border-b-2 py-2 text-center text-3xl font-bold">
+            <p className="h-[50px] border-b-2 border-darkgray py-2 text-center text-3xl font-bold">
               정류장 목록
             </p>
 
             {selectedRoute && (
-              <div className="flex h-[300px] flex-col divide-y-2 overflow-auto">
+              <div className="flex h-[300px] flex-col divide-y-2 divide-darkgray overflow-auto">
                 {selectedRoute.stationList.map((station: any) => (
                   <div key={station.id} className="p-2 text-2xl">
                     {station.name}
