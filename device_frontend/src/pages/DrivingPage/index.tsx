@@ -76,22 +76,24 @@ export default function DrivingPage() {
               <div className="h-2/3 w-full rounded-t-full bg-white"></div>
               <div className="h-1/3 w-full rounded-b-full bg-blue-400"></div>
             </div>
-            <span className="absolute z-50 text-4xl">{station.now}</span>
+            <p className="absolute z-50 w-full truncate text-3xl">
+              {station.now}
+            </p>
           </div>
 
           <span className="text-md absolute left-0 top-[40%] text-rose-800">
             이전 정류장
           </span>
-          <span className="absolute left-0  top-[52%] w-28 text-left text-lg ">
+          <p className="absolute left-0 top-[52%] w-24 truncate text-left text-lg">
             {station.before}
-          </span>
+          </p>
 
           <span className="text-md absolute right-0 top-[40%] text-blue-800">
             다음 정류장
           </span>
-          <span className="absolute right-0 top-[52%] w-28 text-right text-lg">
+          <p className="absolute right-0 top-[52%] w-24 truncate text-right text-lg">
             {station.after}
-          </span>
+          </p>
         </div>
         <div className="flex h-[98%] w-[20%] flex-col items-center overflow-hidden rounded-t-xl border-4 border-darkgreen bg-white">
           <div className=" flex w-full justify-center bg-darkgreen p-2 text-xl font-bold text-white">
