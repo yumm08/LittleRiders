@@ -76,7 +76,7 @@ export default function DrivingPage() {
               <div className="h-2/3 w-full rounded-t-full bg-white"></div>
               <div className="h-1/3 w-full rounded-b-full bg-blue-400"></div>
             </div>
-            <p className="absolute z-50 w-full truncate text-3xl">
+            <p className="absolute z-50 w-full break-all text-xl">
               {station.now}
             </p>
           </div>
