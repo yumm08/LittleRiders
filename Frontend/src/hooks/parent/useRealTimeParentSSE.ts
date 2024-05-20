@@ -67,7 +67,7 @@ export default function useRealTimeParentSSE({ uuid }: Props) {
     const dropEvent = async (event: MessageEvent) => {
       const data = await JSON.parse(event.data)
       setDropChild(data)
-      setDriveStatus('driving')
+      setDriveStatus('end')
       eventSource.close()
     }
 
