@@ -331,7 +331,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
 
         self.stationInfo = {"before" : "", "now" : self.stationList[0]["name"]}
         try:
-            self.stationInfo["after"] =  self.stationInfo[1]["name"]
+            self.stationInfo["after"] =  self.stationList[1]["name"]
         except:
             self.stationInfo["after"] = ""
 
