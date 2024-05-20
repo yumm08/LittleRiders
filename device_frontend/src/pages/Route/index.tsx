@@ -59,7 +59,7 @@ export default function Route() {
       {routeList && (
         <div className="grid h-5/6 w-full grid-cols-12">
           <div className="col-span-5 h-full border-r-2 border-darkgray">
-            <p className="h-[50px] border-b-2 py-2 text-center text-3xl font-bold">
+            <p className="h-[50px] border-b-4 border-t-2 border-darkgray py-2 text-center text-3xl font-bold">
               노선 목록
             </p>
 
@@ -80,7 +80,7 @@ export default function Route() {
             </div>
           </div>
           <div className="col-span-7">
-            <p className="h-[50px] border-b-2 border-darkgray py-2 text-center text-3xl font-bold">
+            <p className="h-[50px] border-b-4 border-t-2 border-darkgray py-2 text-center text-3xl font-bold">
               정류장 목록
             </p>
 
