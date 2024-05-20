@@ -12,8 +12,7 @@
 
 @font-face {
   font-family: 'IBMPlexSansKR-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff')
-    format('woff');
+  src: url('/public/IBMPlexSansKR-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,7 +22,7 @@ body,
   width: 100%;
   height: 100%;
   margin: 0;
-  font-family: 'IBMPlexSansKR-Regular';
+  font-family: IBMPlexSansKR-Regular;
 }
 
 input:focus {
@@ -103,14 +102,10 @@ input:focus {
   }
 }
 
-@font-face {
+/* @font-face {
   font-family: 'IBMPlexSansKR-Regular';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff')
     format('woff');
   font-weight: normal;
   font-style: normal;
-}
-
-body {
-  font-family: 'IBMPlexSansKR-Regular';
-}
+} */

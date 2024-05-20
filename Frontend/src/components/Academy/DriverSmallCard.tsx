@@ -2,20 +2,20 @@ import { memo } from 'react'
 
 import { formatStringToPhoneNumber } from '@utils/formatUtils'
 
-import mock from '@assets/Mock/짱구아빠기사.png'
 import { SSE_DriverInfo } from '@types'
 import { IoCallSharp } from 'react-icons/io5'
 
 interface Props {
   data: SSE_DriverInfo
 }
+
 export default memo(function DriverSmallCard({ data }: Props) {
   return (
     <div className="border-ligtgray relative flex h-[100%] w-[43%]  flex-col items-center justify-center rounded-xl  border-[1px] border-lightgray p-[2%] ">
       {/* 직원 사진 */}
       <img
-        // src={`/api/content/${data.image}`}
-        src={mock}
+        src={`/api/content/${data.image}`}
+        // src={mock}
         alt=""
         className="h-[25%] w-[25%] rounded-full border-[1px] border-lightgreen"
       />
