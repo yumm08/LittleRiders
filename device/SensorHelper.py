@@ -52,7 +52,7 @@ class _MockSensorReceiver(_SensorInterFace):
         
         if not hasattr(cls, "_init"): 
             file_index = random.randint(1,4) 
-            with open("sensor_log/log{file_index}.txt","r",encoding="utf8") as f:
+            with open(f"sensor_log/log{file_index}.txt","r",encoding="utf8") as f:
                 self.positionList = []
                 for line in f.readlines():
                     try:

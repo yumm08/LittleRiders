@@ -318,9 +318,9 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.stationInfoIndex = 1
         self.stationInfo = {"before" : ""}
         try:
-            self.stationInfoIndex["now"] =  self.stationList[0]["name"]
+            self.stationInfo["now"] =  self.stationList[0]["name"]
         except : 
-            self.stationInfoIndex["now"] =  ""
+            self.stationInfo["now"] =  ""
 
         try:
             self.stationInfo["after"] =  self.stationList[1]["name"]
@@ -366,6 +366,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.barcode = ""
 
     def renderDriverByUuid(self,uuid):
+        print(uuid)
         if(not self.url.endswith("qr")):
             return
         try:
