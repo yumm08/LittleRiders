@@ -97,7 +97,7 @@ class BluetoothThread(QThread,Provider,ObserverInterface):
             if(self.latitude < 1000):
                 latitude = self.latitude
                 longitude = self.longitude
-                await asyncio.sleep(4.0)
+                # await asyncio.sleep(4.0)
                 beaconUUIDList = await self.bluetoothHelper.getBeaconUUIDList()
                 beaconUUIDListWithLatitudeLongitude = {
                     "latitude" : latitude,
@@ -161,7 +161,7 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.setupUi(self)
         # self.exitButton.clicked.connect(self.close)
         self.webview = QWebEngineView()
-        self.webview.setUrl(QUrl("https://device2.littleriders.co.kr"))
+        self.webview.setUrl(QUrl("https://device3.littleriders.co.kr"))
         self.mapLayout.addWidget(self.webview)
         self.webview.loadFinished.connect(self.on_load_finished)
         # self.serialNumberText.setText(f"{terminalNumber}")
@@ -366,7 +366,6 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
         self.barcode = ""
 
     def renderDriverByUuid(self,uuid):
-        print(uuid)
         if(not self.url.endswith("qr")):
             return
         try:
@@ -403,12 +402,13 @@ class MainWindow(QMainWindow, form_class,ObserverInterface):
 
         if(position and self.onDrive):
 
-            if(self.stationInfoIndex < len(self.stationList)):
-                compareStation = self.stationList[self.stationInfoIndex]
+            if(self.stationInfoIndex-1 < len(self.stationList)):
+                compareStation = self.stationList[self.stationInfoIndex-1]
                 base_location = (compareStation["latitude"],compareStation["longitude"])
                 point = (position.getLatitude(),position.getLongitude())
                 distance = geodesic(base_location,point).meters
-                if(distance < 5):
+                print("dir : ",distance)
+                if(distance < 20):
                     self.stationInfoIndex +=1
                         
                     self.stationInfo["before"] =self.stationInfo["now"]
