@@ -87,7 +87,7 @@
 ## 👪 팀 소개
 |**[박희준](https://github.com/wooryjoon)**|**[김관우](https://github.com/gwanu-dev)**|**[김민준](https://github.com/mj0107)**|**[김도현](https://github.com/wookoo)**|**[이수현](https://github.com/suhyeon06)**|**[이윤지](https://github.com/yunjiL)** |
 | :---------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-| [<img src="https://avatars.githubusercontent.com/u/106508216?v=4" width="800">](https://github.com/wooryjoon) | [<img src="https://avatars.githubusercontent.com/u/26521521?v=4" width="800">](https://github.com/gwanu-dev) | [<img src="https://avatars.githubusercontent.com/u/61671704?v=4" width="800">](https://github.com/mj0107) | [<img src="https://avatars.githubusercontent.com/u/39308953?v=4" width="800">](https://github.com/wookoo) | [<img src="https://avatars.githubusercontent.com/u/93829156?v=4" width="800">](https://github.com/suhyeon06) | [<img src="https://avatars.githubusercontent.com/u/91938850?v=4" width="800">](https://github.com/yunjiL) |
+| [<img src="https://avatars.githubusercontent.com/u/106508216?v=4" width="800">](https://github.com/wooryjoon) | [<img src="https://avatars.githubusercontent.com/u/26521521?v=4" width="800">](https://github.com/gwanu-dev) | [<img src="https://avatars.githubusercontent.com/u/61671704?v=4" width="800">](https://github.com/mj0107) | [<img src="https://avatars.githubusercontent.com/u/39308953?v=4" width="800">](https://github.com/wookoo) | [<img src="https://avatars.githubusercontent.com/u/93829156?v=4" width="800">](https://github.com/suhyeon06) | [<img src="https://avatars.githubusercontent.com/u/91938850?v=4" width="800">](https://github.com/yumm08) |
 |FrontEnd/팀장|FrontEnd|FrontEnd|BackEnd|BackEnd|BackEnd|
 
 <br>
@@ -95,7 +95,7 @@
 ## 🔧 기술 스택
 ### FrontEnd
 - ReactJS
-- Tawilwind CSS
+- Tailwind CSS
 - Zustand
 - Tanstack Query
 - MSW
